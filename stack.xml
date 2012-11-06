@@ -1,0 +1,9 @@
+<stack>
+  <description brief="race_cbr">race_cbr</description>
+  <author>Maintained by Iran Mansouri, Stefan Konecny, Federico Pecora</author>
+  <license>BSD</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/race_cbr</url>
+  <depend stack="ros" />
+
+</stack>

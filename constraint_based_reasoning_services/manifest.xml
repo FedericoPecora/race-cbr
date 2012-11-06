@@ -1,0 +1,16 @@
+<package>
+  <description brief="constraint_based_reasoning_services">
+
+     constraint_based_reasoning_services
+
+  </description>
+  <author>Iran Mansouri, Stefan Konecny, Federico Pecora</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/constraint_based_reasoning_services</url>
+
+  <depend package="meta_csp_framework" />
+
+</package>
+
+
