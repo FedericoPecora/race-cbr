@@ -1,4 +1,5 @@
 
+
 import java.awt.Rectangle;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -118,21 +119,21 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		return null;
 	}
 	
-	private void onNewObject(OccurrenceArray message) {
-
-		saRelations = new Vector<SpatialAssertionalRelation>();
-		//Assertion
-		List<Occurrence> focusedOccourances = message.getOccurrences();
-		for (Occurrence oc : focusedOccourances) {
-			SpatialAssertionalRelation sa1 = new SpatialAssertionalRelation(oc.getName(), oc.getType());
-			sa1.setCoordinate(getBoundingBoxByName(oc.getName()));
-			saRelations.add(sa1);
-			System.out.println("subscriber");
-		}
-		//.......................................................................................................
-
-
-	}
+//	private void onNewObject(OccurrenceArray message) {
+//
+//		saRelations = new Vector<SpatialAssertionalRelation>();
+//		//Assertion
+//		List<Occurrence> focusedOccourances = message.getOccurrences();
+//		for (Occurrence oc : focusedOccourances) {
+//			SpatialAssertionalRelation sa1 = new SpatialAssertionalRelation(oc.getName(), oc.getType());
+//			sa1.setCoordinate(getBoundingBoxByName(oc.getName()));
+//			saRelations.add(sa1);
+//			System.out.println("subscriber");
+//		}
+//		//.......................................................................................................
+//
+//
+//	}
 
 	private void makeSARelation(){
 		
