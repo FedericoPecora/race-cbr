@@ -25,10 +25,6 @@ repositories {
     url 'http://robotbrains.hideho.org/nexus/content/groups/ros-public'
   }
 
-  //flatDir {
-  //  name 'localRepository'
-  //  dirs 'lib'
-  //} 
 }
 
 dependencies {
