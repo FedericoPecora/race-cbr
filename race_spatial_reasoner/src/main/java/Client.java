@@ -9,9 +9,9 @@ import org.ros.node.NodeMain;
 import org.ros.node.service.ServiceClient;
 import org.ros.node.service.ServiceResponseListener;
 
-import race_msgs.getPositionService;
-import race_msgs.getPositionServiceRequest;
-import race_msgs.getPositionServiceResponse;
+//import race_msgs.getPositionService;
+//import race_msgs.getPositionServiceRequest;
+//import race_msgs.getPositionServiceResponse;
 
 /**
  * 
