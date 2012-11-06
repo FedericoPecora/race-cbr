@@ -1,4 +1,3 @@
-package race_spatial_reasoner;
 
 import java.awt.Rectangle;
 import java.util.Vector;

@@ -1,7 +1,4 @@
 
-
-package race_spatial_reasoner;
-
 import java.awt.Rectangle;
 import java.net.URI;
 import java.net.URISyntaxException;
