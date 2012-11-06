@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="race_spatial_reasoner" pkg="race_spatial_reasoner" type="ask_for_position.sh" output="screen" />
+</launch>

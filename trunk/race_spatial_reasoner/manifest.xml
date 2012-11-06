@@ -1,0 +1,17 @@
+<package>
+  <description brief="race_spatial_reasoner">
+
+     race_spatial_reasoner
+
+  </description>
+  <author>Iran Mansouri</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/race_spatial_reasoner</url>
+
+  <depend package="meta_csp_framework" />
+  <depend package="constraint_based_reasoning_services" />
+
+</package>
+
+

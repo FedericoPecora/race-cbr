@@ -1,0 +1,42 @@
+apply plugin: 'java'
+
+apply plugin: 'eclipse'
+
+// The Maven plugin is only required if your package is used as a library.
+//apply plugin: 'maven'
+
+// The Application plugin and mainClassName attribute are only required if
+// your package is used as a binary.
+apply plugin: 'application'
+mainClassName = 'org.ros.RosRun'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+version = '0.0.0-SNAPSHOT'
+group = 'race_spatial_reasoner'
+
+repositories {
+  //This looks in .m2 local repo for deps (below)
+  mavenLocal()
+  
+  //This looks at a maven repo for deps
+  maven {
+    url 'http://robotbrains.hideho.org/nexus/content/groups/ros-public'
+  }
+
+  //flatDir {
+  //  name 'localRepository'
+  //  dirs 'lib'
+  //} 
+}
+
+dependencies {
+    compile fileTree(dir: 'lib', include: '**/*.jar')
+    compile fileTree(dir: '../meta_csp_framework/lib', include: '**/*.jar')
+    compile 'meta_csp_framework:meta_csp_framework:0.0.0-SNAPSHOT'
+    compile 'constraint_based_reasoning_services:constraint_based_reasoning_services:0.0.0-SNAPSHOT'
+    compile 'ros.rosjava_core:rosjava:0.0.0-SNAPSHOT'
+}
+
+defaultTasks 'installApp'
