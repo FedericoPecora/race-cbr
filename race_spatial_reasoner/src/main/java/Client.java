@@ -1,6 +1,3 @@
-package race_spatial_reasoner;
-
-
 
 import org.ros.exception.RemoteException;
 import org.ros.exception.RosRuntimeException;
