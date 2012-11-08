@@ -9,9 +9,12 @@ import org.ros.node.NodeMain;
 import org.ros.node.service.ServiceClient;
 import org.ros.node.service.ServiceResponseListener;
 
-//import race_msgs.getPositionService;
-//import race_msgs.getPositionServiceRequest;
-//import race_msgs.getPositionServiceResponse;
+import race_msgs.IsConsistent;
+import race_msgs.IsConsistentRequest;
+import race_msgs.IsConsistentResponse;
+import race_msgs.IsHumanWorkingRequest;
+
+
 
 /**
  * 
@@ -48,5 +51,29 @@ public class Client extends AbstractNodeMain {
 //				throw new RosRuntimeException(e);
 //			}
 //		});
+	
+		ServiceClient<IsConsistentRequest, IsConsistentResponse> serviceClient;
+		try {
+			serviceClient = connectedNode.newServiceClient("is_consistent", IsConsistent._TYPE);
+		} catch (ServiceNotFoundException e) {
+			throw new RosRuntimeException(e);
+		}
+		final IsConsistentRequest request = serviceClient.newMessage();
+		request.setAggregateName("aggregate");
+		serviceClient.call(request, new ServiceResponseListener<IsConsistentResponse>() {
+			@Override
+			public void onSuccess(IsConsistentResponse response) {
+//				connectedNode.getLog().info(
+//						String.format(request.getAggregateName());
+				System.out.println(response.getIsConsistent());
+			}
+
+			@Override
+			public void onFailure(RemoteException e) {
+				throw new RosRuntimeException(e);
+			}
+		});
+
+	
 	}
 }

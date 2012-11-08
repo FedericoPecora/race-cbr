@@ -8,5 +8,5 @@ if [ ! -x $WRAPPER ]; then
   exit 1
 fi
 
-$WRAPPER Client
+$WRAPPER spatialReasonerNode
 
