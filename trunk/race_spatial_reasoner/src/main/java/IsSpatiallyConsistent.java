@@ -1,27 +1,24 @@
-
 import java.awt.Rectangle;
 import java.util.Vector;
 
 import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraintSolver;
-import multi.allenInterval.AllenIntervalConstraint;
+
 import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
 import spatial.rectangleAlgebra.QualitativeAllenIntervalConstraint;
 import spatial.rectangleAlgebra.SpatialAssertionalRelation;
 import spatial.rectangleAlgebra.SpatialRule;
 import spatial.rectangleAlgebra.TwoDimensionsAllenConstraint;
-import time.Bounds;
 
-public class GetPositionService  {
+
+
+
+public class IsSpatiallyConsistent {
 	
-
 	private Vector<SpatialRule> srules = null;
-	
-	public GetPositionService(){
+
+	public void buildSpatialKnowledge(){
 		
-	}
-	
-	private void buildSpatialKnowledge(){
 		srules = new Vector<SpatialRule>();
 		SpatialRule r1 = new SpatialRule("cup", "dish", 
 				new AugmentedRectangleConstraint(new TwoDimensionsAllenConstraint(QualitativeAllenIntervalConstraint.Type.During, 
@@ -29,45 +26,44 @@ public class GetPositionService  {
 						QualitativeAllenIntervalConstraint.Type.After)));
 		srules.add(r1);
 
-		SpatialRule r2 = new SpatialRule("knife", "dish", 
-				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(4, 10)),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()))
-		);
-		srules.add(r2);
 		
-
+		SpatialRule r2 = new SpatialRule("knife", "dish", 
+				new AugmentedRectangleConstraint(new TwoDimensionsAllenConstraint(QualitativeAllenIntervalConstraint.Type.After, 
+						QualitativeAllenIntervalConstraint.Type.During)));
+		srules.add(r2);
 		
 		SpatialRule r3 = new SpatialRule("fork", "dish", 
 				new AugmentedRectangleConstraint(new TwoDimensionsAllenConstraint(QualitativeAllenIntervalConstraint.Type.Before,
 						QualitativeAllenIntervalConstraint.Type.During)));
 		srules.add(r3);
 
-		SpatialRule r4 = new SpatialRule("dish", "dish", 
-				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
-						new Bounds(10, 20)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10, 20))));
-		srules.add(r4);
 	
 	}
-
-
-
-	public synchronized  Rectangle getRec(String objName,
+	
+	
+	public synchronized  boolean isMetaConstraintConsistent(String objName,
 			Vector<SpatialAssertionalRelation> saRelations) {
 		
 		System.out.println("heloooooooooooooooooooooooooooooooo");
 		buildSpatialKnowledge();
 		System.out.println("byeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-		MetaSpatialConstraintSolver metaSolver = new MetaSpatialConstraintSolver(0);				
+		MetaSpatialConstraintSolver metaSolver = new MetaSpatialConstraintSolver(0);
+		System.out.println("fooooooooooooooooooooooooooooooooooooo");
 		MetaSpatialConstraint objectsPosition = new MetaSpatialConstraint();
+		
+		System.out.println(srules.get(0));
 		objectsPosition.setSpatialRules(srules.toArray(new SpatialRule[srules.size()]));
 		objectsPosition.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation[saRelations.size()]));
 		
 		
 		
 		metaSolver.addMetaConstraint(objectsPosition);
-		if(metaSolver.backtrack())
-			return objectsPosition.getRectangle(objName);
-		return null;
+		if(metaSolver.backtrack()){
+			System.out.println("truuuuuuuuuuuuuuuuuuuuuuuuuuuue");
+			return true;
+		}
+			
+		return false;
 	}
 
 
