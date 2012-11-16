@@ -72,14 +72,14 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		try {
 			this.node = connectedNode;
 			
-//			Subscriber<FluentArray> fluentArrsubscriber = connectedNode.newSubscriber(FOCUSED_OBJECTS, FluentArray._TYPE);
-//			fluentArrsubscriber.addMessageListener(new MessageListener<FluentArray>() {
-//				
-//				@Override
-//				public void onNewMessage(FluentArray message) {
-//					onNewObject(message);
-//				}
-//			});
+			Subscriber<FluentArray> fluentArrsubscriber = connectedNode.newSubscriber(FOCUSED_OBJECTS, FluentArray._TYPE);
+			fluentArrsubscriber.addMessageListener(new MessageListener<FluentArray>() {
+				
+				@Override
+				public void onNewMessage(FluentArray message) {
+					onNewObject(message);
+				}
+			});
 			
 			
 			connectedNode.newServiceServer(SPATIAL_REASONER, IsConsistent._TYPE, new ServiceResponseBuilder<IsConsistentRequest, IsConsistentResponse>() {
@@ -99,17 +99,18 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		}
 	}
 
-	private synchronized boolean callIsSpatiallyConsistent(IsConsistentRequest req) {
+	private boolean callIsSpatiallyConsistent(IsConsistentRequest req) {
 		
-//		saRelations = new Vector<SpatialAssertionalRelation>();
-//		List<Fluent> fluents = (List<Fluent>) req.getAggregateParts();		
-//		for (Fluent fl : fluents) {
-//			SpatialAssertionalRelation sa1 = new SpatialAssertionalRelation(fl.getName(), fl.getType());
-//			sa1.setCoordinate(getBoundingBoxByName(fl.getName()));
-//			saRelations.add(sa1);
-//		}
+		saRelations = new Vector<SpatialAssertionalRelation>();
+		List<Fluent> fluents = (List<Fluent>) req.getAggregateParts();		
+		for (Fluent fl : fluents) {
+			System.out.println("name: " + fl.getName());
+			SpatialAssertionalRelation sa1 = new SpatialAssertionalRelation(fl.getName(), fl.getType());
+			sa1.setCoordinate(getBoundingBoxByName(fl.getName()));
+			saRelations.add(sa1);
+		}
 		
-		makeSARelation();
+		//makeSARelation();
 		IsSpatiallyConsistent isSpatiallyConsistentService = new IsSpatiallyConsistent();
 		//should be parse from the Ontology
 		return isSpatiallyConsistentService.isMetaConstraintConsistent(req.getAggregateName(), saRelations);
@@ -130,7 +131,6 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	private void onNewObject(FluentArray message) {
 
 		saRelations = new Vector<SpatialAssertionalRelation>();
-		//Assertion
 		List<Fluent> focusedOccourances = message.getFluents();
 		for (Fluent fluent : focusedOccourances) {
 			SpatialAssertionalRelation sa1 = new SpatialAssertionalRelation(fluent.getName(), fluent.getType());
