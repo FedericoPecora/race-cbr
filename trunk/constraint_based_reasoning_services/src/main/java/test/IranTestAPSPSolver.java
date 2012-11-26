@@ -46,21 +46,21 @@ public class IranTestAPSPSolver {
 		aux.setMaximum(4);
 
 		//Let's choose the LB of one and UB of two
-		SimpleDistanceConstraint con1a = new SimpleDistanceConstraint();
-		con1a.setFrom(solver.getVariable(0));
-		con1a.setTo(one);
-		con1a.setMinimum(5);
-		con1a.setMaximum(5);
-
-		SimpleDistanceConstraint con2a = new SimpleDistanceConstraint();
-		con2a.setFrom(solver.getVariable(0));
-		con2a.setTo(two);
-		con2a.setMinimum(10);
-		con2a.setMaximum(10);
+//		SimpleDistanceConstraint con1a = new SimpleDistanceConstraint();
+//		con1a.setFrom(solver.getVariable(0));
+//		con1a.setTo(one);
+//		con1a.setMinimum(5);
+//		con1a.setMaximum(5);
+//
+//		SimpleDistanceConstraint con2a = new SimpleDistanceConstraint();
+//		con2a.setFrom(solver.getVariable(0));
+//		con2a.setTo(two);
+//		con2a.setMinimum(10);
+//		con2a.setMaximum(10);
 
 		if (!solver.addConstraints(new SimpleDistanceConstraint[] {prec,con1,con2})) System.out.println("Could not add constraints (1)");
 		if (!solver.addConstraints(new SimpleDistanceConstraint[] {aux})) System.out.println("Could not add constraints (2)");
-		if (!solver.addConstraints(new SimpleDistanceConstraint[] {con1a,con2a})) System.out.println("Could not add constraints (3)");
+//		if (!solver.addConstraints(new SimpleDistanceConstraint[] {con1a,con2a})) System.out.println("Could not add constraints (3)");
 		
 		ConstraintNetwork.draw(solver.getConstraintNetwork());
 		
@@ -123,7 +123,7 @@ public class IranTestAPSPSolver {
 		 * we have modeled as minimum time lags the minimum size of the object to place.
 		 */
 		
-
+		System.out.println(solver.getRMSRigidity());
 	}
 
 }

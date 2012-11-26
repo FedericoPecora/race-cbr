@@ -77,6 +77,9 @@ public class MetaSpatialConstraint extends MetaConstraint{
 		mark.put(targetRecs, true);
 	}
 
+	
+	//set of focused objects in meta variable not rule!! meta variables are objects instances the named class (Ontological concept) the ARA constraint is just there
+	//on the ground constraint network
 	@Override
 	public ConstraintNetwork[] getMetaVariables() {
 		
@@ -171,6 +174,10 @@ public class MetaSpatialConstraint extends MetaConstraint{
 	
 	public Rectangle getRectangle(String st){
 		return solver.extractBoundingBoxesFromSTPs(st).getAlmostCentreRectangle();
+	}
+	
+	public void culpritDetector(){
+		solver.culpritDetector();
 	}
 
 }
