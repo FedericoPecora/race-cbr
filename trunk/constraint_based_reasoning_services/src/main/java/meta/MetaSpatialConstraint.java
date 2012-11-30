@@ -70,6 +70,8 @@ public class MetaSpatialConstraint extends MetaConstraint{
 			var.setName(sAssertionalRels[i].getFrom());
 			if(sAssertionalRels[i].getCoordinate() != null)
 				var.setBoundingBox(sAssertionalRels[i].getCoordinate());
+			if(sAssertionalRels[i].getCoordinate() != null)
+				var.setOntologicalProp(sAssertionalRels[i].getOntologicalProp());
 			//var.setMarking(markings.UNJUSTIFIED);
 			targetRecs.add(var);			
 		}
@@ -78,7 +80,7 @@ public class MetaSpatialConstraint extends MetaConstraint{
 	}
 
 	
-	//set of focused objects in meta variable not rule!! meta variables are objects instances the named class (Ontological concept) the ARA constraint is just there
+	//set of focused objects is meta variable "not rule"! meta variables are objects instances the named class (Ontological concept) the ARA constraint is just there
 	//on the ground constraint network
 	@Override
 	public ConstraintNetwork[] getMetaVariables() {
@@ -95,7 +97,8 @@ public class MetaSpatialConstraint extends MetaConstraint{
 		else
 			return null;
 	}
-
+	
+	//meta value essentially is the position of meta values
 	@Override
 	public ConstraintNetwork[] getMetaValues(MetaVariable metaVariable) {
 		
@@ -177,7 +180,7 @@ public class MetaSpatialConstraint extends MetaConstraint{
 	}
 	
 	public void culpritDetector(){
-		solver.culpritDetector();
+		solver.minimalCulpritDetector();
 	}
 
 }
