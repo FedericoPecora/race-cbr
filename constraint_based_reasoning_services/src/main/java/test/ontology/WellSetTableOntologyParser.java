@@ -61,8 +61,6 @@ public class WellSetTableOntologyParser {
 		//        	System.out.println(iter.nextStatement().toString());
 		//        }
 
-		String SOURCE = "http://www.owl-ontologies.com/TableSetting.owl";
-		String NS = SOURCE + "#";
 		//create a model using reasoner
 		OntModel model1 = ModelFactory.createOntologyModel( OntModelSpec.OWL_MEM_MICRO_RULE_INF);
 		//create a model which doesn't use a reasoner
