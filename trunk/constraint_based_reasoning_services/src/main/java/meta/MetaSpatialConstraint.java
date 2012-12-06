@@ -182,5 +182,6 @@ public class MetaSpatialConstraint extends MetaConstraint{
 	public void culpritDetector(){
 		solver.minimalCulpritDetector();
 	}
+	
 
 }
