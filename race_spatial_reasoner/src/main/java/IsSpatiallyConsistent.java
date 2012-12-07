@@ -44,11 +44,8 @@ public class IsSpatiallyConsistent {
 	public synchronized  boolean isMetaConstraintConsistent(String objName,
 			Vector<SpatialAssertionalRelation> saRelations) {
 		
-		System.out.println("heloooooooooooooooooooooooooooooooo");
 		buildSpatialKnowledge();
-		System.out.println("byeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 		MetaSpatialConstraintSolver metaSolver = new MetaSpatialConstraintSolver(0);
-		System.out.println("fooooooooooooooooooooooooooooooooooooo");
 		MetaSpatialConstraint objectsPosition = new MetaSpatialConstraint();
 		
 		System.out.println(srules.get(0));
@@ -59,7 +56,6 @@ public class IsSpatiallyConsistent {
 		
 		metaSolver.addMetaConstraint(objectsPosition);
 		if(metaSolver.backtrack()){
-			System.out.println("truuuuuuuuuuuuuuuuuuuuuuuuuuuue");
 			return true;
 		}
 			
