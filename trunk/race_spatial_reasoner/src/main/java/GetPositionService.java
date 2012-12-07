@@ -54,9 +54,7 @@ public class GetPositionService  {
 	public synchronized  Rectangle getRec(String objName,
 			Vector<SpatialAssertionalRelation> saRelations) {
 		
-		System.out.println("heloooooooooooooooooooooooooooooooo");
 		buildSpatialKnowledge();
-		System.out.println("byeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 		MetaSpatialConstraintSolver metaSolver = new MetaSpatialConstraintSolver(0);				
 		MetaSpatialConstraint objectsPosition = new MetaSpatialConstraint();
 		objectsPosition.setSpatialRules(srules.toArray(new SpatialRule[srules.size()]));
