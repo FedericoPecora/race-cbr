@@ -178,6 +178,13 @@ public class StaticSpatialKnowledge {
 
 		
 //		PlacingAreaNorth During[35, 35][5, 5], During[55, 55][15, 15] Counter (34)
+		SpatialRule r19 = new SpatialRule("PlacingAreaNorth", "Counter", 
+				new AugmentedRectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(35, 35), new Bounds(5, 5)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(55, 55), new Bounds(15, 15))
+						)
+		);
+		spatialRelations.add(r19);
 
 
 		
