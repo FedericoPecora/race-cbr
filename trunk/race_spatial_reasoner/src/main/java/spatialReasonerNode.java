@@ -67,12 +67,11 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	private HashMap<String, String> areaInsToConsIns = new HashMap<String, String>(); //this is a map from area instance to constraint Instances
 	private Vector<Fluent> demandedAreaFluent = new Vector<Fluent>();
 	private static final String MYTOPIC = "blackboard/mytopic";
-	private HashMap<String, String> reifiedCons = new HashMap<String, String>(); //<manAreaConstrain1, tabel1>
+	private HashMap<String, String> reifiedCons = new HashMap<String, String>(); //<manAreaConstrain1, tabel1> it stores all refied constraint  for each Passive Object 
 	private ConnectedNode node;
-	private Vector<SpatialRule> spatialKnowledge;
-	private HashMap<String, String> passiveObjCoor = new HashMap<String, String>();
-	private HashMap<String, SpatialRule> relatedSpatialRelToFluent = new HashMap<String, SpatialRule>();
-	private HashMap<String, Rectangle> flunetsCoord = new HashMap<String, Rectangle>();
+	private Vector<SpatialRule> spatialKnowledge;//it is loaded beforhand
+	private HashMap<String, String> passiveObjCoor = new HashMap<String, String>();//<counter1, boundingBox1> : it is for querying BB to get table1, counter1, and table2 coordinate
+	private HashMap<String, SpatialRule> relatedSpatialRelToFluent = new HashMap<String, SpatialRule>();//<manAreaLeft1, SpatialRule(From, To, AugmentedRAConstraint(2D bouned Allen))>
 	private boolean done = false;
 	private boolean[] doneSubRoutines = null;
 	private HashMap<String, String> paasiveObjCategories = new HashMap<String, String>(); //<door1, Door>
@@ -129,14 +128,20 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		System.out.println("... done!");
 		for (String fstr : relatedSpatialRelToFluent.keySet()) {
 			
-			System.out.println("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
 			Vector<SpatialAssertionalRelation> saRelations = new Vector<SpatialAssertionalRelation>();
 			Vector<SpatialRule> srules = new Vector<SpatialRule>();
 			
 			//System.out.println(reifiedCons.get(areaInsToConsIns.get(fstr)));
 			
+			/*
+			 * it is incorrect ..it should be size of relatedSpatialRelToFluent 
+			 * see the example TestPlacingAreaWest
+			 */ 
 			srules.add(getPassiveObjectSize(reifiedCons.get(areaInsToConsIns.get(fstr))));
-			srules.add(relatedSpatialRelToFluent.get(fstr));
+			/*
+			 * but it is correct
+			 */
+			srules.add(relatedSpatialRelToFluent.get(fstr));//it is correct
 			
 			//.........................................
 
@@ -146,7 +151,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 			
 			//getCategory
 			SpatialAssertionalRelation sa1 = new SpatialAssertionalRelation(reifiedCons.get(areaInsToConsIns.get(fstr)), paasiveObjCategories.get(reifiedCons.get(areaInsToConsIns.get(fstr))));
-			sa1.setCoordinate(new BoundingBox(new Bounds(70,70), new Bounds(140, 140), new Bounds(70, 70), new Bounds(140, 140)));
+			sa1.setCoordinate(new BoundingBox(new Bounds(70,70), new Bounds(140, 140), new Bounds(70, 70), new Bounds(140, 140))); //it should be gotten from BB..write a function to get it.before starting to create CN
 			saRelations.add(sa1);
 			
 			metaSpatialReasoner(fstr, srules, saRelations);
@@ -168,7 +173,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		
 	}
 
-
+	//it should be changed to size of intersted flient like manAreaLeft
 	private Bounds[] getSizeOfPassiveObj(String passObj) {
 		// TODO Auto-generated method stub
 		Bounds[] bounds = new Bounds[2];
