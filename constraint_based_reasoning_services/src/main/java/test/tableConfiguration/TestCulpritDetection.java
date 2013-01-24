@@ -14,6 +14,7 @@ import spatial.rectangleAlgebra.QualitativeAllenIntervalConstraint;
 import spatial.rectangleAlgebra.SpatialAssertionalRelation;
 import spatial.rectangleAlgebra.SpatialRule;
 import spatial.rectangleAlgebra.TwoDimensionsAllenConstraint;
+import time.APSPSolver;
 import time.Bounds;
 
 public class TestCulpritDetection {
@@ -39,16 +40,22 @@ public class TestCulpritDetection {
 		Vector<SpatialRule> srules = new Vector<SpatialRule>();
 
 		SpatialRule r1 = new SpatialRule("fork", "table", 
-				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, 21),new Bounds(5, Long.MAX_VALUE)),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, Long.MAX_VALUE),new Bounds(5, Long.MAX_VALUE)))
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, APSPSolver.INF),new Bounds(5, APSPSolver.INF)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, APSPSolver.INF),new Bounds(5, APSPSolver.INF)))
 				);
 		srules.add(r1);
 
 		SpatialRule r2 = new SpatialRule("knife", "table", 
-				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, Long.MAX_VALUE),new Bounds(5, Long.MAX_VALUE)),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, Long.MAX_VALUE),new Bounds(5, Long.MAX_VALUE)))
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, APSPSolver.INF),new Bounds(5, APSPSolver.INF)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, APSPSolver.INF),new Bounds(5, APSPSolver.INF)))
 				);
 		srules.add(r2);
+		
+		SpatialRule r9 = new SpatialRule("dish", "table", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, APSPSolver.INF),new Bounds(5, APSPSolver.INF)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, APSPSolver.INF),new Bounds(5, APSPSolver.INF)))
+				);
+		srules.add(r9);
 
 		SpatialRule r3 = new SpatialRule("fork", "dish", 
 				new AugmentedRectangleConstraint(new TwoDimensionsAllenConstraint(QualitativeAllenIntervalConstraint.Type.Before,
@@ -62,7 +69,7 @@ public class TestCulpritDetection {
 
 		SpatialRule r5 = new SpatialRule("dish", "dish", 
 				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
-						new Bounds(10, 10)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(14, 14))));
+						new Bounds(6, 10)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10, 14))));
 		srules.add(r5);
 
 		SpatialRule r6 = new SpatialRule("fork", "fork", 
@@ -94,10 +101,30 @@ public class TestCulpritDetection {
 		saRelations.add(sa3);
 
 		SpatialAssertionalRelation sa4 = new SpatialAssertionalRelation("dish1", "dish");
-		sa4.setCoordinate(new BoundingBox(new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE)));
+		sa4.setCoordinate(new BoundingBox(new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 		saRelations.add(sa4);
 
+		
+//		SpatialAssertionalRelation sa1 = new SpatialAssertionalRelation("table1", "table");
+//		sa1.setCoordinate(new BoundingBox(new Bounds(0, 0), new Bounds(70, 70), new Bounds(0, 0), new Bounds(50, 50)));
+//		OntologicalSpatialProperty tableOnto = new OntologicalSpatialProperty();
+//		tableOnto.setMovable(false);
+//		sa1.setOntologicalProp(tableOnto);
+//		saRelations.add(sa1);
+//
+//		SpatialAssertionalRelation sa2 = new SpatialAssertionalRelation("knife1", "knife");
+//		sa2.setCoordinate(new BoundingBox(new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE)));
+//		saRelations.add(sa2);
+//
+//		SpatialAssertionalRelation sa3 = new SpatialAssertionalRelation("fork1", "fork");
+//		sa3.setCoordinate(new BoundingBox(new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE)));				
+//		saRelations.add(sa3);
+//
+//		SpatialAssertionalRelation sa4 = new SpatialAssertionalRelation("dish1", "dish");
+//		sa4.setCoordinate(new BoundingBox(new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE)));
+//		saRelations.add(sa4);
 
+		
 		//.......................................................................................................
 		MetaSpatialConstraintSolver metaSolver = new MetaSpatialConstraintSolver(0);
 
@@ -107,8 +134,10 @@ public class TestCulpritDetection {
 
 		metaSolver.addMetaConstraint(objectsPosition);
 		metaSolver.backtrack();
-
-		System.out.println(objectsPosition.getRectangle("dish1"));
+		
+		
+//		System.out.println(objectsPosition.getGnuplotScript("dish1", "fork"));
+//		System.out.println(objectsPosition.getRectangle("dish1"));
 		objectsPosition.culpritDetector();
 
 

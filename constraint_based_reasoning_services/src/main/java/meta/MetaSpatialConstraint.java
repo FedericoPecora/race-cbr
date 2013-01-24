@@ -171,7 +171,7 @@ public class MetaSpatialConstraint extends MetaConstraint{
 		return false;
 	}
 	
-	public String getGnuplotScript(String st){
+	public String getGnuplotScript(String ...st){
 		return solver.drawAlmostCentreRectangle(30, st);
 	}
 	
