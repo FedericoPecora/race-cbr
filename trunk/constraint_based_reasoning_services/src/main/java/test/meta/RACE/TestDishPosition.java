@@ -11,6 +11,7 @@ import spatial.rectangleAlgebra.QualitativeAllenIntervalConstraint;
 import spatial.rectangleAlgebra.SpatialAssertionalRelation;
 import spatial.rectangleAlgebra.SpatialRule;
 import spatial.rectangleAlgebra.TwoDimensionsAllenConstraint;
+import time.APSPSolver;
 import time.Bounds;
 
 
@@ -20,8 +21,6 @@ public class TestDishPosition {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
-		
 		
 		//Spatial Knowledge
 		Vector<SpatialRule> srules = new Vector<SpatialRule>();
@@ -66,11 +65,11 @@ public class TestDishPosition {
 		saRelations.add(sa3);
 		
 		SpatialAssertionalRelation sa4 = new SpatialAssertionalRelation("dish1", "dish");
-		sa4.setCoordinate(new BoundingBox(new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE)));
+		sa4.setCoordinate(new BoundingBox(new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 		saRelations.add(sa4);
 		
 		SpatialAssertionalRelation sa5 = new SpatialAssertionalRelation("napkin1", "napkin");
-		sa5.setCoordinate(new BoundingBox(new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE)));
+		sa5.setCoordinate(new BoundingBox(new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 		saRelations.add(sa5);
 		
 		//.......................................................................................................
@@ -90,11 +89,6 @@ public class TestDishPosition {
 		metaSolver.backtrack();
 		
 		System.out.println(objectsPosition.getRectangle("dish1"));
-		
-		
-		
-
-		
 		
 	}
 

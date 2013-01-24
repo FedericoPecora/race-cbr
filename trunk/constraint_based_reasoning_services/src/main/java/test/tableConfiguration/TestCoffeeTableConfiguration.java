@@ -11,6 +11,7 @@ import spatial.rectangleAlgebra.QualitativeAllenIntervalConstraint;
 import spatial.rectangleAlgebra.SpatialAssertionalRelation;
 import spatial.rectangleAlgebra.SpatialRule;
 import spatial.rectangleAlgebra.TwoDimensionsAllenConstraint;
+import time.APSPSolver;
 import time.Bounds;
 
 public class TestCoffeeTableConfiguration {
@@ -31,13 +32,13 @@ public class TestCoffeeTableConfiguration {
 		//sugerPot 
 		SpatialRule r1 = new SpatialRule("sugerPot", "table", 
 				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, Long.MAX_VALUE),new Bounds(0, Long.MAX_VALUE)))
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, APSPSolver.INF),new Bounds(5, APSPSolver.INF)))
 		);
 		srules.add(r1);
 
 		SpatialRule r2 = new SpatialRule("cup", "table", 
 				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, Long.MAX_VALUE),new Bounds(0, Long.MAX_VALUE)))
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, APSPSolver.INF),new Bounds(5, APSPSolver.INF)))
 		);
 		srules.add(r2);
 		
@@ -56,7 +57,7 @@ public class TestCoffeeTableConfiguration {
 		Vector<SpatialAssertionalRelation> saRelations = new Vector<SpatialAssertionalRelation>();
 		
 		SpatialAssertionalRelation sa1 = new SpatialAssertionalRelation("cup1", "cup");
-		sa1.setCoordinate(new BoundingBox(new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE), new Bounds(0, Long.MAX_VALUE)));
+		sa1.setCoordinate(new BoundingBox(new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 		saRelations.add(sa1);
 		
 		SpatialAssertionalRelation sa2 = new SpatialAssertionalRelation("sugerPot1", "sugerPot");
