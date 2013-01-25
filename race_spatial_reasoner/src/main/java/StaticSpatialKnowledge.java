@@ -13,9 +13,9 @@ import time.Bounds;
 
 public class StaticSpatialKnowledge {
 	
-	private static Vector<SpatialRule> spatialRelations = new Vector<SpatialRule>();
+	//private static Vector<SpatialRule> spatialRelations = new Vector<SpatialRule>();
 
-	public static Vector<SpatialRule> getSpatialKnowledge(){
+	public static Vector<SpatialRule> getSpatialKnowledge(Vector<SpatialRule> spatialRelations){
 		
 		SpatialRule r1 = new SpatialRule("ManipulationAreaSouth", "HorizontalTable", 
 				new AugmentedRectangleConstraint(
@@ -185,8 +185,48 @@ public class StaticSpatialKnowledge {
 						)
 		);
 		spatialRelations.add(r19);
+		
+		
+		SpatialRule r20 = new SpatialRule("ManipulationAreaNorth", "ManipulationAreaNorth", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(70,70)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(70,70))));
+		spatialRelations.add(r20);
 
-
+		SpatialRule r21 = new SpatialRule("ManipulationAreaSouth", "ManipulationAreaSouth", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(70,70)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(70,70))));
+		spatialRelations.add(r21);
+		
+		SpatialRule r22 = new SpatialRule("ManipulationAreaWest", "ManipulationAreaWest", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(70,70)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(70,70))));
+		spatialRelations.add(r22);
+		
+		SpatialRule r23 = new SpatialRule("ManipulationAreaEast", "ManipulationAreaEast", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(70,70)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(70,70))));
+		spatialRelations.add(r23);
+		
+		SpatialRule r24 = new SpatialRule("SittingAreaWest", "SittingAreaWest", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(85,85)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(60,60))));
+		spatialRelations.add(r24);
+		
+		SpatialRule r25 = new SpatialRule("SittingAreaEast", "SittingAreaEast", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(85,85)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(60,60))));
+		spatialRelations.add(r25);
+		
+		
+		SpatialRule r26 = new SpatialRule("SittingAreaNorth", "SittingAreaNorth", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(60,60)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(85,85))));
+		spatialRelations.add(r26);
+		
+		SpatialRule r27 = new SpatialRule("SittingAreaSouth", "SittingAreaSouth", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(60,60)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(85,85))));
+		spatialRelations.add(r27);
 		
 		return spatialRelations;
 		
