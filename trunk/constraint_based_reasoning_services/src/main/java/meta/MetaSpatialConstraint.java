@@ -21,17 +21,17 @@ public class MetaSpatialConstraint extends MetaConstraint{
 
 	
 	private SpatialAssertionalRelation[] sAssertionalRels;
-	private transient AugmentedRectangleConstraintSolver solver;
+	private AugmentedRectangleConstraintSolver solver;
 	private HashMap<String, RectangularRegion> getVariableByName = new HashMap<String, RectangularRegion>();
 	private Vector<RectangularRegion> targetRecs = new Vector<RectangularRegion>();
 	private HashMap<Vector<RectangularRegion>, Boolean> mark = new HashMap<Vector<RectangularRegion>, Boolean>();
-	private Vector<AugmentedRectangleConstraint> addedRAconstraint = new Vector<AugmentedRectangleConstraint>();
+	private Vector<AugmentedRectangleConstraint> addedRAconstraint; 
 	
 	public MetaSpatialConstraint() {
 		//for now!
 		super(null, null);
 		solver = new AugmentedRectangleConstraintSolver();
-		
+		addedRAconstraint = new Vector<AugmentedRectangleConstraint>();
 	}
 	
 	public void setSpatialRules(SpatialRule ...rules){
