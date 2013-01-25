@@ -26,6 +26,7 @@ public class TestAugmentedRARACE {
 	private static final Logger logger = Logger.getLogger(TestAugmentedRARACE.class.getPackage().getName());
 	public static void main(String[] args) {
 		
+		for (;;) {
 		//list of all spatial entities(RA variables) 
 		//list of All constraint
 		//NominalSpatialRelation nominalSR1 = new NominalSpatialRelation("PlacingAreaNorth", "Table", "PlacingAreaNorthConstraint");		
@@ -174,14 +175,15 @@ public class TestAugmentedRARACE {
 		
 		
 		//test logger
-		try {
-		    // Create a file handler that write log record to a file called my.log
-		    FileHandler handler = new FileHandler("augmentedRATest.log");
-		    logger.addHandler(handler);
-		    logger.log(Level.SEVERE, solver.drawMinMaxRectangle(30, st));
-		} catch (IOException e) {
-		}
+//		try {
+//		    // Create a file handler that write log record to a file called my.log
+//		    FileHandler handler = new FileHandler("augmentedRATest.log");
+//		    logger.addHandler(handler);
+//		    logger.log(Level.SEVERE, solver.drawMinMaxRectangle(30, st));
+//		} catch (IOException e) {
+//		}
 		
+	}
 	}
 
 }
