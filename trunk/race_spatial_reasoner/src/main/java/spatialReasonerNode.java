@@ -36,7 +36,7 @@ import org.ros.node.service.ServiceResponseListener;
 import org.ros.node.topic.Publisher;
 import org.ros.node.topic.Subscriber;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
+
 
 import java.util.Vector;
 import java.util.logging.Level;
@@ -70,19 +70,15 @@ import race_msgs.*;
  *
  */
 public class spatialReasonerNode extends AbstractNodeMain {
-
-	//for Federico
 	//each element of this vector is related to each passive object and hash map <conatranitFiller, passiveObjectCategory> 
 	private HashMap<String, String> areaInsToConsIns = new HashMap<String, String>(); //this is a map from area instance to constraint Instances
-	//private Vector<Fluent> demandedAreaFluent = new Vector<Fluent>();
-	//private static final String MYTOPIC = "blackboard/mytopic";
 	private HashMap<String, String> reifiedCons = new HashMap<String, String>(); //<manAreaConstrain1, tabel1> it stores all refied constraint  for each Passive Object 
 	private ConnectedNode node;
 	private Vector<SpatialRule> spatialKnowledge = new Vector<SpatialRule>();
 	private HashMap<String, String> passiveObjCoor = new HashMap<String, String>();//<counter1, boundingBox1> : it is for querying BB to get table1, counter1, and table2 coordinate
 	private HashMap<String, Vector<SpatialRule>> relatedSpatialRelToFluent = new HashMap<String, Vector<SpatialRule>>();//<manAreaLeft1, SpatialRule(From, To, AugmentedRAConstraint(2D bouned Allen))>
-	//private boolean done = false;
 	private boolean[] doneSubRoutines = null;
+	private boolean[] doneSubRoutines1 = null;
 	private HashMap<String, String> paasiveObjCategories = new HashMap<String, String>(); //<door1, Door>
 	private HashMap<String, String> fluentCategories = new HashMap<String, String>(); //<manAreaLeft1, ManAreaLeft>
 	//private HashMap<String, String> posFleuntofArea = new HashMap<String, String>(); //<manAreaLeft1, poseMANTable1>
@@ -91,7 +87,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	private HashMap<String, String> passObjToPoseFlunet = new HashMap<String, String>(); //<table1, poseTable1>
 	private HashMap<String, spatial.rectangleAlgebra.Point> passiveObjPose = new HashMap<String, spatial.rectangleAlgebra.Point>(); //<poseTable1, Point(3321, 4521)>
 	private HashMap<String, spatial.rectangleAlgebra.Point> passiveObjSize = new HashMap<String, spatial.rectangleAlgebra.Point>(); 
-	
+
 	@Override
 	public void onStart(ConnectedNode connectedNode) {
 
@@ -120,12 +116,49 @@ public class spatialReasonerNode extends AbstractNodeMain {
 				e.printStackTrace();
 			}
 
-		} while(!proceed);		
+		} while(!proceed);	
+		
+		filltest();
+		
+		boolean proceed1 = false;
+		do {
+			if (doneSubRoutines1 != null) {
+				proceed1 = true;
+				for (boolean b : doneSubRoutines1) {
+					if (!b) {
+						proceed1 = false;
+						break;
+					}
+				}
+			}
+			System.out.print(".");
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} while(!proceed1);	
+		
 		createSpatialCN();
 		addCoordinatesToBB();
 
 	}
 
+	private void filltest(){
+		
+		int counter = paasiveObjCategories.size();
+		doneSubRoutines1 = new boolean[counter];
+		Arrays.fill(doneSubRoutines1, false);
+		int i = 0;
+		for (String st : paasiveObjCategories.keySet()) {;
+			getPosFluentOfPassiveObject(st, i++);
+		}
+		
+		
+	}
+	
 	private void addCoordinatesToBB() {
 
 		for (String str : recs.keySet()) {
@@ -309,26 +342,26 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 	private BoundingBox getPassiveObjectCoor(String str){
 
+		
+		long x = passiveObjPose.get(str).x();
+		long y = passiveObjPose.get(str).y();
+		long sizex = test(str).x();
+		long sizey = test(str).y();
+		
+		return new BoundingBox(new Bounds((x - sizex),(x - sizex)), new Bounds((x + sizex), (x + sizex)), 
+				new Bounds((y - sizey), (y - sizey)), new Bounds((y + sizey), (y + sizey)));
+			
+	}
+	
+	private spatial.rectangleAlgebra.Point test(String str){
+		
 		if(str.compareTo("table1") == 0)
-			return new BoundingBox(new Bounds((781 - 35),(781 - 35)), new Bounds((781 + 35), (781 + 35)), new Bounds((1144 - 35), (1144 - 35)), new Bounds((1144 + 35), (1144 + 35)));
-
+			return new spatial.rectangleAlgebra.Point(35, 35);
 		else if(str.compareTo("table2") == 0)
-			return new BoundingBox(new Bounds((1036 - 35),(1036 - 35)), new Bounds((1036 + 35), (1036 + 35)), new Bounds((1143 - 35), (1143 - 35)), new Bounds((1143 + 35), (1143 + 35)));
-
+			return new spatial.rectangleAlgebra.Point(35, 35);
 		else if(str.compareTo("counter1") == 0)
-			return new BoundingBox(new Bounds((538 - 35),(538 - 35)), new Bounds((538 + 35), (538 + 35)), new Bounds((1007 - 70), (1007 - 70)), new Bounds((1007 + 70), (1007 + 70)));
-		
+			return new spatial.rectangleAlgebra.Point(35, 70);
 		return null;
-		
-//		long x = passiveObjPose.get(passObjToPoseFlunet.get(str)).x();
-//		long y = passiveObjPose.get(passObjToPoseFlunet.get(str)).y();
-//		long sizex = passiveObjSize.get(str).x();
-//		long sizey = passiveObjSize.get(str).y();
-//		return new BoundingBox(new Bounds((x - sizex),(x - sizex)), new Bounds((x + sizex), (x + sizex)), 
-//				new Bounds((y - sizey), (y - sizey)), new Bounds((y + sizey), (y + sizey)));
-		
-		
-		
 		
 	}
 
@@ -348,7 +381,8 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 		int testx = objectsPosition.getRectangle(fstr).x + (objectsPosition.getRectangle(fstr).width / 2);
 		int testy = objectsPosition.getRectangle(fstr).y + (objectsPosition.getRectangle(fstr).height / 2);
-		System.out.println(fstr +  "---" + (float)testx/100 + ", "+ (float)testy/100 + " " + regionsOrientation.get(fstr));
+		System.out.println(fstr +  " --- " + (float)testx/100 + ", "+ (float)testy/100 + " " + 
+		CardinalConstraint.CardinalRelationToMetricOrientation[regionsOrientation.get(fstr).ordinal()]);
 		recs.put(fstr, objectsPosition.getRectangle(fstr));
 
 	}
@@ -448,13 +482,11 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		for (Fluent f : passiveObjectsFluents) {
 			System.out.println(f.getName());
 			for (Property p : f.getProperties()){
-				if(p.getRoleType().contains("Constraint")) counter++;
-				//else if(p.getRoleType().contains("hasPose")) counter++;
+				if(p.getRoleType().contains("Constraint"))counter++;
 			}
 
 		}
-		counter += passiveObjectsFluents.size() * 2;
-		System.out.println("SIZE:" + passiveObjectsFluents.size());
+		//counter += passiveObjectsFluents.size() * 2;
 		doneSubRoutines = new boolean[counter];
 		Arrays.fill(doneSubRoutines, false);
 		int i = 0;
@@ -466,58 +498,14 @@ public class spatialReasonerNode extends AbstractNodeMain {
 					paasiveObjCategories.put(f.getName(), f.getType());
 					getConstraintFluent(p.getObjectFiller(),i++);
 				}
-				if(p.getRoleType().contains("hasPose")){
-					passObjToPoseFlunet.put(f.getName(), p.getObjectFiller());
-					getPosFluentOfPassiveObject(p.getObjectFiller(), i++);
-				}//hasBoundingBox
-				if(p.getRoleType().contains("hasBoundingBox")){
-					getSizeOfPassiveObj(p.getObjectFiller(), f.getName(), i++);
-				}
 				if(p.getFillerType().compareTo("BoundingBox") == 0)
 					passiveObjCoor.put(f.getName(), p.getObjectFiller());
 			}			
 		}
 	}
 
-	private void getSizeOfPassiveObj(String bbfluent, final String pasObjIns, final int counter){
-		
-		ServiceClient<RetrieveFluentRequest, RetrieveFluentResponse> getFluentByStringClient = null;
-		try {
-			getFluentByStringClient = node.newServiceClient("blackboard/retrieve_fluent", RetrieveFluent._TYPE);
-		} 
-		catch (org.ros.exception.ServiceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		final RetrieveFluentRequest req= getFluentByStringClient.newMessage();
-		req.setInstance(bbfluent);
-
-		getFluentByStringClient.call(req, new ServiceResponseListener<RetrieveFluentResponse>() {
-
-			@Override
-			public void onSuccess(RetrieveFluentResponse response) {
-
-				double x = 0, y = 0;
-				for (Property p : response.getFluent().getProperties()) {
-					if(p.getRoleType().compareTo("hasXSize") == 0)
-						x = (p.getFloatFiller() * 100);
-					else if(p.getRoleType().compareTo("hasYSize") == 0)
-						y = (p.getFloatFiller() * 100);
-				}
-				passiveObjSize.put(pasObjIns, new spatial.rectangleAlgebra.Point(x, y));
-				doneSubRoutines[counter] = true;
-			}
-
-
-			@Override
-			public void onFailure(RemoteException arg0) {
-				System.out.println("retrival failed");
-			}
-		});
-
-		
-	}
-	private void getPosFluentOfPassiveObject(String posfluent, final int counter) {
+	
+	private void getPosFluentOfPassiveObject(final String posfluent, final int counter) {
 
 		ServiceClient<RetrieveFluentRequest, RetrieveFluentResponse> getFluentByStringClient = null;
 		try {
@@ -528,8 +516,10 @@ public class spatialReasonerNode extends AbstractNodeMain {
 			e.printStackTrace();
 		}
 		final RetrieveFluentRequest req= getFluentByStringClient.newMessage();
-		req.setInstance(posfluent);
 
+		req.setInstance("pose" + posfluent.toUpperCase().substring(0, 1) + posfluent.substring(1, posfluent.length()));
+		
+		
 		getFluentByStringClient.call(req, new ServiceResponseListener<RetrieveFluentResponse>() {
 
 			@Override
@@ -542,8 +532,8 @@ public class spatialReasonerNode extends AbstractNodeMain {
 					else if(p.getRoleType().compareTo("hasY") == 0)
 						y = (p.getFloatFiller() * 100);
 				}
-				passiveObjPose.put(response.getFluent().getName(), new spatial.rectangleAlgebra.Point(x, y));
-				doneSubRoutines[counter] = true;
+				passiveObjPose.put(posfluent, new spatial.rectangleAlgebra.Point(x, y));
+				doneSubRoutines1[counter] = true;
 			}
 
 
@@ -605,12 +595,6 @@ public class spatialReasonerNode extends AbstractNodeMain {
 			}
 		});
 	}
-
-
-
-
-
-
 
 
 	@Override
