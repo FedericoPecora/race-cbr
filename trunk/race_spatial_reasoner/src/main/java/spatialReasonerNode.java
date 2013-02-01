@@ -118,7 +118,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 		} while(!proceed);	
 		
-		filltest();
+		fillPassiveObjPose();
 		
 		boolean proceed1 = false;
 		do {
@@ -146,7 +146,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 	}
 
-	private void filltest(){
+	private void fillPassiveObjPose(){
 		
 		int counter = paasiveObjCategories.size();
 		doneSubRoutines1 = new boolean[counter];
@@ -188,13 +188,13 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		Property prop = node.getTopicMessageFactory().newFromType(Property._TYPE);
 		prop.setRoleType("hasXSize");
 		prop.setFillerType("xsd:float");
-		prop.setFloatFiller((float)(recs.get(str).width) / 100);
+		prop.setFloatFiller((float)getBoundingBoxSizeRelativeToOrientation(str).x() / 100);
 		props.add(prop);
 
 		Property prop1 = node.getTopicMessageFactory().newFromType(Property._TYPE);
 		prop1.setRoleType("hasYSize");
 		prop1.setFillerType("xsd:float");
-		prop1.setFloatFiller((float)(recs.get(str).height) / 100);
+		prop1.setFloatFiller((float)getBoundingBoxSizeRelativeToOrientation(str).y() / 100);
 		props.add(prop1);
 
 		Property prop2 = node.getTopicMessageFactory().newFromType(Property._TYPE);
@@ -240,7 +240,15 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 	}
 
-
+	private spatial.rectangleAlgebra.Point getBoundingBoxSizeRelativeToOrientation(String str){
+		
+		
+		if(regionsOrientation.get(str).compareTo(spatial.cardinal.CardinalConstraint.Type.North) == 0 ||
+				regionsOrientation.get(str).compareTo(spatial.cardinal.CardinalConstraint.Type.South) == 0)
+			return new spatial.rectangleAlgebra.Point((recs.get(str).height), (recs.get(str).width));
+		else 
+			return new spatial.rectangleAlgebra.Point((recs.get(str).width),(recs.get(str).height));
+	}
 
 
 	private void addPoseFluent(String str, String prefix) {
@@ -272,7 +280,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		Property prop2 = node.getTopicMessageFactory().newFromType(Property._TYPE);
 		prop2.setRoleType("hasZ");
 		prop2.setFillerType("xsd:float");
-		prop2.setFloatFiller(0);
+		prop2.setFloatFiller(getZPose(str));
 		props.add(prop2);
 
 		//hasYaw
@@ -345,25 +353,27 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		
 		long x = passiveObjPose.get(str).x();
 		long y = passiveObjPose.get(str).y();
-		long sizex = test(str).x();
-		long sizey = test(str).y();
+		long sizex = getPassiveObjSize(str).x();
+		long sizey = getPassiveObjSize(str).y();
 		
 		return new BoundingBox(new Bounds((x - sizex),(x - sizex)), new Bounds((x + sizex), (x + sizex)), 
 				new Bounds((y - sizey), (y - sizey)), new Bounds((y + sizey), (y + sizey)));
 			
 	}
 	
-	private spatial.rectangleAlgebra.Point test(String str){
+	private spatial.rectangleAlgebra.Point getPassiveObjSize(String str){
 		
-		if(str.compareTo("table1") == 0)
+		if(str.compareTo("table1") == 0 || str.compareTo("HorizontalTable") == 0)
 			return new spatial.rectangleAlgebra.Point(35, 35);
-		else if(str.compareTo("table2") == 0)
+		else if(str.compareTo("table2") == 0 || str.compareTo("VerticalTable") == 0)
 			return new spatial.rectangleAlgebra.Point(35, 35);
-		else if(str.compareTo("counter1") == 0)
+		else if(str.compareTo("counter1") == 0 || str.compareTo("Counter") == 0)
 			return new spatial.rectangleAlgebra.Point(35, 70);
 		return null;
 		
 	}
+	
+	
 
 
 
@@ -375,18 +385,20 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		MetaSpatialConstraint objectsPosition = new MetaSpatialConstraint();
 		objectsPosition.setSpatialRules(srules.toArray(new SpatialRule[srules.size()]));
 		objectsPosition.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation[saRelations.size()]));
-
+		
 		metaSolver.addMetaConstraint(objectsPosition);
 		metaSolver.backtrack();
-
+		
 		int testx = objectsPosition.getRectangle(fstr).x + (objectsPosition.getRectangle(fstr).width / 2);
 		int testy = objectsPosition.getRectangle(fstr).y + (objectsPosition.getRectangle(fstr).height / 2);
-		System.out.println(fstr +  " --- " + (float)testx/100 + ", "+ (float)testy/100 + " " + 
+		System.out.println(fstr +  " --- " + (float)testx/100 + ", "+ (float)testy/100 + " " +		
 		CardinalConstraint.CardinalRelationToMetricOrientation[regionsOrientation.get(fstr).ordinal()]);
 		recs.put(fstr, objectsPosition.getRectangle(fstr));
 
 	}
-
+	
+	
+	
 
 	private void getPassiveObject() {
 
@@ -419,7 +431,15 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 
 	}
-
+	
+	private float getZPose(String str){
+		
+		if(regionsOrientation.get(str).compareTo(spatial.cardinal.CardinalConstraint.Type.NO) == 0)
+			return (float)(getPassiveObjSize(paasiveObjCategories.get(reifiedCons.get(areaInsToConsIns.get(str)))).x * 2 + 1) / 100;
+		
+		return (float)0.0;
+		
+	}
 
 	private void updateFluentCoordinate(String st) {
 
@@ -563,11 +583,12 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 			@Override
 			public void onSuccess(RetrieveFluentResponse response) {
-
-
+												
 				for (Property p : response.getFluent().getProperties()) {
 					Vector<SpatialRule> sr = new Vector<SpatialRule>();
 					areaInsToConsIns.put(p.getObjectFiller(), response.getFluent().getName());
+//					if(p.getRoleType().compareTo("hasRectangleAlgebraConstraintA") == 0);
+//						System.out.println("helloo" + p.getFillerType() + p.getObjectFiller());
 					for (int i = 0; i < spatialKnowledge.size(); i++) {
 						if(spatialKnowledge.get(i).getFrom().compareTo(p.getFillerType()) == 0 && 
 								spatialKnowledge.get(i).getTo().compareTo(paasiveObjCategories.get(reifiedCons.get(response.getFluent().getName()))) == 0){
