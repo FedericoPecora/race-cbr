@@ -84,7 +84,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	private HashMap<String, Vector<SpatialRule>> relatedSpatialRelToFluent = new HashMap<String, Vector<SpatialRule>>();//<manAreaLeft1, SpatialRule(From, To, AugmentedRAConstraint(2D bouned Allen))>
 	private boolean[] doneSubRoutines = null;
 	private boolean[] doneSubRoutines1 = null;
-	//private static final String MYTOPIC = "blackboard/iranTopic";
+	private static final String MYTOPIC = "blackboard/iranTopic";
 	private HashMap<String, String> paasiveObjCategories = new HashMap<String, String>(); //<door1, Door>
 	private HashMap<String, String> fluentCategories = new HashMap<String, String>(); //<manAreaLeft1, ManAreaLeft>
 	//private HashMap<String, String> posFleuntofArea = new HashMap<String, String>(); //<manAreaLeft1, poseMANTable1>
@@ -93,8 +93,8 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	private HashMap<String, String> passObjToPoseFlunet = new HashMap<String, String>(); //<table1, poseTable1>
 	private HashMap<String, spatial.rectangleAlgebra.Point> passiveObjPose = new HashMap<String, spatial.rectangleAlgebra.Point>(); //<poseTable1, Point(3321, 4521)>
 	private HashMap<String, spatial.rectangleAlgebra.Point> passiveObjSize = new HashMap<String, spatial.rectangleAlgebra.Point>(); 
-	private boolean blocked = true;
-
+	
+	
 	@Override
 	public void onStart(ConnectedNode connectedNode) {
 
@@ -104,29 +104,35 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 		StaticSpatialKnowledge.getSpatialKnowledge(spatialKnowledge);
 		
-//		MasterClient masterClient = new MasterClient(node.getMasterUri());
-//		Response<SystemState> systemState = masterClient.getSystemState(this.getDefaultNodeName());
-//		Collection<TopicSystemState> c = systemState.getResult().getTopics();
-//		Vector<String> topicNames = new Vector<String>();
-//		for (TopicSystemState t : c) {
-//			if (t.getTopicName().contains("blackbord")) topicNames.add(t.getTopicName());
-//		}
-//		
-//		for (String st : topicNames) {
-//			System.out.println(st);
-//		}
-//
-//		
-//		Subscriber<Fluent> fluentArrsubscriber = connectedNode.newSubscriber(MYTOPIC, Fluent._TYPE);
-//		fluentArrsubscriber.addMessageListener(new MessageListener<Fluent>() {
-//			@Override
-//			public void onNewMessage(Fluent message) {				
-//				onStaticKnowlegeLoaded(message);
-//			}
-//		});
+		while(true){
+			MasterClient masterClient = new MasterClient(node.getMasterUri());
+			Response<SystemState> systemState = masterClient.getSystemState(this.getDefaultNodeName());
+			Collection<TopicSystemState> c = systemState.getResult().getTopics();
+			Vector<String> topicNames = new Vector<String>();
+			for (TopicSystemState t : c) {
+				if (t.getTopicName().contains("blackboard")) topicNames.add(t.getTopicName());
+				
+			}
+			
+			if(topicNames.size() != 0)
+				break;
+		}
+		
+		System.out.println("FINISHED");
 
+		
+		Subscriber<Fluent> fluentArrsubscriber = connectedNode.newSubscriber(MYTOPIC, Fluent._TYPE);
+		fluentArrsubscriber.addMessageListener(new MessageListener<Fluent>() {
+			@Override
+			public void onNewMessage(Fluent message) {				
+				onStaticKnowlegeLoaded(message);
+			}
+		});
 
+		
 		getPassiveObject();
+		
+		
 		boolean proceed = false;
 		do {
 			if (doneSubRoutines != null) {
@@ -147,7 +153,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 			}
 
 		} while(!proceed);	
-
+		
 		fillPassiveObjPose();
 
 		boolean proceed1 = false;
@@ -178,8 +184,8 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 	private void onStaticKnowlegeLoaded(Fluent message){
 		
-		System.out.println("i am here: " + message.getName());
-		blocked = false;
+		getPassiveObject();
+
 	}
 	
 	private void fillPassiveObjPose(){
@@ -438,7 +444,6 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 	private void getPassiveObject() {
 
-		//if(!blocked){
 			ServiceClient<GetFluentsByQueryRequest, GetFluentsByQueryResponse> getPassiveObjsClients = null;
 			try {
 				getPassiveObjsClients = node.newServiceClient("blackboard/get_fluents_by_query", GetFluentsByQuery._TYPE);
@@ -455,8 +460,10 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	
 				@Override
 				public void onSuccess(GetFluentsByQueryResponse response) {
-	
-					onGetPassiveObjects(response.getFluents());
+					
+					if(response.getFluents().size() != 0)
+						onGetPassiveObjects(response.getFluents());
+					
 				}
 	
 				@Override
@@ -465,7 +472,6 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	
 				}
 			});
-		//}
 
 	}
 
