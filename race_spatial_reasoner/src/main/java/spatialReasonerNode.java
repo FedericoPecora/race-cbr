@@ -84,16 +84,16 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	private HashMap<String, Vector<SpatialRule>> relatedSpatialRelToFluent = new HashMap<String, Vector<SpatialRule>>();//<manAreaLeft1, SpatialRule(From, To, AugmentedRAConstraint(2D bouned Allen))>
 	private boolean[] doneSubRoutines = null;
 	private boolean[] doneSubRoutines1 = null;
+	private boolean[] doneSubRoutines2 = null;
 	private static final String MYTOPIC = "blackboard/iranTopic";
 	private HashMap<String, String> paasiveObjCategories = new HashMap<String, String>(); //<door1, Door>
 	private HashMap<String, String> fluentCategories = new HashMap<String, String>(); //<manAreaLeft1, ManAreaLeft>
-	//private HashMap<String, String> posFleuntofArea = new HashMap<String, String>(); //<manAreaLeft1, poseMANTable1>
 	private HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
 	private HashMap<String, CardinalConstraint.Type> regionsOrientation = new HashMap<String, CardinalConstraint.Type>();
 	private HashMap<String, String> passObjToPoseFlunet = new HashMap<String, String>(); //<table1, poseTable1>
 	private HashMap<String, spatial.rectangleAlgebra.Point> passiveObjPose = new HashMap<String, spatial.rectangleAlgebra.Point>(); //<poseTable1, Point(3321, 4521)>
 	private HashMap<String, spatial.rectangleAlgebra.Point> passiveObjSize = new HashMap<String, spatial.rectangleAlgebra.Point>(); 
-	
+	private enum subroutin {GETFLUNET, GETPOSE, ADDFLUNETS};
 	
 	@Override
 	public void onStart(ConnectedNode connectedNode) {
@@ -112,8 +112,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 			for (TopicSystemState t : c) {
 				if (t.getTopicName().contains("blackboard")) topicNames.add(t.getTopicName());
 				
-			}
-			
+			}			
 			if(topicNames.size() != 0)
 				break;
 		}
@@ -128,58 +127,93 @@ public class spatialReasonerNode extends AbstractNodeMain {
 				onStaticKnowlegeLoaded(message);
 			}
 		});
-
 		
 		getPassiveObject();
-		
-		
-		boolean proceed = false;
-		do {
-			if (doneSubRoutines != null) {
-				proceed = true;
-				for (boolean b : doneSubRoutines) {
-					if (!b) {
-						proceed = false;
-						break;
-					}
-				}
-			}
-			System.out.print(".");
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		waitForTerminate(subroutin.GETFLUNET);
 
-		} while(!proceed);	
 		
 		fillPassiveObjPose();
-
-		boolean proceed1 = false;
-		do {
-			if (doneSubRoutines1 != null) {
-				proceed1 = true;
-				for (boolean b : doneSubRoutines1) {
-					if (!b) {
-						proceed1 = false;
-						break;
-					}
-				}
-			}
-			System.out.print(".");
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		} while(!proceed1);	
+		waitForTerminate(subroutin.GETPOSE);
+		
 
 		createSpatialCN();
 		addCoordinatesToBB();
+		
+		
+		waitForTerminate(subroutin.ADDFLUNETS);
+		System.exit(1);
 
+	}
+	
+	private void waitForTerminate(subroutin option){
+		
+		if(option.compareTo(subroutin.GETFLUNET) == 0){
+			boolean proceed = false;
+			do {
+				if (doneSubRoutines != null) {
+					proceed = true;
+					for (boolean b : doneSubRoutines) {
+						if (!b) {
+							proceed = false;
+							break;
+						}
+					}
+				}
+				System.out.print(".");
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			} while(!proceed);	
+		}
+		else if(option.compareTo(subroutin.GETPOSE) == 0){
+			boolean proceed = false;
+			do {
+				if (doneSubRoutines1 != null) {
+					proceed = true;
+					for (boolean b : doneSubRoutines1) {
+						if (!b) {
+							proceed = false;
+							break;
+						}
+					}
+				}
+				System.out.print(".");
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			} while(!proceed);	
+		}
+		else if(option.compareTo(subroutin.ADDFLUNETS) == 0){
+			boolean proceed = false;
+			do {
+				if (doneSubRoutines2 != null) {
+					proceed = true;
+					for (boolean b : doneSubRoutines2) {
+						if (!b) {
+							proceed = false;
+							break;
+						}
+					}
+				}
+				System.out.print(".");
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			} while(!proceed);	
+		}
+		
 	}
 
 	private void onStaticKnowlegeLoaded(Fluent message){
@@ -202,14 +236,21 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	}
 
 	private void addCoordinatesToBB() {
+		
+		int counter = 0;
+		counter = recs.size();
+		doneSubRoutines2 = new boolean[counter];
+		Arrays.fill(doneSubRoutines2, false);
+		int i = 0;
 
 		for (String str : recs.keySet()) {
 			addPoseFluent(str, "pose");
 			addPoseFluent(str, "poseBB");
 			addBBFleunt(str);
 
-			updateFluentCoordinate(str);
+			updateFluentCoordinate(str, i++);
 		}
+		
 
 	}
 
@@ -268,6 +309,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 			@Override
 			public void onSuccess(AddFluentResponse response) {
+				System.out.println("ADD BB FLUENT");
 				System.out.println(response.getResult().getResultCode());
 				System.out.println(response.getResult().getErrorMessage());
 			}
@@ -349,6 +391,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 			@Override
 			public void onSuccess(AddFluentResponse response) {
+				System.out.println("ADD POSE FLUENt");
 				System.out.println(response.getResult().getResultCode());
 				System.out.println(response.getResult().getErrorMessage());
 			}
@@ -484,7 +527,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 	}
 
-	private void updateFluentCoordinate(String st) {
+	private void updateFluentCoordinate(String st, final int counter) {
 
 		Fluent f = node.getTopicMessageFactory().newFromType(Fluent._TYPE);
 		f.setName(st);
@@ -525,8 +568,11 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 			@Override
 			public void onSuccess(AddFluentResponse response) {
+				System.out.println("Update fleunt to b");
 				System.out.println(response.getResult().getResultCode());
 				System.out.println(response.getResult().getErrorMessage());
+				System.out.println("counter: " + counter);
+				doneSubRoutines2[counter] = true;
 			}
 
 			@Override
