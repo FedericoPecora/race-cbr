@@ -9,7 +9,7 @@ import framework.Variable;
 public class TestAPSPSolver {
 	
 	public static void main(String[] args) {
-		
+		//test		
 		APSPSolver solver = new APSPSolver(0, 100);
 		//solver.setOptions(framework.ConstraintSolver.OPTIONS.AUTO_PROPAGATE);
 		Variable[] vars = solver.createVariables(3);
