@@ -85,7 +85,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	private boolean[] doneSubRoutines = null;
 	private boolean[] doneSubRoutines1 = null;
 	private boolean[] doneSubRoutines2 = null;
-	private static final String MYTOPIC = "blackboard/iranTopic";
+	private static final String MYTOPIC = "blackboard/passiveObjectTopic";
 	private HashMap<String, String> paasiveObjCategories = new HashMap<String, String>(); //<door1, Door>
 	private HashMap<String, String> fluentCategories = new HashMap<String, String>(); //<manAreaLeft1, ManAreaLeft>
 	private HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
