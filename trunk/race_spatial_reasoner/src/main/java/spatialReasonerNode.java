@@ -104,21 +104,6 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 		StaticSpatialKnowledge.getSpatialKnowledge(spatialKnowledge);
 		
-		while(true){
-			MasterClient masterClient = new MasterClient(node.getMasterUri());
-			Response<SystemState> systemState = masterClient.getSystemState(this.getDefaultNodeName());
-			Collection<TopicSystemState> c = systemState.getResult().getTopics();
-			Vector<String> topicNames = new Vector<String>();
-			for (TopicSystemState t : c) {
-				if (t.getTopicName().contains("blackboard")) topicNames.add(t.getTopicName());
-				
-			}			
-			if(topicNames.size() != 0)
-				break;
-		}
-		
-		System.out.println("FINISHED");
-
 		
 		Subscriber<Fluent> fluentArrsubscriber = connectedNode.newSubscriber(MYTOPIC, Fluent._TYPE);
 		fluentArrsubscriber.addMessageListener(new MessageListener<Fluent>() {
@@ -487,15 +472,37 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 	private void getPassiveObject() {
 
-			ServiceClient<GetFluentsByQueryRequest, GetFluentsByQueryResponse> getPassiveObjsClients = null;
-			try {
-				getPassiveObjsClients = node.newServiceClient("blackboard/get_fluents_by_query", GetFluentsByQuery._TYPE);
-				//blackboard/c
-			} 
-			catch (org.ros.exception.ServiceNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	     ServiceClient<GetFluentsByQueryRequest, GetFluentsByQueryResponse> getPassiveObjsClients = null;
+         boolean print = false;
+         while (true)
+         {
+                 try {
+                         getPassiveObjsClients = node.newServiceClient("blackboard/get_fluents_by_query", GetFluentsByQuery._TYPE);
+                 }
+                 catch (org.ros.exception.ServiceNotFoundException e) {
+                         System.out.println("waiting for service 'blackboard/get_fluents_by_query'...");
+                         print = true;
+                         try {
+                                 Thread.sleep(1000);
+                         } catch (InterruptedException e1) {
+                         }
+                         continue;
+                 }
+
+                 break;
+         }
+         if (print)
+                 System.out.println("... done waiting for service.");
+         
+//			ServiceClient<GetFluentsByQueryRequest, GetFluentsByQueryResponse> getPassiveObjsClients = null;
+//			try {
+//				getPassiveObjsClients = node.newServiceClient("blackboard/get_fluents_by_query", GetFluentsByQuery._TYPE);
+//				//blackboard/c
+//			} 
+//			catch (org.ros.exception.ServiceNotFoundException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			final GetFluentsByQueryRequest poRequest = getPassiveObjsClients.newMessage();
 			poRequest.setQuery("select distinct ?instance where {?instance a ?subclass. ?subclass rdfs:subClassOf+ race:Furniture}");
 	
