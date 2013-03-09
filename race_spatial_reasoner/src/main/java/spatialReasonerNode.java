@@ -102,34 +102,39 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 		//MetaCSPLogging.setLevel(MetaSpatialConstraintSolver.class, Level.FINEST);
 		//MetaCSPLogging.setLevel(RectangleConstraintSolver.class, Level.FINEST);
+		
 		this.node = connectedNode;
-
+		
 		StaticSpatialKnowledge.getSpatialKnowledge(spatialKnowledge);
 		
 		
-		Subscriber<Fluent> fluentArrsubscriber = connectedNode.newSubscriber(MYTOPIC, Fluent._TYPE);
-		fluentArrsubscriber.addMessageListener(new MessageListener<Fluent>() {
-			@Override
-			public void onNewMessage(Fluent message) {	
-				System.out.println("get new furniture");
-				onStaticKnowlegeLoaded(message);
-			}
-		});
 		
-		getPassiveObject();
-		waitForTerminate(subroutin.GETFLUNET);
-
+	
+			Subscriber<Fluent> fluentArrsubscriber = connectedNode.newSubscriber(MYTOPIC, Fluent._TYPE);
+			fluentArrsubscriber.addMessageListener(new MessageListener<Fluent>() {
+				@Override
+				public void onNewMessage(Fluent message) {	
+					System.out.println("get new furniture");
+					
+					onStaticKnowlegeLoaded(message);
+				}
+			});
+			
+			getPassiveObject();
+			waitForTerminate(subroutin.GETFLUNET);
+	
+			
+			fillPassiveObjPose();
+			waitForTerminate(subroutin.GETPOSE);
+			
+	
+			createSpatialCN();
+			addCoordinatesToBB();
+			waitForTerminate(subroutin.ADDFLUNETS);
+			
+			callAddFluentsService();
+			System.exit(0);
 		
-		fillPassiveObjPose();
-		waitForTerminate(subroutin.GETPOSE);
-		
-
-		createSpatialCN();
-		addCoordinatesToBB();
-		waitForTerminate(subroutin.ADDFLUNETS);
-		
-		callAddFluentsService();
-		System.exit(0);
 
 	}
 	

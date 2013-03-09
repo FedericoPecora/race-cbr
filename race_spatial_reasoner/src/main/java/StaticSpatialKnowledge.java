@@ -297,6 +297,35 @@ public class StaticSpatialKnowledge {
 		);
 		spatialRelations.add(r36);
 		
+		
+		//NearAreaCounter
+		SpatialRule r37 = new SpatialRule("NearAreaCounter", "Counter", 
+				new AugmentedRectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Contains, new Bounds(100, 100), new Bounds(100, 100)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Contains, new Bounds(100, 100), new Bounds(100, 100))
+						)
+		);
+		spatialRelations.add(r37);
+		
+		//NearAreaTable
+		SpatialRule r38 = new SpatialRule("NearAreaTable", "VerticalTable", 
+				new AugmentedRectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Contains, new Bounds(100, 100), new Bounds(100, 100)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Contains, new Bounds(100, 100), new Bounds(100, 100))
+						)
+		);
+		spatialRelations.add(r38);
+		
+		//NearAreaTable
+		SpatialRule r39 = new SpatialRule("NearAreaTable", "HorizontalTable", 
+				new AugmentedRectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Contains, new Bounds(100, 100), new Bounds(100, 100)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Contains, new Bounds(100, 100), new Bounds(100, 100))
+						)
+		);
+		spatialRelations.add(r39);
+		
+		
 		return spatialRelations;
 		
 	}
