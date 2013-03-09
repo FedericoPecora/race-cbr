@@ -94,6 +94,8 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	private HashMap<String, spatial.rectangleAlgebra.Point> passiveObjPose = new HashMap<String, spatial.rectangleAlgebra.Point>(); //<poseTable1, Point(3321, 4521)>
 	private HashMap<String, spatial.rectangleAlgebra.Point> passiveObjSize = new HashMap<String, spatial.rectangleAlgebra.Point>(); 
 	private enum subroutin {GETFLUNET, GETPOSE, ADDFLUNETS};
+	private ArrayList<Fluent> fluents = new ArrayList<Fluent>();
+
 	
 	@Override
 	public void onStart(ConnectedNode connectedNode) {
@@ -108,7 +110,8 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		Subscriber<Fluent> fluentArrsubscriber = connectedNode.newSubscriber(MYTOPIC, Fluent._TYPE);
 		fluentArrsubscriber.addMessageListener(new MessageListener<Fluent>() {
 			@Override
-			public void onNewMessage(Fluent message) {				
+			public void onNewMessage(Fluent message) {	
+				System.out.println("get new furniture");
 				onStaticKnowlegeLoaded(message);
 			}
 		});
@@ -123,13 +126,44 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 		createSpatialCN();
 		addCoordinatesToBB();
-		
-		
 		waitForTerminate(subroutin.ADDFLUNETS);
-		System.exit(1);
+		
+		callAddFluentsService();
+		System.exit(0);
 
 	}
 	
+	private void callAddFluentsService() {
+		ServiceClient<AddFluentsRequest, AddFluentsResponse> serviceClient = null;
+		try {
+			serviceClient = node.newServiceClient("blackboard/add_fluents", AddFluents._TYPE);
+
+		} 
+		catch (org.ros.exception.ServiceNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		final AddFluentsRequest request = serviceClient.newMessage();
+		request.setFluents(fluents);
+		
+		serviceClient.call(request, new ServiceResponseListener<AddFluentsResponse>() {
+
+			@Override
+			public void onSuccess(AddFluentsResponse response) {
+				System.out.println(fluents.size() + " fluents Added");
+                System.out.println(response.getResult().getErrorMessage());
+			}
+
+			@Override
+			public void onFailure(RemoteException arg0) {
+				System.out.println("system call failed");
+
+			}
+		});
+
+		
+	}
+
 	private void waitForTerminate(subroutin option){
 		
 		if(option.compareTo(subroutin.GETFLUNET) == 0){
@@ -144,7 +178,6 @@ public class spatialReasonerNode extends AbstractNodeMain {
 						}
 					}
 				}
-				System.out.print(".");
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
@@ -166,7 +199,6 @@ public class spatialReasonerNode extends AbstractNodeMain {
 						}
 					}
 				}
-				System.out.print(".");
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
@@ -188,7 +220,6 @@ public class spatialReasonerNode extends AbstractNodeMain {
 						}
 					}
 				}
-				System.out.print(".");
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
@@ -232,8 +263,8 @@ public class spatialReasonerNode extends AbstractNodeMain {
 			addPoseFluent(str, "pose");
 			addPoseFluent(str, "poseBB");
 			addBBFleunt(str);
-
 			updateFluentCoordinate(str, i++);
+			
 		}
 		
 
@@ -270,7 +301,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		prop2.setFillerType("xsd:float");
 		prop2.setFloatFiller(0);
 		props.add(prop2);
-
+		
 		//hasPose, Pose, poseBBPAERCounter1
 		Property prop3 = node.getTopicMessageFactory().newFromType(Property._TYPE);
 		prop3.setRoleType("hasPose");
@@ -279,33 +310,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		props.add(prop3);
 
 		f.setProperties(props);
-		ServiceClient<AddFluentRequest, AddFluentResponse> serviceClient = null;
-		try {
-			serviceClient = node.newServiceClient("blackboard/add_fluent", AddFluent._TYPE);
-		} 
-		catch (org.ros.exception.ServiceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		final AddFluentRequest request = serviceClient.newMessage();
-		request.setFluent(f);
-
-		serviceClient.call(request, new ServiceResponseListener<AddFluentResponse>() {
-
-			@Override
-			public void onSuccess(AddFluentResponse response) {
-				System.out.println("ADD BB FLUENT");
-				System.out.println(response.getResult().getResultCode());
-				System.out.println(response.getResult().getErrorMessage());
-			}
-
-			@Override
-			public void onFailure(RemoteException arg0) {
-				System.out.println("system call failed");
-
-			}
-		});
-
+		fluents.add(f);
 
 	}
 
@@ -352,6 +357,8 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		prop2.setFloatFiller(getZPose(str));
 		props.add(prop2);
 
+
+		
 		//hasYaw
 		Property prop3 = node.getTopicMessageFactory().newFromType(Property._TYPE);
 		prop3.setRoleType("hasYaw");
@@ -360,34 +367,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		props.add(prop3);
 
 		f.setProperties(props);
-		ServiceClient<AddFluentRequest, AddFluentResponse> serviceClient = null;
-		try {
-			serviceClient = node.newServiceClient("blackboard/add_fluent", AddFluent._TYPE);
-
-		} 
-		catch (org.ros.exception.ServiceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		final AddFluentRequest request = serviceClient.newMessage();
-		request.setFluent(f);
-
-		serviceClient.call(request, new ServiceResponseListener<AddFluentResponse>() {
-
-			@Override
-			public void onSuccess(AddFluentResponse response) {
-				System.out.println("ADD POSE FLUENt");
-				System.out.println(response.getResult().getResultCode());
-				System.out.println(response.getResult().getErrorMessage());
-			}
-
-			@Override
-			public void onFailure(RemoteException arg0) {
-				System.out.println("system call failed");
-
-			}
-		});
-
+		fluents.add(f);
 
 	}
 
@@ -461,17 +441,15 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 		int testx = objectsPosition.getRectangle(fstr).x + (objectsPosition.getRectangle(fstr).width / 2);
 		int testy = objectsPosition.getRectangle(fstr).y + (objectsPosition.getRectangle(fstr).height / 2);
-		System.out.println(fstr +  " --- " + (float)testx/100 + ", "+ (float)testy/100 + " " +		
-				CardinalConstraint.CardinalRelationToMetricOrientation[regionsOrientation.get(fstr).ordinal()]);
+//		System.out.println(fstr +  " --- " + (float)testx/100 + ", "+ (float)testy/100 + " " +		
+//				CardinalConstraint.CardinalRelationToMetricOrientation[regionsOrientation.get(fstr).ordinal()]);
 		recs.put(fstr, objectsPosition.getRectangle(fstr));
 
 	}
 
 
-
-
 	private void getPassiveObject() {
-
+		
 	     ServiceClient<GetFluentsByQueryRequest, GetFluentsByQueryResponse> getPassiveObjsClients = null;
          boolean print = false;
          while (true)
@@ -494,15 +472,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
          if (print)
                  System.out.println("... done waiting for service.");
          
-//			ServiceClient<GetFluentsByQueryRequest, GetFluentsByQueryResponse> getPassiveObjsClients = null;
-//			try {
-//				getPassiveObjsClients = node.newServiceClient("blackboard/get_fluents_by_query", GetFluentsByQuery._TYPE);
-//				//blackboard/c
-//			} 
-//			catch (org.ros.exception.ServiceNotFoundException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+
 			final GetFluentsByQueryRequest poRequest = getPassiveObjsClients.newMessage();
 			poRequest.setQuery("select distinct ?instance where {?instance a ?subclass. ?subclass rdfs:subClassOf+ race:Furniture}");
 	
@@ -511,6 +481,9 @@ public class spatialReasonerNode extends AbstractNodeMain {
 				@Override
 				public void onSuccess(GetFluentsByQueryResponse response) {
 					
+					if(response.getFluents().size() == 0){
+						System.out.println("waiting for initial knowledge to be loaded");
+					}
 					if(response.getFluents().size() != 0)
 						onGetPassiveObjects(response.getFluents());
 					
@@ -533,7 +506,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		return (float)0.0;
 
 	}
-
+	
 	private void updateFluentCoordinate(String st, final int counter) {
 
 		Fluent f = node.getTopicMessageFactory().newFromType(Fluent._TYPE);
@@ -556,38 +529,8 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		props.add(prop1);
 
 		f.setProperties(props);
-
-
-
-		ServiceClient<AddFluentRequest, AddFluentResponse> serviceClient = null;
-		try {
-			serviceClient = node.newServiceClient("blackboard/add_fluent", AddFluent._TYPE);
-
-		} 
-		catch (org.ros.exception.ServiceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		final AddFluentRequest request = serviceClient.newMessage();
-		request.setFluent(f);
-
-		serviceClient.call(request, new ServiceResponseListener<AddFluentResponse>() {
-
-			@Override
-			public void onSuccess(AddFluentResponse response) {
-				System.out.println("Update fleunt to b");
-				System.out.println(response.getResult().getResultCode());
-				System.out.println(response.getResult().getErrorMessage());
-				System.out.println("counter: " + counter);
-				doneSubRoutines2[counter] = true;
-			}
-
-			@Override
-			public void onFailure(RemoteException arg0) {
-				System.out.println("system call failed");
-
-			}
-		});
+		fluents.add(f);
+		doneSubRoutines2[counter] = true;
 
 
 	}

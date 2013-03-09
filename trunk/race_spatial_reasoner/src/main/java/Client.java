@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import org.ros.exception.RemoteException;
 import org.ros.exception.RosRuntimeException;
@@ -22,6 +23,9 @@ import race_msgs.IsConsistentRequest;
 import race_msgs.IsConsistentResponse;
 import race_msgs.IsHumanWorkingRequest;
 import race_msgs.Property;
+import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
+import spatial.rectangleAlgebra.SpatialRule;
+import spatial.*;
 
 
 
@@ -29,6 +33,8 @@ import race_msgs.Property;
  * 
  * @author Iran Mansouri
  */
+
+
 public class Client extends AbstractNodeMain {
 
 	private ConnectedNode node;
@@ -43,11 +49,17 @@ public class Client extends AbstractNodeMain {
 		//MetaCSPLogging.setLevel(MetaSpatialConstraintSolver.class, Level.FINEST);
 		//MetaCSPLogging.setLevel(RectangleConstraintSolver.class, Level.FINEST);
 		this.node = connectedNode;
-		addConceptualObjectFluent("cnsp3");
-		addConceptualObjectFluent("cnsp4");
-		addAllenConstraint("finishes1", "Finishes");
-		addAllenConstraint("meets2", "Meets");
-		addRAconstraint("finishMeet1");
+//		addConceptualObjectFluent("cnsp3");
+//		addConceptualObjectFluent("cnsp4");
+//		addAllenConstraint("finishes1", "Finishes");
+//		addAllenConstraint("meets2", "Meets");
+//		addRAconstraint("finishMeet1");
+		
+		Vector<SpatialRule> spatialKnowledge = new Vector<SpatialRule>();
+		StaticSpatialKnowledge.getSpatialKnowledge(spatialKnowledge);
+		for (SpatialRule spatialRule : spatialKnowledge) {
+			addRAconstraint(spatialRule.getFrom() + "_" + spatialRule.getTo(), spatialRule.getRaCons());
+		}
 		
 	}
 		
@@ -154,7 +166,7 @@ public class Client extends AbstractNodeMain {
 
 	}
 	
-	private void addRAconstraint(String st) {
+	private void addRAconstraint(String st, AugmentedRectangleConstraint ara) {
 		
 //		upper:SpatialConstraint
 //		upper:hasFirst exactly 1 upper:PassiveObject
