@@ -504,7 +504,11 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	}
 
 	private float getZPose(String str){
-
+		
+		//since there is no 3D reasoning , it has to be hacked! 
+		//we can do it in a systematic way, if we use block algebra or add some rule as meta constraint to the spatial constraint network.. 
+		if(str.contains("near"))  
+			return (float)0.0; 
 		if(regionsOrientation.get(str).compareTo(spatial.cardinal.CardinalConstraint.Type.NO) == 0)
 			return (float)(getPassiveObjSize(paasiveObjCategories.get(reifiedCons.get(areaInsToConsIns.get(str)))).x * 2 + 1) / 100;
 

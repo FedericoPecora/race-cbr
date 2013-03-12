@@ -165,7 +165,7 @@ public class StaticSpatialKnowledge {
 		SpatialRule r17 = new SpatialRule("ManipulationAreaEast", "Counter", 
 				new AugmentedRectangleConstraint(
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(30, 30), new Bounds(5, 5))
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds())
 						)
 		);
 		spatialRelations.add(r17);
@@ -208,7 +208,7 @@ public class StaticSpatialKnowledge {
 		
 		SpatialRule r23 = new SpatialRule("ManipulationAreaEast", "ManipulationAreaEast", 
 				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
-						new Bounds(manipulationAreaSize,manipulationAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(0, APSPSolver.INF))));
+						new Bounds(manipulationAreaSize,manipulationAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(manipulationAreaSize,manipulationAreaSize))));
 		spatialRelations.add(r23);
 		
 		SpatialRule r24 = new SpatialRule("SittingAreaWest", "SittingAreaWest", 
@@ -250,7 +250,7 @@ public class StaticSpatialKnowledge {
 		
 		SpatialRule r31 = new SpatialRule("PreManipulationAreaEast", "PreManipulationAreaEast", 
 				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
-						new Bounds(premanipulationAreaSize,premanipulationAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(0, APSPSolver.INF))));
+						new Bounds(premanipulationAreaSize,premanipulationAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(premanipulationAreaSize,premanipulationAreaSize))));
 		spatialRelations.add(r31);
 
 		SpatialRule r32 = new SpatialRule("PreManipulationAreaSouth", "HorizontalTable", 
@@ -292,7 +292,7 @@ public class StaticSpatialKnowledge {
 		SpatialRule r36 = new SpatialRule("PreManipulationAreaEast", "Counter", 
 				new AugmentedRectangleConstraint(
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(manipulationAreaSize,manipulationAreaSize)),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(35, 35), new Bounds(35, 35))
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds())
 						)
 		);
 		spatialRelations.add(r36);
