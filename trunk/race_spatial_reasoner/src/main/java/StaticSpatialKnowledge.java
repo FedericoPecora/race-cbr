@@ -19,7 +19,7 @@ public class StaticSpatialKnowledge {
 	public static Vector<SpatialRule> getSpatialKnowledge(Vector<SpatialRule> spatialRelations){
 		
 		int manipulationAreaSize = 40;
-		int premanipulationAreaSize = 40;
+		int premanipulationAreaSize = 60;
 		
 		SpatialRule r1 = new SpatialRule("ManipulationAreaSouth", "HorizontalTable", 
 				new AugmentedRectangleConstraint(
