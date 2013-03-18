@@ -19,7 +19,8 @@ public class StaticSpatialKnowledge {
 	public static Vector<SpatialRule> getSpatialKnowledge(Vector<SpatialRule> spatialRelations){
 		
 		int manipulationAreaSize = 40;
-		int premanipulationAreaSize = 60;
+		int premanipulationAreaSize = 40;
+		int pmaSlack = 20;
 		
 		SpatialRule r1 = new SpatialRule("ManipulationAreaSouth", "HorizontalTable", 
 				new AugmentedRectangleConstraint(
@@ -256,7 +257,7 @@ public class StaticSpatialKnowledge {
 		SpatialRule r32 = new SpatialRule("PreManipulationAreaSouth", "HorizontalTable", 
 				new AugmentedRectangleConstraint(
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(manipulationAreaSize,manipulationAreaSize))
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(manipulationAreaSize + pmaSlack,manipulationAreaSize + pmaSlack))
 						)
 		);
 		spatialRelations.add(r32);
@@ -264,7 +265,7 @@ public class StaticSpatialKnowledge {
 		SpatialRule r33 = new SpatialRule("PreManipulationAreaNorth", "HorizontalTable", 
 				new AugmentedRectangleConstraint(
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(manipulationAreaSize,manipulationAreaSize))
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(manipulationAreaSize + pmaSlack ,manipulationAreaSize + pmaSlack))
 						)
 		);
 		spatialRelations.add(r33);
@@ -273,7 +274,7 @@ public class StaticSpatialKnowledge {
 	//		ManipulationAreaWest Meets, Equals VerticalTable
 		SpatialRule r34 = new SpatialRule("PreManipulationAreaWest", "VerticalTable", 
 				new AugmentedRectangleConstraint(
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(manipulationAreaSize,manipulationAreaSize)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(manipulationAreaSize + pmaSlack,manipulationAreaSize + pmaSlack)),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds())
 						)
 		);
@@ -282,7 +283,7 @@ public class StaticSpatialKnowledge {
 //		ManipulationAreaEast Meets , Equals VerticalTable
 		SpatialRule r35 = new SpatialRule("PreManipulationAreaEast", "VerticalTable", 
 				new AugmentedRectangleConstraint(
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(manipulationAreaSize,manipulationAreaSize)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(manipulationAreaSize + pmaSlack,manipulationAreaSize + pmaSlack)),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds())
 						)
 		);
@@ -291,7 +292,7 @@ public class StaticSpatialKnowledge {
 //		ManipulationAreaEast Meets , During[35, 35][35, 35] Counter
 		SpatialRule r36 = new SpatialRule("PreManipulationAreaEast", "Counter", 
 				new AugmentedRectangleConstraint(
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(manipulationAreaSize,manipulationAreaSize)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(manipulationAreaSize + pmaSlack,manipulationAreaSize + pmaSlack)),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds())
 						)
 		);

@@ -96,48 +96,48 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	private enum subroutin {GETFLUNET, GETPOSE, ADDFLUNETS};
 	private ArrayList<Fluent> fluents = new ArrayList<Fluent>();
 
-	
+
 	@Override
 	public void onStart(ConnectedNode connectedNode) {
 
 		//MetaCSPLogging.setLevel(MetaSpatialConstraintSolver.class, Level.FINEST);
 		//MetaCSPLogging.setLevel(RectangleConstraintSolver.class, Level.FINEST);
-		
+
 		this.node = connectedNode;
-		
+
 		StaticSpatialKnowledge.getSpatialKnowledge(spatialKnowledge);
-		
-		
-		
-	
-			Subscriber<Fluent> fluentArrsubscriber = connectedNode.newSubscriber(MYTOPIC, Fluent._TYPE);
-			fluentArrsubscriber.addMessageListener(new MessageListener<Fluent>() {
-				@Override
-				public void onNewMessage(Fluent message) {	
-					System.out.println("get new furniture");
-					
-					onStaticKnowlegeLoaded(message);
-				}
-			});
-			
-			getPassiveObject();
-			waitForTerminate(subroutin.GETFLUNET);
-	
-			
-			fillPassiveObjPose();
-			waitForTerminate(subroutin.GETPOSE);
-			
-	
-			createSpatialCN();
-			addCoordinatesToBB();
-			waitForTerminate(subroutin.ADDFLUNETS);
-			
-			callAddFluentsService();
-			System.exit(0);
-		
+
+
+
+
+		Subscriber<Fluent> fluentArrsubscriber = connectedNode.newSubscriber(MYTOPIC, Fluent._TYPE);
+		fluentArrsubscriber.addMessageListener(new MessageListener<Fluent>() {
+			@Override
+			public void onNewMessage(Fluent message) {	
+				System.out.println("get new furniture");
+
+				onStaticKnowlegeLoaded(message);
+			}
+		});
+
+		getPassiveObject();
+		waitForTerminate(subroutin.GETFLUNET);
+
+
+		fillPassiveObjPose();
+		waitForTerminate(subroutin.GETPOSE);
+
+
+		createSpatialCN();
+		addCoordinatesToBB();
+		waitForTerminate(subroutin.ADDFLUNETS);
+
+		callAddFluentsService();
+		System.exit(0);
+
 
 	}
-	
+
 	private void callAddFluentsService() {
 		ServiceClient<AddFluentsRequest, AddFluentsResponse> serviceClient = null;
 		try {
@@ -150,13 +150,13 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		}
 		final AddFluentsRequest request = serviceClient.newMessage();
 		request.setFluents(fluents);
-		
+
 		serviceClient.call(request, new ServiceResponseListener<AddFluentsResponse>() {
 
 			@Override
 			public void onSuccess(AddFluentsResponse response) {
 				System.out.println(fluents.size() + " fluents Added");
-                System.out.println(response.getResult().getErrorMessage());
+				System.out.println(response.getResult().getErrorMessage());
 			}
 
 			@Override
@@ -166,11 +166,11 @@ public class spatialReasonerNode extends AbstractNodeMain {
 			}
 		});
 
-		
+
 	}
 
 	private void waitForTerminate(subroutin option){
-		
+
 		if(option.compareTo(subroutin.GETFLUNET) == 0){
 			boolean proceed = false;
 			do {
@@ -234,15 +234,15 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 			} while(!proceed);	
 		}
-		
+
 	}
 
 	private void onStaticKnowlegeLoaded(Fluent message){
-		
+
 		getPassiveObject();
 
 	}
-	
+
 	private void fillPassiveObjPose(){
 
 		int counter = paasiveObjCategories.size();
@@ -257,7 +257,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	}
 
 	private void addCoordinatesToBB() {
-		
+
 		int counter = 0;
 		counter = recs.size();
 		doneSubRoutines2 = new boolean[counter];
@@ -269,9 +269,9 @@ public class spatialReasonerNode extends AbstractNodeMain {
 			addPoseFluent(str, "poseBB");
 			addBBFleunt(str);
 			updateFluentCoordinate(str, i++);
-			
+
 		}
-		
+
 
 	}
 
@@ -306,7 +306,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		prop2.setFillerType("xsd:float");
 		prop2.setFloatFiller(0);
 		props.add(prop2);
-		
+
 		//hasPose, Pose, poseBBPAERCounter1
 		Property prop3 = node.getTopicMessageFactory().newFromType(Property._TYPE);
 		prop3.setRoleType("hasPose");
@@ -363,7 +363,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		props.add(prop2);
 
 
-		
+
 		//hasYaw
 		Property prop3 = node.getTopicMessageFactory().newFromType(Property._TYPE);
 		prop3.setRoleType("hasYaw");
@@ -446,65 +446,65 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 		int testx = objectsPosition.getRectangle(fstr).x + (objectsPosition.getRectangle(fstr).width / 2);
 		int testy = objectsPosition.getRectangle(fstr).y + (objectsPosition.getRectangle(fstr).height / 2);
-//		System.out.println(fstr +  " --- " + (float)testx/100 + ", "+ (float)testy/100 + " " +		
-//				CardinalConstraint.CardinalRelationToMetricOrientation[regionsOrientation.get(fstr).ordinal()]);
+//				System.out.println(fstr +  " --- " + (float)testx/100 + ", "+ (float)testy/100 + " " +		
+//						CardinalConstraint.CardinalRelationToMetricOrientation[regionsOrientation.get(fstr).ordinal()]);
 		recs.put(fstr, objectsPosition.getRectangle(fstr));
 
 	}
 
 
 	private void getPassiveObject() {
-		
-	     ServiceClient<GetFluentsByQueryRequest, GetFluentsByQueryResponse> getPassiveObjsClients = null;
-         boolean print = false;
-         while (true)
-         {
-                 try {
-                         getPassiveObjsClients = node.newServiceClient("blackboard/get_fluents_by_query", GetFluentsByQuery._TYPE);
-                 }
-                 catch (org.ros.exception.ServiceNotFoundException e) {
-                         System.out.println("waiting for service 'blackboard/get_fluents_by_query'...");
-                         print = true;
-                         try {
-                                 Thread.sleep(1000);
-                         } catch (InterruptedException e1) {
-                         }
-                         continue;
-                 }
 
-                 break;
-         }
-         if (print)
-                 System.out.println("... done waiting for service.");
-         
+		ServiceClient<GetFluentsByQueryRequest, GetFluentsByQueryResponse> getPassiveObjsClients = null;
+		boolean print = false;
+		while (true)
+		{
+			try {
+				getPassiveObjsClients = node.newServiceClient("blackboard/get_fluents_by_query", GetFluentsByQuery._TYPE);
+			}
+			catch (org.ros.exception.ServiceNotFoundException e) {
+				System.out.println("waiting for service 'blackboard/get_fluents_by_query'...");
+				print = true;
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e1) {
+				}
+				continue;
+			}
 
-			final GetFluentsByQueryRequest poRequest = getPassiveObjsClients.newMessage();
-			poRequest.setQuery("select distinct ?instance where {?instance a ?subclass. ?subclass rdfs:subClassOf+ race:Furniture}");
-	
-			getPassiveObjsClients.call(poRequest, new ServiceResponseListener<GetFluentsByQueryResponse>() {
-	
-				@Override
-				public void onSuccess(GetFluentsByQueryResponse response) {
-					
-					if(response.getFluents().size() == 0){
-						System.out.println("waiting for initial knowledge to be loaded");
-					}
-					if(response.getFluents().size() != 0)
-						onGetPassiveObjects(response.getFluents());
-					
+			break;
+		}
+		if (print)
+			System.out.println("... done waiting for service.");
+
+
+		final GetFluentsByQueryRequest poRequest = getPassiveObjsClients.newMessage();
+		poRequest.setQuery("select distinct ?instance where {?instance a ?subclass. ?subclass rdfs:subClassOf+ race:Furniture}");
+
+		getPassiveObjsClients.call(poRequest, new ServiceResponseListener<GetFluentsByQueryResponse>() {
+
+			@Override
+			public void onSuccess(GetFluentsByQueryResponse response) {
+
+				if(response.getFluents().size() == 0){
+					System.out.println("waiting for initial knowledge to be loaded");
 				}
-	
-				@Override
-				public void onFailure(RemoteException arg0) {
-					System.out.println("Get passive Objects is failed");
-	
-				}
-			});
+				if(response.getFluents().size() != 0)
+					onGetPassiveObjects(response.getFluents());
+
+			}
+
+			@Override
+			public void onFailure(RemoteException arg0) {
+				System.out.println("Get passive Objects is failed");
+
+			}
+		});
 
 	}
 
 	private float getZPose(String str){
-		
+
 		//since there is no 3D reasoning , it has to be hacked! 
 		//we can do it in a systematic way, if we use block algebra or add some rule as meta constraint to the spatial constraint network.. 
 		if(str.contains("near"))  
@@ -515,7 +515,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		return (float)0.0;
 
 	}
-	
+
 	private void updateFluentCoordinate(String st, final int counter) {
 
 		Fluent f = node.getTopicMessageFactory().newFromType(Fluent._TYPE);
