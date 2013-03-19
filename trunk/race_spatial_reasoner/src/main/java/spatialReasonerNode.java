@@ -47,6 +47,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 
 import javax.management.ServiceNotFoundException;
+import javax.vecmath.Point3d;
 
 import race_msgs.Fluent;
 import race_msgs.FluentArray;
@@ -408,24 +409,33 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 		long x = passiveObjPose.get(str).x();
 		long y = passiveObjPose.get(str).y();
-		long sizex = getPassiveObjSize(str).x();
-		long sizey = getPassiveObjSize(str).y();
+		long sizex = (long)getPassiveObjSize(str).x;
+		long sizey = (long)getPassiveObjSize(str).y;
 
 		return new BoundingBox(new Bounds((x - sizex),(x - sizex)), new Bounds((x + sizex), (x + sizex)), 
 				new Bounds((y - sizey), (y - sizey)), new Bounds((y + sizey), (y + sizey)));
 
 	}
 
-	private spatial.rectangleAlgebra.Point getPassiveObjSize(String str){
+	private Point3d getPassiveObjSize(String str){
+		
+//		if(str.compareTo("table1") == 0 || str.compareTo("HorizontalTable") == 0)
+//			return new spatial.rectangleAlgebra.Point(35, 35);
+//		else if(str.compareTo("table2") == 0 || str.compareTo("VerticalTable") == 0)
+//			return new spatial.rectangleAlgebra.Point(35, 35);
+//		else if(str.compareTo("counter1") == 0 || str.compareTo("Counter") == 0)
+//			return new spatial.rectangleAlgebra.Point(35, 70);
+//		return null;
 
 		if(str.compareTo("table1") == 0 || str.compareTo("HorizontalTable") == 0)
-			return new spatial.rectangleAlgebra.Point(35, 35);
+			return new Point3d(35, 35, 73);
 		else if(str.compareTo("table2") == 0 || str.compareTo("VerticalTable") == 0)
-			return new spatial.rectangleAlgebra.Point(35, 35);
+			return new Point3d(35, 35, 73);
 		else if(str.compareTo("counter1") == 0 || str.compareTo("Counter") == 0)
-			return new spatial.rectangleAlgebra.Point(35, 70);
+			return new Point3d(35, 70, 75);
 		return null;
 
+		
 	}
 
 
@@ -446,7 +456,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 		int testx = objectsPosition.getRectangle(fstr).x + (objectsPosition.getRectangle(fstr).width / 2);
 		int testy = objectsPosition.getRectangle(fstr).y + (objectsPosition.getRectangle(fstr).height / 2);
-//				System.out.println(fstr +  " --- " + (float)testx/100 + ", "+ (float)testy/100 + " " +		
+//		System.out.println(fstr +  " --- " + (float)testx/100 + ", "+ (float)testy/100 + " " +		
 //						CardinalConstraint.CardinalRelationToMetricOrientation[regionsOrientation.get(fstr).ordinal()]);
 		recs.put(fstr, objectsPosition.getRectangle(fstr));
 
@@ -510,7 +520,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		if(str.contains("near"))  
 			return (float)0.0; 
 		if(regionsOrientation.get(str).compareTo(spatial.cardinal.CardinalConstraint.Type.NO) == 0)
-			return (float)(getPassiveObjSize(paasiveObjCategories.get(reifiedCons.get(areaInsToConsIns.get(str)))).x * 2 + 1) / 100;
+			return (float)(getPassiveObjSize(paasiveObjCategories.get(reifiedCons.get(areaInsToConsIns.get(str)))).z ) / 100;
 
 		return (float)0.0;
 
