@@ -268,7 +268,7 @@ public class StaticSpatialKnowledge {
 		SpatialRule r33 = new SpatialRule("PreManipulationAreaNorth", "HorizontalTable", 
 				new AugmentedRectangleConstraint(
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(manipulationAreaSize + pmaSlack ,manipulationAreaSize + pmaSlack))
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(manipulationAreaSize + pmaSlack + 20 ,manipulationAreaSize + pmaSlack + 20))
 						)
 		);
 		spatialRelations.add(r33);
