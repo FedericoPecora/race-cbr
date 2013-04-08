@@ -183,5 +183,13 @@ public class MetaSpatialConstraint extends MetaConstraint{
 		solver.minimalCulpritDetector();
 	}
 	
+	public RectangularRegion[] getCulprits(){
+		return solver.getCulpritSet();
+	}
+	
+	//this method return consistency, because the metaSpatial constraint always return true,(because we do not want the relations retracted)
+	public boolean isConsistent(){
+		return solver.inConsistent();
+	}
 
 }
