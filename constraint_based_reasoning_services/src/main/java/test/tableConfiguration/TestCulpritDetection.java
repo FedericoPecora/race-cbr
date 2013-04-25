@@ -138,45 +138,45 @@ public class TestCulpritDetection {
 		
 		
 
-		Bounds knife_size_x = new Bounds(5, 7);
-		Bounds knife_size_y = new Bounds(19, 21);
-		Bounds cup_size_x = new Bounds(5, 7);
-		Bounds cup_size_y = new Bounds(5, 7);
-		Bounds fork_size_x = new Bounds(5, 7);
-		Bounds fork_size_y = new Bounds(19, 21);
-		Bounds withinReach_y_lower = new Bounds(10, 20);
-		Bounds withinReach_y_upper = new Bounds(10, APSPSolver.INF);
-		Bounds withinReach_x_lower = new Bounds(10, APSPSolver.INF);
-		Bounds withinReach_x_upper = new Bounds(10, APSPSolver.INF);
+		Bounds knife_size_x = new Bounds(4, 8);
+		Bounds knife_size_y = new Bounds(18, 24);
+		Bounds cup_size_x = new Bounds(4, 7);
+		Bounds cup_size_y = new Bounds(4, 7);
+		Bounds fork_size_x = new Bounds(4, 8);
+		Bounds fork_size_y = new Bounds(18, 24);
+		Bounds withinReach_y_lower = new Bounds(5, 20);
+		Bounds withinReach_y_upper = new Bounds(5, APSPSolver.INF);
+		Bounds withinReach_x_lower = new Bounds(5, APSPSolver.INF);
+		Bounds withinReach_x_upper = new Bounds(5, APSPSolver.INF);
 
 		Vector<SpatialRule> srules = new Vector<SpatialRule>();
 
+		SpatialRule r2 = new SpatialRule("cup", "knife", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(15,20)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()))
+				);
+		srules.add(r2);
+
+		SpatialRule r3 = new SpatialRule("cup", "fork", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(15,20)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During , AllenIntervalConstraint.Type.During.getDefaultBounds()))
+
+				);
+		srules.add(r3);
+
+
 //		SpatialRule r2 = new SpatialRule("cup", "knife", 
-//				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(15,15)),
+//				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(8,16)),
 //						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(10, APSPSolver.INF), new Bounds(1, APSPSolver.INF)))
 //				);
 //		srules.add(r2);
 //
 //		SpatialRule r3 = new SpatialRule("cup", "fork", 
-//				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(15,15)),
+//				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(8,16)),
 //						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During , new Bounds(10, APSPSolver.INF), new Bounds(1, APSPSolver.INF)))
 //
 //				);
 //		srules.add(r3);
-
-
-		SpatialRule r2 = new SpatialRule("cup", "knife", 
-				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(8,16)),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(10, APSPSolver.INF), new Bounds(1, APSPSolver.INF)))
-				);
-		srules.add(r2);
-
-		SpatialRule r3 = new SpatialRule("cup", "fork", 
-				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(8,16)),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During , new Bounds(10, APSPSolver.INF), new Bounds(1, APSPSolver.INF)))
-
-				);
-		srules.add(r3);
 
 		SpatialRule r4 = new SpatialRule("fork", "table", 
 				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, withinReach_x_lower,withinReach_x_upper),
@@ -196,6 +196,7 @@ public class TestCulpritDetection {
 		//				);
 		//		srules.add(r6);
 
+		
 		SpatialRule r7 = new SpatialRule("knife", "knife", 
 				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
 						knife_size_x), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, knife_size_y)));
@@ -211,26 +212,30 @@ public class TestCulpritDetection {
 						fork_size_x), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, fork_size_y)));
 		srules.add(r9);
 		
+
+
+
 		
 
 		Vector<SpatialAssertionalRelation> saRelations = new Vector<SpatialAssertionalRelation>();
 
 		SpatialAssertionalRelation sa1 = new SpatialAssertionalRelation("table1", "table");
-		sa1.setCoordinate(new BoundingBox(new Bounds(0, 0), new Bounds(100, 100), new Bounds(0, 0), new Bounds(100, 100)));
+		sa1.setCoordinate(new BoundingBox(new Bounds(0, 0), new Bounds(100, 100), new Bounds(0, 0), new Bounds(99, 99)));
 		OntologicalSpatialProperty tableOnto = new OntologicalSpatialProperty();
 		tableOnto.setMovable(false);
 		sa1.setOntologicalProp(tableOnto);
 		saRelations.add(sa1);
 
 		SpatialAssertionalRelation sa3 = new SpatialAssertionalRelation("fork1", "fork");
-		sa3.setCoordinate(new BoundingBox(new Bounds(27, 27), new Bounds(32, 32), new Bounds(10, 10), new Bounds(31, 31)));
-//		sa3.setCoordinate(new BoundingBox(new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
+//		sa3.setCoordinate(new BoundingBox(new Bounds(25, 25), new Bounds(31, 31), new Bounds(13, 13), new Bounds(35, 35)));
+//		sa3.setCoordinate(new BoundingBox(new Bounds(32, 32), new Bounds(37, 37), new Bounds(10, 10), new Bounds(30, 30)));
+		sa3.setCoordinate(new BoundingBox(new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 		saRelations.add(sa3);
 
 		
 		SpatialAssertionalRelation sa2 = new SpatialAssertionalRelation("knife1", "knife");
-		sa2.setCoordinate(new BoundingBox(new Bounds(41,41), new Bounds(47,47), new Bounds(10, 10), new Bounds(31, 31)));
-//		sa2.setCoordinate(new BoundingBox(new Bounds(37,37), new Bounds(43,43), new Bounds(10, 10), new Bounds(31, 31)));
+//		sa2.setCoordinate(new BoundingBox(new Bounds(39,39), new Bounds(46,46), new Bounds(13, 13), new Bounds(35, 35)));
+		sa2.setCoordinate(new BoundingBox(new Bounds(64,64), new Bounds(72,72), new Bounds(11, 11), new Bounds(33, 33)));
 //		sa2.setCoordinate(new BoundingBox(new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 		saRelations.add(sa2);
 
@@ -250,11 +255,12 @@ public class TestCulpritDetection {
 		metaSolver.backtrack();
 		
 		if(objectsPosition.isConsistent())
-			System.out.println("consistenct");
-		else System.out.println("inconsistenct");
+			System.out.println("consistent");
+		else System.out.println("inconsistent");
 			
 
-//		System.out.println(objectsPosition.getRectangle("knife"));
+		System.out.println("cup: " + objectsPosition.getRectangle("cup"));
+		System.out.println("knife: " + objectsPosition.getRectangle("knife"));
 
 		objectsPosition.culpritDetector();
 		System.out.println("culprits: " + objectsPosition.getCulprits()[0].getName());
