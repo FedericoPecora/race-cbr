@@ -35,70 +35,92 @@ public class TestSimplePlannerForTableScratch {
 //		MetaCSPLogging.setLevel(Level.FINEST);
 //		MetaCSPLogging.setLevel(planner.getClass(), Level.FINE);
 				
-		SimpleDomain rd = new SimpleDomain(new int[] {2}, new String[] {"arm"}, "TestDomain");
-		
-		AllenIntervalConstraint duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(1,APSPSolver.INF));
-		AllenIntervalConstraint moveToDuringLocalization = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
-		
+		SimpleDomain rd = new SimpleDomain(new int[] {1}, new String[] {"arm"}, "TestDomain");
+
+		AllenIntervalConstraint durationPickupCup = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+		AllenIntervalConstraint durationPickupFork = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+		AllenIntervalConstraint durationPlaceCup = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+		AllenIntervalConstraint durationPlaceFork = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+		AllenIntervalConstraint placeForkAfterPickup = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+		AllenIntervalConstraint placeCupAfterPickup = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+
+
 		SimpleOperator operator1 = new SimpleOperator("Robot1::place_fork(arm)",
-				new AllenIntervalConstraint[] {moveToDuringLocalization},
+				new AllenIntervalConstraint[] {placeForkAfterPickup},
 				new String[] {"Robot1::pickup_fork(arm)"},
-				null);
-		operator1.addConstraint(duration, 0, 0);
+				new int[] {1});
+		operator1.addConstraint(durationPlaceFork, 0, 0);
 		rd.addOperator(operator1);
 		
 		SimpleOperator operator2 = new SimpleOperator("Robot1::place_cup(arm)",
-				new AllenIntervalConstraint[] {moveToDuringLocalization},
+				new AllenIntervalConstraint[] {placeCupAfterPickup},
 				new String[] {"Robot1::pickup_cup(arm)"},
-				null);
+				new int[] {1});
+		operator2.addConstraint(durationPlaceCup, 0, 0);
 		rd.addOperator(operator2);
 
-		
-		SimpleOperator operator3 = new SimpleOperator("Robot1::place_knife(arm)",
-				new AllenIntervalConstraint[] {moveToDuringLocalization},
-				new String[] {"Robot1::pickup_knife(arm)"},
-				null);
-		rd.addOperator(operator3);
-		
-		SimpleOperator operator4 = new SimpleOperator("Robot1::pickup_cup(arm)",
+		SimpleOperator operator1res = new SimpleOperator("Robot1::pickup_fork(arm)",
 				null,
 				null,
 				new int[] {1});
-		rd.addOperator(operator4);
+		operator1res.addConstraint(durationPickupFork, 0, 0);
+		rd.addOperator(operator1res);
 		
-		
-		SimpleOperator operator5 = new SimpleOperator("Robot1::pickup_fork(arm)",
+		SimpleOperator operator2res = new SimpleOperator("Robot1::pickup_cup(arm)",
 				null,
 				null,
 				new int[] {1});
-		rd.addOperator(operator5);
-		
-		SimpleOperator operator6 = new SimpleOperator("Robot1::pickup_knife(arm)",
-				null,
-				null,
-				new int[] {1});
-		rd.addOperator(operator6);
+		operator2res.addConstraint(durationPickupCup, 0, 0);
+		rd.addOperator(operator2res);
 		
 		
+
 		
-		SimpleOperator operator7 = new SimpleOperator("Robot1::place_cup(arm)",
-				null,
-				null,
-				new int[] {1});
-		rd.addOperator(operator7);
-		
-		
-		SimpleOperator operator8 = new SimpleOperator("Robot1::place_fork(arm)",
-				null,
-				null,
-				new int[] {1});
-		rd.addOperator(operator8);
-		
-		SimpleOperator operator9 = new SimpleOperator("Robot1::place_knife(arm)",
-				null,
-				null,
-				new int[] {1});
-		rd.addOperator(operator9);
+//		SimpleOperator operator3 = new SimpleOperator("Robot1::place_knife(arm)",
+//				new AllenIntervalConstraint[] {moveToDuringLocalization},
+//				new String[] {"Robot1::pickup_knife(arm)"},
+//				null);
+//		rd.addOperator(operator3);
+//		
+//		SimpleOperator operator4 = new SimpleOperator("Robot1::pickup_cup(arm)",
+//				null,
+//				null,
+//				new int[] {1});
+//		rd.addOperator(operator4);
+//		
+//		
+//		SimpleOperator operator5 = new SimpleOperator("Robot1::pickup_fork(arm)",
+//				null,
+//				null,
+//				new int[] {1});
+//		rd.addOperator(operator5);
+//		
+//		SimpleOperator operator6 = new SimpleOperator("Robot1::pickup_knife(arm)",
+//				null,
+//				null,
+//				new int[] {1});
+//		rd.addOperator(operator6);
+//		
+//		
+//		
+//		SimpleOperator operator7 = new SimpleOperator("Robot1::place_cup(arm)",
+//				null,
+//				null,
+//				new int[] {1});
+//		rd.addOperator(operator7);
+//		
+//		
+//		SimpleOperator operator8 = new SimpleOperator("Robot1::place_fork(arm)",
+//				null,
+//				null,
+//				new int[] {1});
+//		rd.addOperator(operator8);
+//		
+//		SimpleOperator operator9 = new SimpleOperator("Robot1::place_knife(arm)",
+//				null,
+//				null,
+//				new int[] {1});
+//		rd.addOperator(operator9);
 
 //		SimpleOperator operator4 = new SimpleOperator("Robot1::pickup_cup()",
 //				new AllenIntervalConstraint[] {moveToDuringLocalization},
@@ -136,15 +158,15 @@ public class TestSimplePlannerForTableScratch {
 		// ... this is a goal (i.e., an activity to justify through the meta-constraint)
 		two.setMarking(markings.UNJUSTIFIED);
 		
-		
-		Activity three = (Activity)groundSolver.createVariable("Robot1");
-		three.setSymbolicDomain("place_knife(arm)");
-		
-		// ... this is a goal (i.e., an activity to justify through the meta-constraint)
-		three.setMarking(markings.UNJUSTIFIED);
+//		
+//		Activity three = (Activity)groundSolver.createVariable("Robot1");
+//		three.setSymbolicDomain("place_knife(arm)");
+//		
+//		// ... this is a goal (i.e., an activity to justify through the meta-constraint)
+//		three.setMarking(markings.UNJUSTIFIED);
 		
 
-		TimelinePublisher tp = new TimelinePublisher(groundSolver, new Bounds(0,25), "Robot1");
+		TimelinePublisher tp = new TimelinePublisher(groundSolver, new Bounds(0,60), "Robot1");
 		//TimelinePublisher can also be instantiated w/o bounds, in which case the bounds are calculated every time publish is called
 //		TimelinePublisher tp = new TimelinePublisher(groundSolver, "Robot1", "Robot2", "LocalizationService", "RFIDReader1", "LaserScanner1");
 		TimelineVisualizer viz = new TimelineVisualizer(tp);
