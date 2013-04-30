@@ -17,7 +17,7 @@ import framework.ConstraintNetwork;
 import framework.meta.MetaConstraint;
 import framework.meta.MetaVariable;
 
-public class MetaSpatialConstraint extends MetaConstraint{
+public class NewMetaSpatialConstraint extends MetaConstraint{
 
 	
 	private SpatialAssertionalRelation[] sAssertionalRels;
@@ -27,7 +27,7 @@ public class MetaSpatialConstraint extends MetaConstraint{
 	private HashMap<Vector<RectangularRegion>, Boolean> mark = new HashMap<Vector<RectangularRegion>, Boolean>();
 	private Vector<AugmentedRectangleConstraint> addedRAconstraint; 
 	
-	public MetaSpatialConstraint() {
+	public NewMetaSpatialConstraint() {
 		//for now!
 		super(null, null);
 		solver = new AugmentedRectangleConstraintSolver();
