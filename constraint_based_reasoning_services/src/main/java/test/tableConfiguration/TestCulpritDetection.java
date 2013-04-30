@@ -227,15 +227,15 @@ public class TestCulpritDetection {
 		saRelations.add(sa1);
 
 		SpatialAssertionalRelation sa3 = new SpatialAssertionalRelation("fork1", "fork");
-//		sa3.setCoordinate(new BoundingBox(new Bounds(25, 25), new Bounds(31, 31), new Bounds(13, 13), new Bounds(35, 35)));
+		sa3.setCoordinate(new BoundingBox(new Bounds(31, 31), new Bounds(37, 37), new Bounds(13, 13), new Bounds(32, 32)));
 //		sa3.setCoordinate(new BoundingBox(new Bounds(32, 32), new Bounds(37, 37), new Bounds(10, 10), new Bounds(30, 30)));
-		sa3.setCoordinate(new BoundingBox(new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
+//		sa3.setCoordinate(new BoundingBox(new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 		saRelations.add(sa3);
 
 		
 		SpatialAssertionalRelation sa2 = new SpatialAssertionalRelation("knife1", "knife");
-//		sa2.setCoordinate(new BoundingBox(new Bounds(39,39), new Bounds(46,46), new Bounds(13, 13), new Bounds(35, 35)));
-		sa2.setCoordinate(new BoundingBox(new Bounds(64,64), new Bounds(72,72), new Bounds(11, 11), new Bounds(33, 33)));
+		sa2.setCoordinate(new BoundingBox(new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
+//		sa2.setCoordinate(new BoundingBox(new Bounds(64,64), new Bounds(72,72), new Bounds(11, 11), new Bounds(33, 33)));
 //		sa2.setCoordinate(new BoundingBox(new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 		saRelations.add(sa2);
 
