@@ -14,6 +14,7 @@ import spatial.rectangleAlgebra.SpatialRule;
 import spatial.rectangleAlgebra.TwoDimensionsAllenConstraint;
 import framework.Constraint;
 import framework.ConstraintNetwork;
+import framework.ConstraintSolver;
 import framework.meta.MetaConstraint;
 import framework.meta.MetaVariable;
 
