@@ -3,6 +3,8 @@ package test.meta.RACE;
 import java.util.Vector;
 import java.util.logging.Level;
 
+import orbital.algorithm.Combinatorical;
+
 import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraint2;
 import meta.MetaSpatialConstraintSolver;
@@ -31,10 +33,24 @@ public class TestNewImplementaionRA {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+
+
+//		int[] test = {1, 2};
+//		Combinatorical c = Combinatorical.getPermutations(3, 2,  true);
+//		System.out.println(c.count());
+//		while (c.hasNext()) {
+//			int[] combination = c.next();
+//			//System.out.println("Doing " + Arrays.toString(combination));
+//			boolean skip = false;
+//			for (int i = 0; i < combination.length; i++) {
+//				System.out.print(combination[i]);
+//			}
+//			System.out.println("hey");
+//		}
+
 		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
-		
-		
+
+
 		Bounds knife_size_x = new Bounds(4, 8);
 		Bounds knife_size_y = new Bounds(18, 24);
 		Bounds cup_size_x = new Bounds(4, 7);
@@ -73,8 +89,8 @@ public class TestNewImplementaionRA {
 		srules.add(r5);
 
 
-		
-		
+
+
 
 		SpatialRule2 r7 = new SpatialRule2("knife", "knife", 
 				new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.Size, knife_size_x, knife_size_y));
@@ -91,7 +107,7 @@ public class TestNewImplementaionRA {
 
 		//Assertion
 		Vector<SpatialAssertionalRelation2> saRelations = new Vector<SpatialAssertionalRelation2>();
-		
+
 		SpatialAssertionalRelation2 sa1 = new SpatialAssertionalRelation2("table1", "table");
 		sa1.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
 				new Bounds(0, 0), new Bounds(100, 100), new Bounds(0, 0), new Bounds(99, 99)));
@@ -104,41 +120,41 @@ public class TestNewImplementaionRA {
 		sa3.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
 				new Bounds(31, 31), new Bounds(37, 37), new Bounds(13, 13), new Bounds(32, 32)));
 		saRelations.add(sa3);
-		
-		SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("knife1", "knife");
-		sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
-				new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
-		saRelations.add(sa2);
 
 //		SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("knife1", "knife");
 //		sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
-//				new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
+//				new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 //		saRelations.add(sa2);
-		
+
+				SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("knife1", "knife");
+				sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+						new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
+				saRelations.add(sa2);
+
 
 
 		SpatialAssertionalRelation2 sa4 = new SpatialAssertionalRelation2("cup1", "cup");
 		sa4.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
 				new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 		saRelations.add(sa4);
-		
+
 		//.......................................................................................................
-		
-		MetaCSPLogging.setLevel(MetaSpatialConstraintSolver2.class, Level.FINEST);
-		MetaCSPLogging.setLevel(RectangleConstraintSolver2.class, Level.FINEST);
+
+		//		MetaCSPLogging.setLevel(MetaSpatialConstraintSolver2.class, Level.FINEST);
+		//		MetaCSPLogging.setLevel(RectangleConstraintSolver2.class, Level.FINEST);
 
 		MetaSpatialConstraintSolver2 metaSolver = new MetaSpatialConstraintSolver2(0, 1000, 0);
-		
 
-		
+
+
 		MetaSpatialConstraint2 objectsPosition = new MetaSpatialConstraint2();
 		objectsPosition.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
 		objectsPosition.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
-		
-		
+
+
 		metaSolver.addMetaConstraint(objectsPosition);
 		metaSolver.backtrack();
-		
+
 		System.out.println(objectsPosition.getRectangle("cup1"));
 		System.out.println(objectsPosition.getRectangle("knife1"));
 		System.out.println(objectsPosition.getRectangle("fork1"));

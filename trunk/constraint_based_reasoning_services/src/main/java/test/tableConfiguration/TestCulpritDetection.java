@@ -24,18 +24,7 @@ public class TestCulpritDetection {
 	 */
 	public static void main(String[] args) {
 
-//		//		int[] test = {1, 2};
-//		//		Combinatorical c = Combinatorical.getPermutations(5, 2,  true);
-//		//		System.out.println(c.count());
-//		//		while (c.hasNext()) {
-//		//			int[] combination = c.next();
-//		//			//System.out.println("Doing " + Arrays.toString(combination));
-//		//			boolean skip = false;
-//		//			for (int i = 0; i < combination.length; i++) {
-//		//				System.out.print(combination[i]);
-//		//			}
-//		//			System.out.println("hey");
-//		//		}
+
 //		//Spatial Knowledge
 //
 //		Vector<SpatialRule> srules = new Vector<SpatialRule>();
