@@ -144,20 +144,21 @@ public class TestNewImplementaionRA {
 		//		MetaCSPLogging.setLevel(RectangleConstraintSolver2.class, Level.FINEST);
 
 		MetaSpatialConstraintSolver2 metaSolver = new MetaSpatialConstraintSolver2(0, 1000, 0);
-
-
+		
+		
 
 		MetaSpatialConstraint2 objectsPosition = new MetaSpatialConstraint2();
 		objectsPosition.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
 		objectsPosition.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
+		objectsPosition.testSpagetti();
 
 
-		metaSolver.addMetaConstraint(objectsPosition);
-		metaSolver.backtrack();
-
-		System.out.println(objectsPosition.getRectangle("cup1"));
-		System.out.println(objectsPosition.getRectangle("knife1"));
-		System.out.println(objectsPosition.getRectangle("fork1"));
+//		metaSolver.addMetaConstraint(objectsPosition);
+//		metaSolver.backtrack();
+//
+//		System.out.println(objectsPosition.getRectangle("cup1"));
+//		System.out.println(objectsPosition.getRectangle("knife1"));
+//		System.out.println(objectsPosition.getRectangle("fork1"));
 
 	}
 
