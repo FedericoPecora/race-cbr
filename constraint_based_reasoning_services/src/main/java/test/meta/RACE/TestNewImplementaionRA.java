@@ -49,7 +49,7 @@ public class TestNewImplementaionRA {
 //			}
 //			System.out.println("hey");
 //		}
-		while (true) {
+
 		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
 
 
@@ -152,7 +152,10 @@ public class TestNewImplementaionRA {
 		MetaSpatialConstraint2 objectsPosition = new MetaSpatialConstraint2();
 		objectsPosition.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
 		objectsPosition.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
-		objectsPosition.testSpagetti();
+		objectsPosition.fakegeneratedMetaVariable();
+		objectsPosition.fakegeneratedmetavalues();
+		
+
 		
 		
 //		metaSolver.addMetaConstraint(objectsPosition);
@@ -161,7 +164,7 @@ public class TestNewImplementaionRA {
 //		System.out.println(objectsPosition.getRectangle("cup1"));
 //		System.out.println(objectsPosition.getRectangle("knife1"));
 //		System.out.println(objectsPosition.getRectangle("fork1"));
-		}
+
 
 	}
 
