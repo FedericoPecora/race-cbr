@@ -3,6 +3,8 @@ package test.meta.RACE;
 import java.util.Vector;
 import java.util.logging.Level;
 
+import framework.ConstraintNetwork;
+
 import orbital.algorithm.Combinatorical;
 
 import meta.MetaSpatialConstraint;
@@ -47,7 +49,7 @@ public class TestNewImplementaionRA {
 //			}
 //			System.out.println("hey");
 //		}
-
+		while (true) {
 		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
 
 
@@ -151,14 +153,15 @@ public class TestNewImplementaionRA {
 		objectsPosition.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
 		objectsPosition.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
 		objectsPosition.testSpagetti();
-
-
+		
+		
 //		metaSolver.addMetaConstraint(objectsPosition);
 //		metaSolver.backtrack();
 //
 //		System.out.println(objectsPosition.getRectangle("cup1"));
 //		System.out.println(objectsPosition.getRectangle("knife1"));
 //		System.out.println(objectsPosition.getRectangle("fork1"));
+		}
 
 	}
 

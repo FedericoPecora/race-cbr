@@ -179,7 +179,7 @@ public class TestSpatioCausalMetaSolver {
 		
 		
 
-		TimelinePublisher tp = new TimelinePublisher(groundSolver, new Bounds(0,120), "Robot1", "cup1");
+		TimelinePublisher tp = new TimelinePublisher(groundSolver, new Bounds(0,120), "Robot1", "cup1", "knife1");
 		TimelineVisualizer viz = new TimelineVisualizer(tp);
 		tp.publish(false, false);
 		tp.publish(false, true);

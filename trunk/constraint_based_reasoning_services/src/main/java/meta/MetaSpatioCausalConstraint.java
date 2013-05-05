@@ -7,11 +7,14 @@ import spatial.rectangleAlgebra.AugmentedRectangleConstraintSolver;
 import spatial.rectangleAlgebra.RectangularRegion;
 import spatial.rectangleAlgebra.SpatialAssertionalRelation;
 import spatial.rectangleAlgebra.SpatialRule;
+import time.APSPSolver;
+import time.Bounds;
 import meta.simplePlanner.SimpleDomain;
 import meta.simplePlanner.SimpleDomain.markings;
 import multi.activity.Activity;
 import multi.activity.ActivityNetwork;
 import multi.activity.ActivityNetworkSolver;
+import multi.allenInterval.AllenIntervalConstraint;
 import multi.allenInterval.AllenIntervalNetworkSolver;
 import framework.Constraint;
 import framework.ConstraintNetwork;
@@ -54,13 +57,13 @@ public class MetaSpatioCausalConstraint extends SimpleDomain{
 		//creat the unjustified activities
 		//get coordinat of rectangularRegion
 		
-		
-		 
-		AugmentedRectangleConstraintSolver gs= (AugmentedRectangleConstraintSolver)metaSpatialConstrainSolver.getConstraintSolvers()[0];
-		System.out.println("heloooooooooooo"+ ((AllenIntervalNetworkSolver)((AugmentedRectangleConstraintSolver)metaSpatialConstrainSolver.getConstraintSolvers()[0]).getInternalSolver()[0]).getVariables().length);
-		for (int i = 0; i < gs.getVariables().length; i++) {
-			System.out.println(gs.getVariables()[i]);
-		}
+//		
+//		 
+//		AugmentedRectangleConstraintSolver gs= (AugmentedRectangleConstraintSolver)metaSpatialConstrainSolver.getConstraintSolvers()[0];
+//		System.out.println("heloooooooooooo"+ ((AllenIntervalNetworkSolver)((AugmentedRectangleConstraintSolver)metaSpatialConstrainSolver.getConstraintSolvers()[0]).getInternalSolver()[0]).getVariables().length);
+//		for (int i = 0; i < gs.getVariables().length; i++) {
+//			System.out.println(gs.getVariables()[i]);
+//		}
 		
 		
 		
@@ -71,6 +74,16 @@ public class MetaSpatioCausalConstraint extends SimpleDomain{
 			one.setSymbolicDomain("at()");
 			one.setMarking(markings.UNJUSTIFIED);
 			counter++;
+					
+			Activity two = (Activity)groundSolver.createVariable("knife1");
+			two.setSymbolicDomain("at()");
+			two.setMarking(markings.UNJUSTIFIED);
+			counter++;
+			
+			AllenIntervalConstraint twoAfterOne = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After);
+			twoAfterOne.setFrom(one);
+			twoAfterOne.setTo(two);
+			groundSolver.addConstraints(new Constraint[] {twoAfterOne});
 		}
 		
 	}
@@ -89,7 +102,7 @@ public class MetaSpatioCausalConstraint extends SimpleDomain{
 	
 	@Override
 	public ConstraintNetwork[] getMetaVariables() {
-		synthesizeSpatialknowlege();
+//		synthesizeSpatialknowlege();
 		
 		//if getUnboundedObjected changed
 		getUnbounedRectangularRegion();
