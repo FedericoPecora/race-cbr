@@ -1,10 +1,17 @@
 package meta;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.commons.collections15.comparators.ComparableComparator;
 
 import orbital.algorithm.Combinatorical;
 
@@ -50,7 +57,7 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 	private HashMap<Vector<RectangularRegion2>, Boolean> mark = new HashMap<Vector<RectangularRegion2>, Boolean>();
 	private HashMap<HashMap<String, Bounds[]>, Integer> permutation = new HashMap<HashMap<String,Bounds[]>, Integer>();
 	private Vector<String> initialUnboundedObjName = new Vector<String>();
-	private Vector<String> potentialCulorit = new Vector<String>();
+	private Vector<String> potentialCulprit = new Vector<String>();
 
 
 	public MetaSpatialConstraint2() {
@@ -69,9 +76,8 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 	public void setSpatialAssertionalRelations(SpatialAssertionalRelation2 ...sAssertionalRels){
 		this.sAssertionalRels  = sAssertionalRels;
 	}
-
-	public void testSpagetti(){
-
+	
+	public void fakegeneratedMetaVariable(){
 		Vector<UnaryRectangleConstraint2> atConstraints = new Vector<UnaryRectangleConstraint2>();
 		RectangleConstraintSolver2 rasolver = new RectangleConstraintSolver2(0,1000);
 		for (int i = 0; i < sAssertionalRels.length; i++){
@@ -99,104 +105,39 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 		}
 
 		generateCombinantion(atConstraints);
-		generateMetaValues();
 		mark.put(targetRecs, true);
 
 	}
-
-
-	private void generateCombinantion(Vector<UnaryRectangleConstraint2> atConstraints){
-
-		Vector<UnaryRectangleConstraint2> boundedUnaryCons = new Vector<UnaryRectangleConstraint2>();
-		Vector<UnaryRectangleConstraint2> unboundedUnaryCons = new Vector<UnaryRectangleConstraint2>();
-
-		HashMap<Vector<UnaryRectangleConstraint2>, Integer> rank = new HashMap<Vector<UnaryRectangleConstraint2>, Integer>();
-		for (int i = 0; i < atConstraints.size(); i++) {
-			Bounds[] boundsX = 
-					((AllenIntervalConstraint)((UnaryRectangleConstraint2)atConstraints.get(i)).getInternalConstraints()[0]).getBounds();
-			Bounds[] boundsY = 
-					((AllenIntervalConstraint)((UnaryRectangleConstraint2)atConstraints.get(i)).getInternalConstraints()[1]).getBounds();
-			if(!isUnboundedBoundingBox(boundsX[0], boundsX[1], boundsY[0], boundsY[1])
-					&& ((RectangularRegion2)((UnaryRectangleConstraint2)atConstraints.get(i)).getFrom()).getOntologicalProp().isMovable()){
-				
-//				potentialCulorit.add(((RectangularRegion2)((UnaryRectangleConstraint2)atConstraints.get(i)).getFrom()).getName());
-				System.out.println(((RectangularRegion2)((UnaryRectangleConstraint2)atConstraints.get(i)).getFrom()).getName());
-				boundedUnaryCons.add((UnaryRectangleConstraint2)atConstraints.get(i));			
-			}
-			else{				
-				unboundedUnaryCons.add((UnaryRectangleConstraint2)atConstraints.get(i));
-			}
-		}
-
-		Combinatorical c = Combinatorical.getPermutations(boundedUnaryCons.size(), 2,  true);
-		System.out.println(c.count());
-		while (c.hasNext()) {
-			int[] combination = c.next();
-			int culpritNumber = 0;
-			Vector<UnaryRectangleConstraint2> tmpboundedUnaryCons = new Vector<UnaryRectangleConstraint2>();
-			Vector<UnaryRectangleConstraint2> justCulprit = new Vector<UnaryRectangleConstraint2>();
-			for (int i = 0; i < combination.length; i++) {
-				if(combination[i] == 1){
-					UnaryRectangleConstraint2 utmp = new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF));
-					utmp.setFrom(boundedUnaryCons.get(i).getFrom());
-					utmp.setTo(boundedUnaryCons.get(i).getTo());
-					tmpboundedUnaryCons.add(utmp);
-					justCulprit.add(utmp);
-					culpritNumber++;
-				}
-
-				else
-					tmpboundedUnaryCons.add(boundedUnaryCons.get(i));
-				//				System.out.print(combination[i]);
-
-			}
-			rank.put(tmpboundedUnaryCons, culpritNumber);
-
-		}
-		//		System.out.println(rank);
-
-		for (Vector<UnaryRectangleConstraint2> cc : rank.keySet()) {
-			HashMap<String, Bounds[]>  culprit = new HashMap<String, Bounds[]>();
-
-			for (int i = 0; i < cc.size(); i++) {
-
-				Bounds[] bounds = new Bounds[4];
-				bounds[0] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)cc.get(i)).getInternalConstraints()[0]).getBounds()[0];
-				bounds[1] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)cc.get(i)).getInternalConstraints()[0]).getBounds()[1];
-				bounds[2] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)cc.get(i)).getInternalConstraints()[1]).getBounds()[0];
-				bounds[3] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)cc.get(i)).getInternalConstraints()[1]).getBounds()[1];
-
-				culprit.put(((RectangularRegion2)cc.get(i).getFrom()).getName(), bounds);
-			}
-			for (int i = 0; i < unboundedUnaryCons.size(); i++) {
-				Bounds[] bounds = new Bounds[4];
-				bounds[0] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)unboundedUnaryCons.get(i)).getInternalConstraints()[0]).getBounds()[0];
-				bounds[1] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)unboundedUnaryCons.get(i)).getInternalConstraints()[0]).getBounds()[1];
-				bounds[2] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)unboundedUnaryCons.get(i)).getInternalConstraints()[1]).getBounds()[0];
-				bounds[3] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)unboundedUnaryCons.get(i)).getInternalConstraints()[1]).getBounds()[1];
-
-				culprit.put(((RectangularRegion2)unboundedUnaryCons.get(i).getFrom()).getName(), bounds);
-			}
-			permutation.put(culprit, rank.get(cc));
-		}
-
-//		System.out.println(permutation);
-	}
-
-
-	private void generateMetaValues() {
-
+	
+	public void fakegeneratedmetavalues(){
 		int counter = 0;
+		
+		class ConstraintNetworkSortingCritera extends ComparableComparator<Comparable>{
+
+		    public double rigidityNumber = 0;
+		    public int culpritLevel = 0;
+		    
+		    ConstraintNetworkSortingCritera(double rigidityNumber, int culpritLevel){
+		    	this.culpritLevel = culpritLevel;
+		    	this.rigidityNumber = rigidityNumber;
+		    }
+		    
+		    
+		}
+		
+		final HashMap<ConstraintNetwork, ConstraintNetworkSortingCritera> sortingCN = new HashMap<ConstraintNetwork, ConstraintNetworkSortingCritera>();
+		
 		for (HashMap<String, Bounds[]> iterCN : permutation.keySet()) {
 			for (String t : iterCN.keySet()) {
 				System.out.println(iterCN.get(t)[0] + " " + iterCN.get(t)[1] + " " + iterCN.get(t)[2] + iterCN.get(t)[3]);
 			}
 						
 			RectangleConstraintSolver2 iterSolver = new RectangleConstraintSolver2(0,1000);
-			
 			Vector<MultiBinaryConstraint> addedGeneralKn = new Vector<MultiBinaryConstraint>();
 			HashMap<String, RectangularRegion2> getVariableByName = new HashMap<String, RectangularRegion2>();
 
+
+			
 			//general knowledge
 			for (int i = 0; i < this.rules.length; i++) {
 				
@@ -272,7 +213,6 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 						uConsBinary.setTo(var);
 						getVariableByName.put(this.rules[i].getTo(), var);
 					}
-					//				System.out.println(tmpRule[i].getRAConstraint());
 					addedGeneralKn.add(uConsBinary);
 					
 				}
@@ -288,13 +228,13 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 			//Att At cpnstraint
 			Vector<RectangularRegion2> metaVaribales = new Vector<RectangularRegion2>();
 			
-			for (String st : iterCN.keySet()) {
+			for (RectangularRegion2 Metavar : targetRecs) {
 				RectangularRegion2 var = (RectangularRegion2)iterSolver.createVariable();
-				var.setName(st);
+				var.setName(Metavar.getName());
 				
-				Bounds[] atBounds = new Bounds[iterCN.get(st).length];
+				Bounds[] atBounds = new Bounds[iterCN.get(Metavar.getName()).length];
 				for (int j = 0; j < atBounds.length; j++) {
-					Bounds at = new Bounds(iterCN.get(st)[j].min, iterCN.get(st)[j].max);
+					Bounds at = new Bounds(iterCN.get(Metavar.getName())[j].min, iterCN.get(Metavar.getName())[j].max);
 					atBounds[j] = at;
 				}
 				
@@ -303,10 +243,9 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 				atCon.setTo(var);
 				metaVaribales.add(var);				
 				if(!iterSolver.addConstraint(atCon))
-					System.out.println("Failed to add AT constraint");
+					System.out.println("Failed to add AT constraint");			
 			}
-
-
+			
 			Vector<RectangleConstraint2> assertionList = new Vector<RectangleConstraint2>();
 			for (int i = 0; i < sAssertionalRels.length; i++) {
 				for (int j = 0; j < metaVaribales.size(); j++) {
@@ -324,45 +263,148 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 			}
 			
 			System.out.println("");
-			
-//			try {
-				MetaCSPLogging.setLevel(Level.FINE);
-				if(!iterSolver.addConstraints(assertionList.toArray(new RectangleConstraint2[assertionList.size()])))
-					System.out.println("Failed to add Assertinal Constraint");;
+			boolean isConsistent = true;
+
+//				MetaCSPLogging.setLevel(Level.FINE);
+				if(!iterSolver.addConstraints(assertionList.toArray(new RectangleConstraint2[assertionList.size()]))){
+					isConsistent = false;
+					System.out.println("Failed to add Assertinal Constraint");
+				}
+					
 	
-//			} catch (ConstraintNotFound e) {
-//											
-//			}
 			
-//				if (counter++ == permutation.keySet().size()-2) {
-//					ConstraintNetwork.draw(iterSolver.getConstraintSolvers()[0].getConstraintNetwork());
-//					ConstraintNetwork.draw(iterSolver.getConstraintSolvers()[1].getConstraintNetwork());
-//					
-//					
-//					try {
-//						Thread.sleep(100000);
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					
-//				}
-			double avg = ((double)(((AllenIntervalNetworkSolver)iterSolver.getConstraintSolvers()[0]).getRigidityNumber()) 
+			double rigidityavg = ((double)(((AllenIntervalNetworkSolver)iterSolver.getConstraintSolvers()[0]).getRigidityNumber()) 
 					+ (double)(((AllenIntervalNetworkSolver)iterSolver.getConstraintSolvers()[1]).getRigidityNumber())) / 2;
-
-
-
-			System.out.println("rank: " + permutation.get(iterCN));
-			System.out.println("avg: " + avg);
+			
+			if(isConsistent){
+				sortingCN.put(iterSolver.getConstraintNetwork(), new ConstraintNetworkSortingCritera(rigidityavg, permutation.get(iterCN)));
+			}
+			
 			System.out.println(iterSolver.extractBoundingBoxesFromSTPs("cup1").getAlmostCentreRectangle());
 			
-//			for (int i = 0; i < iterSolver.getConstraints().length; i++) {
-//				System.out.println(iterSolver.getConstraints()[i]);
-//			}
 			System.out.println("_______________________________________________________________________________");
 
 		}		
+		
+		ArrayList as = new ArrayList( sortingCN.keySet() );          
+		Collections.sort( as , new Comparator() {  
+			public int compare( Object o1 , Object o2 )  
+			{  
+				RectangleConstraintNetwork2 l1 = (RectangleConstraintNetwork2)o1 ;  
+				RectangleConstraintNetwork2 l2 = (RectangleConstraintNetwork2)o2 ;  
+				Integer first = (Integer)sortingCN.get(l1).culpritLevel;  
+				Integer second = (Integer)sortingCN.get(l2).culpritLevel;
+				int i = first.compareTo(second);				
+				if(i != 0 ) return i;
+				
+				RectangleConstraintNetwork2 r1 = (RectangleConstraintNetwork2)o1 ;  
+				RectangleConstraintNetwork2 r2 = (RectangleConstraintNetwork2)o2 ;  
+				Double firstRig = (Double)sortingCN.get(r1).rigidityNumber;  
+				Double secondRig = (Double)sortingCN.get(r2).rigidityNumber;
+				
+				i = firstRig.compareTo(secondRig);
+			    if (i != 0) return i;
+				return -1;
+			}  
+		}); 
+		
+		Iterator i = as.iterator();  
+		while ( i.hasNext() )  
+		{  
+			ConstraintNetwork ct = new RectangleConstraintNetwork2(null); 
+			ct = (RectangleConstraintNetwork2)i.next();
+			System.out.println(ct);
+			System.out.println(sortingCN.get(ct).rigidityNumber);
+			System.out.println(sortingCN.get(ct).culpritLevel);
+			System.out.println(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+		} 
+
 	}
+	
+
+
+	private void generateCombinantion(Vector<UnaryRectangleConstraint2> atConstraints){
+
+		Vector<UnaryRectangleConstraint2> boundedUnaryCons = new Vector<UnaryRectangleConstraint2>();
+		Vector<UnaryRectangleConstraint2> unboundedUnaryCons = new Vector<UnaryRectangleConstraint2>();
+
+		HashMap<Vector<UnaryRectangleConstraint2>, Integer> rank = new HashMap<Vector<UnaryRectangleConstraint2>, Integer>();
+		for (int i = 0; i < atConstraints.size(); i++) {
+			Bounds[] boundsX = 
+					((AllenIntervalConstraint)((UnaryRectangleConstraint2)atConstraints.get(i)).getInternalConstraints()[0]).getBounds();
+			Bounds[] boundsY = 
+					((AllenIntervalConstraint)((UnaryRectangleConstraint2)atConstraints.get(i)).getInternalConstraints()[1]).getBounds();
+			if(!isUnboundedBoundingBox(boundsX[0], boundsX[1], boundsY[0], boundsY[1])
+					&& ((RectangularRegion2)((UnaryRectangleConstraint2)atConstraints.get(i)).getFrom()).getOntologicalProp().isMovable()){
+				
+				potentialCulprit.add(((RectangularRegion2)((UnaryRectangleConstraint2)atConstraints.get(i)).getFrom()).getName());
+				System.out.println(((RectangularRegion2)((UnaryRectangleConstraint2)atConstraints.get(i)).getFrom()).getName());
+				boundedUnaryCons.add((UnaryRectangleConstraint2)atConstraints.get(i));			
+			}
+			else{			
+				if(((RectangularRegion2)((UnaryRectangleConstraint2)atConstraints.get(i)).getFrom()).getOntologicalProp().isMovable())
+					initialUnboundedObjName.add(((RectangularRegion2)((UnaryRectangleConstraint2)atConstraints.get(i)).getFrom()).getName());
+				unboundedUnaryCons.add((UnaryRectangleConstraint2)atConstraints.get(i));
+			}
+		}
+
+
+		Combinatorical c = Combinatorical.getPermutations(boundedUnaryCons.size(), 2,  true);
+		System.out.println(c.count());
+		while (c.hasNext()) {
+			int[] combination = c.next();
+			int culpritNumber = 0;
+			Vector<UnaryRectangleConstraint2> tmpboundedUnaryCons = new Vector<UnaryRectangleConstraint2>();
+			Vector<UnaryRectangleConstraint2> justCulprit = new Vector<UnaryRectangleConstraint2>();
+			for (int i = 0; i < combination.length; i++) {
+				if(combination[i] == 1){
+					UnaryRectangleConstraint2 utmp = new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF));
+					utmp.setFrom(boundedUnaryCons.get(i).getFrom());
+					utmp.setTo(boundedUnaryCons.get(i).getTo());
+					tmpboundedUnaryCons.add(utmp);
+					justCulprit.add(utmp);
+					culpritNumber++;
+				}
+
+				else
+					tmpboundedUnaryCons.add(boundedUnaryCons.get(i));
+				//				System.out.print(combination[i]);
+
+			}
+			rank.put(tmpboundedUnaryCons, culpritNumber);
+
+		}
+		//		System.out.println(rank);
+
+		for (Vector<UnaryRectangleConstraint2> cc : rank.keySet()) {
+			HashMap<String, Bounds[]>  culprit = new HashMap<String, Bounds[]>();
+
+			for (int i = 0; i < cc.size(); i++) {
+
+				Bounds[] bounds = new Bounds[4];
+				bounds[0] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)cc.get(i)).getInternalConstraints()[0]).getBounds()[0];
+				bounds[1] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)cc.get(i)).getInternalConstraints()[0]).getBounds()[1];
+				bounds[2] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)cc.get(i)).getInternalConstraints()[1]).getBounds()[0];
+				bounds[3] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)cc.get(i)).getInternalConstraints()[1]).getBounds()[1];
+
+				culprit.put(((RectangularRegion2)cc.get(i).getFrom()).getName(), bounds);
+			}
+			for (int i = 0; i < unboundedUnaryCons.size(); i++) {
+				Bounds[] bounds = new Bounds[4];
+				bounds[0] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)unboundedUnaryCons.get(i)).getInternalConstraints()[0]).getBounds()[0];
+				bounds[1] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)unboundedUnaryCons.get(i)).getInternalConstraints()[0]).getBounds()[1];
+				bounds[2] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)unboundedUnaryCons.get(i)).getInternalConstraints()[1]).getBounds()[0];
+				bounds[3] = ((AllenIntervalConstraint)((UnaryRectangleConstraint2)unboundedUnaryCons.get(i)).getInternalConstraints()[1]).getBounds()[1];
+
+				culprit.put(((RectangularRegion2)unboundedUnaryCons.get(i).getFrom()).getName(), bounds);
+			}
+			permutation.put(culprit, rank.get(cc));
+		}
+
+//		System.out.println(permutation);
+	}
+
+
 
 
 
