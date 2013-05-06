@@ -4,7 +4,10 @@ package test.meta;
 import java.util.Vector;
 import java.util.logging.Level;
 
+import meta.MetaSpatialConstraint2;
+import meta.MetaSpatialConstraintSolver2;
 import meta.MetaSpatioCausalConstraint;
+import meta.MetaSpatioCausalConstraintSolver;
 import meta.simplePlanner.SimpleDomain;
 import meta.simplePlanner.SimpleOperator;
 import meta.simplePlanner.SimplePlanner;
@@ -13,6 +16,11 @@ import meta.symbolsAndTime.Schedulable;
 import multi.activity.Activity;
 import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
+import sandbox.spatial.rectangleAlgebra2.RectangleConstraint2;
+import sandbox.spatial.rectangleAlgebra2.RectangleConstraintSolver2;
+import sandbox.spatial.rectangleAlgebra2.SpatialAssertionalRelation2;
+import sandbox.spatial.rectangleAlgebra2.SpatialRule2;
+import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;
 import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
 import spatial.rectangleAlgebra.BoundingBox;
 import spatial.rectangleAlgebra.OntologicalSpatialProperty;
@@ -41,10 +49,10 @@ public class TestSpatioCausalMetaSolver {
 //		MetaCSPLogging.setLevel(Level.FINEST);
 //		MetaCSPLogging.setLevel(planner.getClass(), Level.FINE);
 				
-		Vector<SpatialRule> srules = new Vector<SpatialRule>();
+		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
 		getSpatialKnowledge(srules);
 		
-		MetaSpatioCausalConstraint rd = new MetaSpatioCausalConstraint(new int[] {1}, new String[] {"arm"}, "TestDomain", srules.toArray(new SpatialRule[srules.size()]));
+		SimpleDomain rd = new SimpleDomain(new int[] {1}, new String[] {"arm"}, "TestDomain");
 
 		
 		AllenIntervalConstraint atCupAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
@@ -172,9 +180,28 @@ public class TestSpatioCausalMetaSolver {
 		
 		
 		
-		Vector<SpatialAssertionalRelation> saRelations = new Vector<SpatialAssertionalRelation>();
+		Vector<SpatialAssertionalRelation2> saRelations = new Vector<SpatialAssertionalRelation2>();
 		getAssertionalRule(saRelations);
-		rd.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation[saRelations.size()]));
+
+
+		
+		
+		MetaSpatioCausalConstraintSolver metaSolver = new MetaSpatioCausalConstraintSolver(0, 1000, 0);
+		MetaSpatialConstraint2 objectsPosition = new MetaSpatialConstraint2();
+		objectsPosition.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
+		objectsPosition.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
+
+
+		//		MetaCSPLogging.setLevel(MetaSpatialConstraintSolver2.class, Level.FINEST);
+		//		MetaCSPLogging.setLevel(MetaSpatialConstraint2.class, Level.FINEST);
+
+
+		metaSolver.addMetaConstraint(objectsPosition);
+		metaSolver.addMetaConstraint(rd);
+		metaSolver.backtrack();
+
+		ConstraintNetwork.draw(metaSolver.getConstraintSolvers()[0].getConstraintNetwork(), "Constraint Network");
+		((RectangleConstraintSolver2)metaSolver.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("cup1").getAlmostCentreRectangle();
 
 		
 		
@@ -194,7 +221,7 @@ public class TestSpatioCausalMetaSolver {
 		tp.publish(true, false);
 	}
 	
-	private static void getSpatialKnowledge(Vector<SpatialRule> srules){
+	private static void getSpatialKnowledge(Vector<SpatialRule2> srules){
 		
 		Bounds knife_size_x = new Bounds(4, 8);
 		Bounds knife_size_y = new Bounds(18, 24);
@@ -208,75 +235,78 @@ public class TestSpatioCausalMetaSolver {
 		Bounds withinReach_x_upper = new Bounds(5, APSPSolver.INF);
 
 
-		SpatialRule r2 = new SpatialRule("cup", "knife", 
-				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(15,20)),
+		SpatialRule2 r2 = new SpatialRule2("cup", "knife", 
+				new RectangleConstraint2(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(15,20)),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds() ))
 				);
 		srules.add(r2);
 
-		SpatialRule r3 = new SpatialRule("cup", "fork", 
-				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(15,20)),
+		SpatialRule2 r3 = new SpatialRule2("cup", "fork", 
+				new RectangleConstraint2(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(15,20)),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During , AllenIntervalConstraint.Type.During.getDefaultBounds()))
 
 				);
 		srules.add(r3);
 
-		SpatialRule r4 = new SpatialRule("fork", "table", 
-				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, withinReach_x_lower,withinReach_x_upper),
+		SpatialRule2 r4 = new SpatialRule2("fork", "table", 
+				new RectangleConstraint2(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, withinReach_x_lower,withinReach_x_upper),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, withinReach_y_lower, withinReach_y_upper))
 				);
 		srules.add(r4);
 
-		SpatialRule r5 = new SpatialRule("knife", "table", 
-				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, withinReach_x_lower,withinReach_x_upper),
+		SpatialRule2 r5 = new SpatialRule2("knife", "table", 
+				new RectangleConstraint2(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, withinReach_x_lower,withinReach_x_upper),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, withinReach_y_lower, withinReach_y_upper))
 				);
 		srules.add(r5);
 
-		//		SpatialRule r6 = new SpatialRule("cup", "table", 
-		//				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, withinReach_x_lower,withinReach_x_upper),
-		//						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, withinReach_y_lower, withinReach_y_upper))
-		//				);
-		//		srules.add(r6);
 
-		SpatialRule r7 = new SpatialRule("knife", "knife", 
-				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
-						knife_size_x), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, knife_size_y)));
+
+
+
+		SpatialRule2 r7 = new SpatialRule2("knife", "knife", 
+				new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.Size, knife_size_x, knife_size_y));
 		srules.add(r7);
 
-		SpatialRule r8 = new SpatialRule("cup", "cup", 
-				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
-						cup_size_x), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, cup_size_y)));
+		SpatialRule2 r8 = new SpatialRule2("cup", "cup", 
+				new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.Size, cup_size_x, cup_size_y));
 		srules.add(r8);
 
-		SpatialRule r9 = new SpatialRule("fork", "fork", 
-				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
-						fork_size_x), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, fork_size_y)));
+		SpatialRule2 r9 = new SpatialRule2("fork", "fork", 
+				new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.Size, fork_size_x, fork_size_y));
 		srules.add(r9);
 	}
 	
-	private static void getAssertionalRule(Vector<SpatialAssertionalRelation> saRelations){
+	private static void getAssertionalRule(Vector<SpatialAssertionalRelation2> saRelations){
 		
-		SpatialAssertionalRelation sa1 = new SpatialAssertionalRelation("table1", "table");
-		sa1.setCoordinate(new BoundingBox(new Bounds(0, 0), new Bounds(100, 100), new Bounds(0, 0), new Bounds(99, 99)));
+		SpatialAssertionalRelation2 sa1 = new SpatialAssertionalRelation2("table1", "table");
+		sa1.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+				new Bounds(0, 0), new Bounds(100, 100), new Bounds(0, 0), new Bounds(99, 99)));
 		OntologicalSpatialProperty tableOnto = new OntologicalSpatialProperty();
 		tableOnto.setMovable(false);
 		sa1.setOntologicalProp(tableOnto);
 		saRelations.add(sa1);
 
-		SpatialAssertionalRelation sa3 = new SpatialAssertionalRelation("fork1", "fork");
-		sa3.setCoordinate(new BoundingBox(new Bounds(31, 31), new Bounds(37, 37), new Bounds(13, 13), new Bounds(32, 32)));
+		SpatialAssertionalRelation2 sa3 = new SpatialAssertionalRelation2("fork1", "fork");		
+		sa3.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+				new Bounds(31, 31), new Bounds(37, 37), new Bounds(13, 13), new Bounds(32, 32)));
 		saRelations.add(sa3);
 
-		
-		SpatialAssertionalRelation sa2 = new SpatialAssertionalRelation("knife1", "knife");
-		sa2.setCoordinate(new BoundingBox(new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
-//		sa2.setCoordinate(new BoundingBox(new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
+		//		SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("knife1", "knife");
+		//		sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+		//				new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
+		//		saRelations.add(sa2);
+
+		SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("knife1", "knife");
+		sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+				new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
 		saRelations.add(sa2);
 
 
-		SpatialAssertionalRelation sa4 = new SpatialAssertionalRelation("cup1", "cup");
-		sa4.setCoordinate(new BoundingBox(new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
+
+		SpatialAssertionalRelation2 sa4 = new SpatialAssertionalRelation2("cup1", "cup");
+		sa4.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+				new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 		saRelations.add(sa4);
 
 	}
