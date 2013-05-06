@@ -4,6 +4,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 
 import framework.ConstraintNetwork;
+import framework.ConstraintSolver;
 
 import orbital.algorithm.Combinatorical;
 
@@ -152,14 +153,34 @@ public class TestNewImplementaionRA {
 		MetaSpatialConstraint2 objectsPosition = new MetaSpatialConstraint2();
 		objectsPosition.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
 		objectsPosition.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
-		objectsPosition.fakegeneratedMetaVariable();
-		objectsPosition.fakegeneratedmetavalues();
+//		objectsPosition.fakegeneratedMetaVariable();
+
 		
 
 		
+		MetaCSPLogging.setLevel(MetaSpatialConstraintSolver2.class, Level.FINEST);
+		MetaCSPLogging.setLevel(MetaSpatialConstraint2.class, Level.FINEST);
+//		MetaCSPLogging.setLevel(RectangleConstraintSolver2.class, Level.FINEST);
+
+		metaSolver.addMetaConstraint(objectsPosition);
 		
-//		metaSolver.addMetaConstraint(objectsPosition);
-//		metaSolver.backtrack();
+		metaSolver.backtrack();
+		
+		ConstraintNetwork.draw(objectsPosition.getGroundSolver().getConstraintNetwork(), "Constraint Network");
+//		System.out.println(metaSolver.get);
+
+
+//		for (ConstraintSolver cs : metaSolver.getGroundVariables().keySet()) {
+//			System.out.println("hiiiiiiiii" + metaSolver.getGroundVariables().get(cs).length);
+//			for (int i = 0; i < metaSolver.getGroundVariables().get(cs).length; i++) {
+//				System.out.println(metaSolver.getGroundVariables().get(cs)[i]);
+//			}
+//			
+//		}
+//		
+		
+
+		
 //
 //		System.out.println(objectsPosition.getRectangle("cup1"));
 //		System.out.println(objectsPosition.getRectangle("knife1"));

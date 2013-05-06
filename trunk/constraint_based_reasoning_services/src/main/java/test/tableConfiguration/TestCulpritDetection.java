@@ -1,11 +1,13 @@
 package test.tableConfiguration;
 
 import java.util.Vector;
+import java.util.logging.Level;
 
 import orbital.algorithm.Combinatorical;
 
 import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraintSolver;
+import meta.MetaSpatialConstraintSolver2;
 import multi.allenInterval.AllenIntervalConstraint;
 import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
 import spatial.rectangleAlgebra.BoundingBox;
@@ -16,6 +18,7 @@ import spatial.rectangleAlgebra.SpatialRule;
 import spatial.rectangleAlgebra.TwoDimensionsAllenConstraint;
 import time.APSPSolver;
 import time.Bounds;
+import utility.logging.MetaCSPLogging;
 
 public class TestCulpritDetection {
 
@@ -239,7 +242,9 @@ public class TestCulpritDetection {
 		MetaSpatialConstraint objectsPosition = new MetaSpatialConstraint();
 		objectsPosition.setSpatialRules(srules.toArray(new SpatialRule[srules.size()]));
 		objectsPosition.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation[saRelations.size()]));
-
+		
+		MetaCSPLogging.setLevel(MetaSpatialConstraintSolver.class, Level.FINEST);
+		
 		metaSolver.addMetaConstraint(objectsPosition);
 		metaSolver.backtrack();
 		
