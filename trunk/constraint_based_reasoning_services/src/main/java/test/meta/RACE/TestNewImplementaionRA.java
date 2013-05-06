@@ -38,18 +38,18 @@ public class TestNewImplementaionRA {
 	public static void main(String[] args) {
 
 
-//		int[] test = {1, 2};
-//		Combinatorical c = Combinatorical.getPermutations(3, 2,  true);
-//		System.out.println(c.count());
-//		while (c.hasNext()) {
-//			int[] combination = c.next();
-//			//System.out.println("Doing " + Arrays.toString(combination));
-//			boolean skip = false;
-//			for (int i = 0; i < combination.length; i++) {
-//				System.out.print(combination[i]);
-//			}
-//			System.out.println("hey");
-//		}
+		//		int[] test = {1, 2};
+		//		Combinatorical c = Combinatorical.getPermutations(3, 2,  true);
+		//		System.out.println(c.count());
+		//		while (c.hasNext()) {
+		//			int[] combination = c.next();
+		//			//System.out.println("Doing " + Arrays.toString(combination));
+		//			boolean skip = false;
+		//			for (int i = 0; i < combination.length; i++) {
+		//				System.out.print(combination[i]);
+		//			}
+		//			System.out.println("hey");
+		//		}
 
 		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
 
@@ -124,15 +124,15 @@ public class TestNewImplementaionRA {
 				new Bounds(31, 31), new Bounds(37, 37), new Bounds(13, 13), new Bounds(32, 32)));
 		saRelations.add(sa3);
 
-//		SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("knife1", "knife");
-//		sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
-//				new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
-//		saRelations.add(sa2);
+		//		SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("knife1", "knife");
+		//		sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+		//				new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
+		//		saRelations.add(sa2);
 
-				SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("knife1", "knife");
-				sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
-						new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
-				saRelations.add(sa2);
+		SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("knife1", "knife");
+		sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+				new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
+		saRelations.add(sa2);
 
 
 
@@ -141,50 +141,32 @@ public class TestNewImplementaionRA {
 				new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 		saRelations.add(sa4);
 
-		//.......................................................................................................
 
-		//		MetaCSPLogging.setLevel(MetaSpatialConstraintSolver2.class, Level.FINEST);
-		//		MetaCSPLogging.setLevel(RectangleConstraintSolver2.class, Level.FINEST);
-
+		//....................................
 		MetaSpatialConstraintSolver2 metaSolver = new MetaSpatialConstraintSolver2(0, 1000, 0);
-		
-		
-
 		MetaSpatialConstraint2 objectsPosition = new MetaSpatialConstraint2();
 		objectsPosition.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
 		objectsPosition.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
-//		objectsPosition.fakegeneratedMetaVariable();
 
-		
 
-		
-		MetaCSPLogging.setLevel(MetaSpatialConstraintSolver2.class, Level.FINEST);
-		MetaCSPLogging.setLevel(MetaSpatialConstraint2.class, Level.FINEST);
-//		MetaCSPLogging.setLevel(RectangleConstraintSolver2.class, Level.FINEST);
+		//		MetaCSPLogging.setLevel(MetaSpatialConstraintSolver2.class, Level.FINEST);
+		//		MetaCSPLogging.setLevel(MetaSpatialConstraint2.class, Level.FINEST);
+
 
 		metaSolver.addMetaConstraint(objectsPosition);
-		
 		metaSolver.backtrack();
-		
-		ConstraintNetwork.draw(objectsPosition.getGroundSolver().getConstraintNetwork(), "Constraint Network");
-//		System.out.println(metaSolver.get);
+
+		ConstraintNetwork.draw(metaSolver.getConstraintSolvers()[0].getConstraintNetwork(), "Constraint Network");
+		((RectangleConstraintSolver2)metaSolver.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("cup1").getAlmostCentreRectangle();
 
 
-//		for (ConstraintSolver cs : metaSolver.getGroundVariables().keySet()) {
-//			System.out.println("hiiiiiiiii" + metaSolver.getGroundVariables().get(cs).length);
-//			for (int i = 0; i < metaSolver.getGroundVariables().get(cs).length; i++) {
-//				System.out.println(metaSolver.getGroundVariables().get(cs)[i]);
-//			}
-//			
-//		}
-//		
-		
 
-		
-//
-//		System.out.println(objectsPosition.getRectangle("cup1"));
-//		System.out.println(objectsPosition.getRectangle("knife1"));
-//		System.out.println(objectsPosition.getRectangle("fork1"));
+
+
+		//
+		//		System.out.println(objectsPosition.getRectangle("cup1"));
+		//		System.out.println(objectsPosition.getRectangle("knife1"));
+		//		System.out.println(objectsPosition.getRectangle("fork1"));
 
 
 	}

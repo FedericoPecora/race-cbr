@@ -36,7 +36,6 @@ public class MetaSpatialConstraint extends MetaConstraint{
 	}
 	
 	public void setSpatialRules(SpatialRule ...rules){
-		
 
 		for (int i = 0; i < rules.length; i++) {
 			if(getVariableByName.get(rules[i].getFrom()) != null )

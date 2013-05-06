@@ -2,6 +2,9 @@ package meta;
 
 import java.util.Vector;
 
+import sandbox.spatial.rectangleAlgebra2.RectangleConstraintSolver2;
+import sandbox.spatial.rectangleAlgebra2.SpatialAssertionalRelation2;
+import sandbox.spatial.rectangleAlgebra2.SpatialRule2;
 import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
 import spatial.rectangleAlgebra.AugmentedRectangleConstraintSolver;
 import spatial.rectangleAlgebra.RectangularRegion;
@@ -31,14 +34,15 @@ public class MetaSpatioCausalConstraint extends SimpleDomain{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-    private SpatialAssertionalRelation[] sAssertionalRels;
-    private SpatialRule[] rules;
+    private SpatialAssertionalRelation2[] sAssertionalRels;
+    private SpatialRule2[] rules;
     private MetaSpatialConstraintSolver metaSpatialConstrainSolver = new MetaSpatialConstraintSolver(0);
     private MetaSpatialConstraint objectsPosition = new MetaSpatialConstraint();
 	int counter = 0;
-    
+    long origin = 0, horizon = 1000;
+	
     public MetaSpatioCausalConstraint(int[] capacities, String[] resourceNames,
-			String domainName, SpatialRule[] rules) {
+			String domainName, SpatialRule2[] rules) {
 				
 		super(capacities, resourceNames, domainName);
 		this.rules = rules;
@@ -47,25 +51,11 @@ public class MetaSpatioCausalConstraint extends SimpleDomain{
 	
     
 	
-	public void setSpatialAssertionalRelations(SpatialAssertionalRelation ...sAssertionalRels){
-		
-		this.sAssertionalRels = sAssertionalRels;
-		
+	public void setSpatialAssertionalRelations(SpatialAssertionalRelation2 ...sAssertionalRels){		
+		this.sAssertionalRels = sAssertionalRels;		
 	}
 	
 	private void getUnbounedRectangularRegion(){		
-		//creat the unjustified activities
-		//get coordinat of rectangularRegion
-		
-//		
-//		 
-//		AugmentedRectangleConstraintSolver gs= (AugmentedRectangleConstraintSolver)metaSpatialConstrainSolver.getConstraintSolvers()[0];
-//		System.out.println("heloooooooooooo"+ ((AllenIntervalNetworkSolver)((AugmentedRectangleConstraintSolver)metaSpatialConstrainSolver.getConstraintSolvers()[0]).getInternalSolver()[0]).getVariables().length);
-//		for (int i = 0; i < gs.getVariables().length; i++) {
-//			System.out.println(gs.getVariables()[i]);
-//		}
-		
-		
 		
 		
 		if(counter == 0){
@@ -91,12 +81,7 @@ public class MetaSpatioCausalConstraint extends SimpleDomain{
 	private void synthesizeSpatialknowlege(){
 		
 
-		objectsPosition.setSpatialRules(this.rules);
-		objectsPosition.setSpatialAssertionalRelations(this.sAssertionalRels);
 
-		metaSpatialConstrainSolver.addMetaConstraint(objectsPosition);
-		
-		metaSpatialConstrainSolver.backtrack();
 		
 	}
 	

@@ -1,28 +1,31 @@
 package meta;
 
-import sandbox.spatial.rectangleAlgebra2.RectangleConstraint2;
-import sandbox.spatial.rectangleAlgebra2.RectangleConstraintSolver2;
+import meta.simplePlanner.SimpleDomain;
+import meta.simplePlanner.SimplePlanner;
+import multi.activity.ActivityNetworkSolver;
+import multi.allenInterval.AllenIntervalConstraint;
 import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraintSolver;
-import time.Bounds;
+import symbols.SymbolicValueConstraint;
 import framework.ConstraintNetwork;
+import framework.ConstraintSolver;
 import framework.meta.MetaConstraintSolver;
 import framework.meta.MetaVariable;
 
-public class MetaSpatialConstraintSolver2  extends MetaConstraintSolver{
+public class MetaSpatioCausalConstraintSolver extends MetaConstraintSolver{
 
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8700618716230870106L;
+	private static final long serialVersionUID = 1L;
 
-	public MetaSpatialConstraintSolver2(long origin, long horizon, long animationTime) {
-		super(new Class[]{RectangleConstraint2.class, UnaryRectangleConstraint2.class}, 
-				animationTime, new RectangleConstraintSolver2(origin, horizon));
+	public MetaSpatioCausalConstraintSolver(long origin, long horizon, long animationTime) {
+		super(new Class[] {MetaSpatialConstraint2.class, SimpleDomain.class}, animationTime, new MetaSpatialConstraintSolver2(origin, horizon, animationTime),
+				new SimplePlanner(origin, horizon, animationTime)
+				);
+		// TODO Auto-generated constructor stub
 	}
 	
-
 	
 	@Override
 	public void preBacktrack() {
@@ -46,7 +49,6 @@ public class MetaSpatialConstraintSolver2  extends MetaConstraintSolver{
 	@Override
 	protected void addResolverSub(ConstraintNetwork metaVariable,
 			ConstraintNetwork metaValue) {
-		
 		System.out.println("metaValue: " + metaValue);
 		
 		for (int i = 0; i < metaValue.getConstraints().length; i++) {
@@ -101,4 +103,3 @@ public class MetaSpatialConstraintSolver2  extends MetaConstraintSolver{
 	}
 
 }
-
