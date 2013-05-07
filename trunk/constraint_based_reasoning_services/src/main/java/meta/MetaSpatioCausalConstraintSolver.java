@@ -4,6 +4,8 @@ import meta.simplePlanner.SimpleDomain;
 import meta.simplePlanner.SimplePlanner;
 import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
+import sandbox.spatial.rectangleAlgebra2.RectangleConstraint2;
+import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
 import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;
 import symbols.SymbolicValueConstraint;
 import framework.ConstraintNetwork;
@@ -20,9 +22,8 @@ public class MetaSpatioCausalConstraintSolver extends MetaConstraintSolver{
 	private static final long serialVersionUID = 1L;
 
 	public MetaSpatioCausalConstraintSolver(long origin, long horizon, long animationTime) {
-		super(new Class[] {MetaSpatialConstraint2.class, SimpleDomain.class}, animationTime, new MetaSpatialConstraintSolver2(origin, horizon, animationTime),
-				new SimplePlanner(origin, horizon, animationTime)
-				);
+		super(new Class[] {RectangleConstraint2.class, UnaryRectangleConstraint2.class, AllenIntervalConstraint.class}, 
+				animationTime, new SpatialFluentSolver(origin, horizon)	);
 		// TODO Auto-generated constructor stub
 	}
 	
