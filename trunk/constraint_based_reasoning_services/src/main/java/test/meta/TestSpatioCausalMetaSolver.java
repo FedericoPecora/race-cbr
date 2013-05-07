@@ -46,23 +46,26 @@ public class TestSpatioCausalMetaSolver {
 		
 		//#################################################################################################################
 		SimplePlanner planner = new SimplePlanner(0,600,0);		
-		// This is a pointer toward the ActivityNetwork solver of the Scheduler
-		ActivityNetworkSolver groundSolver = (ActivityNetworkSolver)planner.getConstraintSolvers()[0];
 		MetaCSPLogging.setLevel(planner.getClass(), Level.FINEST);
 		SimpleDomain rd = new SimpleDomain(new int[] {1}, new String[] {"arm"}, "TestDomain");		
 		addOperator(rd);		
-		//This adds the domain as a meta-constraint of the SimplePlanner
 		planner.addMetaConstraint(rd);
-		//... and we also add all its resources as separate meta-constraints
 		for (Schedulable sch : rd.getSchedulingMetaConstraints()) planner.addMetaConstraint(sch);
 		
 		//#################################################################################################################
+		
+		MetaSpatioCausalConstraintSolver metaSpatioCasualSolver = new MetaSpatioCausalConstraintSolver(0, 1000, 0);
+		MetaSpatialConstraint2 objectsPosition = new MetaSpatialConstraint2();
+		SpatialFluentSolver grounSpatialFluentSolver = (SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0];
+		
+		
+		
 		
 		//this is spatial general and assetional rule
 		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
 		Vector<SpatialAssertionalRelation2> saRelations = new Vector<SpatialAssertionalRelation2>();
 		getSpatialKnowledge(srules);
-		getAssertionalRule(saRelations);
+		getAssertionalRule(saRelations, grounSpatialFluentSolver);
 
 		//#################################################################################################################
 		//current situation + goal
@@ -78,14 +81,8 @@ public class TestSpatioCausalMetaSolver {
 		
 		
 		//#################################################################################################################
-		
-		MetaSpatioCausalConstraintSolver metaSpatioCasualSolver = new MetaSpatioCausalConstraintSolver(0, 1000, 0);
-		MetaSpatialConstraint2 objectsPosition = new MetaSpatialConstraint2();
 		objectsPosition.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
 		objectsPosition.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
-
-
-
 
 		metaSpatioCasualSolver.addMetaConstraint(objectsPosition);
 		metaSpatioCasualSolver.addMetaConstraint(rd);
@@ -93,20 +90,16 @@ public class TestSpatioCausalMetaSolver {
 
 		ConstraintNetwork.draw(metaSpatioCasualSolver.getConstraintSolvers()[0].getConstraintNetwork(), "Constraint Network");
 		((RectangleConstraintSolver2)metaSpatioCasualSolver.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("cup1").getAlmostCentreRectangle();
-
 		
-		
-
-		TimelinePublisher tp = new TimelinePublisher(groundSolver, new Bounds(0,120), "Robot1", "cup1", "knife1");
+		//draw activity network solver
+		TimelinePublisher tp = new TimelinePublisher((ActivityNetworkSolver)grounSpatialFluentSolver.getConstraintSolvers()[1], new Bounds(0,120), "Robot1", "cup1", "knife1");
 		TimelineVisualizer viz = new TimelineVisualizer(tp);
 		tp.publish(false, false);
 		tp.publish(false, true);
 		
-
-		
 		planner.backtrack();
-		
-		ConstraintNetwork.draw(groundSolver.getConstraintNetwork(), "Constraint Network");
+		//draw activity network
+		ConstraintNetwork.draw(grounSpatialFluentSolver.getConstraintSolvers()[1].getConstraintNetwork(), "Constraint Network");
 		
 		planner.draw();
 		tp.publish(true, false);
@@ -285,12 +278,9 @@ public class TestSpatioCausalMetaSolver {
 		srules.add(r9);
 	}
 	
-	private static void getAssertionalRule(Vector<SpatialAssertionalRelation2> saRelations){
+	private static void getAssertionalRule(Vector<SpatialAssertionalRelation2> saRelations, SpatialFluentSolver grounSpatialFluentSolver){
 		
-		SpatialFluentSolver spatialFluentSolver = new SpatialFluentSolver(0, 1000);
-
-		
-
+	
 		SpatialAssertionalRelation2 sa1 = new SpatialAssertionalRelation2("table1", "table");
 		sa1.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
 				new Bounds(0, 0), new Bounds(100, 100), new Bounds(0, 0), new Bounds(99, 99)));
@@ -298,7 +288,7 @@ public class TestSpatioCausalMetaSolver {
 		tableOnto.setMovable(false);
 		sa1.setOntologicalProp(tableOnto);
 		
-		SpatialFuent tableFlunet = (SpatialFuent)spatialFluentSolver.createVariable();
+		SpatialFuent tableFlunet = (SpatialFuent)grounSpatialFluentSolver.createVariable();
 		((RectangularRegion2)tableFlunet.getInternalVariables()[0]).setName("table1");
 		((Activity)tableFlunet.getInternalVariables()[1]).setSymbolicDomain("at_table1()");
 		sa1.associateSpatialFlunt(tableFlunet);
@@ -310,7 +300,7 @@ public class TestSpatioCausalMetaSolver {
 		sa3.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
 				new Bounds(31, 31), new Bounds(37, 37), new Bounds(13, 13), new Bounds(32, 32)));
 		
-		SpatialFuent forkFlunet = (SpatialFuent)spatialFluentSolver.createVariable();
+		SpatialFuent forkFlunet = (SpatialFuent)grounSpatialFluentSolver.createVariable();
 		((RectangularRegion2)forkFlunet.getInternalVariables()[0]).setName("fork1");
 		((Activity)forkFlunet.getInternalVariables()[1]).setSymbolicDomain("at_fork1_table1()");
 		sa3.associateSpatialFlunt(forkFlunet);
@@ -327,7 +317,7 @@ public class TestSpatioCausalMetaSolver {
 		sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
 				new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
 		
-		SpatialFuent knifeFlunet = (SpatialFuent)spatialFluentSolver.createVariable();
+		SpatialFuent knifeFlunet = (SpatialFuent)grounSpatialFluentSolver.createVariable();
 		((RectangularRegion2)knifeFlunet.getInternalVariables()[0]).setName("knife1");
 		((Activity)knifeFlunet.getInternalVariables()[1]).setSymbolicDomain("at_knife1_table1()");
 		sa2.associateSpatialFlunt(knifeFlunet);
@@ -339,15 +329,13 @@ public class TestSpatioCausalMetaSolver {
 		sa4.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
 				new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 		
-		SpatialFuent cupFlunet = (SpatialFuent)spatialFluentSolver.createVariable();
+		SpatialFuent cupFlunet = (SpatialFuent)grounSpatialFluentSolver.createVariable();
 		((RectangularRegion2)cupFlunet.getInternalVariables()[0]).setName("cup1");
 		((Activity)cupFlunet.getInternalVariables()[1]).setSymbolicDomain("at_cup1_table1()");
 		((Activity)cupFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
 		sa4.associateSpatialFlunt(cupFlunet);
 		
 		saRelations.add(sa4);
-
-
 	}
 
 }
