@@ -47,7 +47,7 @@ public class MetaSpatialConstraintSolver2  extends MetaConstraintSolver{
 	protected void addResolverSub(ConstraintNetwork metaVariable,
 			ConstraintNetwork metaValue) {
 		
-		System.out.println("metaValue: " + metaValue);
+//		System.out.println("metaValue: " + metaValue);
 		
 		for (int i = 0; i < metaValue.getConstraints().length; i++) {
 			if(metaValue.getConstraints()[i] instanceof UnaryRectangleConstraint2)
@@ -57,8 +57,8 @@ public class MetaSpatialConstraintSolver2  extends MetaConstraintSolver{
 							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[0], 
 							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[1], 
 							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[2], 
-							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[3]))
-						System.out.println(((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getTo());
+							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[3]));
+//						System.out.println(((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getTo());
 					
 		}
 		

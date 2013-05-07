@@ -29,6 +29,7 @@ import sandbox.spatial.rectangleAlgebra2.RectangleConstraintSolver2;
 import sandbox.spatial.rectangleAlgebra2.RectangularRegion2;
 import sandbox.spatial.rectangleAlgebra2.SpatialAssertionalRelation2;
 import sandbox.spatial.rectangleAlgebra2.RectangleConstraintSolver2;
+import sandbox.spatial.rectangleAlgebra2.SpatialFuent;
 import sandbox.spatial.rectangleAlgebra2.SpatialRule2;
 import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;
 import spatial.rectangleAlgebra.AugmentedRectangleConstraintNetwork;
@@ -74,8 +75,6 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 		this.rules = new SpatialRule2[rules.length];
 		this.rules = rules;
 	}
-
-
 
 	public void setSpatialAssertionalRelations(SpatialAssertionalRelation2 ...sAssertionalRels){
 		this.sAssertionalRels = new SpatialAssertionalRelation2[sAssertionalRels.length];
@@ -130,7 +129,7 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 		}
 
 		final HashMap<ConstraintNetwork, ConstraintNetworkSortingCritera> sortingCN = new HashMap<ConstraintNetwork, ConstraintNetworkSortingCritera>();
-		HashMap< ConstraintNetwork,HashMap<String, Bounds[]>> cnToInitPose = new HashMap<ConstraintNetwork, HashMap<String,Bounds[]>>(); 
+		HashMap< ConstraintNetwork,HashMap<String, Bounds[]>> cnToInitPose = new HashMap<ConstraintNetwork, HashMap<String,Bounds[]>>();
 		for (HashMap<String, Bounds[]> iterCN : permutation.keySet()) {
 //			for (String t : iterCN.keySet()) {
 //				System.out.println(iterCN.get(t)[0] + " " + iterCN.get(t)[1] + " " + iterCN.get(t)[2] + iterCN.get(t)[3]);
@@ -211,16 +210,12 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 						getVariableByName.put(this.rules[i].getTo(), var);
 					}
 					addedGeneralKn.add(uConsBinary);
-
 				}
-
 			}
 
 			
 			if(!iterSolver.addConstraints(addedGeneralKn.toArray(new MultiBinaryConstraint[addedGeneralKn.size()])))
 				System.out.println("Failed to general knowledge add");
-
-
 
 			//Att At cpnstraint
 			Vector<RectangularRegion2> metaVaribales = new Vector<RectangularRegion2>();
@@ -265,7 +260,7 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 			//				MetaCSPLogging.setLevel(Level.FINE);
 			if(!iterSolver.addConstraints(assertionList.toArray(new RectangleConstraint2[assertionList.size()]))){
 				isConsistent = false;
-				System.out.println("Failed to add Assertinal Constraint");
+				System.out.println("Failed to add Assertinal Constraint in first generation of all culprit..alternatives generate later...");
 			}
 
 
@@ -311,6 +306,7 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 		{  
 			ConstraintNetwork ct = new RectangleConstraintNetwork2(null); 
 			ct = (RectangleConstraintNetwork2)i.next();
+//			System.out.println("======================================================================");
 //			System.out.println(ct);
 //			System.out.println(cnToInitPose.get(ct));
 //			for (String t : cnToInitPose.get(ct).keySet()) {
@@ -318,7 +314,7 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 //			}
 //			System.out.println(sortingCN.get(ct).rigidityNumber);
 //			System.out.println(sortingCN.get(ct).culpritLevel);
-//			System.out.println(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+//			System.out.println("======================================================================");
 			alternativeSets.add(cnToInitPose.get(ct));
 
 		} 		
@@ -429,7 +425,8 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 		Vector<RectangularRegion2> targetRecs = new Vector<RectangularRegion2>();
 		Vector<UnaryRectangleConstraint2> atConstraints = new Vector<UnaryRectangleConstraint2>();
 		for (int i = 0; i < sAssertionalRels.length; i++){
-						
+			
+
 			RectangularRegion2 var = (RectangularRegion2)this.metaCS.getConstraintSolvers()[0].createVariable();
 			var.setName(sAssertionalRels[i].getFrom());
 
@@ -444,6 +441,8 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 				UnaryRectangleConstraint2 atCon = new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, atBounds);
 				atCon.setFrom(var);
 				atCon.setTo(var);
+
+
 				atConstraints.add(atCon);
 			}
 
@@ -454,13 +453,10 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 
 		generateCombinantion(atConstraints);
 
-
-
 		RectangleConstraintNetwork2 raNetwork = new RectangleConstraintNetwork2(null);
-		for (int i = 0; i < targetRecs.size(); i++) 				
-			raNetwork.addVariable(targetRecs.get(i));			
-
-
+		for (int i = 0; i < targetRecs.size(); i++) {
+			raNetwork.addVariable(targetRecs.get(i));
+		}
 
 		return new ConstraintNetwork[]{raNetwork};
 		//		return ret.toArray(new ConstraintNetwork[ret.size()]);
@@ -486,7 +482,7 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 		for (int k = 0; k < alternativeSets.size(); k++) {
 			
 			RectangleConstraintNetwork2 mvalue = new RectangleConstraintNetwork2(this.metaCS.getConstraintSolvers()[0]);
-			HashMap<String, Bounds[]> alternativeSet = generateAllAlternativeSet(conflictvars).get(k);
+			HashMap<String, Bounds[]> alternativeSet = alternativeSets.get(k);
 
 			mvalue.join(createTBOXspatialNetwork(this.metaCS.getConstraintSolvers()[0], getVariableByName)); //TBOX general knowledge in RectangleCN
 			
@@ -530,7 +526,8 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 				}
 			}
 			
-			System.out.println("mvalue: " + mvalue);
+			System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+			System.out.println("generated mvalue: " + mvalue);
 			System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 			ret.add(mvalue);
 
@@ -617,10 +614,7 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 					getVariableByName.put(this.rules[i].getTo(), var);
 				}
 				ret.addConstraint(uConsBinary);
-
 			}
-
-
 		}
 
 		return ret;

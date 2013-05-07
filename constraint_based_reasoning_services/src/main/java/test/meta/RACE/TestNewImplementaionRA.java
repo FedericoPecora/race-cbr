@@ -12,10 +12,16 @@ import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraint2;
 import meta.MetaSpatialConstraintSolver;
 import meta.MetaSpatialConstraintSolver2;
+import meta.simplePlanner.SimpleDomain.markings;
+import multi.activity.Activity;
+import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
 import sandbox.spatial.rectangleAlgebra2.RectangleConstraint2;
 import sandbox.spatial.rectangleAlgebra2.RectangleConstraintSolver2;
+import sandbox.spatial.rectangleAlgebra2.RectangularRegion2;
 import sandbox.spatial.rectangleAlgebra2.SpatialAssertionalRelation2;
+import sandbox.spatial.rectangleAlgebra2.SpatialFuent;
+import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
 import sandbox.spatial.rectangleAlgebra2.SpatialRule2;
 import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;
 import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2.Type;
@@ -36,20 +42,6 @@ public class TestNewImplementaionRA {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
-
-		//		int[] test = {1, 2};
-		//		Combinatorical c = Combinatorical.getPermutations(3, 2,  true);
-		//		System.out.println(c.count());
-		//		while (c.hasNext()) {
-		//			int[] combination = c.next();
-		//			//System.out.println("Doing " + Arrays.toString(combination));
-		//			boolean skip = false;
-		//			for (int i = 0; i < combination.length; i++) {
-		//				System.out.print(combination[i]);
-		//			}
-		//			System.out.println("hey");
-		//		}
 
 		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
 
@@ -107,7 +99,7 @@ public class TestNewImplementaionRA {
 				new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.Size, fork_size_x, fork_size_y));
 		srules.add(r9);
 
-
+		//###############################################################################################
 		//Assertion
 		Vector<SpatialAssertionalRelation2> saRelations = new Vector<SpatialAssertionalRelation2>();
 
@@ -117,32 +109,40 @@ public class TestNewImplementaionRA {
 		OntologicalSpatialProperty tableOnto = new OntologicalSpatialProperty();
 		tableOnto.setMovable(false);
 		sa1.setOntologicalProp(tableOnto);
+		
+		
 		saRelations.add(sa1);
+		//............................................................................................
 
 		SpatialAssertionalRelation2 sa3 = new SpatialAssertionalRelation2("fork1", "fork");		
 		sa3.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
 				new Bounds(31, 31), new Bounds(37, 37), new Bounds(13, 13), new Bounds(32, 32)));
+		
+
 		saRelations.add(sa3);
 
 		//		SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("knife1", "knife");
 		//		sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
 		//				new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 		//		saRelations.add(sa2);
-
+		
+		//.........................................................................................
 		SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("knife1", "knife");
 		sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
 				new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
+				
 		saRelations.add(sa2);
-
-
-
+		
+		//....................................................................................
 		SpatialAssertionalRelation2 sa4 = new SpatialAssertionalRelation2("cup1", "cup");
 		sa4.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
 				new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
+		
+				
 		saRelations.add(sa4);
 
 
-		//....................................
+		//####################################################################################################
 		MetaSpatialConstraintSolver2 metaSolver = new MetaSpatialConstraintSolver2(0, 1000, 0);
 		MetaSpatialConstraint2 objectsPosition = new MetaSpatialConstraint2();
 		objectsPosition.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
@@ -155,13 +155,11 @@ public class TestNewImplementaionRA {
 
 		metaSolver.addMetaConstraint(objectsPosition);
 		metaSolver.backtrack();
-
+		
+//		System.out.println(metaSolver.getConstraintSolvers()[0]);
+		
 		ConstraintNetwork.draw(metaSolver.getConstraintSolvers()[0].getConstraintNetwork(), "Constraint Network");
 		((RectangleConstraintSolver2)metaSolver.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("cup1").getAlmostCentreRectangle();
-
-
-
-
 
 		//
 		//		System.out.println(objectsPosition.getRectangle("cup1"));
