@@ -5,18 +5,16 @@ import java.util.Vector;
 import java.util.logging.Level;
 
 import meta.MetaCausalConstraint;
+import meta.MetaCausalConstraint.markings;
 import meta.MetaSpatialConstraint2;
 import meta.MetaSpatialConstraintSolver2;
 import meta.MetaSpatialFluentConstraint;
 import meta.MetaSpatioCausalConstraint;
 import meta.MetaSpatioCausalConstraintSolver;
-import meta.simplePlanner.SimpleDomain;
+
 import meta.simplePlanner.SimpleOperator;
-import meta.simplePlanner.SimplePlanner;
-import meta.simplePlanner.SimpleDomain.markings;
 import meta.symbolsAndTime.Schedulable;
 import multi.activity.Activity;
-import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
 import sandbox.spatial.rectangleAlgebra2.RectangleConstraint2;
 import sandbox.spatial.rectangleAlgebra2.RectangleConstraintSolver2;
@@ -49,7 +47,7 @@ public class TestSpatioCausalMetaSolver {
 		SpatialFluentSolver grounSpatialFluentSolver = (SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0];
 		
 		//#################################################################################################################
-		MetaCausalConstraint rd = new MetaCausalConstraint(new int[] {1}, new String[] {"arm"}, "TestDomain");		
+		MetaCausalConstraint rd = new MetaCausalConstraint(new int[] {1}, new String[] {"arm"}, "WellSetTableDomain");		
 		addOperator(rd);		
 		//#################################################################################################################
 		
@@ -73,7 +71,7 @@ public class TestSpatioCausalMetaSolver {
 			metaSpatioCasualSolver.addMetaConstraint(sch);
 		}
 		
-//		MetaCSPLogging.setLevel(MetaSpatialFluentConstraint.class, Level.FINE);
+		MetaCSPLogging.setLevel(MetaSpatioCausalConstraintSolver.class, Level.FINE);
 		metaSpatioCasualSolver.backtrack();
 
 		//#####################################################################################################################
@@ -82,20 +80,20 @@ public class TestSpatioCausalMetaSolver {
 		System.out.println(((RectangleConstraintSolver2)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
 				.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("cup1").getAlmostCentreRectangle());
 		
-		System.out.println(((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]));
+//		System.out.println(((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]));
 
 		
-		//draw activity network solver
-		TimelinePublisher tp = new TimelinePublisher(
-				((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1])
-						, new Bounds(0,120), "robot1");
-		TimelineVisualizer viz = new TimelineVisualizer(tp);
-		tp.publish(false, false);
-		tp.publish(false, true);
-		//draw activity network
-//		ConstraintNetwork.draw(((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
-//				.getConstraintSolvers()[1]).getConstraintNetwork(), "Constraint Network");
-		tp.publish(true, false);
+//		//draw activity network solver
+//		TimelinePublisher tp = new TimelinePublisher(
+//				((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1])
+//						, new Bounds(0,120), "robot1");
+//		TimelineVisualizer viz = new TimelineVisualizer(tp);
+//		tp.publish(false, false);
+//		tp.publish(false, true);
+//		//draw activity network
+////		ConstraintNetwork.draw(((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
+////				.getConstraintSolvers()[1]).getConstraintNetwork(), "Constraint Network");
+//		tp.publish(true, false);
 		//#####################################################################################################################
 	}
 	

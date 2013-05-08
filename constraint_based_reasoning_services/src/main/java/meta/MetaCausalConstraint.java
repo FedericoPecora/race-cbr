@@ -7,8 +7,6 @@ import sandbox.spatial.rectangleAlgebra2.SpatialFluent;
 import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
 
 import meta.simplePlanner.SimpleOperator;
-import meta.simplePlanner.SimpleReusableResource;
-import meta.simplePlanner.SimpleDomain.markings;
 import meta.symbolsAndTime.Schedulable;
 import multi.activity.Activity;
 import multi.activity.ActivityNetwork;
@@ -82,31 +80,17 @@ public class MetaCausalConstraint extends MetaConstraint {
 //		ActivityNetworkSolver groundSolver = (ActivityNetworkSolver)this.metaCS.getConstraintSolvers()[0];
 //		(SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[0]
 		
-		ActivityNetworkSolver groundSolver = (ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
+		
 		Vector<ConstraintNetwork> ret = new Vector<ConstraintNetwork>();
 		for (int i = 0; i < ((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables().length; i++) {
-			
-//			System.out.println(((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[i]).getActivity().getMarking());
-			if(((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[i]).getActivity().getMarking().equals(markings.UNJUSTIFIED)){
+			Activity act = ((Activity)((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[i]).getActivity());
+			if(act.getMarking().equals(markings.UNJUSTIFIED)){
 				ActivityNetwork nw = new ActivityNetwork(null);
 				nw.addVariable(((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[i]).getActivity());
 				ret.add(nw);
 			}
 		}
-		
-		System.out.println("heloooooooooooooooooooooooooooooooooooooooooo");
-		
-//		Vector<ConstraintNetwork> ret = new Vector<ConstraintNetwork>();
-//		// for every variable that is marked as UNJUSTIFIED an ActivityNetwork is built
-//		// this becomes a task
-//		for (Variable task : groundSolver.getVariables()) {
-//			System.out.println("task: "  +task);
-//			if (task.getMarking().equals(markings.UNJUSTIFIED)) {
-//				ActivityNetwork nw = new ActivityNetwork(null);
-//				nw.addVariable(task);
-//				ret.add(nw);
-//			}
-//		}
+				
 		return ret.toArray(new ConstraintNetwork[ret.size()]);
 	}
 
@@ -128,7 +112,10 @@ public class MetaCausalConstraint extends MetaConstraint {
 					operatorTailActivitiesToInsert.add(problematicActivity);
 				}
 				else {
-					VariablePrototype tailActivity = new VariablePrototype(groundSolver, possibleOperatorTailComponent, possibleOperatorTailSymbol);
+					VariablePrototype tailActivity = new VariablePrototype(
+							(ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]),
+							possibleOperatorTailComponent, possibleOperatorTailSymbol);
+					
 					tailActivity.setMarking(markings.UNJUSTIFIED);
 					operatorTailActivitiesToInsert.add(tailActivity);
 				}
@@ -199,7 +186,6 @@ public class MetaCausalConstraint extends MetaConstraint {
 	public ConstraintNetwork[] getMetaValues(MetaVariable metaVariable) {
 		Vector<ConstraintNetwork> retPossibleConstraintNetworks = new Vector<ConstraintNetwork>();
 		ConstraintNetwork problematicNetwork = metaVariable.getConstraintNetwork();
-		System.out.println("problematicNetwork: " + problematicNetwork);
 		Activity problematicActivity = (Activity)problematicNetwork.getVariables()[0]; 
 
 		for (SimpleOperator r : operators) {
@@ -215,7 +201,9 @@ public class MetaCausalConstraint extends MetaConstraint {
 			}
 		}
 		
-		if (!retPossibleConstraintNetworks.isEmpty()) return retPossibleConstraintNetworks.toArray(new ConstraintNetwork[retPossibleConstraintNetworks.size()]);
+		if (!retPossibleConstraintNetworks.isEmpty())
+			return retPossibleConstraintNetworks.toArray(new ConstraintNetwork[retPossibleConstraintNetworks.size()]);
+
 		ActivityNetwork nullActivityNetwork = new ActivityNetwork(null);
 		return new ConstraintNetwork[] {nullActivityNetwork};
 	}
@@ -234,13 +222,13 @@ public class MetaCausalConstraint extends MetaConstraint {
 		return resourcesMap;
 	}
 	// Given a variable act, it returns all the RubReusRes that are currently exploited by the variable
-	public SimpleReusableResource[] getCurrentReusableResourcesUsedByActivity(Variable act) {
+	public SimpleReusableResource2[] getCurrentReusableResourcesUsedByActivity(Variable act) {
 		Vector<SimpleReusableResource2> ret = new Vector<SimpleReusableResource2>();
 		for (SimpleReusableResource2 rr : currentResourceUtilizers.keySet()) {
 			if (currentResourceUtilizers.get(rr).containsKey(act)) 
 				ret.add(rr);
 		}
-		return ret.toArray(new SimpleReusableResource[ret.size()]);
+		return ret.toArray(new SimpleReusableResource2[ret.size()]);
 	}
 
 	public int getResourceUsageLevel(SimpleReusableResource2 rr, Variable act) {
@@ -250,7 +238,7 @@ public class MetaCausalConstraint extends MetaConstraint {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "SimpleDomain " + this.name;
+		return "MetaCasualConstraint " + this.name;
 	}
 
 	@Override

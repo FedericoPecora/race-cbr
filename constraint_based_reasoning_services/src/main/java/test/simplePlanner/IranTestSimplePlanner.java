@@ -45,7 +45,7 @@ public class IranTestSimplePlanner {
 	public static void main(String[] args) {
 
 
-		MetaCSPLogging.setLevel(TimelinePublisher.class, Level.FINEST);
+//		MetaCSPLogging.setLevel(TimelinePublisher.class, Level.FINEST);
 
 		SimplePlanner planner = new SimplePlanner(0,600,0);		
 		// This is a pointer toward the ActivityNetwork solver of the Scheduler
@@ -179,25 +179,22 @@ public class IranTestSimplePlanner {
 		for (Schedulable sch : rd.getSchedulingMetaConstraints()) planner.addMetaConstraint(sch);
 		
 		// INITIAL AND GOAL STATE DEFS
+		Activity three = (Activity)groundSolver.createVariable("robot1");
+		three.setSymbolicDomain("at_knife1_table1()");
+		three.setMarking(markings.UNJUSTIFIED);
+		
+		
 		Activity one = (Activity)groundSolver.createVariable("robot1");
 		one.setSymbolicDomain("at_cup1_table1()");
-		
-		// ... this is a goal (i.e., an activity to justify through the meta-constraint)
 		one.setMarking(markings.UNJUSTIFIED);
 		
 
-//		Activity two = (Activity)groundSolver.createVariable("Robot1");
-//		two.setSymbolicDomain("place_fork(arm)");
-//		
-//		// ... this is a goal (i.e., an activity to justify through the meta-constraint)
-//		two.setMarking(markings.UNJUSTIFIED);
+		Activity two = (Activity)groundSolver.createVariable("robot1");
+		two.setSymbolicDomain("at_fork1_table1()");
+		two.setMarking(markings.UNJUSTIFIED);
 		
-//		
-//		Activity three = (Activity)groundSolver.createVariable("Robot1");
-//		three.setSymbolicDomain("place_knife(arm)");
-//		
-//		// ... this is a goal (i.e., an activity to justify through the meta-constraint)
-//		three.setMarking(markings.UNJUSTIFIED);
+		
+		
 		
 		planner.backtrack();
 		
