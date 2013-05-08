@@ -2,11 +2,10 @@ package meta;
 
 import java.util.HashMap;
 
-import meta.simplePlanner.SimpleDomain;
-import meta.simplePlanner.SimpleDomain.markings;
-import meta.simplePlanner.SimplePlanner;
+
+import meta.MetaCausalConstraint.markings;
 import multi.activity.Activity;
-import multi.activity.ActivityNetworkSolver;
+
 import multi.allenInterval.AllenIntervalConstraint;
 import sandbox.spatial.rectangleAlgebra2.RectangleConstraint2;
 import sandbox.spatial.rectangleAlgebra2.RectangularRegion2;
@@ -15,7 +14,6 @@ import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
 import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;
 import symbols.SymbolicValueConstraint;
 import framework.ConstraintNetwork;
-import framework.ConstraintSolver;
 import framework.meta.MetaConstraintSolver;
 import framework.meta.MetaVariable;
 
@@ -28,7 +26,7 @@ public class MetaSpatioCausalConstraintSolver extends MetaConstraintSolver{
 	private static final long serialVersionUID = 1L;
 
 	public MetaSpatioCausalConstraintSolver(long origin, long horizon, long animationTime) {
-		super(new Class[] {RectangleConstraint2.class, UnaryRectangleConstraint2.class, AllenIntervalConstraint.class}, 
+		super(new Class[] {RectangleConstraint2.class, UnaryRectangleConstraint2.class, AllenIntervalConstraint.class, SymbolicValueConstraint.class}, 
 				animationTime, new SpatialFluentSolver(origin, horizon)	);
 		// TODO Auto-generated constructor stub
 	}
@@ -72,15 +70,9 @@ public class MetaSpatioCausalConstraintSolver extends MetaConstraintSolver{
 							if(((RectangularRegion2)metaValue.getConstraints()[i].getScope()[0]).getName().compareTo
 									(((SpatialFluent)metaVariable.getVariables()[j]).getName()) == 0)
 								((Activity)((SpatialFluent)metaVariable.getVariables()[j]).getActivity()).setMarking(markings.UNJUSTIFIED);
-						}
-						
+						}						
 					}
-						
-					
 		}
-
-
-		
 		
 	}
 
