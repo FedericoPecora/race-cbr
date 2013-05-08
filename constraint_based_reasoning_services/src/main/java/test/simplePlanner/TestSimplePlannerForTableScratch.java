@@ -52,7 +52,7 @@ public class TestSimplePlannerForTableScratch {
 		operator1.addConstraint(durationPlaceFork, 0, 0);
 		rd.addOperator(operator1);
 		
-		SimpleOperator operator2 = new SimpleOperator("Robot1::place_cup(arm)",
+		SimpleOperator operator2 = new SimpleOperator("Robot1::place_cup()",
 				new AllenIntervalConstraint[] {placeCupAfterPickup},
 				new String[] {"Robot1::pickup_cup(arm)"},
 				new int[] {1});
@@ -74,70 +74,6 @@ public class TestSimplePlannerForTableScratch {
 		rd.addOperator(operator2res);
 		
 		
-
-		
-//		SimpleOperator operator3 = new SimpleOperator("Robot1::place_knife(arm)",
-//				new AllenIntervalConstraint[] {moveToDuringLocalization},
-//				new String[] {"Robot1::pickup_knife(arm)"},
-//				null);
-//		rd.addOperator(operator3);
-//		
-//		SimpleOperator operator4 = new SimpleOperator("Robot1::pickup_cup(arm)",
-//				null,
-//				null,
-//				new int[] {1});
-//		rd.addOperator(operator4);
-//		
-//		
-//		SimpleOperator operator5 = new SimpleOperator("Robot1::pickup_fork(arm)",
-//				null,
-//				null,
-//				new int[] {1});
-//		rd.addOperator(operator5);
-//		
-//		SimpleOperator operator6 = new SimpleOperator("Robot1::pickup_knife(arm)",
-//				null,
-//				null,
-//				new int[] {1});
-//		rd.addOperator(operator6);
-//		
-//		
-//		
-//		SimpleOperator operator7 = new SimpleOperator("Robot1::place_cup(arm)",
-//				null,
-//				null,
-//				new int[] {1});
-//		rd.addOperator(operator7);
-//		
-//		
-//		SimpleOperator operator8 = new SimpleOperator("Robot1::place_fork(arm)",
-//				null,
-//				null,
-//				new int[] {1});
-//		rd.addOperator(operator8);
-//		
-//		SimpleOperator operator9 = new SimpleOperator("Robot1::place_knife(arm)",
-//				null,
-//				null,
-//				new int[] {1});
-//		rd.addOperator(operator9);
-
-//		SimpleOperator operator4 = new SimpleOperator("Robot1::pickup_cup()",
-//				new AllenIntervalConstraint[] {moveToDuringLocalization},
-//				new String[] {"Robot1::place_fork()"},
-//				null);
-//		rd.addOperator(operator4);
-//
-//		
-//		SimpleOperator operator5 = new SimpleOperator("Robot1::pickup_cup()",
-//				new AllenIntervalConstraint[] {moveToDuringLocalization},
-//				new String[] {"Robot1::place_knife()"},
-//				null);
-//		rd.addOperator(operator5);
-		
-
-		
-		
 		
 		//This adds the domain as a meta-constraint of the SimplePlanner
 		planner.addMetaConstraint(rd);
@@ -146,17 +82,17 @@ public class TestSimplePlannerForTableScratch {
 		
 		// INITIAL AND GOAL STATE DEFS
 		Activity one = (Activity)groundSolver.createVariable("Robot1");
-		one.setSymbolicDomain("place_cup(arm)");
+		one.setSymbolicDomain("place_cup()");
 		
 		// ... this is a goal (i.e., an activity to justify through the meta-constraint)
 		one.setMarking(markings.UNJUSTIFIED);
 		
 
-		Activity two = (Activity)groundSolver.createVariable("Robot1");
-		two.setSymbolicDomain("place_fork(arm)");
-		
-		// ... this is a goal (i.e., an activity to justify through the meta-constraint)
-		two.setMarking(markings.UNJUSTIFIED);
+//		Activity two = (Activity)groundSolver.createVariable("Robot1");
+//		two.setSymbolicDomain("place_fork(arm)");
+//		
+//		// ... this is a goal (i.e., an activity to justify through the meta-constraint)
+//		two.setMarking(markings.UNJUSTIFIED);
 		
 //		
 //		Activity three = (Activity)groundSolver.createVariable("Robot1");
