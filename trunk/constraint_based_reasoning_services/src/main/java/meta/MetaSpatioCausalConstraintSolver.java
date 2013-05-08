@@ -1,10 +1,16 @@
 package meta;
 
+import java.util.HashMap;
+
 import meta.simplePlanner.SimpleDomain;
+import meta.simplePlanner.SimpleDomain.markings;
 import meta.simplePlanner.SimplePlanner;
+import multi.activity.Activity;
 import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
 import sandbox.spatial.rectangleAlgebra2.RectangleConstraint2;
+import sandbox.spatial.rectangleAlgebra2.RectangularRegion2;
+import sandbox.spatial.rectangleAlgebra2.SpatialFluent;
 import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
 import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;
 import symbols.SymbolicValueConstraint;
@@ -50,20 +56,31 @@ public class MetaSpatioCausalConstraintSolver extends MetaConstraintSolver{
 	@Override
 	protected void addResolverSub(ConstraintNetwork metaVariable,
 			ConstraintNetwork metaValue) {
-		System.out.println("metaValue: " + metaValue);
 		
+				
 		for (int i = 0; i < metaValue.getConstraints().length; i++) {
 			if(metaValue.getConstraints()[i] instanceof UnaryRectangleConstraint2)
 				//this if will check for unboudned obj in order to create the goal
 				if(((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getType().equals(UnaryRectangleConstraint2.Type.At)) 
-					if(((MetaSpatialConstraint2)this.metaConstraints.get(0)).isUnboundedBoundingBox(
+					if(((MetaSpatialFluentConstraint)this.metaConstraints.get(0)).isUnboundedBoundingBox(
 							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[0], 
 							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[1], 
 							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[2], 
-							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[3]))
-						System.out.println(((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getTo());
+							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[3])){
+						
+						for (int j = 0; j < metaVariable.getVariables().length; j++) {
+							if(((RectangularRegion2)metaValue.getConstraints()[i].getScope()[0]).getName().compareTo
+									(((SpatialFluent)metaVariable.getVariables()[j]).getName()) == 0)
+								((Activity)((SpatialFluent)metaVariable.getVariables()[j]).getActivity()).setMarking(markings.UNJUSTIFIED);
+						}
+						
+					}
+						
 					
 		}
+
+
+		
 		
 	}
 

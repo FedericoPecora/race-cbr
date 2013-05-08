@@ -20,7 +20,7 @@ import sandbox.spatial.rectangleAlgebra2.RectangleConstraint2;
 import sandbox.spatial.rectangleAlgebra2.RectangleConstraintSolver2;
 import sandbox.spatial.rectangleAlgebra2.RectangularRegion2;
 import sandbox.spatial.rectangleAlgebra2.SpatialAssertionalRelation2;
-import sandbox.spatial.rectangleAlgebra2.SpatialFuent;
+import sandbox.spatial.rectangleAlgebra2.SpatialFluent;
 import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
 import sandbox.spatial.rectangleAlgebra2.SpatialRule2;
 import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;

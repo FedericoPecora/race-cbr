@@ -4,8 +4,10 @@ package test.meta;
 import java.util.Vector;
 import java.util.logging.Level;
 
+import meta.MetaCausalConstraint;
 import meta.MetaSpatialConstraint2;
 import meta.MetaSpatialConstraintSolver2;
+import meta.MetaSpatialFluentConstraint;
 import meta.MetaSpatioCausalConstraint;
 import meta.MetaSpatioCausalConstraintSolver;
 import meta.simplePlanner.SimpleDomain;
@@ -20,7 +22,7 @@ import sandbox.spatial.rectangleAlgebra2.RectangleConstraint2;
 import sandbox.spatial.rectangleAlgebra2.RectangleConstraintSolver2;
 import sandbox.spatial.rectangleAlgebra2.RectangularRegion2;
 import sandbox.spatial.rectangleAlgebra2.SpatialAssertionalRelation2;
-import sandbox.spatial.rectangleAlgebra2.SpatialFuent;
+import sandbox.spatial.rectangleAlgebra2.SpatialFluent;
 import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
 import sandbox.spatial.rectangleAlgebra2.SpatialRule2;
 import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;
@@ -42,24 +44,14 @@ public class TestSpatioCausalMetaSolver {
 	public static void main(String[] args) {
 
 
-		MetaCSPLogging.setLevel(TimelinePublisher.class, Level.FINEST);
-		
-		//#################################################################################################################
-		SimplePlanner planner = new SimplePlanner(0,600,0);		
-		MetaCSPLogging.setLevel(planner.getClass(), Level.FINEST);
-		SimpleDomain rd = new SimpleDomain(new int[] {1}, new String[] {"arm"}, "TestDomain");		
-		addOperator(rd);		
-		planner.addMetaConstraint(rd);
-		for (Schedulable sch : rd.getSchedulingMetaConstraints()) planner.addMetaConstraint(sch);
-		
-		//#################################################################################################################
-		
 		MetaSpatioCausalConstraintSolver metaSpatioCasualSolver = new MetaSpatioCausalConstraintSolver(0, 1000, 0);
-		MetaSpatialConstraint2 objectsPosition = new MetaSpatialConstraint2();
+		MetaSpatialFluentConstraint metaSpatialFluentConstraint = new MetaSpatialFluentConstraint();
 		SpatialFluentSolver grounSpatialFluentSolver = (SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0];
 		
-		
-		
+		//#################################################################################################################
+		MetaCausalConstraint rd = new MetaCausalConstraint(new int[] {1}, new String[] {"arm"}, "TestDomain");		
+		addOperator(rd);		
+		//#################################################################################################################
 		
 		//this is spatial general and assetional rule
 		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
@@ -67,45 +59,47 @@ public class TestSpatioCausalMetaSolver {
 		getSpatialKnowledge(srules);
 		getAssertionalRule(saRelations, grounSpatialFluentSolver);
 
-		//#################################################################################################################
-		//current situation + goal
-//		SpatialFluentSolver spSolver = new SpatialFluentSolver(0, 1000);
-//		
-//		SpatialFeunt forkAtTable = (SpatialFeunt)spSolver.createVariable();
-//		//set symbolic domain for planning
-//		//set name + at constraint 
-//		
-//		SpatialFeunt knifeAtTable = (SpatialFeunt)spSolver.createVariable();
-//		SpatialFeunt cupAtTable = (SpatialFeunt)spSolver.createVariable();
-		
-		
 		
 		//#################################################################################################################
-		objectsPosition.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
-		objectsPosition.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
-
-		metaSpatioCasualSolver.addMetaConstraint(objectsPosition);
+		//add spatial general and assertional rule to MetaSpatialFluentConstraint
+		metaSpatialFluentConstraint.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
+		metaSpatialFluentConstraint.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
+		
+		//add meta constraint
+		metaSpatioCasualSolver.addMetaConstraint(metaSpatialFluentConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(rd);
+		
+		for (Schedulable sch : rd.getSchedulingMetaConstraints()) {
+			metaSpatioCasualSolver.addMetaConstraint(sch);
+		}
+		
+//		MetaCSPLogging.setLevel(MetaSpatialFluentConstraint.class, Level.FINE);
 		metaSpatioCasualSolver.backtrack();
 
+		//#####################################################################################################################
 		ConstraintNetwork.draw(metaSpatioCasualSolver.getConstraintSolvers()[0].getConstraintNetwork(), "Constraint Network");
-		((RectangleConstraintSolver2)metaSpatioCasualSolver.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("cup1").getAlmostCentreRectangle();
+		
+		System.out.println(((RectangleConstraintSolver2)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
+				.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("cup1").getAlmostCentreRectangle());
+		
+		System.out.println(((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]));
+
 		
 		//draw activity network solver
-		TimelinePublisher tp = new TimelinePublisher((ActivityNetworkSolver)grounSpatialFluentSolver.getConstraintSolvers()[1], new Bounds(0,120), "Robot1", "cup1", "knife1");
+		TimelinePublisher tp = new TimelinePublisher(
+				((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1])
+						, new Bounds(0,120), "robot1");
 		TimelineVisualizer viz = new TimelineVisualizer(tp);
 		tp.publish(false, false);
 		tp.publish(false, true);
-		
-		planner.backtrack();
 		//draw activity network
-		ConstraintNetwork.draw(grounSpatialFluentSolver.getConstraintSolvers()[1].getConstraintNetwork(), "Constraint Network");
-		
-		planner.draw();
+//		ConstraintNetwork.draw(((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
+//				.getConstraintSolvers()[1]).getConstraintNetwork(), "Constraint Network");
 		tp.publish(true, false);
+		//#####################################################################################################################
 	}
 	
-	private static void addOperator(SimpleDomain rd) {
+	private static void addOperator(MetaCausalConstraint rd) {
 		
 		AllenIntervalConstraint atCupAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
 		AllenIntervalConstraint atCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
@@ -134,28 +128,28 @@ public class TestSpatioCausalMetaSolver {
 		AllenIntervalConstraint pickFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 
 		
-		SimpleOperator operator1 = new SimpleOperator("robot::at_cup1_table1()",
+		SimpleOperator operator1 = new SimpleOperator("robot1::at_cup1_table1()",
 				new AllenIntervalConstraint[] {atCupAfterPlace},
-				new String[] {"Robot1::place_cup1_table1(arm)"},
+				new String[] {"robot1::place_cup1_table1(arm)"},
 				new int[] {1});
 		operator1.addConstraint(atCup1Duration, 0, 0);
 		rd.addOperator(operator1);
 		
-		SimpleOperator operator2 = new SimpleOperator("Robot1::place_cup1_table1(arm)",
+		SimpleOperator operator2 = new SimpleOperator("robot1::place_cup1_table1(arm)",
 				new AllenIntervalConstraint[] {placeCupAfterholding},
-				new String[] {"Robot1::holding_cup1(arm)"},
+				new String[] {"robot1::holding_cup1(arm)"},
 				new int[] {1});
 		operator2.addConstraint(placeCup1Duration, 0, 0);
 		rd.addOperator(operator2);
 
-		SimpleOperator operator3 = new SimpleOperator("Robot1::holding_cup1(arm)",
+		SimpleOperator operator3 = new SimpleOperator("robot1::holding_cup1(arm)",
 				new AllenIntervalConstraint[] {holdingCupAfterPick},
-				new String[] {"Robot1::pick_cup1(arm)"},
+				new String[] {"robot1::pick_cup1(arm)"},
 				new int[] {1});
 		operator3.addConstraint(holdingCup1Duration, 0, 0);
 		rd.addOperator(operator3);
 		
-		SimpleOperator operator1res = new SimpleOperator("Robot1::pick_cup1(arm)",
+		SimpleOperator operator1res = new SimpleOperator("robot1::pick_cup1(arm)",
 				null,
 				null,
 				new int[] {1});
@@ -164,28 +158,28 @@ public class TestSpatioCausalMetaSolver {
 		
 		//........................
 
-		SimpleOperator operator4 = new SimpleOperator("robot::at_knife1_table1()",
+		SimpleOperator operator4 = new SimpleOperator("robot1::at_knife1_table1()",
 				new AllenIntervalConstraint[] {atKnifeAfterPlace},
-				new String[] {"Robot1::place_knife1_table1(arm)"},
+				new String[] {"robot1::place_knife1_table1(arm)"},
 				new int[] {1});
 		operator4.addConstraint(atKnife1Duration, 0, 0);
 		rd.addOperator(operator4);
 		
-		SimpleOperator operator5 = new SimpleOperator("Robot1::place_knife1_table1(arm)",
+		SimpleOperator operator5 = new SimpleOperator("robot1::place_knife1_table1(arm)",
 				new AllenIntervalConstraint[] {placeKnifeAfterholding},
-				new String[] {"Robot1::holding_knife1(arm)"},
+				new String[] {"robot1::holding_knife1(arm)"},
 				new int[] {1});
 		operator5.addConstraint(placeKnife1Duration, 0, 0);
 		rd.addOperator(operator5);
 
-		SimpleOperator operator6 = new SimpleOperator("Robot1::holding_knife1(arm)",
+		SimpleOperator operator6 = new SimpleOperator("robot1::holding_knife1(arm)",
 				new AllenIntervalConstraint[] {holdingKnifeAfterPick},
-				new String[] {"Robot1::pick_knife1(arm)"},
+				new String[] {"robot1::pick_knife1(arm)"},
 				new int[] {1});
 		operator6.addConstraint(holdingKnife1Duration, 0, 0);
 		rd.addOperator(operator6);
 		
-		SimpleOperator operator2res = new SimpleOperator("Robot1::pick_knife1(arm)",
+		SimpleOperator operator2res = new SimpleOperator("robot1::pick_knife1(arm)",
 				null,
 				null,
 				new int[] {1});
@@ -194,28 +188,28 @@ public class TestSpatioCausalMetaSolver {
 
 		//........................
 		
-		SimpleOperator operator7 = new SimpleOperator("robot::at_fork_table1()",
+		SimpleOperator operator7 = new SimpleOperator("robot1::at_fork_table1()",
 				new AllenIntervalConstraint[] {atForkAfterPlace},
-				new String[] {"Robot1::place_fork1_table1(arm)"},
+				new String[] {"robot1::place_fork1_table1(arm)"},
 				new int[] {1});
 		operator7.addConstraint(atFork1Duration, 0, 0);
 		rd.addOperator(operator7);
 		
-		SimpleOperator operator8 = new SimpleOperator("Robot1::place_fork1_table1(arm)",
+		SimpleOperator operator8 = new SimpleOperator("robot1::place_fork1_table1(arm)",
 				new AllenIntervalConstraint[] {placeForkAfterholding},
-				new String[] {"Robot1::holding_fork1(arm)"},
+				new String[] {"robot1::holding_fork1(arm)"},
 				new int[] {1});
 		operator8.addConstraint(placeFork1Duration, 0, 0);
 		rd.addOperator(operator8);
 
-		SimpleOperator operator9 = new SimpleOperator("Robot1::holding_fork1(arm)",
+		SimpleOperator operator9 = new SimpleOperator("robot1::holding_fork1(arm)",
 				new AllenIntervalConstraint[] {holdingForkAfterPick},
-				new String[] {"Robot1::pick_fork1(arm)"},
+				new String[] {"robot1::pick_fork1(arm)"},
 				new int[] {1});
 		operator9.addConstraint(holdingFork1Duration, 0, 0);
 		rd.addOperator(operator9);
 		
-		SimpleOperator operator3res = new SimpleOperator("Robot1::pick_fork1(arm)",
+		SimpleOperator operator3res = new SimpleOperator("robot1::pick_fork1(arm)",
 				null,
 				null,
 				new int[] {1});
@@ -288,9 +282,11 @@ public class TestSpatioCausalMetaSolver {
 		tableOnto.setMovable(false);
 		sa1.setOntologicalProp(tableOnto);
 		
-		SpatialFuent tableFlunet = (SpatialFuent)grounSpatialFluentSolver.createVariable();
+		SpatialFluent tableFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable();
+		tableFlunet.setName("table1");
 		((RectangularRegion2)tableFlunet.getInternalVariables()[0]).setName("table1");
 		((Activity)tableFlunet.getInternalVariables()[1]).setSymbolicDomain("at_table1()");
+		((Activity)tableFlunet.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
 		sa1.associateSpatialFlunt(tableFlunet);
 		
 		saRelations.add(sa1);
@@ -300,9 +296,11 @@ public class TestSpatioCausalMetaSolver {
 		sa3.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
 				new Bounds(31, 31), new Bounds(37, 37), new Bounds(13, 13), new Bounds(32, 32)));
 		
-		SpatialFuent forkFlunet = (SpatialFuent)grounSpatialFluentSolver.createVariable();
+		SpatialFluent forkFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable();
+		forkFlunet.setName("fork1");
 		((RectangularRegion2)forkFlunet.getInternalVariables()[0]).setName("fork1");
 		((Activity)forkFlunet.getInternalVariables()[1]).setSymbolicDomain("at_fork1_table1()");
+		((Activity)forkFlunet.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
 		sa3.associateSpatialFlunt(forkFlunet);
 
 		saRelations.add(sa3);
@@ -317,9 +315,11 @@ public class TestSpatioCausalMetaSolver {
 		sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
 				new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
 		
-		SpatialFuent knifeFlunet = (SpatialFuent)grounSpatialFluentSolver.createVariable();
+		SpatialFluent knifeFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable();
+		knifeFlunet.setName("knife1");
 		((RectangularRegion2)knifeFlunet.getInternalVariables()[0]).setName("knife1");
 		((Activity)knifeFlunet.getInternalVariables()[1]).setSymbolicDomain("at_knife1_table1()");
+		((Activity)knifeFlunet.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
 		sa2.associateSpatialFlunt(knifeFlunet);
 		
 		saRelations.add(sa2);
@@ -329,13 +329,15 @@ public class TestSpatioCausalMetaSolver {
 		sa4.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
 				new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 		
-		SpatialFuent cupFlunet = (SpatialFuent)grounSpatialFluentSolver.createVariable();
+		SpatialFluent cupFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable();
+		cupFlunet.setName("cup1");
 		((RectangularRegion2)cupFlunet.getInternalVariables()[0]).setName("cup1");
 		((Activity)cupFlunet.getInternalVariables()[1]).setSymbolicDomain("at_cup1_table1()");
 		((Activity)cupFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
 		sa4.associateSpatialFlunt(cupFlunet);
 		
 		saRelations.add(sa4);
+
 	}
 
 }
