@@ -15,6 +15,7 @@ import meta.MetaSpatioCausalConstraintSolver;
 import meta.simplePlanner.SimpleOperator;
 import meta.symbolsAndTime.Schedulable;
 import multi.activity.Activity;
+import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
 import sandbox.spatial.rectangleAlgebra2.RectangleConstraint2;
 import sandbox.spatial.rectangleAlgebra2.RectangleConstraintSolver2;
@@ -82,18 +83,16 @@ public class TestSpatioCausalMetaSolver {
 		
 //		System.out.println(((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]));
 
-		
-//		//draw activity network solver
-//		TimelinePublisher tp = new TimelinePublisher(
-//				((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1])
-//						, new Bounds(0,120), "robot1");
-//		TimelineVisualizer viz = new TimelineVisualizer(tp);
-//		tp.publish(false, false);
-//		tp.publish(false, true);
-//		//draw activity network
-////		ConstraintNetwork.draw(((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
-////				.getConstraintSolvers()[1]).getConstraintNetwork(), "Constraint Network");
-//		tp.publish(true, false);
+		ActivityNetworkSolver acSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
+		//draw activity network solver
+		TimelinePublisher tp = new TimelinePublisher(acSolver, new Bounds(0,120), "robot1");
+		TimelineVisualizer viz = new TimelineVisualizer(tp);
+		tp.publish(false, false);
+		tp.publish(false, true);
+		//draw activity network
+//		ConstraintNetwork.draw(((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
+//				.getConstraintSolvers()[1]).getConstraintNetwork(), "Constraint Network");
+		tp.publish(true, false);
 		//#####################################################################################################################
 	}
 	

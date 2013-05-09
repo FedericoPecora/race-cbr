@@ -7,6 +7,7 @@ import sandbox.spatial.rectangleAlgebra2.SpatialFluent;
 import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
 
 import meta.simplePlanner.SimpleOperator;
+import meta.simplePlanner.SimpleDomain.markings;
 import meta.symbolsAndTime.Schedulable;
 import multi.activity.Activity;
 import multi.activity.ActivityNetwork;
@@ -79,17 +80,23 @@ public class MetaCausalConstraint extends MetaConstraint {
 	public ConstraintNetwork[] getMetaVariables() {
 //		ActivityNetworkSolver groundSolver = (ActivityNetworkSolver)this.metaCS.getConstraintSolvers()[0];
 //		(SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[0]
-		
-		
 		Vector<ConstraintNetwork> ret = new Vector<ConstraintNetwork>();
-		for (int i = 0; i < ((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables().length; i++) {
-			Activity act = ((Activity)((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[i]).getActivity());
-			if(act.getMarking().equals(markings.UNJUSTIFIED)){
+		for (int i = 0; i < ((ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).
+				getConstraintSolvers()[1])).getVariables().length; i++) {
+
+			
+			if(((ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).
+					getConstraintSolvers()[1])).getVariables()[i].getMarking().equals(markings.UNJUSTIFIED)){
 				ActivityNetwork nw = new ActivityNetwork(null);
-				nw.addVariable(((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[i]).getActivity());
+				nw.addVariable(((ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).
+						getConstraintSolvers()[1])).getVariables()[i]);
 				ret.add(nw);
 			}
+//			System.out.println("inside: " +((ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).
+//					getConstraintSolvers()[1])).getVariables()[i]);
 		}
+		
+
 				
 		return ret.toArray(new ConstraintNetwork[ret.size()]);
 	}
@@ -112,15 +119,21 @@ public class MetaCausalConstraint extends MetaConstraint {
 					operatorTailActivitiesToInsert.add(problematicActivity);
 				}
 				else {
-					VariablePrototype tailActivity = new VariablePrototype(
-							(ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]),
-							possibleOperatorTailComponent, possibleOperatorTailSymbol);
+//					VariablePrototype tailActivity = new VariablePrototype(
+//							(ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]),
+//							possibleOperatorTailComponent, possibleOperatorTailSymbol);
 					
+					
+					Activity tailActivity = (Activity)((ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).
+							getConstraintSolvers()[1])).createVariable(possibleOperatorTailComponent);
+					tailActivity.setSymbolicDomain(possibleOperatorTailSymbol);
 					tailActivity.setMarking(markings.UNJUSTIFIED);
 					operatorTailActivitiesToInsert.add(tailActivity);
 				}
 			}
+			
 
+			
 			Vector<AllenIntervalConstraint> allenIntervalConstraintsToAdd = new Vector<AllenIntervalConstraint>();
 
 			for (int i = 0; i < possibleOperator.getRequirementConstraints().length; i++) {
