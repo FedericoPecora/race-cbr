@@ -38,7 +38,6 @@ import time.Bounds;
 import utility.logging.MetaCSPLogging;
 import utility.timelinePlotting.TimelinePublisher;
 import utility.timelinePlotting.TimelineVisualizer;
-import framework.Constraint;
 import framework.ConstraintNetwork;
 
 public class IranTestSimplePlanner {	

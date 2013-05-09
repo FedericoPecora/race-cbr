@@ -375,16 +375,17 @@ public class MetaSpatialFluentConstraint extends MetaConstraint {
 			return null;
 		Vector<SpatialFluent> targetRecs = new Vector<SpatialFluent>();
 		Vector<UnaryRectangleConstraint2> atConstraints = new Vector<UnaryRectangleConstraint2>();
+		HashMap<String,SpatialFluent> currentFluent = new HashMap<String,SpatialFluent>();
+		
+		for (int j = 0; j < ((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables().length; j++) 
+			currentFluent.put(((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[j]).getName(), (SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[j]);		
+				
+		System.out.println("fleunr:" + currentFluent);
+		
 		for (int i = 0; i < sAssertionalRels.length; i++){
 			
-
-//			for (int j = 0; j < ((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables().length; j++) {
-//				System.out.println("fluent" + ((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[j]);
-//			}
-			
-			SpatialFluent sf = sAssertionalRels[i].getSpatialFleunt();
-//			RectangularRegion2 var = (RectangularRegion2)this.metaCS.getConstraintSolvers()[0].createVariable();
-//			var.setName(sAssertionalRels[i].getFrom());
+			SpatialFluent sf = currentFluent.get(sAssertionalRels[i].getFrom());
+//			SpatialFluent sf = sAssertionalRels[i].getSpatialFleunt();
 
 			//Add at constraint of indivisuals
 			if(sAssertionalRels[i].getUnaryAtRectangleConstraint() != null){
