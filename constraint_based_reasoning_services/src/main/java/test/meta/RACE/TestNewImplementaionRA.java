@@ -1,40 +1,18 @@
 package test.meta.RACE;
 
 import java.util.Vector;
-import java.util.logging.Level;
-
 import framework.ConstraintNetwork;
-import framework.ConstraintSolver;
-
-import orbital.algorithm.Combinatorical;
-
-import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraint2;
-import meta.MetaSpatialConstraintSolver;
 import meta.MetaSpatialConstraintSolver2;
-import meta.simplePlanner.SimpleDomain.markings;
-import multi.activity.Activity;
-import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
 import sandbox.spatial.rectangleAlgebra2.RectangleConstraint2;
 import sandbox.spatial.rectangleAlgebra2.RectangleConstraintSolver2;
-import sandbox.spatial.rectangleAlgebra2.RectangularRegion2;
 import sandbox.spatial.rectangleAlgebra2.SpatialAssertionalRelation2;
-import sandbox.spatial.rectangleAlgebra2.SpatialFluent;
-import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
 import sandbox.spatial.rectangleAlgebra2.SpatialRule2;
 import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;
-import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2.Type;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
-import spatial.rectangleAlgebra.BoundingBox;
 import spatial.rectangleAlgebra.OntologicalSpatialProperty;
-import spatial.rectangleAlgebra.QualitativeAllenIntervalConstraint;
-import spatial.rectangleAlgebra.SpatialAssertionalRelation;
-import spatial.rectangleAlgebra.SpatialRule;
-import spatial.rectangleAlgebra.TwoDimensionsAllenConstraint;
 import time.APSPSolver;
 import time.Bounds;
-import utility.logging.MetaCSPLogging;
 
 public class TestNewImplementaionRA {
 

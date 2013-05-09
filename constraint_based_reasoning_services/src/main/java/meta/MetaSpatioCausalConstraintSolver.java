@@ -1,6 +1,7 @@
 package meta;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 
 import meta.MetaCausalConstraint.markings;
@@ -53,7 +54,37 @@ public class MetaSpatioCausalConstraintSolver extends MetaConstraintSolver{
 	@Override
 	protected void retractResolverSub(ConstraintNetwork metaVariable,
 			ConstraintNetwork metaValue) {
-		// TODO Auto-generated method stub
+		
+		ActivityNetworkSolver groundSolver = (ActivityNetworkSolver)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getConstraintSolvers()[1];
+		Vector<Variable> activityToRemove = new Vector<Variable>();
+		
+		for (Variable v : metaValue.getVariables()) {
+			if (!metaVariable.containsVariable(v)) {
+				if (v instanceof VariablePrototype) {
+					Variable vReal = metaValue.getSubstitution((VariablePrototype)v);
+					if (vReal != null) {
+						activityToRemove.add(vReal);
+					}
+				}
+			}
+		}
+
+		for (int j = 0; j < this.metaConstraints.size(); j++) 
+			if(this.metaConstraints.get(j) instanceof MetaCausalConstraint ){
+				MetaCausalConstraint mcc = (MetaCausalConstraint)this.metaConstraints.get(j);
+				for (Variable v : activityToRemove) {
+					for (SimpleReusableResource2 rr : mcc.getCurrentReusableResourcesUsedByActivity((Activity)v)) {
+						rr.removeUsage((Activity)v);
+					}
+				}
+			}
+		
+		
+		
+		groundSolver.removeVariables(activityToRemove.toArray(new Variable[activityToRemove.size()]));
+
+		
+		
 		
 	}
 
