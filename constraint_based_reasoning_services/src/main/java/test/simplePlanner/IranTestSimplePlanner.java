@@ -28,6 +28,7 @@ import meta.simplePlanner.SimpleDomain;
 import meta.simplePlanner.SimpleDomain.markings;
 import meta.simplePlanner.SimpleOperator;
 import meta.simplePlanner.SimplePlanner;
+import meta.simplePlanner.SimpleReusableResource;
 import meta.symbolsAndTime.Schedulable;
 import multi.activity.Activity;
 import multi.activity.ActivityNetworkSolver;
@@ -51,11 +52,12 @@ public class IranTestSimplePlanner {
 		// This is a pointer toward the ActivityNetwork solver of the Scheduler
 		ActivityNetworkSolver groundSolver = (ActivityNetworkSolver)planner.getConstraintSolvers()[0];
 
-		MetaCSPLogging.setLevel(planner.getClass(), Level.FINEST);
+		MetaCSPLogging.setLevel(planner.getClass(), Level.FINE);
+		
 //		MetaCSPLogging.setLevel(Level.FINEST);
 //		MetaCSPLogging.setLevel(planner.getClass(), Level.FINE);
 				
-		SimpleDomain rd = new SimpleDomain(new int[] {1}, new String[] {"arm"}, "TestDomain");
+		SimpleDomain rd = new SimpleDomain(new int[] {2}, new String[] {"arm"}, "TestDomain");
 
 		AllenIntervalConstraint atCupAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
 		AllenIntervalConstraint atCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
@@ -176,6 +178,7 @@ public class IranTestSimplePlanner {
 		//This adds the domain as a meta-constraint of the SimplePlanner
 		planner.addMetaConstraint(rd);
 		//... and we also add all its resources as separate meta-constraints
+		MetaCSPLogging.setLevel(Schedulable.class, Level.FINEST);
 		for (Schedulable sch : rd.getSchedulingMetaConstraints()) planner.addMetaConstraint(sch);
 		
 		// INITIAL AND GOAL STATE DEFS
@@ -197,9 +200,6 @@ public class IranTestSimplePlanner {
 		
 		
 		planner.backtrack();
-		
-		System.out.println("groundSolver" + groundSolver);
-		
 		TimelinePublisher tp = new TimelinePublisher(groundSolver, new Bounds(0,100), "robot1");
 		//TimelinePublisher can also be instantiated w/o bounds, in which case the bounds are calculated every time publish is called
 //		TimelinePublisher tp = new TimelinePublisher(groundSolver, "Robot1", "Robot2", "LocalizationService", "RFIDReader1", "LaserScanner1");
