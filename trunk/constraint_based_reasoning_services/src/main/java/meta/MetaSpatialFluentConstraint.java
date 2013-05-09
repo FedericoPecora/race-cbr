@@ -66,40 +66,6 @@ public class MetaSpatialFluentConstraint extends MetaConstraint {
 		this.sAssertionalRels  = sAssertionalRels;
 	}
 
-	public void fakegeneratedMetaVariable(){
-		Vector<RectangularRegion2> targetRecs = new Vector<RectangularRegion2>();
-		Vector<UnaryRectangleConstraint2> atConstraints = new Vector<UnaryRectangleConstraint2>();
-		RectangleConstraintSolver2 rasolver = new RectangleConstraintSolver2(0,1000);
-		for (int i = 0; i < sAssertionalRels.length; i++){
-
-			RectangularRegion2 var = (RectangularRegion2)rasolver.createVariable();
-			var.setName(sAssertionalRels[i].getFrom());
-
-			//Add at constraint of indivisuals
-			if(sAssertionalRels[i].getUnaryAtRectangleConstraint() != null){
-				Bounds[] atBounds = new Bounds[sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds().length];
-				for (int j = 0; j < atBounds.length; j++) {
-					Bounds b = new Bounds(sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[j].min, sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[j].max) ;
-					atBounds[j] = b;
-				}
-
-				UnaryRectangleConstraint2 atCon = new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, atBounds);
-				atCon.setFrom(var);
-				atCon.setTo(var);
-				atConstraints.add(atCon);
-			}
-
-			if(sAssertionalRels[i].getOntologicalProp() != null)
-				var.setOntologicalProp(sAssertionalRels[i].getOntologicalProp());
-			targetRecs.add(var);			
-		}
-
-		generateCombinantion(atConstraints);
-		generateAllAlternativeSet(targetRecs);
-
-
-	}
-
 	public Vector<HashMap<String, Bounds[]>> generateAllAlternativeSet(Vector<RectangularRegion2> targetRecs){
 
 		class ConstraintNetworkSortingCritera{

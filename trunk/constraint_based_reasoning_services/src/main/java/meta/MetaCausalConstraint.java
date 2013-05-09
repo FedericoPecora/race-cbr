@@ -119,14 +119,15 @@ public class MetaCausalConstraint extends MetaConstraint {
 					operatorTailActivitiesToInsert.add(problematicActivity);
 				}
 				else {
-//					VariablePrototype tailActivity = new VariablePrototype(
-//							(ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]),
-//							possibleOperatorTailComponent, possibleOperatorTailSymbol);
+					VariablePrototype tailActivity = new VariablePrototype(
+							(ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]),
+							possibleOperatorTailComponent, possibleOperatorTailSymbol);
 					
 					
-					Activity tailActivity = (Activity)((ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).
-							getConstraintSolvers()[1])).createVariable(possibleOperatorTailComponent);
-					tailActivity.setSymbolicDomain(possibleOperatorTailSymbol);
+//					Activity tailActivity = (Activity)((ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).
+//							getConstraintSolvers()[1])).createVariable(possibleOperatorTailComponent);
+//					tailActivity.setSymbolicDomain(possibleOperatorTailSymbol);
+					
 					tailActivity.setMarking(markings.UNJUSTIFIED);
 					operatorTailActivitiesToInsert.add(tailActivity);
 				}

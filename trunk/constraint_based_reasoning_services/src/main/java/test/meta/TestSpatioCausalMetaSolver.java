@@ -48,8 +48,8 @@ public class TestSpatioCausalMetaSolver {
 		SpatialFluentSolver grounSpatialFluentSolver = (SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0];
 		
 		//#################################################################################################################
-		MetaCausalConstraint rd = new MetaCausalConstraint(new int[] {1}, new String[] {"arm"}, "WellSetTableDomain");		
-		addOperator(rd);		
+		MetaCausalConstraint metaCausalConstraint = new MetaCausalConstraint(new int[] {1}, new String[] {"arm"}, "WellSetTableDomain");		
+		addOperator(metaCausalConstraint);		
 		//#################################################################################################################
 		
 		//this is spatial general and assetional rule
@@ -66,17 +66,20 @@ public class TestSpatioCausalMetaSolver {
 		
 		//add meta constraint
 		metaSpatioCasualSolver.addMetaConstraint(metaSpatialFluentConstraint);
-		metaSpatioCasualSolver.addMetaConstraint(rd);
-		
-		for (Schedulable sch : rd.getSchedulingMetaConstraints()) {
+		for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
 			metaSpatioCasualSolver.addMetaConstraint(sch);
 		}
+		
+		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
+		
+		
 		
 		MetaCSPLogging.setLevel(MetaSpatioCausalConstraintSolver.class, Level.FINE);
 		metaSpatioCasualSolver.backtrack();
 
 		//#####################################################################################################################
-		ConstraintNetwork.draw(metaSpatioCasualSolver.getConstraintSolvers()[0].getConstraintNetwork(), "Constraint Network");
+		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
+		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
 		
 		System.out.println(((RectangleConstraintSolver2)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
 				.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("cup1").getAlmostCentreRectangle());
