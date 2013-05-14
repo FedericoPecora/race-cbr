@@ -88,11 +88,11 @@ public class TestSimplePlannerForTableScratch {
 		one.setMarking(markings.UNJUSTIFIED);
 		
 
-//		Activity two = (Activity)groundSolver.createVariable("Robot1");
-//		two.setSymbolicDomain("place_fork(arm)");
-//		
-//		// ... this is a goal (i.e., an activity to justify through the meta-constraint)
-//		two.setMarking(markings.UNJUSTIFIED);
+		Activity two = (Activity)groundSolver.createVariable("Robot1");
+		two.setSymbolicDomain("pickup_cup(arm)");
+		
+		// ... this is a goal (i.e., an activity to justify through the meta-constraint)
+		two.setMarking(markings.JUSTIFIED);
 		
 //		
 //		Activity three = (Activity)groundSolver.createVariable("Robot1");

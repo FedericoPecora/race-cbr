@@ -65,7 +65,14 @@ public class MetaSpatialFluentConstraint extends MetaConstraint {
 		this.sAssertionalRels = new SpatialAssertionalRelation2[sAssertionalRels.length];
 		this.sAssertionalRels  = sAssertionalRels;
 	}
-
+	
+	public Vector<String> getPotentialCulprit(){
+		return potentialCulprit;
+	}
+	public Vector<String> getInitialUnboundedObject(){
+		return initialUnboundedObjName;
+	}
+	
 	public Vector<HashMap<String, Bounds[]>> generateAllAlternativeSet(Vector<RectangularRegion2> targetRecs){
 
 		class ConstraintNetworkSortingCritera{
@@ -297,7 +304,7 @@ public class MetaSpatialFluentConstraint extends MetaConstraint {
 				unboundedUnaryCons.add((UnaryRectangleConstraint2)atConstraints.get(i));
 			}
 		}
-
+		
 
 		Combinatorical c = Combinatorical.getPermutations(boundedUnaryCons.size(), 2,  true);
 		//		System.out.println(c.count());
@@ -380,8 +387,6 @@ public class MetaSpatialFluentConstraint extends MetaConstraint {
 		for (int j = 0; j < ((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables().length; j++) 
 			currentFluent.put(((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[j]).getName(), (SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[j]);		
 				
-		System.out.println("fleunr:" + currentFluent);
-		
 		for (int i = 0; i < sAssertionalRels.length; i++){
 			
 			SpatialFluent sf = currentFluent.get(sAssertionalRels[i].getFrom());
