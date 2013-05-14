@@ -83,17 +83,15 @@ public class MetaCausalConstraint extends MetaConstraint {
 		Vector<ConstraintNetwork> ret = new Vector<ConstraintNetwork>();
 		for (int i = 0; i < ((ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).
 				getConstraintSolvers()[1])).getVariables().length; i++) {
-
-			
-			if(((ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).
-					getConstraintSolvers()[1])).getVariables()[i].getMarking().equals(markings.UNJUSTIFIED)){
+			if(((ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1])).
+					getVariables()[i].getMarking().equals(markings.UNJUSTIFIED)){
+//				System.out.println("inside: " +((ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).
+//						getConstraintSolvers()[1])).getVariables()[i]);
 				ActivityNetwork nw = new ActivityNetwork(null);
 				nw.addVariable(((ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).
 						getConstraintSolvers()[1])).getVariables()[i]);
 				ret.add(nw);
 			}
-//			System.out.println("inside: " +((ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).
-//					getConstraintSolvers()[1])).getVariables()[i]);
 		}
 		
 
@@ -103,7 +101,6 @@ public class MetaCausalConstraint extends MetaConstraint {
 
 	private ConstraintNetwork expandOperator(SimpleOperator possibleOperator, Activity problematicActivity) {		
 		ActivityNetwork activityNetworkToReturn = new ActivityNetwork(null);
-//		ActivityNetworkSolver groundSolver = (ActivityNetworkSolver)this.metaCS.getConstraintSolvers()[0];
 		ActivityNetworkSolver groundSolver = (ActivityNetworkSolver)(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
 		String possibleOperatorHead = possibleOperator.getHead();
 		String possibleOperatorSymbol = possibleOperatorHead.substring(possibleOperatorHead.indexOf("::")+2, possibleOperatorHead.length());
