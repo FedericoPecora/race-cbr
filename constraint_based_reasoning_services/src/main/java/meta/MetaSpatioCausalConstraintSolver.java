@@ -2,10 +2,6 @@ package meta;
 
 import java.util.HashMap;
 import java.util.Vector;
-
-import org.hamcrest.core.IsInstanceOf;
-
-
 import meta.MetaCausalConstraint.markings;
 import meta.simplePlanner.SimpleDomain;
 import meta.simplePlanner.SimpleReusableResource;
