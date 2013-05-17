@@ -38,14 +38,14 @@ import time.Bounds;
 import utility.logging.MetaCSPLogging;
 import utility.timelinePlotting.TimelinePublisher;
 import utility.timelinePlotting.TimelineVisualizer;
+import framework.Constraint;
 import framework.ConstraintNetwork;
 
 public class IranTestSimplePlanner {	
 	
 	public static void main(String[] args) {
-
-
-//		MetaCSPLogging.setLevel(TimelinePublisher.class, Level.FINEST);
+		
+		MetaCSPLogging.setLevel(TimelinePublisher.class, Level.FINEST);
 
 		SimplePlanner planner = new SimplePlanner(0,600,0);		
 		// This is a pointer toward the ActivityNetwork solver of the Scheduler
@@ -85,17 +85,17 @@ public class IranTestSimplePlanner {
 		AllenIntervalConstraint pickFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 
 		
-		SimpleOperator operator1 = new SimpleOperator("robot1::at_cup1_table1()",
+		SimpleOperator operator1 = new SimpleOperator("cup::at_cup1_table1()",
 				new AllenIntervalConstraint[] {atCupAfterPlace},
 				new String[] {"robot1::place_cup1_table1(arm)"},
-				new int[] {1});
+				new int[] {0});
 		operator1.addConstraint(atCup1Duration, 0, 0);
 		rd.addOperator(operator1);
 		
 		SimpleOperator operator2 = new SimpleOperator("robot1::place_cup1_table1(arm)",
 				new AllenIntervalConstraint[] {placeCupAfterholding},
 				new String[] {"robot1::holding_cup1(arm)"},
-				new int[] {1});
+				new int[] {2});
 		operator2.addConstraint(placeCup1Duration, 0, 0);
 		rd.addOperator(operator2);
 
@@ -109,23 +109,23 @@ public class IranTestSimplePlanner {
 		SimpleOperator operator1res = new SimpleOperator("robot1::pick_cup1(arm)",
 				null,
 				null,
-				new int[] {1});
+				new int[] {2});
 		operator1res.addConstraint(pickCup1Duration, 0, 0);
 		rd.addOperator(operator1res);
 		
 		//........................
 
-		SimpleOperator operator4 = new SimpleOperator("robot1::at_knife1_table1()",
+		SimpleOperator operator4 = new SimpleOperator("knife::at_knife1_table1()",
 				new AllenIntervalConstraint[] {atKnifeAfterPlace},
 				new String[] {"robot1::place_knife1_table1(arm)"},
-				new int[] {1});
+				new int[] {0});
 		operator4.addConstraint(atKnife1Duration, 0, 0);
 		rd.addOperator(operator4);
 		
 		SimpleOperator operator5 = new SimpleOperator("robot1::place_knife1_table1(arm)",
 				new AllenIntervalConstraint[] {placeKnifeAfterholding},
 				new String[] {"robot1::holding_knife1(arm)"},
-				new int[] {1});
+				new int[] {2});
 		operator5.addConstraint(placeKnife1Duration, 0, 0);
 		rd.addOperator(operator5);
 
@@ -139,23 +139,23 @@ public class IranTestSimplePlanner {
 		SimpleOperator operator2res = new SimpleOperator("robot1::pick_knife1(arm)",
 				null,
 				null,
-				new int[] {1});
+				new int[] {2});
 		operator2res.addConstraint(pickKnife1Duration, 0, 0);
 		rd.addOperator(operator2res);
 
 		//........................
 		
-		SimpleOperator operator7 = new SimpleOperator("robot1::at_fork_table1()",
+		SimpleOperator operator7 = new SimpleOperator("fork::at_fork_table1()",
 				new AllenIntervalConstraint[] {atForkAfterPlace},
 				new String[] {"robot1::place_fork1_table1(arm)"},
-				new int[] {1});
+				new int[] {0});
 		operator7.addConstraint(atFork1Duration, 0, 0);
 		rd.addOperator(operator7);
 		
 		SimpleOperator operator8 = new SimpleOperator("robot1::place_fork1_table1(arm)",
 				new AllenIntervalConstraint[] {placeForkAfterholding},
 				new String[] {"robot1::holding_fork1(arm)"},
-				new int[] {1});
+				new int[] {2});
 		operator8.addConstraint(placeFork1Duration, 0, 0);
 		rd.addOperator(operator8);
 
@@ -169,10 +169,12 @@ public class IranTestSimplePlanner {
 		SimpleOperator operator3res = new SimpleOperator("robot1::pick_fork1(arm)",
 				null,
 				null,
-				new int[] {1});
+				new int[] {2});
 		operator3res.addConstraint(pickFork1Duration, 0, 0);
 		rd.addOperator(operator3res);
+
 		
+		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		
 		//This adds the domain as a meta-constraint of the SimplePlanner
 		planner.addMetaConstraint(rd);
@@ -181,21 +183,24 @@ public class IranTestSimplePlanner {
 		for (Schedulable sch : rd.getSchedulingMetaConstraints()) planner.addMetaConstraint(sch);
 		
 		// INITIAL AND GOAL STATE DEFS
-		Activity three = (Activity)groundSolver.createVariable("robot1");
-		three.setSymbolicDomain("at_knife1_table1()");
-		three.setMarking(markings.UNJUSTIFIED);
 		
+//		Activity three = (Activity)groundSolver.createVariable("robot1");
+//		three.setSymbolicDomain("holding_cup1(arm)");
+//		three.setMarking(markings.UNJUSTIFIED);
 		
-		Activity one = (Activity)groundSolver.createVariable("robot1");
-		one.setSymbolicDomain("at_cup1_table1()");
-		one.setMarking(markings.UNJUSTIFIED);
-		
-
 		Activity two = (Activity)groundSolver.createVariable("robot1");
-		two.setSymbolicDomain("at_fork1_table1()");
+		two.setSymbolicDomain("place_knife1_table1(arm)");
 		two.setMarking(markings.UNJUSTIFIED);
 		
-		
+		Activity one = (Activity)groundSolver.createVariable("robot1");
+		one.setSymbolicDomain("place_cup1_table1(arm)");
+		one.setMarking(markings.UNJUSTIFIED);
+	
+		AllenIntervalConstraint after = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds());
+		after.setFrom(one);
+		after.setTo(two);
+
+		groundSolver.addConstraints(new Constraint[] {after});
 		
 		
 		planner.backtrack();
