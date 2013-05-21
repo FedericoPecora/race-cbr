@@ -149,7 +149,7 @@ public class MetaSpatioCausalConstraintSolver extends MetaConstraintSolver{
 		//		for (int i = 0; i < metaVariable.getVariables().length; i++) {
 		//			System.out.println(metaVariable.getVariables()[i]);
 		//		}
-
+		
 		Vector<String> oldGoal = new Vector<String>();
 		Vector<String> newGoal = new Vector<String>();
 		for (int i = 0; i < metaValue.getConstraints().length; i++) {

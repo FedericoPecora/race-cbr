@@ -89,10 +89,6 @@ public class MetaSpatialFluentConstraint extends MetaConstraint {
 		final HashMap<ConstraintNetwork, ConstraintNetworkSortingCritera> sortingCN = new HashMap<ConstraintNetwork, ConstraintNetworkSortingCritera>();
 		HashMap< ConstraintNetwork,HashMap<String, Bounds[]>> cnToInitPose = new HashMap<ConstraintNetwork, HashMap<String,Bounds[]>>();
 		for (HashMap<String, Bounds[]> iterCN : permutation.keySet()) {
-//			for (String t : iterCN.keySet()) {
-//				System.out.println(iterCN.get(t)[0] + " " + iterCN.get(t)[1] + " " + iterCN.get(t)[2] + iterCN.get(t)[3]);
-//			}
-
 			RectangleConstraintSolver2 iterSolver = new RectangleConstraintSolver2(origin,horizon);
 			HashMap<String, RectangularRegion2> getVariableByName = new HashMap<String, RectangularRegion2>();
 			
@@ -304,10 +300,10 @@ public class MetaSpatialFluentConstraint extends MetaConstraint {
 				unboundedUnaryCons.add((UnaryRectangleConstraint2)atConstraints.get(i));
 			}
 		}
-		
-
 		Combinatorical c = Combinatorical.getPermutations(boundedUnaryCons.size(), 2,  true);
-		//		System.out.println(c.count());
+//		System.out.println("boundedUnaryCons" + boundedUnaryCons);
+//		System.out.println("c.count: " + c.count());
+
 		while (c.hasNext()) {
 			int[] combination = c.next();
 			int culpritNumber = 0;
@@ -498,10 +494,12 @@ public class MetaSpatialFluentConstraint extends MetaConstraint {
 			logger.finest("pregenerated meta value for scoring: " + mvalue);
 			ret.add(mvalue);
 
+			
 //			if(!this.metaCS.getConstraintSolvers()[0].addConstraints(assertionList.toArray(new RectangleConstraint2[assertionList.size()])))
 //				System.out.println("Failed to add Assertinal Constraint");
 
 		}		
+
 		return  ret.toArray(new ConstraintNetwork[ret.size()]);
 	}
 
