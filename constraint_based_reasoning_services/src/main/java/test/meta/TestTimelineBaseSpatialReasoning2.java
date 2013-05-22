@@ -31,7 +31,7 @@ import utility.timelinePlotting.TimelineVisualizer;
 import framework.Constraint;
 import framework.ConstraintNetwork;
 
-public class TestTimelineBaseSpatialReasoning {
+public class TestTimelineBaseSpatialReasoning2 {
 
 	
 	public static void main(String[] args) {
@@ -78,11 +78,11 @@ public class TestTimelineBaseSpatialReasoning {
 		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
 		
 		System.out.println(((RectangleConstraintSolver2)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
-				.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("cup1").getAlmostCentreRectangle());
+				.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("cup").getAlmostCentreRectangle());
 
 
 		ActivityNetworkSolver acSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
-		TimelinePublisher tp = new TimelinePublisher(acSolver, new Bounds(0,80), "robot1");
+		TimelinePublisher tp = new TimelinePublisher(acSolver, new Bounds(0,150), "robot1");
 		TimelineVisualizer viz = new TimelineVisualizer(tp);
 		tp.publish(false, false);
 		tp.publish(false, true);
@@ -143,7 +143,7 @@ public class TestTimelineBaseSpatialReasoning {
 		SpatialFluent forkFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable();
 		forkFlunet.setName("fork1");
 		((RectangularRegion2)forkFlunet.getInternalVariables()[0]).setName("fork1");
-		((Activity)forkFlunet.getInternalVariables()[1]).setSymbolicDomain("on_fork1_table1(arm)");
+		((Activity)forkFlunet.getInternalVariables()[1]).setSymbolicDomain("on_fork1_table1()");
 		((Activity)forkFlunet.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
 		spatialFleunts.add(forkFlunet);
 		
@@ -271,7 +271,7 @@ public class TestTimelineBaseSpatialReasoning {
 
 		//........................
 		
-		SimpleOperator operator7 = new SimpleOperator("robot1::on_fork_table1()",
+		SimpleOperator operator7 = new SimpleOperator("robot1::on_fork1_table1()",
 				new AllenIntervalConstraint[] {atForkAfterPlace},
 				new String[] {"robot1::place_fork1_table1(arm)"},
 				new int[] {0});
@@ -360,7 +360,7 @@ public class TestTimelineBaseSpatialReasoning {
 	
 		SpatialAssertionalRelation2 sa1 = new SpatialAssertionalRelation2("table1", "table");
 		sa1.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
-				new Bounds(0, 0), new Bounds(100, 100), new Bounds(0, 0), new Bounds(99, 99)));
+				new Bounds(0, 0), new Bounds(60, 60), new Bounds(0, 0), new Bounds(99, 99)));
 		OntologicalSpatialProperty tableOnto = new OntologicalSpatialProperty();
 		tableOnto.setMovable(false);
 		sa1.setOntologicalProp(tableOnto);
@@ -371,7 +371,7 @@ public class TestTimelineBaseSpatialReasoning {
 
 		SpatialAssertionalRelation2 sa3 = new SpatialAssertionalRelation2("fork1", "fork");		
 		sa3.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
-				new Bounds(31, 31), new Bounds(37, 37), new Bounds(13, 13), new Bounds(32, 32)));
+				new Bounds(20, 20), new Bounds(26, 26), new Bounds(13, 13), new Bounds(32, 32)));
 
 //		sa3.associateSpatialFlunt(forkFlunet);
 		saRelations.add(sa3);
@@ -384,7 +384,7 @@ public class TestTimelineBaseSpatialReasoning {
 		//.........................................................................................
 		SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("knife1", "knife");
 		sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
-				new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
+				new Bounds(30,30), new Bounds(36,36), new Bounds(10, 10), new Bounds(33, 33)));
 		
 //		sa2.associateSpatialFlunt(knifeFlunet);		
 		saRelations.add(sa2);

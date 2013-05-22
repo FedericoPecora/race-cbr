@@ -95,7 +95,7 @@ public class MetaCausalConstraint extends MetaConstraint {
 		}
 		
 
-				
+		System.out.println("metaVaribale: " + ret);
 		return ret.toArray(new ConstraintNetwork[ret.size()]);
 	}
 
@@ -198,7 +198,6 @@ public class MetaCausalConstraint extends MetaConstraint {
 		Vector<ConstraintNetwork> retPossibleConstraintNetworks = new Vector<ConstraintNetwork>();
 		ConstraintNetwork problematicNetwork = metaVariable.getConstraintNetwork();
 		Activity problematicActivity = (Activity)problematicNetwork.getVariables()[0]; 
-
 		for (SimpleOperator r : operators) {
 			String problematicActivitySymbolicDomain = problematicActivity.getSymbolicVariable().getDomain().toString();
 			String operatorHead = r.getHead();
