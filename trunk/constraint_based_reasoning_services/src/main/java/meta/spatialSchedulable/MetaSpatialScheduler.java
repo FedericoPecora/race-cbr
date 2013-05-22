@@ -93,24 +93,23 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 			metaValue.addConstraint(clonedConstraint);
 		}
 		
-		if(counter == 2){
-			Activity hold = null;
-			
-			for (int i = 0; i < groundSolver.getVariables().length; i++) {
-				System.out.println("var: " + groundSolver.getConstraintSolvers()[1].getVariables()[i]);
-				if(((Activity)groundSolver.getVariables()[i]).getSymbolicVariable().toString().contains("holding_cup1")){
-					hold = ((Activity)groundSolver.getVariables()[i]);
-				}
-			}
-			Activity pick = (Activity)groundSolver.createVariable("robot1");
-			pick.setSymbolicDomain("pick_knife1(arm)");
-			AllenIntervalConstraint oldgoalAfternewGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds());
-			oldgoalAfternewGoal.setFrom(hold);
-			oldgoalAfternewGoal.setTo(pick);									
-			groundSolver.addConstraints(new Constraint[] {oldgoalAfternewGoal});
-		}	
-		
-		counter++;
+//		if(counter == 2){
+//			Activity hold = null;
+//			
+//			for (int i = 0; i < groundSolver.getVariables().length; i++) {
+//				System.out.println("var: " + groundSolver.getConstraintSolvers()[1].getVariables()[i]);
+//				if(((Activity)groundSolver.getVariables()[i]).getSymbolicVariable().toString().contains("holding_cup1")){
+//					hold = ((Activity)groundSolver.getVariables()[i]);
+//				}
+//			}
+//			Activity pick = (Activity)groundSolver.createVariable("robot1");
+//			pick.setSymbolicDomain("pick_knife1(arm)");
+//			AllenIntervalConstraint oldgoalAfternewGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds());
+//			oldgoalAfternewGoal.setFrom(hold);
+//			oldgoalAfternewGoal.setTo(pick);									
+//			groundSolver.addConstraints(new Constraint[] {oldgoalAfternewGoal});
+//		}	
+//		counter++;
 		
 		for (Variable v : metaValue.getVariables()) {
 			for (int j = 0; j < this.metaConstraints.size(); j++) {
@@ -121,11 +120,7 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 					}
 				}
 			}
-
-
 		}
-
-		
 	}
 		
 
