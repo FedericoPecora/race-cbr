@@ -57,7 +57,6 @@ public class SpatialSchedulable extends MetaConstraint {
 	private SpatialRule2[] rules;
 	private boolean markMetaVar = false;
 	private HashMap<HashMap<String, Bounds[]>, Integer> permutation;
-	private HashMap<ConstraintNetwork, HashMap<HashMap<String, Bounds[]>, Integer>> metaVarToPermutation;
 	private Vector<String> initialUnboundedObjName = new Vector<String>();
 	private Vector<String> potentialCulprit = new Vector<String>();
 	private HashMap<Activity, SpatialFluent> activityToFluent = new HashMap<Activity, SpatialFluent>();
@@ -147,14 +146,12 @@ public class SpatialSchedulable extends MetaConstraint {
 	// Finds sets of overlapping activities and assesses whether they are
 	// conflicting (e.g., over-consuming a resource)
 	private ConstraintNetwork[] samplingPeakCollection() {
-				
-		permutation = new HashMap<HashMap<String, Bounds[]>, Integer>();
-		metaVarToPermutation = new HashMap<ConstraintNetwork, HashMap<HashMap<String,Bounds[]>,Integer>>();
+
 		if (activities != null && !activities.isEmpty()) {
 			
 			Vector<Activity> currentacts= removeCulpritsFromCurrentActivity(); 
 			
-			System.out.println("currentacts" + currentacts);
+//			System.out.println("currentacts" + currentacts);
 			Activity[] groundVars = currentacts.toArray(new Activity[currentacts.size()]);			
 			Arrays.sort(groundVars, new ActivityComparator(true));
 			Vector<ConstraintNetwork> ret = new Vector<ConstraintNetwork>();
@@ -177,14 +174,14 @@ public class SpatialSchedulable extends MetaConstraint {
 				long start = (groundVars[i]).getTemporalVariable().getEST();
 				long end = (groundVars[i]).getTemporalVariable().getLET();
 				Bounds intersection = new Bounds(start, end);
-				 System.out.println("intersection1: " + groundVars[i] + " " +intersection);
+//				System.out.println("intersection1: " + groundVars[i] + " " +intersection);
 				for (int j = 0; j < groundVars.length; j++) {
 					if (i != j) {
 						start = (groundVars[j]).getTemporalVariable().getEST();
 						end = (groundVars[j]).getTemporalVariable().getLET();
 						Bounds nextInterval = new Bounds(start, end);
-						 System.out.println("nextinterval: " + groundVars[j] + " " +nextInterval);
-						 System.out.println("____________________________________");
+//						 System.out.println("nextinterval: " + groundVars[j] + " " +nextInterval);
+//						 System.out.println("____________________________________");
 						Bounds intersectionNew = intersection.intersectStrict(nextInterval);
 						if (intersectionNew != null) {
 							overlapping.add(groundVars[j]);
@@ -209,7 +206,7 @@ public class SpatialSchedulable extends MetaConstraint {
 				}
 				retActivities.add(current);
 				
-				System.out.println("retActivities: " + retActivities);
+//				System.out.println("retActivities: " + retActivities);
 				
 				
 				for (Vector<Activity> actVec : retActivities) {
@@ -221,10 +218,8 @@ public class SpatialSchedulable extends MetaConstraint {
 				}
 //				setPermutationHashMAP(overlappingAll.get(0).toArray(new Activity[overlappingAll.get(0).size()]));				
 //				return ret.toArray(new ConstraintNetwork[ret.size()]);
-				setPermutationHashMAP(overlappingAll.lastElement().toArray(new Activity[overlappingAll.lastElement().size()]));
+//				setPermutationHashMAP(overlappingAll.lastElement().toArray(new Activity[overlappingAll.lastElement().size()]));
 				return new ConstraintNetwork[]{ret.lastElement()};
-				
-
 			}
 		}
 		
@@ -257,7 +252,8 @@ public class SpatialSchedulable extends MetaConstraint {
 
 	@Override
 	public ConstraintNetwork[] getMetaVariables() {
-		return samplingPeakCollection();
+//		return samplingPeakCollection();
+		return completePeakCollection();
 	}
 
 	@Override
@@ -271,6 +267,10 @@ public class SpatialSchedulable extends MetaConstraint {
 
 		if (metaVariable == null)
 			return null;
+		permutation = new HashMap<HashMap<String, Bounds[]>, Integer>();
+
+
+		
 		Vector<ConstraintNetwork> ret = new Vector<ConstraintNetwork>();
 		RectangleConstraintNetwork2 mvalue = new RectangleConstraintNetwork2(this.metaCS.getConstraintSolvers()[0]);
 		
@@ -284,7 +284,7 @@ public class SpatialSchedulable extends MetaConstraint {
 			conflictvars.add(activityToFluent.get((Activity) conflict.getVariables()[j]));
 			conflictRecvars.add(activityToFluent.get((Activity) conflict.getVariables()[j]).getRectangularRegion());
 		}
-		
+		setPermutationHashMAP(conflictvars, conflictRecvars);
 		Vector<HashMap<String, Bounds[]>> alternativeSets = generateAllAlternativeSet(conflictRecvars);
 
 		HashMap<String, Bounds[]> alternativeSet = alternativeSets.get(0);
@@ -435,7 +435,27 @@ public class SpatialSchedulable extends MetaConstraint {
 //					 Constraint[] {newOnAfteroldOn});
 //			 System.out.println(newOnAfteroldOn);
 		}
+		
+	
+		Activity hold = null;
+//		var: robot1::<SymbolicVariable 6: [pick_cup1_table2(arm)]>U<AllenInterval 6 (I-TP: 14 15 ) [[11, INF], [21, INF]]>/JUSTIFIED
+		for (int i = 0; i < ((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables().length; i++) {
+			
+			if(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i])
+					.getSymbolicVariable().toString().contains("pick_cup1_table2")){
+//				hold = ((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]);
+				System.out.println("var: " + ((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]);
+				AllenIntervalConstraint oldgoalAfternewGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Deadline, new Bounds(21,21));
+				oldgoalAfternewGoal.setFrom(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]));
+				oldgoalAfternewGoal.setTo(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]));									
+				((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new Constraint[] {oldgoalAfternewGoal});
 
+			}
+		}
+//		Activity pick = (Activity)groundSolver.createVariable("robot1");
+//		pick.setSymbolicDomain("pick_knife1(arm)");
+	
+	
 
 		
 //		//set old Activity before the other activity that is potential culprit
@@ -455,181 +475,14 @@ public class SpatialSchedulable extends MetaConstraint {
 //		}
 		
 		ret.add(mvalue);
-		System.out.println(ret);
+//		System.out.println(ret);
 		return ret.toArray(new ConstraintNetwork[ret.size()]);
 
 	}
 
 
-	/**
-	 * Get a list of {@link MCSData} objects, ordered according to decreasing k,
-	 * where k is a heuristic estimator of the amount of flexibility which is
-	 * maintained when imposing a temporal constraint that resolves an MCS - see
-	 * [P. Laborie, M. Ghallab, "Planning with Sharable Resource Constraints",
-	 * IJCAI 1995].
-	 * 
-	 * @param peak
-	 *            The peaks from which to sample MCSs and compute the k-based
-	 *            ordering.
-	 * @return An ordered array of {@link MCSData} objects.
-	 */
-	public MCSData[] getOrderedMCSs(ConstraintNetwork peak) {
 
-		// System.out.println("PEAK SIZE: " + peak.getVariables().length);
-
-		Vector<Variable[]> mcslist = new Vector<Variable[]>();
-
-		Variable[] vars = peak.getVariables();
-		for (int i = 0; i < vars.length; i++) {
-			for (int j = i + 1; j < vars.length; j++) {
-				Variable[] oneMcs = new Variable[2];
-				oneMcs[0] = vars[i];
-				oneMcs[1] = vars[j];
-				mcslist.add(oneMcs);
-			}
-		}
-
-		// MCSData[] mcsinfo = new MCSData[mcslist.size()];
-		Vector<MCSData> mcsinfo = new Vector<MCSData>();
-
-		int index = 0;
-		boolean unresMCSFound = false;
-		// System.out.println("MCSINFO size: " + mcsinfo.length);
-
-		while ((!unresMCSFound) && (index < mcslist.size())) // Per ogni MCS
-		{
-			float pcmin = 1.0f; // Valore del pcmin
-			float pcminBad = 1.0f; // Valore del pcmin
-			float kReciprocal = 0.0f; // Reciproco di K (Ribaltare prima di
-										// uscire)
-			Variable actFrom = null;
-			Variable actTo = null;
-			int unresMCS = 0;
-
-			Variable[] currentMcs = mcslist.elementAt(index);
-			// Vector che conterrà i valori dei commit
-			Vector<Float> pcVector = new Vector<Float>();
-
-			int mcsSize = currentMcs.length;
-
-			// Per ogni coppia di attività {Ag, Ah} dell'MCS
-			for (int g = 0; g < mcsSize; g++) {
-				long est1 = ((Activity) currentMcs[g]).getTemporalVariable()
-						.getEST();
-				long eet1 = ((Activity) currentMcs[g]).getTemporalVariable()
-						.getEST();
-				long lst1 = ((Activity) currentMcs[g]).getTemporalVariable()
-						.getLST();
-				long let1 = ((Activity) currentMcs[g]).getTemporalVariable()
-						.getLET();
-
-				for (int h = g + 1; h < mcsSize; h++) {
-					long est2 = ((Activity) currentMcs[h])
-							.getTemporalVariable().getEST();
-					long eet2 = ((Activity) currentMcs[h])
-							.getTemporalVariable().getEET();
-					long lst2 = ((Activity) currentMcs[h])
-							.getTemporalVariable().getLST();
-					long let2 = ((Activity) currentMcs[h])
-							.getTemporalVariable().getLET();
-
-					// Analisi coppia diretta
-					long dmin = est2 - let1;
-					long dmax = lst2 - eet1;
-
-					if (dmin > dmax) {
-						logger.severe("Direct pair and dmin > dmax: IMPOSSIBLE");
-						System.exit(0);
-					}
-
-					float pc = 0.0f; // pc corrente
-					if (dmin != dmax) {
-						pc = ((float) (Math.min(dmax, 0) - Math.min(dmin, 0)))
-								/ ((float) (dmax - dmin));
-						pcVector.add(pc);
-
-						if (pc < pcmin) {
-							// System.out.println("ADDED DIRECT: " + pc);
-							pcmin = pc;
-							pcminBad = pcmin;
-							actFrom = currentMcs[g];
-							actTo = currentMcs[h];
-						} else {
-							unresMCS++;
-						}
-					} else // If dmin == dmax, we can skip the analysis of the
-							// pair {Ag, Ah}
-					{
-						unresMCS++;
-					}
-
-					// Analisi coppia inversa
-					dmin = est1 - let2;
-					dmax = lst1 - eet2;
-
-					if (dmin > dmax) {
-						logger.severe("Inverse pair and dmin > dmax: IMPOSSIBLE");
-						System.exit(0);
-					}
-
-					if (dmin != dmax) // Se dmin == dmax, possiamo skippare
-										// l'analisi della coppia {Ag, Ah}
-					{
-						pc = ((float) (Math.min(dmax, 0) - Math.min(dmin, 0)))
-								/ ((float) (dmax - dmin));
-						pcVector.add(pc);
-
-						if (pc < pcmin) {
-							// System.out.println("ADDED INVERSE: " + pc);
-							pcmin = pc;
-							actFrom = currentMcs[h];
-							actTo = currentMcs[g];
-						} else {
-							unresMCS++;
-						}
-					} else {
-						unresMCS++;
-					}
-				}
-			}
-
-			// SE INCONTRIAMO UN MCS IRRISOLVIBILE POSSIAMO INTERROMPERE IL
-			// CICLO: LA SOLUZIONE E' IMPOSSIBILE
-			if (unresMCS < (mcsSize * (mcsSize - 1))) {
-				// Calcolo del K(MCS)
-				for (int g = 0; g < pcVector.size(); g++) {
-					// Dbg.printMsg("" + pcVector.elementAt(g), LogLvl.Normal);
-					kReciprocal += 1.0f / (1.0f + pcVector.elementAt(g) - pcmin);
-				}
-
-				// mcsinfo[index] = new MCSData(pcmin, (Activity)actFrom,
-				// (Activity)actTo, (kReciprocal == 0.0f) ? 1 :
-				// 1.0f/kReciprocal);
-				mcsinfo.add(new MCSData(pcmin, (Activity) actFrom,
-						(Activity) actTo, (kReciprocal == 0.0f) ? 1
-								: 1.0f / kReciprocal));
-				mcsinfo.add(new MCSData(pcminBad, (Activity) actTo,
-						(Activity) actFrom, (kReciprocal == 0.0f) ? 1
-								: 1.0f / kReciprocal));
-				index++;
-			} else {
-				unresMCSFound = true;
-			}
-		}
-
-		MCSData[] mcsinfoArray = mcsinfo.toArray(new MCSData[mcsinfo.size()]);
-		// Se abbiamo trovato una soluzione
-		if (!unresMCSFound) {
-			// Arrays.sort(mcsinfo);
-			Arrays.sort(mcsinfoArray);
-		} else {
-			// mcsinfo = null;
-			mcsinfoArray = null;
-		}
-
-		// return mcsinfo;
-		return mcsinfoArray;
-	}
+	
 
 	protected boolean temporalOverlap(Activity a1, Activity a2) {
 		return !(a1.getTemporalVariable().getEET() <= a2.getTemporalVariable()
@@ -644,10 +497,10 @@ public class SpatialSchedulable extends MetaConstraint {
 
 	public boolean isConflicting(Activity[] peak) {
 		
-		System.out.println("------------------------------------------------------------");
-		for (int i = 0; i < peak.length; i++) {
-			System.out.println(peak[i]);
-		}
+//		System.out.println("------------------------------------------------------------");
+//		for (int i = 0; i < peak.length; i++) {
+//			System.out.println(peak[i]);
+//		}
 		
 		
 		
@@ -846,8 +699,8 @@ public class SpatialSchedulable extends MetaConstraint {
 				.toArray(new RectangleConstraint2[assertionList.size()])))
 			isConsistent = false;
 		
-		System.out.println(isConsistent);
-		System.out.println("------------------------------------------------------------");
+//		System.out.println(isConsistent);
+//		System.out.println("------------------------------------------------------------");
 		return (!isConsistent);
 	}
 
@@ -894,7 +747,6 @@ public class SpatialSchedulable extends MetaConstraint {
 
 	@Override
 	public boolean isEquivalent(Constraint c) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -1135,7 +987,72 @@ public class SpatialSchedulable extends MetaConstraint {
 		return alternativeSets;
 
 	}
+	
+	private ConstraintNetwork[] completePeakCollection() {
 
+	if (activities != null && !activities.isEmpty()) {
+			logger.finest("Doing complete peak collection with " + activities.size() + " activities...");
+			
+			Vector<Activity> currentacts= removeCulpritsFromCurrentActivity(); 
+			
+//			System.out.println("currentacts" + currentacts);
+			Activity[] groundVars = currentacts.toArray(new Activity[currentacts.size()]);			
+
+			
+			Vector<Long> discontinuities = new Vector<Long>();
+			for (Activity a : groundVars) {
+				long start = a.getTemporalVariable().getEST();
+				long end = a.getTemporalVariable().getEST();
+				if (!discontinuities.contains(start)) discontinuities.add(start);
+				if (!discontinuities.contains(end)) discontinuities.add(end);
+			}
+			
+			Long[] discontinuitiesArray = discontinuities.toArray(new Long[discontinuities.size()]);
+			Arrays.sort(discontinuitiesArray);
+			
+			HashSet<HashSet<Activity>> superPeaks = new HashSet<HashSet<Activity>>();
+
+			for (int i = 0; i < discontinuitiesArray.length-1; i++) {
+				HashSet<Activity> onePeak = new HashSet<Activity>();
+				superPeaks.add(onePeak);
+				Bounds interval = new Bounds(discontinuitiesArray[i], discontinuitiesArray[i+1]);
+				for (Activity a : groundVars) {
+					Bounds interval1 = new Bounds(a.getTemporalVariable().getEST(), a.getTemporalVariable().getLET());
+					Bounds intersection = interval.intersectStrict(interval1);
+					if (intersection != null && !intersection.isSingleton()) {
+						onePeak.add(a);
+					}
+				}
+			}
+			
+//			System.out.println("superPeaks" + superPeaks);
+			
+			Vector<ConstraintNetwork> ret = new Vector<ConstraintNetwork>();
+			for (HashSet<Activity> superSet : superPeaks) {
+				for (Set<Activity> s : powerSet(superSet)) {
+					if (!s.isEmpty()) {
+						ActivityNetwork cn = new ActivityNetwork(null);
+						for (Activity a : s) cn.addVariable(a); 
+						if (!ret.contains(cn) && isConflicting(s.toArray(new Activity[s.size()]))) ret.add(cn);
+					}
+				}
+			}
+			
+//			System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//			for (int i = 0; i < ret.size(); i++) {
+//				System.out.println(ret.get(i));
+//				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//			}
+//			System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+			
+			logger.finest("Done peak sampling");
+			return ret.toArray(new ConstraintNetwork[ret.size()]);			
+		} 
+		
+		return (new ConstraintNetwork[0]);
+	}
+
+	
 	private void generateCombinantion(Vector<UnaryRectangleConstraint2> atConstraints) {
 
 		Vector<UnaryRectangleConstraint2> boundedUnaryCons = new Vector<UnaryRectangleConstraint2>();
@@ -1355,16 +1272,20 @@ public class SpatialSchedulable extends MetaConstraint {
 		return ret;
 	}
 	
-	private void setPermutationHashMAP(Activity[] peak){
+	private void setPermutationHashMAP(Vector<SpatialFluent> conflictvars, Vector<RectangularRegion2> targetRecs){
 		
 		Vector<UnaryRectangleConstraint2> atConstraints = new Vector<UnaryRectangleConstraint2>();
 		HashMap<String, SpatialFluent> currentFluent = new HashMap<String, SpatialFluent>();
-		Vector<RectangularRegion2> targetRecs = new Vector<RectangularRegion2>();
+//		Vector<RectangularRegion2> targetRecs = new Vector<RectangularRegion2>();
 
-		for (int i = 0; i < peak.length; i++) {
-			currentFluent.put(activityToFluent.get(peak[i]).getName(),activityToFluent.get(peak[i]));
-			targetRecs.add(activityToFluent.get(peak[i]).getRectangularRegion());
+		for (int i = 0; i < conflictvars.size(); i++) {
+			currentFluent.put(conflictvars.get(i).getName(), conflictvars.get(i));
 		}
+		
+//		for (int i = 0; i < peak.length; i++) {
+//			currentFluent.put(activityToFluent.get(peak[i]).getName(),activityToFluent.get(peak[i]));
+//			targetRecs.add(activityToFluent.get(peak[i]).getRectangularRegion());
+//		}
 
 		// Add at constraint
 		RectangleConstraintSolver2 iterSolver = new RectangleConstraintSolver2(origin, horizon);

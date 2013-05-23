@@ -30,6 +30,8 @@ import utility.timelinePlotting.TimelinePublisher;
 import utility.timelinePlotting.TimelineVisualizer;
 import framework.Constraint;
 import framework.ConstraintNetwork;
+import framework.ValueOrderingH;
+import framework.VariableOrderingH;
 
 public class TestTimelineBaseSpatialReasoning2 {
 
@@ -38,7 +40,22 @@ public class TestTimelineBaseSpatialReasoning2 {
 		
 
 		MetaSpatialScheduler metaSpatioCasualSolver = new MetaSpatialScheduler(0, 1000, 0);
-		SpatialSchedulable metaSpatialSchedulable = new SpatialSchedulable(null, null);
+		//Most critical conflict is the one with most activities 
+		VariableOrderingH varOH = new VariableOrderingH() {
+			@Override
+			public int compare(ConstraintNetwork arg0, ConstraintNetwork arg1) {
+				return arg1.getVariables().length - arg0.getVariables().length;
+			}
+			@Override
+			public void collectData(ConstraintNetwork[] allMetaVariables) { }
+		};
+		// no value ordering
+		ValueOrderingH valOH = new ValueOrderingH() {
+			@Override
+			public int compare(ConstraintNetwork o1, ConstraintNetwork o2) { return 0; }
+		};
+		SpatialSchedulable metaSpatialSchedulable = new SpatialSchedulable(varOH, valOH);
+
 		
 		SpatialFluentSolver groundSolver = (SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0];
 		
@@ -68,8 +85,8 @@ public class TestTimelineBaseSpatialReasoning2 {
 		}
 		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
 		
-		MetaCSPLogging.setLevel(MetaSpatioCausalConstraintSolver.class, Level.FINE);
-		MetaCSPLogging.setLevel(SpatialSchedulable.class, Level.FINE);
+		MetaCSPLogging.setLevel(MetaSpatialScheduler.class, Level.FINEST);
+//		MetaCSPLogging.setLevel(SpatialSchedulable.class, Level.FINE);
 		metaSpatioCasualSolver.backtrack();
 
 		//#####################################################################################################################
