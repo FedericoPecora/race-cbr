@@ -94,8 +94,6 @@ public class MetaCausalConstraint extends MetaConstraint {
 			}
 		}
 		
-
-		System.out.println("metaVaribale: " + ret);
 		return ret.toArray(new ConstraintNetwork[ret.size()]);
 	}
 
