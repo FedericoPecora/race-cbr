@@ -195,7 +195,27 @@ public class MetaCausalConstraint extends MetaConstraint {
 	public ConstraintNetwork[] getMetaValues(MetaVariable metaVariable) {
 		Vector<ConstraintNetwork> retPossibleConstraintNetworks = new Vector<ConstraintNetwork>();
 		ConstraintNetwork problematicNetwork = metaVariable.getConstraintNetwork();
-		Activity problematicActivity = (Activity)problematicNetwork.getVariables()[0]; 
+		Activity problematicActivity = (Activity)problematicNetwork.getVariables()[0];
+		
+		//Include also unifications
+		SpatialFluentSolver s = ((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]);
+		ActivityNetworkSolver ans = (ActivityNetworkSolver)s.getConstraintSolvers()[1];
+		for (Variable var : ans.getVariables()) {
+			Activity act = (Activity)var;
+			//If this unifies
+			if (!act.equals(problematicActivity)) {
+				if (act.getSymbolicVariable().getDomain().toString().equals(problematicActivity.getSymbolicVariable().getDomain().toString())) {
+					ActivityNetwork newResolver = new ActivityNetwork(null);
+					AllenIntervalConstraint unificationCon = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals);
+					unificationCon.setFrom(problematicActivity);
+					unificationCon.setTo(act);
+					newResolver.addConstraint(unificationCon);
+					retPossibleConstraintNetworks.add(newResolver);
+				}
+			}
+		}
+		
+		//Include possible operator expansions
 		for (SimpleOperator r : operators) {
 			String problematicActivitySymbolicDomain = problematicActivity.getSymbolicVariable().getDomain().toString();
 			String operatorHead = r.getHead();
@@ -208,6 +228,7 @@ public class MetaCausalConstraint extends MetaConstraint {
 				}
 			}
 		}
+		
 		
 		if (!retPossibleConstraintNetworks.isEmpty())
 			return retPossibleConstraintNetworks.toArray(new ConstraintNetwork[retPossibleConstraintNetworks.size()]);

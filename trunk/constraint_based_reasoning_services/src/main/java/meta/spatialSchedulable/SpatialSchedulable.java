@@ -437,23 +437,21 @@ public class SpatialSchedulable extends MetaConstraint {
 		}
 		
 	
-		Activity hold = null;
-//		var: robot1::<SymbolicVariable 6: [pick_cup1_table2(arm)]>U<AllenInterval 6 (I-TP: 14 15 ) [[11, INF], [21, INF]]>/JUSTIFIED
-		for (int i = 0; i < ((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables().length; i++) {
-			
-			if(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i])
-					.getSymbolicVariable().toString().contains("pick_cup1_table2")){
-//				hold = ((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]);
-				System.out.println("var: " + ((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]);
-				AllenIntervalConstraint oldgoalAfternewGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Deadline, new Bounds(21,21));
-				oldgoalAfternewGoal.setFrom(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]));
-				oldgoalAfternewGoal.setTo(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]));									
-				((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new Constraint[] {oldgoalAfternewGoal});
-
-			}
-		}
-//		Activity pick = (Activity)groundSolver.createVariable("robot1");
-//		pick.setSymbolicDomain("pick_knife1(arm)");
+//		Activity hold = null;
+////		var: robot1::<SymbolicVariable 6: [pick_cup1_table2(arm)]>U<AllenInterval 6 (I-TP: 14 15 ) [[11, INF], [21, INF]]>/JUSTIFIED
+//		for (int i = 0; i < ((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables().length; i++) {
+//			
+//			if(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i])
+//					.getSymbolicVariable().toString().contains("pick_cup1_table2")){
+////				hold = ((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]);
+//				System.out.println("var: " + ((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]);
+//				AllenIntervalConstraint oldgoalAfternewGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Deadline, new Bounds(21,21));
+//				oldgoalAfternewGoal.setFrom(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]));
+//				oldgoalAfternewGoal.setTo(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]));									
+//				((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new Constraint[] {oldgoalAfternewGoal});
+//
+//			}
+//		}
 	
 	
 

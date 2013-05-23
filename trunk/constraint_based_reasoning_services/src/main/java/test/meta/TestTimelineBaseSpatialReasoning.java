@@ -120,15 +120,15 @@ public class TestTimelineBaseSpatialReasoning {
 		((Activity)tableFlunet.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
 		spatialFleunts.add(tableFlunet);
 		
-//		AllenIntervalConstraint ontable1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(40,APSPSolver.INF));
+//		AllenIntervalConstraint ontable1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 //		ontable1Duration.setFrom(tableFlunet.getActivity());
 //		ontable1Duration.setTo(tableFlunet.getActivity());
 //		cons.add(ontable1Duration);
-//		
-//		AllenIntervalConstraint releaseOnTable = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
-//		releaseOnTable.setFrom(tableFlunet.getActivity());
-//		releaseOnTable.setTo(tableFlunet.getActivity());
-//		cons.add(releaseOnTable);
+		
+		AllenIntervalConstraint releaseOnTable = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(20,20));
+		releaseOnTable.setFrom(tableFlunet.getActivity());
+		releaseOnTable.setTo(tableFlunet.getActivity());
+		cons.add(releaseOnTable);
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		
 		SpatialFluent cupFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable();
@@ -250,12 +250,12 @@ public class TestTimelineBaseSpatialReasoning {
 		operator41.addConstraint(holdingCup1Duration, 0, 0);
 		rd.addOperator(operator41);
 		
-		SimpleOperator operator1res = new SimpleOperator("robot1::on_cup1_table2()",
-				null,
-				null,
-				new int[] {0});
-		operator1res.addConstraint(pickCup1Duration, 0, 0);
-		rd.addOperator(operator1res);
+//		SimpleOperator operator1res = new SimpleOperator("robot1::on_cup1_table2()",
+//				null,
+//				null,
+//				new int[] {0});
+//		operator1res.addConstraint(pickCup1Duration, 0, 0);
+//		rd.addOperator(operator1res);
 		
 		//........................
 
@@ -281,12 +281,20 @@ public class TestTimelineBaseSpatialReasoning {
 		rd.addOperator(operator6);
 		
 		SimpleOperator operator2res = new SimpleOperator("robot1::pick_knife1(arm)",
-				null,
-				null,
+				new AllenIntervalConstraint[] {holdingKnifeAfterPick},
+				new String[] {"robot1::on_knife1_table1()"},
 				new int[] {2});
 		operator2res.addConstraint(pickKnife1Duration, 0, 0);
 		rd.addOperator(operator2res);
+		
+//		SimpleOperator operator3res = new SimpleOperator("robot1::on_knife1_table1()",
+//				null,
+//				null,
+//				new int[] {0});
+//		operator3res.addConstraint(pickCup1Duration, 0, 0);
+//		rd.addOperator(operator3res);
 
+		
 		//........................
 		
 		SimpleOperator operator7 = new SimpleOperator("robot1::on_fork_table1()",
