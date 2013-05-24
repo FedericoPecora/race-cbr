@@ -57,7 +57,35 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 	protected void retractResolverSub(ConstraintNetwork metaVariable,
 			ConstraintNetwork metaValue) {
 
+		ActivityNetworkSolver groundSolver = (ActivityNetworkSolver)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getConstraintSolvers()[1];
+		Vector<Variable> activityToRemove = new Vector<Variable>();
 
+		for (Variable v : metaValue.getVariables()) {
+			if (!metaVariable.containsVariable(v)) {
+				if (v instanceof VariablePrototype) {
+					Variable vReal = metaValue.getSubstitution((VariablePrototype)v);
+					if (vReal != null) {
+						activityToRemove.add(vReal);
+					}
+				}
+			}
+		}
+
+		for (int j = 0; j < this.metaConstraints.size(); j++) 
+			if(this.metaConstraints.get(j) instanceof MetaCausalConstraint ){
+				MetaCausalConstraint mcc = (MetaCausalConstraint)this.metaConstraints.get(j);
+				for (Variable v : activityToRemove) {
+					for (SimpleReusableResource2 rr : mcc.getCurrentReusableResourcesUsedByActivity((Activity)v)) {
+						rr.removeUsage((Activity)v);
+					}
+				}
+			}
+
+
+
+		groundSolver.removeVariables(activityToRemove.toArray(new Variable[activityToRemove.size()]));
+		
+		
 	}
 
 	@Override
@@ -93,23 +121,7 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 			metaValue.addConstraint(clonedConstraint);
 		}
 		
-//		if(counter == 2){
-//			Activity hold = null;
-//			
-//			for (int i = 0; i < groundSolver.getVariables().length; i++) {
-//				System.out.println("var: " + groundSolver.getConstraintSolvers()[1].getVariables()[i]);
-//				if(((Activity)groundSolver.getVariables()[i]).getSymbolicVariable().toString().contains("holding_cup1")){
-//					hold = ((Activity)groundSolver.getVariables()[i]);
-//				}
-//			}
-//			Activity pick = (Activity)groundSolver.createVariable("robot1");
-//			pick.setSymbolicDomain("pick_knife1(arm)");
-//			AllenIntervalConstraint oldgoalAfternewGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds());
-//			oldgoalAfternewGoal.setFrom(hold);
-//			oldgoalAfternewGoal.setTo(pick);									
-//			groundSolver.addConstraints(new Constraint[] {oldgoalAfternewGoal});
-//		}	
-//		counter++;
+
 		
 		for (Variable v : metaValue.getVariables()) {
 			for (int j = 0; j < this.metaConstraints.size(); j++) {

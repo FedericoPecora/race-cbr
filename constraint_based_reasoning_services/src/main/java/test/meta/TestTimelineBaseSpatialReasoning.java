@@ -287,6 +287,8 @@ public class TestTimelineBaseSpatialReasoning {
 		operator2res.addConstraint(pickKnife1Duration, 0, 0);
 		rd.addOperator(operator2res);
 		
+		
+		
 //		SimpleOperator operator3res = new SimpleOperator("robot1::on_knife1_table1()",
 //				null,
 //				null,
@@ -297,7 +299,7 @@ public class TestTimelineBaseSpatialReasoning {
 		
 		//........................
 		
-		SimpleOperator operator7 = new SimpleOperator("robot1::on_fork_table1()",
+		SimpleOperator operator7 = new SimpleOperator("robot1::on_fork1_table1()",
 				new AllenIntervalConstraint[] {atForkAfterPlace},
 				new String[] {"robot1::place_fork1_table1(arm)"},
 				new int[] {0});
@@ -318,12 +320,20 @@ public class TestTimelineBaseSpatialReasoning {
 		operator9.addConstraint(holdingFork1Duration, 0, 0);
 		rd.addOperator(operator9);
 		
-		SimpleOperator operator3res = new SimpleOperator("robot1::pick_fork1(arm)",
-				null,
-				null,
+		SimpleOperator operator4res = new SimpleOperator("robot1::pick_fork1(arm)",
+				new AllenIntervalConstraint[] {holdingKnifeAfterPick},
+				new String[] {"robot1::on_fork1_table1()"},
 				new int[] {2});
-		operator3res.addConstraint(pickFork1Duration, 0, 0);
-		rd.addOperator(operator3res);
+		operator4res.addConstraint(pickFork1Duration, 0, 0);
+		rd.addOperator(operator4res);
+
+		
+//		SimpleOperator operator3res = new SimpleOperator("robot1::on_fork1_table1()",
+//				null,
+//				null,
+//				new int[] {0});
+//		operator3res.addConstraint(pickFork1Duration, 0, 0);
+//		rd.addOperator(operator3res);
 
 		
 	}
