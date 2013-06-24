@@ -113,7 +113,7 @@ public class TestTimelineBaseSpatialReasoning {
 		
 		Vector<Constraint> cons = new Vector<Constraint>();
 		
-		SpatialFluent tableFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable();
+		SpatialFluent tableFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("table1");
 		tableFlunet.setName("table1");
 		((RectangularRegion2)tableFlunet.getInternalVariables()[0]).setName("table1");
 		((Activity)tableFlunet.getInternalVariables()[1]).setSymbolicDomain("on_table1()");
@@ -131,12 +131,7 @@ public class TestTimelineBaseSpatialReasoning {
 		cons.add(releaseOnTable);
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		
-		SpatialFluent cupFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable();
-		cupFlunet.setName("cup1");
-		((RectangularRegion2)cupFlunet.getInternalVariables()[0]).setName("cup1");
-		((Activity)cupFlunet.getInternalVariables()[1]).setSymbolicDomain("on_cup1_table1()");
-		((Activity)cupFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
-		spatialFleunts.add(cupFlunet);
+		
 		
 //		AllenIntervalConstraint onCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(40,APSPSolver.INF));
 //		onCup1Duration.setFrom(cupFlunet.getActivity());
@@ -156,6 +151,14 @@ public class TestTimelineBaseSpatialReasoning {
 		((Activity)knifeFlunet.getInternalVariables()[1]).setSymbolicDomain("on_knife1_table1()");
 		((Activity)knifeFlunet.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
 		spatialFleunts.add(knifeFlunet);
+		
+		
+		SpatialFluent cupFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable();
+		cupFlunet.setName("cup1");
+		((RectangularRegion2)cupFlunet.getInternalVariables()[0]).setName("cup1");
+		((Activity)cupFlunet.getInternalVariables()[1]).setSymbolicDomain("on_cup1_table1()");
+		((Activity)cupFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
+		spatialFleunts.add(cupFlunet);
 		
 		
 		SpatialFluent forkFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable();
@@ -376,7 +379,6 @@ public class TestTimelineBaseSpatialReasoning {
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, withinReach_y_lower, withinReach_y_upper))
 				);
 		srules.add(r5);
-
 
 		SpatialRule2 r7 = new SpatialRule2("knife", "knife", 
 				new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.Size, knife_size_x, knife_size_y));

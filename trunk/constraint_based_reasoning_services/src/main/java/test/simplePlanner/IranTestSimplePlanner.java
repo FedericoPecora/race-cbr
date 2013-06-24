@@ -85,7 +85,7 @@ public class IranTestSimplePlanner {
 		AllenIntervalConstraint pickFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 
 		
-		SimpleOperator operator1 = new SimpleOperator("cup::at_cup1_table1()",
+		SimpleOperator operator1 = new SimpleOperator("cup1::on_cup1_table1()",
 				new AllenIntervalConstraint[] {atCupAfterPlace},
 				new String[] {"robot1::place_cup1_table1(arm)"},
 				new int[] {0});
@@ -99,23 +99,52 @@ public class IranTestSimplePlanner {
 		operator2.addConstraint(placeCup1Duration, 0, 0);
 		rd.addOperator(operator2);
 
-		SimpleOperator operator3 = new SimpleOperator("robot1::holding_cup1(arm)",
-				new AllenIntervalConstraint[] {holdingCupAfterPick},
-				new String[] {"robot1::pick_cup1(arm)"},
-				new int[] {1});
-		operator3.addConstraint(holdingCup1Duration, 0, 0);
-		rd.addOperator(operator3);
+//		SimpleOperator operator3 = new SimpleOperator("robot1::holding_cup1(arm)",
+//				new AllenIntervalConstraint[] {holdingCupAfterPick},
+//				new String[] {"robot1::pick_cup1_table2(arm)"},
+//				new int[] {1});
+//		operator3.addConstraint(holdingCup1Duration, 0, 0);
+//		rd.addOperator(operator3);
 		
-		SimpleOperator operator1res = new SimpleOperator("robot1::pick_cup1(arm)",
-				null,
-				null,
+		SimpleOperator operator311 = new SimpleOperator("robot1::holding_cup1(arm)",
+				new AllenIntervalConstraint[] {holdingCupAfterPick},
+				new String[] {"robot1::on_ManipulationArea_table1()"},
+				new int[] {0});
+		operator311.addConstraint(holdingCup1Duration, 0, 0);
+		rd.addOperator(operator311);
+		
+		SimpleOperator operator312 = new SimpleOperator("robot1::on_ManipulationArea_table1()",
+				new AllenIntervalConstraint[] {holdingCupAfterPick},
+				new String[] {"robot1::move_to_table1()"},
+				new int[] {0});
+		operator312.addConstraint(holdingCup1Duration, 0, 0);
+		rd.addOperator(operator312);
+		
+		SimpleOperator operator313 = new SimpleOperator("robot1::move_to_table1()",
+				new AllenIntervalConstraint[] {holdingCupAfterPick},
+				new String[] {"robot1::pick_cup1_table2(arm)"},
+				new int[] {0});
+		operator313.addConstraint(holdingCup1Duration, 0, 0);
+		rd.addOperator(operator313);
+		
+		
+		SimpleOperator operator41 = new SimpleOperator("robot1::pick_cup1_table2(arm)",
+				new AllenIntervalConstraint[] {holdingCupAfterPick},
+				new String[] {"cup1::on_cup1_table2()"},
 				new int[] {2});
-		operator1res.addConstraint(pickCup1Duration, 0, 0);
-		rd.addOperator(operator1res);
+		operator41.addConstraint(holdingCup1Duration, 0, 0);
+		rd.addOperator(operator41);
+		
+//		SimpleOperator operator1res = new SimpleOperator("robot1::on_cup1_table2()",
+//				null,
+//				null,
+//				new int[] {0});
+//		operator1res.addConstraint(pickCup1Duration, 0, 0);
+//		rd.addOperator(operator1res);
 		
 		//........................
 
-		SimpleOperator operator4 = new SimpleOperator("knife::at_knife1_table1()",
+		SimpleOperator operator4 = new SimpleOperator("robot1::on_knife1_table1()",
 				new AllenIntervalConstraint[] {atKnifeAfterPlace},
 				new String[] {"robot1::place_knife1_table1(arm)"},
 				new int[] {0});
@@ -136,16 +165,26 @@ public class IranTestSimplePlanner {
 		operator6.addConstraint(holdingKnife1Duration, 0, 0);
 		rd.addOperator(operator6);
 		
-		SimpleOperator operator2res = new SimpleOperator("robot1::pick_knife1(arm)",
-				null,
-				null,
-				new int[] {2});
-		operator2res.addConstraint(pickKnife1Duration, 0, 0);
-		rd.addOperator(operator2res);
+//		SimpleOperator operator2res = new SimpleOperator("robot1::pick_knife1(arm)",
+//				new AllenIntervalConstraint[] {holdingKnifeAfterPick},
+//				new String[] {"robot1::on_knife1_table1()"},
+//				new int[] {2});
+//		operator2res.addConstraint(pickKnife1Duration, 0, 0);
+//		rd.addOperator(operator2res);
+		
+		
+		
+//		SimpleOperator operator3res = new SimpleOperator("robot1::on_knife1_table1()",
+//				null,
+//				null,
+//				new int[] {0});
+//		operator3res.addConstraint(pickCup1Duration, 0, 0);
+//		rd.addOperator(operator3res);
 
+		
 		//........................
 		
-		SimpleOperator operator7 = new SimpleOperator("fork::at_fork_table1()",
+		SimpleOperator operator7 = new SimpleOperator("robot1::on_fork1_table1()",
 				new AllenIntervalConstraint[] {atForkAfterPlace},
 				new String[] {"robot1::place_fork1_table1(arm)"},
 				new int[] {0});
@@ -166,12 +205,20 @@ public class IranTestSimplePlanner {
 		operator9.addConstraint(holdingFork1Duration, 0, 0);
 		rd.addOperator(operator9);
 		
-		SimpleOperator operator3res = new SimpleOperator("robot1::pick_fork1(arm)",
-				null,
-				null,
-				new int[] {2});
-		operator3res.addConstraint(pickFork1Duration, 0, 0);
-		rd.addOperator(operator3res);
+//		SimpleOperator operator4res = new SimpleOperator("robot1::pick_fork1(arm)",
+//				new AllenIntervalConstraint[] {holdingKnifeAfterPick},
+//				new String[] {"robot1::on_fork1_table1()"},
+//				new int[] {2});
+//		operator4res.addConstraint(pickFork1Duration, 0, 0);
+//		rd.addOperator(operator4res);
+
+		
+//		SimpleOperator operator3res = new SimpleOperator("robot1::on_fork1_table1()",
+//				null,
+//				null,
+//				new int[] {0});
+//		operator3res.addConstraint(pickFork1Duration, 0, 0);
+//		rd.addOperator(operator3res);
 
 		
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -188,15 +235,17 @@ public class IranTestSimplePlanner {
 //		three.setSymbolicDomain("holding_cup1(arm)");
 //		three.setMarking(markings.UNJUSTIFIED);
 		
+
+		
+		Activity one = (Activity)groundSolver.createVariable("cup1");
+		one.setSymbolicDomain("on_cup1_table1()");
+		one.setMarking(markings.UNJUSTIFIED);
+	
 		Activity two = (Activity)groundSolver.createVariable("robot1");
 		two.setSymbolicDomain("place_knife1_table1(arm)");
 		two.setMarking(markings.UNJUSTIFIED);
 		
-		Activity one = (Activity)groundSolver.createVariable("robot1");
-		one.setSymbolicDomain("place_cup1_table1(arm)");
-		one.setMarking(markings.UNJUSTIFIED);
-	
-		AllenIntervalConstraint after = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds());
+		AllenIntervalConstraint after = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
 		after.setFrom(one);
 		after.setTo(two);
 
@@ -204,7 +253,7 @@ public class IranTestSimplePlanner {
 		
 		
 		planner.backtrack();
-		TimelinePublisher tp = new TimelinePublisher(groundSolver, new Bounds(0,100), "robot1");
+		TimelinePublisher tp = new TimelinePublisher(groundSolver, new Bounds(0,100), "robot1", "cup1");
 		//TimelinePublisher can also be instantiated w/o bounds, in which case the bounds are calculated every time publish is called
 //		TimelinePublisher tp = new TimelinePublisher(groundSolver, "Robot1", "Robot2", "LocalizationService", "RFIDReader1", "LaserScanner1");
 		TimelineVisualizer viz = new TimelineVisualizer(tp);

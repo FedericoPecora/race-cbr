@@ -9,6 +9,11 @@ import framework.meta.MetaVariable;
 
 public class MetaSpatialConstraintSolver  extends MetaConstraintSolver{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6313357152623751118L;
+
 	public MetaSpatialConstraintSolver(long animationTime) {
 		super(new Class[]{AugmentedRectangleConstraint.class}, animationTime, new AugmentedRectangleConstraintSolver());
 	}
