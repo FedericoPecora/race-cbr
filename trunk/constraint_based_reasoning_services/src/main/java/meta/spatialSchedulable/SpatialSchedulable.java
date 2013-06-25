@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.awt.Rectangle;
 
 import orbital.algorithm.Combinatorical;
 
@@ -22,6 +23,7 @@ import sandbox.spatial.rectangleAlgebra2.SpatialFluent;
 import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
 import sandbox.spatial.rectangleAlgebra2.SpatialRule2;
 import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;
+import spatial.rectangleAlgebra.BoundingBox;
 import symbols.SymbolicDomain;
 import time.APSPSolver;
 import time.Bounds;
@@ -61,7 +63,28 @@ public class SpatialSchedulable extends MetaConstraint {
 	private Vector<String> potentialCulprit = new Vector<String>();
 	private HashMap<Activity, SpatialFluent> activityToFluent = new HashMap<Activity, SpatialFluent>();
 	private Vector<Activity> activeCulprit = new Vector<Activity>();
-
+	private HashMap<String, Rectangle> oldRectangularRegion = new HashMap<String, Rectangle>();
+	
+	public HashMap<String, Rectangle> getPreviosRectangularRegion(){
+		return oldRectangularRegion;
+	}
+	
+	public HashMap<String, Rectangle> getUpdatedRectangularRegion(){
+		HashMap<String, Rectangle> newRectangularRegion = new HashMap<String, Rectangle>();
+		for (int i = 0; i < sAssertionalRels.length; i++) {	
+			if(sAssertionalRels[i].getOntologicalProp() != null){
+				if(sAssertionalRels[i].getOntologicalProp().isMovable()){
+					BoundingBox bb = new BoundingBox(sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[0], 
+							sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[1],
+							sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[2],
+							sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[3]);
+					newRectangularRegion.put(sAssertionalRels[i].getFrom(), bb.getAlmostCentreRectangle());
+				}
+			}
+		}
+		return newRectangularRegion;
+	}
+	
 	public SpatialSchedulable(VariableOrderingH varOH, ValueOrderingH valOH) {
 		super(varOH, valOH);
 		this.beforeParameter = 1;
@@ -72,11 +95,12 @@ public class SpatialSchedulable extends MetaConstraint {
 		this.rules = rules;
 	}
 
-	public void setSpatialAssertionalRelations(
-			SpatialAssertionalRelation2... sAssertionalRels) {
+	public void setSpatialAssertionalRelations(SpatialAssertionalRelation2... sAssertionalRels) {
 		this.sAssertionalRels = new SpatialAssertionalRelation2[sAssertionalRels.length];
 		this.sAssertionalRels = sAssertionalRels;
 	}
+	
+	
 
 	public int getBeforeParameter() {
 		return beforeParameter;
@@ -281,11 +305,25 @@ public class SpatialSchedulable extends MetaConstraint {
 			conflictvars.add(activityToFluent.get((Activity) conflict.getVariables()[j]));
 			conflictRecvars.add(activityToFluent.get((Activity) conflict.getVariables()[j]).getRectangularRegion());
 		}
-		setPermutationHashMAP(conflictvars, conflictRecvars);
-		Vector<HashMap<String, Bounds[]>> alternativeSets = generateAllAlternativeSet(conflictRecvars);
+		setPermutationHashMAP(conflictvars, conflictRecvars);//it only generate permutation, does not perform any propagation
+		Vector<HashMap<String, Bounds[]>> alternativeSets = generateAllAlternativeSet(conflictRecvars);//it ranks the alternative
+		
+		for (int i = 0; i < sAssertionalRels.length; i++) {		
+			if(sAssertionalRels[i].getOntologicalProp() != null){
+				if(sAssertionalRels[i].getOntologicalProp().isMovable()){
+					BoundingBox bb = new BoundingBox(sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[0], 
+							sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[1],
+							sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[2],
+							sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[3]);
+					oldRectangularRegion.put(sAssertionalRels[i].getFrom(), bb.getAlmostCentreRectangle());
+				}
+			}
+		}
 
 		HashMap<String, Bounds[]> alternativeSet = alternativeSets.get(0);
-		mvalue.join(createTBOXspatialNetwork(((SpatialFluentSolver) this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[0],getVariableByName)); // TBOX general knowledge in RectangleCN
+		
+		// TBOX general knowledge in RectangleCN
+		mvalue.join(createTBOXspatialNetwork(((SpatialFluentSolver) this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[0],getVariableByName)); 
 		// Att At cpnstraint
 		Vector<RectangularRegion2> metaVaribales = new Vector<RectangularRegion2>();		
 		for (SpatialFluent var : conflictvars) {
@@ -330,8 +368,6 @@ public class SpatialSchedulable extends MetaConstraint {
 		Vector<Activity> oldGoal = new Vector<Activity>();
 		Vector<String> newGoal = new Vector<String>();
 		HashMap<String, Activity> culpritActivities = new HashMap<String, Activity>(); 
-		Vector<Activity> passiveCulprit = new Vector<Activity>();
-		
 		
 		for (int i = 0; i < mvalue.getConstraints().length; i++) {
 			if (mvalue.getConstraints()[i] instanceof UnaryRectangleConstraint2) {
@@ -346,33 +382,12 @@ public class SpatialSchedulable extends MetaConstraint {
 						for (int j = 0; j < metaVariable.getConstraintNetwork().getVariables().length; j++) {
 							if (((RectangularRegion2) mvalue.getConstraints()[i].getScope()[0]).getName().compareTo
 									(((SpatialFluent) activityToFluent.get((Activity)metaVariable.getConstraintNetwork().getVariables()[j]) ).getName()) == 0) {
-//								System.out.println("ADDED ACTIVITY: " + ((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));
-//								((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])).setMarking(markings.UNJUSTIFIED);								
+//								System.out.println("ADDED ACTIVITY: " + ((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));								
 								if (this.getPotentialCulprit().contains(((RectangularRegion2) mvalue.getConstraints()[i].getScope()[0]).getName())) {
-//									System.out.println("HERE IS THE NEW GOAL: " + ((RectangularRegion2)mvalue.getConstraints()[i].getScope()[0]).getName());
 									culpritActivities.put(((RectangularRegion2)mvalue.getConstraints()[i].getScope()[0]).getName(), 
 											((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));
 									newGoal.add(((RectangularRegion2) mvalue.getConstraints()[i].getScope()[0]).getName());
-									activeCulprit.add(((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));
-									
-								} else {
-									System.out.println("HERE IS THE OLD GOAL: " + ((RectangularRegion2)mvalue.getConstraints()[i].getScope()[0]).getName());
-									System.out.println("OLD GOAL ACTIVTY: " + ((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));
-//									oldGoal.add(((RectangularRegion2) mvalue.getConstraints()[i].getScope()[0]).getName());
-									oldGoal.add(((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));
-								}
-							}
-						}
-					}else{
-						
-							for (int j = 0; j < metaVariable.getConstraintNetwork().getVariables().length; j++) {
-								if (((RectangularRegion2) mvalue.getConstraints()[i].getScope()[0]).getName().compareTo
-										(((SpatialFluent) activityToFluent.get((Activity)metaVariable.getConstraintNetwork().getVariables()[j]) ).getName()) == 0) {
-									if (this.getPotentialCulprit().contains(((RectangularRegion2) mvalue.getConstraints()[i].getScope()[0]).getName())) {
-//										System.out.println("HERE IS PASSIVE CULPRIT: " + ((RectangularRegion2)mvalue.getConstraints()[i].getScope()[0]).getName());
-										if(!passiveCulprit.contains(((Activity)(metaVariable.getConstraintNetwork().getVariables()[j]))))
-											passiveCulprit.add(((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));
-
+									activeCulprit.add(((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));									
 								}
 							}
 						}
@@ -380,10 +395,16 @@ public class SpatialSchedulable extends MetaConstraint {
 				}						
 			}
 		}
-	
+		
+		
+
+		
+//		for (Activity act : activityToFluent.keySet()) {
+//			System.out.println("** " + act + activityToFluent.get(act));
+//		}
+		
 		//set new Goal After old activity
-		for (String st :newGoal) {
-			
+		for (String st :newGoal) {			
 			//add new fluent
 			SpatialFluent newgoalFlunet = (SpatialFluent)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).createVariable();
 			newgoalFlunet.setName(st);
@@ -409,6 +430,13 @@ public class SpatialSchedulable extends MetaConstraint {
 					 Constraint[] {newOnAfteroldOn});
 			System.out.println(newOnAfteroldOn);
 			 
+			
+			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			//generate rectangle resources in the table
+			
+			
+			
+			
 			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //			 //new goal before old goal ! i am not sure if it is neccessary
 //			 AllenIntervalConstraint newgoalBeforeOldeGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before,
@@ -421,40 +449,6 @@ public class SpatialSchedulable extends MetaConstraint {
 		}
 		
 	
-//		Activity hold = null;
-////		var: robot1::<SymbolicVariable 6: [pick_cup1_table2(arm)]>U<AllenInterval 6 (I-TP: 14 15 ) [[11, INF], [21, INF]]>/JUSTIFIED
-//		for (int i = 0; i < ((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables().length; i++) {
-//			
-//			if(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i])
-//					.getSymbolicVariable().toString().contains("pick_cup1_table2")){
-////				hold = ((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]);
-//				System.out.println("var: " + ((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]);
-//				AllenIntervalConstraint oldgoalAfternewGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Deadline, new Bounds(21,21));
-//				oldgoalAfternewGoal.setFrom(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]));
-//				oldgoalAfternewGoal.setTo(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[i]));									
-//				((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new Constraint[] {oldgoalAfternewGoal});
-//
-//			}
-//		}
-	
-	
-
-		
-//		//set old Activity before the other activity that is potential culprit
-//		for (int j = 0; j < activeCulprit.size(); j++) {
-//			for (int j2 = 0; j2 < passiveCulprit.size(); j2++) {
-//				
-//				 AllenIntervalConstraint getRidOfOverlap = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before,
-//						 AllenIntervalConstraint.Type.Before.getDefaultBounds());
-//				 System.out.println(activeCulprit.get(j));
-//				 getRidOfOverlap.setFrom(activeCulprit.get(j));
-//				 getRidOfOverlap.setTo(passiveCulprit.get(j2));
-//				 ((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new
-//						 Constraint[] {getRidOfOverlap});
-//				 
-//				 System.out.println(getRidOfOverlap);
-//			}
-//		}
 		
 		ret.add(mvalue);
 //		System.out.println(ret);
@@ -483,8 +477,6 @@ public class SpatialSchedulable extends MetaConstraint {
 //		for (int i = 0; i < peak.length; i++) {
 //			System.out.println(peak[i]);
 //		}
-		
-		
 		
 		Vector<UnaryRectangleConstraint2> atConstraints = new Vector<UnaryRectangleConstraint2>();
 		HashMap<String, SpatialFluent> currentFluent = new HashMap<String, SpatialFluent>();
@@ -977,6 +969,7 @@ public class SpatialSchedulable extends MetaConstraint {
 			
 			Vector<Activity> currentacts= removeCulpritsFromCurrentActivity(); 
 			
+			
 //			System.out.println("currentacts" + currentacts);
 			Activity[] groundVars = currentacts.toArray(new Activity[currentacts.size()]);			
 
@@ -1053,9 +1046,10 @@ public class SpatialSchedulable extends MetaConstraint {
 				potentialCulprit.add(((RectangularRegion2) ((UnaryRectangleConstraint2) atConstraints.get(i)).getFrom()).getName());
 				logger.fine("one potential culprit can be: " + ((RectangularRegion2) ((UnaryRectangleConstraint2) atConstraints.get(i)).getFrom()).getName());
 				boundedUnaryCons.add((UnaryRectangleConstraint2) atConstraints.get(i));
-			} else {
-				if (((RectangularRegion2) ((UnaryRectangleConstraint2) atConstraints.get(i)).getFrom()).getOntologicalProp().isMovable())
-					initialUnboundedObjName.add(((RectangularRegion2) ((UnaryRectangleConstraint2) atConstraints.get(i)).getFrom()).getName());
+			}
+			else {				
+//				if (((RectangularRegion2) ((UnaryRectangleConstraint2) atConstraints.get(i)).getFrom()).getOntologicalProp().isMovable())
+//					initialUnboundedObjName.add(((RectangularRegion2) ((UnaryRectangleConstraint2) atConstraints.get(i)).getFrom()).getName());
 				unboundedUnaryCons.add((UnaryRectangleConstraint2) atConstraints.get(i));
 			}
 		}

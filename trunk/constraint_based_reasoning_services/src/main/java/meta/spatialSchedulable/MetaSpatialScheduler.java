@@ -1,5 +1,7 @@
 package meta.spatialSchedulable;
 
+import java.awt.Rectangle;
+import java.util.HashMap;
 import java.util.Vector;
 
 import meta.MetaCausalConstraint;
@@ -122,6 +124,19 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 		}
 		
 
+		for (int j = 0; j < this.metaConstraints.size(); j++) {
+			if(this.metaConstraints.get(j) instanceof SpatialSchedulable ){
+				HashMap<String, Rectangle> old_on = ((SpatialSchedulable)this.metaConstraints.elementAt(j)).getPreviosRectangularRegion();
+				HashMap<String, Rectangle> new_on = ((SpatialSchedulable)this.metaConstraints.elementAt(j)).getUpdatedRectangularRegion();
+				System.out.println("old: " + old_on);
+				System.out.println("new: " + new_on);
+				for (int j2 = 0; j2 < this.metaConstraints.size(); j2++) {
+					if(this.metaConstraints.get(j2) instanceof MetaOccupiedConstraint){
+						((MetaOccupiedConstraint)this.metaConstraints.elementAt(j2)).setUsage(old_on, new_on);
+					}
+				}
+			}
+		}
 		
 		for (Variable v : metaValue.getVariables()) {
 			for (int j = 0; j < this.metaConstraints.size(); j++) {
