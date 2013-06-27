@@ -8,6 +8,7 @@ import meta.MetaSpatialFluentConstraint;
 import meta.MetaSpatioCausalConstraintSolver;
 import meta.MetaCausalConstraint.markings;
 import meta.simplePlanner.SimpleOperator;
+import meta.spatialSchedulable.MetaOccupiedConstraint;
 import meta.spatialSchedulable.MetaSpatialScheduler;
 import meta.spatialSchedulable.SpatialSchedulable;
 import meta.symbolsAndTime.Schedulable;
@@ -39,54 +40,65 @@ public class TestTimelineBaseSpatialReasoning3 {
 	public static void main(String[] args) {
 		
 
-		MetaSpatialScheduler metaSpatioCasualSolver = new MetaSpatialScheduler(0, 1000, 0);
-		//Most critical conflict is the one with most activities 
+		MetaSpatialScheduler metaSpatioCasualSolver = new MetaSpatialScheduler(
+				0, 1000, 0);
+		// Most critical conflict is the one with most activities
 		VariableOrderingH varOH = new VariableOrderingH() {
 			@Override
 			public int compare(ConstraintNetwork arg0, ConstraintNetwork arg1) {
 				return arg1.getVariables().length - arg0.getVariables().length;
 			}
+
 			@Override
-			public void collectData(ConstraintNetwork[] allMetaVariables) { }
+			public void collectData(ConstraintNetwork[] allMetaVariables) {
+			}
 		};
 		// no value ordering
 		ValueOrderingH valOH = new ValueOrderingH() {
 			@Override
-			public int compare(ConstraintNetwork o1, ConstraintNetwork o2) { return 0; }
+			public int compare(ConstraintNetwork o1, ConstraintNetwork o2) {
+				return 0;
+			}
 		};
 		SpatialSchedulable metaSpatialSchedulable = new SpatialSchedulable(varOH, valOH);
+		MetaOccupiedConstraint metaOccupiedConstraint = new MetaOccupiedConstraint(null, null);
+		SpatialFluentSolver groundSolver = (SpatialFluentSolver) metaSpatioCasualSolver.getConstraintSolvers()[0];
 
-		
-		SpatialFluentSolver groundSolver = (SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0];
-		
-		//#################################################################################################################
-		MetaCausalConstraint metaCausalConstraint = new MetaCausalConstraint(new int[] {2}, new String[] {"arm"}, "WellSetTableDomain");		
-		addOperator(metaCausalConstraint);		
-		//#################################################################################################################
-		//this is spatial general and assetional rule
+		// #################################################################################################################
+		MetaCausalConstraint metaCausalConstraint = new MetaCausalConstraint(
+				new int[] { 2 }, new String[] { "arm" }, "WellSetTableDomain");
+		addOperator(metaCausalConstraint);
+		// #################################################################################################################
+		// this is spatial general and assetional rule
 		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
 		Vector<SpatialAssertionalRelation2> saRelations = new Vector<SpatialAssertionalRelation2>();
 		Vector<SpatialFluent> spatialFleunts = new Vector<SpatialFluent>();
 		getSpatialKnowledge(srules);
 		getAssertionalRule(saRelations);
 		insertCurrentStateCurrentGoal(groundSolver, spatialFleunts);
-		//#################################################################################################################
-		//add spatial general and assertional rule to MetaSpatialFluentConstraint
-		metaSpatialSchedulable.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
-		metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
-		metaSpatialSchedulable.setUsage(spatialFleunts.toArray(new SpatialFluent[spatialFleunts.size()]));
-		
-		
-		//add meta constraint
-				
-		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);		
-		for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
+		// #################################################################################################################
+		// add spatial general and assertional rule to
+		// MetaSpatialFluentConstraint
+		metaSpatialSchedulable.setSpatialRules(srules
+				.toArray(new SpatialRule2[srules.size()]));
+		metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations
+				.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
+		metaSpatialSchedulable.setUsage(spatialFleunts
+				.toArray(new SpatialFluent[spatialFleunts.size()]));
+		// #################################################################################################################
+
+		// add meta constraint
+
+		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
+		for (Schedulable sch : metaCausalConstraint
+				.getSchedulingMetaConstraints()) {
 			metaSpatioCasualSolver.addMetaConstraint(sch);
 		}
 		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
-		
+		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
+
 		MetaCSPLogging.setLevel(MetaSpatialScheduler.class, Level.FINEST);
-//		MetaCSPLogging.setLevel(SpatialSchedulable.class, Level.FINE);
+		// MetaCSPLogging.setLevel(SpatialSchedulable.class, Level.FINE);
 		metaSpatioCasualSolver.backtrack();
 
 		//#####################################################################################################################
@@ -99,7 +111,7 @@ public class TestTimelineBaseSpatialReasoning3 {
 
 
 		ActivityNetworkSolver acSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
-		TimelinePublisher tp = new TimelinePublisher(acSolver, new Bounds(0,150), "robot1");
+		TimelinePublisher tp = new TimelinePublisher(acSolver, new Bounds(0,123), "robot1");
 		TimelineVisualizer viz = new TimelineVisualizer(tp);
 		tp.publish(false, false);
 		tp.publish(false, true);
@@ -219,6 +231,32 @@ public class TestTimelineBaseSpatialReasoning3 {
 		AllenIntervalConstraint holdingForkAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
 		AllenIntervalConstraint holdingFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 		AllenIntervalConstraint pickFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+
+//		AllenIntervalConstraint atCupAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
+//		AllenIntervalConstraint atCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint placeCupAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
+//		AllenIntervalConstraint placeCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint holdingCupAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
+//		AllenIntervalConstraint holdingCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint pickCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//
+//		
+//		AllenIntervalConstraint atKnifeAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
+//		AllenIntervalConstraint atKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint placeKnifeAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
+//		AllenIntervalConstraint placeKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint holdingKnifeAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
+//		AllenIntervalConstraint holdingKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint pickKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//
+//		
+//		AllenIntervalConstraint atForkAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
+//		AllenIntervalConstraint atFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint placeForkAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
+//		AllenIntervalConstraint placeFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint holdingForkAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
+//		AllenIntervalConstraint holdingFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint pickFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 
 		
 		SimpleOperator operator1 = new SimpleOperator("robot1::on_cup1_table1()",
