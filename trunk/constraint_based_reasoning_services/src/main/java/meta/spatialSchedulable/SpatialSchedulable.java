@@ -396,12 +396,12 @@ public class SpatialSchedulable extends MetaConstraint {
 			}
 		}
 		
-		
-
-		
-//		for (Activity act : activityToFluent.keySet()) {
-//			System.out.println("** " + act + activityToFluent.get(act));
-//		}
+		//extract the fluent which is relevant to the original goal(s)
+		Vector<Activity> originalGoals = new Vector<Activity>(); //e.g., cup1 in the so called wellSetTable Scenario
+		for (Activity act : activityToFluent.keySet()) {
+			if(initialUnboundedObjName.contains(activityToFluent.get(act).getName()))
+				originalGoals.add(act);
+		}
 		
 		//set new Goal After old activity
 		for (String st :newGoal) {			
@@ -431,21 +431,19 @@ public class SpatialSchedulable extends MetaConstraint {
 			System.out.println(newOnAfteroldOn);
 			 
 			
-			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-			//generate rectangle resources in the table
-			
-			
-			
 			
 			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//			 //new goal before old goal ! i am not sure if it is neccessary
-//			 AllenIntervalConstraint newgoalBeforeOldeGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before,
-//					 AllenIntervalConstraint.Type.Before.getDefaultBounds());
-//			 newgoalBeforeOldeGoal.setFrom(((Activity)newgoalFlunet.getInternalVariables()[1]));
-//			 newgoalBeforeOldeGoal.setTo(culpritActivities.get(st));
-//			 ((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new
-//					 Constraint[] {newgoalBeforeOldeGoal});
-//			 System.out.println(newgoalBeforeOldeGoal);
+			 //new goal before old goal e.g., on_knife before on_cup
+			for (int j = 0; j < originalGoals.size(); j++) {
+				AllenIntervalConstraint culpritsBeforeOldeGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before,
+						 AllenIntervalConstraint.Type.Before.getDefaultBounds());
+				culpritsBeforeOldeGoal.setFrom(((Activity)newgoalFlunet.getInternalVariables()[1]));
+				culpritsBeforeOldeGoal.setTo(originalGoals.get(j)); //has to be change to CUP
+				((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new
+						 Constraint[] {culpritsBeforeOldeGoal});
+				System.out.println("HERE: " + culpritsBeforeOldeGoal);
+
+			}
 		}
 		
 	
@@ -681,11 +679,27 @@ public class SpatialSchedulable extends MetaConstraint {
 	public void setUsage(SpatialFluent... sfs) {
 		if (activities == null)
 			activities = new Vector<Activity>();
-		for (SpatialFluent sf : sfs)
+		for (SpatialFluent sf : sfs){
 			if (!activities.contains(sf.getActivity())) {
 				activities.add(sf.getActivity());
 				activityToFluent.put(sf.getActivity(), sf);
 			}
+		}
+		
+		for (int i = 0; i < sfs.length; i++) {
+			for (int j = 0; j < sAssertionalRels.length; j++) {
+				if(sAssertionalRels[j].getFrom().compareTo(sfs[i].getRectangularRegion().getName()) == 0){
+					if(isUnboundedBoundingBox(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[0], 
+							sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[1], 
+							sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[2],
+							sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[3])){
+						initialUnboundedObjName.add(sfs[i].getRectangularRegion().getName());
+					}
+				}
+			}
+		}
+		
+		
 
 	}
 
