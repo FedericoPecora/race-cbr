@@ -27,7 +27,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 
 	public MetaOccupiedConstraint(VariableOrderingH varOH, ValueOrderingH valOH) {
 		super(varOH, valOH);
-		// TODO Auto-generated constructor stub
+
 	}
 	
 	public void setUsage(HashMap<String, Rectangle> old_on, HashMap<String, Rectangle> new_on) {

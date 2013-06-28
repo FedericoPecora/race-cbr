@@ -430,8 +430,6 @@ public class SpatialSchedulable extends MetaConstraint {
 					 Constraint[] {newOnAfteroldOn});
 			System.out.println(newOnAfteroldOn);
 			 
-			
-			
 			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 			 //new goal before old goal e.g., on_knife before on_cup
 			for (int j = 0; j < originalGoals.size(); j++) {
@@ -759,7 +757,9 @@ public class SpatialSchedulable extends MetaConstraint {
 				this.rigidityNumber = rigidityNumber;
 			}
 		}
-
+		
+//		System.out.println("targetRecs: " + targetRecs);
+		
 		final HashMap<ConstraintNetwork, ConstraintNetworkSortingCritera> sortingCN = new HashMap<ConstraintNetwork, ConstraintNetworkSortingCritera>();
 		HashMap<ConstraintNetwork, HashMap<String, Bounds[]>> cnToInitPose = new HashMap<ConstraintNetwork, HashMap<String, Bounds[]>>();
 		for (HashMap<String, Bounds[]> iterCN : permutation.keySet()) {
@@ -977,21 +977,17 @@ public class SpatialSchedulable extends MetaConstraint {
 	}
 	
 	private ConstraintNetwork[] completePeakCollection() {
-
-	if (activities != null && !activities.isEmpty()) {
+		
+		if (activities != null && !activities.isEmpty()) {
 			logger.finest("Doing complete peak collection with " + activities.size() + " activities...");
 			
-			Vector<Activity> currentacts= removeCulpritsFromCurrentActivity(); 
-			
-			
+			Vector<Activity> currentacts = removeCulpritsFromCurrentActivity(); 
 //			System.out.println("currentacts" + currentacts);
 			Activity[] groundVars = currentacts.toArray(new Activity[currentacts.size()]);			
-
-			
 			Vector<Long> discontinuities = new Vector<Long>();
 			for (Activity a : groundVars) {
 				long start = a.getTemporalVariable().getEST();
-				long end = a.getTemporalVariable().getEST();
+				long end = a.getTemporalVariable().getLET();
 				if (!discontinuities.contains(start)) discontinuities.add(start);
 				if (!discontinuities.contains(end)) discontinuities.add(end);
 			}
@@ -1007,6 +1003,7 @@ public class SpatialSchedulable extends MetaConstraint {
 				Bounds interval = new Bounds(discontinuitiesArray[i], discontinuitiesArray[i+1]);
 				for (Activity a : groundVars) {
 					Bounds interval1 = new Bounds(a.getTemporalVariable().getEST(), a.getTemporalVariable().getLET());
+					
 					Bounds intersection = interval.intersectStrict(interval1);
 					if (intersection != null && !intersection.isSingleton()) {
 						onePeak.add(a);

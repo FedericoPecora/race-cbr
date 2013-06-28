@@ -99,7 +99,7 @@ public class TestTimelineBaseSpatialReasoning2 {
 
 
 		ActivityNetworkSolver acSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
-		TimelinePublisher tp = new TimelinePublisher(acSolver, new Bounds(0,150), "robot1");
+		TimelinePublisher tp = new TimelinePublisher(acSolver, new Bounds(0,113), "robot1");
 		TimelineVisualizer viz = new TimelineVisualizer(tp);
 		tp.publish(false, false);
 		tp.publish(false, true);
@@ -110,8 +110,7 @@ public class TestTimelineBaseSpatialReasoning2 {
 	private static void insertCurrentStateCurrentGoal(SpatialFluentSolver grounSpatialFluentSolver, 
 			Vector<SpatialFluent> spatialFleunts) {
 		
-		Vector<Constraint> cons = new Vector<Constraint>();
-		
+		Vector<Constraint> cons = new Vector<Constraint>();		
 		SpatialFluent tableFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable();
 		tableFlunet.setName("table1");
 		((RectangularRegion2)tableFlunet.getInternalVariables()[0]).setName("table1");
@@ -169,23 +168,20 @@ public class TestTimelineBaseSpatialReasoning2 {
 		releaseOnFork.setTo(forkFlunet.getActivity());
 		cons.add(releaseOnFork);
 		
-//		AllenIntervalConstraint onFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(5,APSPSolver.INF));
-//		onFork1Duration.setFrom(forkFlunet.getActivity());
-//		onFork1Duration.setTo(forkFlunet.getActivity());
-//		cons.add(onFork1Duration);
+		AllenIntervalConstraint onFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(1,APSPSolver.INF));
+		onFork1Duration.setFrom(forkFlunet.getActivity());
+		onFork1Duration.setTo(forkFlunet.getActivity());
+		cons.add(onFork1Duration);
 		
 		AllenIntervalConstraint releaseOnKnife = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(20,20));
 		releaseOnKnife.setFrom(knifeFlunet.getActivity());
 		releaseOnKnife.setTo(knifeFlunet.getActivity());
 		cons.add(releaseOnKnife);
 		
-
-
-		
-//		AllenIntervalConstraint onknife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(5,APSPSolver.INF));
-//		onknife1Duration.setFrom(knifeFlunet.getActivity());
-//		onknife1Duration.setTo(knifeFlunet.getActivity());
-//		cons.add(onknife1Duration);
+		AllenIntervalConstraint onknife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(1,APSPSolver.INF));
+		onknife1Duration.setFrom(knifeFlunet.getActivity());
+		onknife1Duration.setTo(knifeFlunet.getActivity());
+		cons.add(onknife1Duration);
 		
 		
 		grounSpatialFluentSolver.getConstraintSolvers()[1].addConstraints(cons.toArray(new Constraint[cons.size()]));
