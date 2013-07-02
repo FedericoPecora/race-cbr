@@ -28,6 +28,7 @@ public class SimpleReusableResource2 extends Schedulable {
 		this.capacity = capacity;
 		this.rd = rd;
 		this.name = name;
+//		setPeakCollectionStrategy(peakCollectionStrategy.COMPLETE);
 	}
 	
 
