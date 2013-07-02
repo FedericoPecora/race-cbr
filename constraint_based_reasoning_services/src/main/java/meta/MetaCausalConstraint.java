@@ -221,6 +221,7 @@ public class MetaCausalConstraint extends MetaConstraint {
 			String operatorHead = r.getHead();
 			String opeatorHeadComponent = operatorHead.substring(0, operatorHead.indexOf("::"));
 			String operatorHeadSymbol = operatorHead.substring(operatorHead.indexOf("::")+2, operatorHead.length());
+			
 			if (opeatorHeadComponent.equals(problematicActivity.getComponent())) {
 				if (problematicActivitySymbolicDomain.contains(operatorHeadSymbol)) {
 					ConstraintNetwork newResolver = expandOperator(r,problematicActivity);

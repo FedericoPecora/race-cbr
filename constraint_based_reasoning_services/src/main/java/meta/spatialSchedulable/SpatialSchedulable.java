@@ -39,6 +39,7 @@ import framework.multi.MultiBinaryConstraint;
 import framework.multi.MultiDomain;
 import meta.MetaSpatialFluentConstraint;
 import meta.MetaCausalConstraint.markings;
+import meta.simplePlanner.SimpleOperator;
 import meta.symbolsAndTime.MCSData;
 import meta.symbolsAndTime.Schedulable;
 import meta.symbolsAndTime.Schedulable.PEAKCOLLECTION;
@@ -64,9 +65,14 @@ public class SpatialSchedulable extends MetaConstraint {
 	private HashMap<Activity, SpatialFluent> activityToFluent = new HashMap<Activity, SpatialFluent>();
 	private Vector<Activity> activeCulprit = new Vector<Activity>();
 	private HashMap<String, Rectangle> oldRectangularRegion = new HashMap<String, Rectangle>();
+	private Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
 	
 	public HashMap<String, Rectangle> getPreviosRectangularRegion(){
 		return oldRectangularRegion;
+	}
+	
+	public void addOperator(SimpleOperator r) {
+		operators.add(r);
 	}
 	
 	public HashMap<String, Rectangle> getUpdatedRectangularRegion(){
@@ -406,7 +412,8 @@ public class SpatialSchedulable extends MetaConstraint {
 		//set new Goal After old activity
 		for (String st :newGoal) {			
 			//add new fluent
-			SpatialFluent newgoalFlunet = (SpatialFluent)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).createVariable();
+//			SpatialFluent newgoalFlunet = (SpatialFluent)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).createVariable("locationConstraints");
+			SpatialFluent newgoalFlunet = (SpatialFluent)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).createVariable(culpritActivities.get(st).getComponent());
 			newgoalFlunet.setName(st);
 			((Activity)newgoalFlunet.getInternalVariables()[1]).setSymbolicDomain(culpritActivities.get(st).getSymbolicVariable().toString()
 					.subSequence(21, ((Activity)culpritActivities.get(st)).getSymbolicVariable().toString().length() - 1).toString());
@@ -431,30 +438,37 @@ public class SpatialSchedulable extends MetaConstraint {
 			System.out.println(newOnAfteroldOn);
 			 
 			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-			 //new goal before old goal e.g., on_knife before on_cup
+			//new goal before old goal e.g., on_knife before on_cup
+			//instead of that on_knife before precondition on_cup which is place_cup. the reason is I do not implement place_knife before plaace_cup
+			//is the activity place_knife is not existed!! it is not the valid argue, I will try later
 			for (int j = 0; j < originalGoals.size(); j++) {
-				AllenIntervalConstraint culpritsBeforeOldeGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before,
-						 AllenIntervalConstraint.Type.Before.getDefaultBounds());
-				culpritsBeforeOldeGoal.setFrom(((Activity)newgoalFlunet.getInternalVariables()[1]));
-				culpritsBeforeOldeGoal.setTo(originalGoals.get(j)); //has to be change to CUP
-				((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new
-						 Constraint[] {culpritsBeforeOldeGoal});
-				System.out.println("HERE: " + culpritsBeforeOldeGoal);
-
-			}
+				//finding Precondition
+				for (int i = 0; i < operators.size(); i++) {
+					if(originalGoals.get(j).getSymbolicVariable().getDomain().toString().contains
+							(operators.get(i).getHead().substring(operators.get(i).getHead().indexOf("::")+2, operators.get(i).getHead().length()))){
+						for(String req: operators.get(i).getRequirementActivities()){
+							for (int k = 0; k < ((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables().length; k++) {
+								if(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[k]).getDomain().toString()
+								.contains(req.substring(req.indexOf("::")+2, req.length()))){
+									AllenIntervalConstraint culpritsBeforeOldeGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before,
+											 AllenIntervalConstraint.Type.Before.getDefaultBounds());
+									culpritsBeforeOldeGoal.setFrom(((Activity)newgoalFlunet.getInternalVariables()[1]));
+									culpritsBeforeOldeGoal.setTo(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[k])); 
+									((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new
+											 Constraint[] {culpritsBeforeOldeGoal});
+									System.out.println("culpritsBeforeOldeGoal: " + culpritsBeforeOldeGoal);
+								}
+							}
+						}
+					}
+				}
+			}			
 		}
-		
-	
-		
 		ret.add(mvalue);
 //		System.out.println(ret);
 		return ret.toArray(new ConstraintNetwork[ret.size()]);
 
 	}
-
-
-
-	
 
 	protected boolean temporalOverlap(Activity a1, Activity a2) {
 		return !(a1.getTemporalVariable().getEET() <= a2.getTemporalVariable()

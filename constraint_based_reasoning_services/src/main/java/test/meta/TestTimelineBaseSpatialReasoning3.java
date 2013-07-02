@@ -111,7 +111,7 @@ public class TestTimelineBaseSpatialReasoning3 {
 
 
 		ActivityNetworkSolver acSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
-		TimelinePublisher tp = new TimelinePublisher(acSolver, new Bounds(0,150), "robot1");
+		TimelinePublisher tp = new TimelinePublisher(acSolver, new Bounds(0,78),  "locationConstraints", "robot1_cup1", "robot1_knife1", "robot1_fork1");
 		TimelineVisualizer viz = new TimelineVisualizer(tp);
 		tp.publish(false, false);
 		tp.publish(false, true);
@@ -122,12 +122,11 @@ public class TestTimelineBaseSpatialReasoning3 {
 	private static void insertCurrentStateCurrentGoal(SpatialFluentSolver grounSpatialFluentSolver, 
 			Vector<SpatialFluent> spatialFleunts) {
 		
-		Vector<Constraint> cons = new Vector<Constraint>();
-		
-		SpatialFluent tableFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("Robot1");;
+		Vector<Constraint> cons = new Vector<Constraint>();		
+		SpatialFluent tableFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("locationConstraints");
 		tableFlunet.setName("table1");
 		((RectangularRegion2)tableFlunet.getInternalVariables()[0]).setName("table1");
-		((Activity)tableFlunet.getInternalVariables()[1]).setSymbolicDomain("on_table1()");
+		((Activity)tableFlunet.getInternalVariables()[1]).setSymbolicDomain("at_table1()");
 		((Activity)tableFlunet.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
 		spatialFleunts.add(tableFlunet);
 		
@@ -142,7 +141,7 @@ public class TestTimelineBaseSpatialReasoning3 {
 		cons.add(releaseOnTable);
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		
-		SpatialFluent cupFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("Robot1");;
+		SpatialFluent cupFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("locationConstraints");
 		cupFlunet.setName("cup1");
 		((RectangularRegion2)cupFlunet.getInternalVariables()[0]).setName("cup1");
 		((Activity)cupFlunet.getInternalVariables()[1]).setSymbolicDomain("on_cup1_table1()");
@@ -161,7 +160,7 @@ public class TestTimelineBaseSpatialReasoning3 {
 
 		
 		//...................................................it comes to the scene later
-		SpatialFluent knifeFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("Robot1");;
+		SpatialFluent knifeFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("locationConstraints");
 		knifeFlunet.setName("knife1");
 		((RectangularRegion2)knifeFlunet.getInternalVariables()[0]).setName("knife1");
 		((Activity)knifeFlunet.getInternalVariables()[1]).setSymbolicDomain("on_knife1_table1()");
@@ -169,7 +168,7 @@ public class TestTimelineBaseSpatialReasoning3 {
 		spatialFleunts.add(knifeFlunet);
 		
 		
-		SpatialFluent forkFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable();
+		SpatialFluent forkFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("locationConstraints");
 		forkFlunet.setName("fork1");
 		((RectangularRegion2)forkFlunet.getInternalVariables()[0]).setName("fork1");
 		((Activity)forkFlunet.getInternalVariables()[1]).setSymbolicDomain("on_fork1_table1()");
@@ -206,58 +205,85 @@ public class TestTimelineBaseSpatialReasoning3 {
 
 	private static void addOperator(MetaCausalConstraint rd) {
 		
-		AllenIntervalConstraint atCupAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+//		AllenIntervalConstraint atCupAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+//		AllenIntervalConstraint atCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint placeCupAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+//		AllenIntervalConstraint placeCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint holdingCupAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+//		AllenIntervalConstraint holdingCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint pickCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//
+//		
+//		AllenIntervalConstraint atKnifeAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+//		AllenIntervalConstraint atKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint placeKnifeAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+//		AllenIntervalConstraint placeKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint holdingKnifeAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+//		AllenIntervalConstraint holdingKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint pickKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//
+//		
+//		AllenIntervalConstraint atForkAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+//		AllenIntervalConstraint atFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint placeForkAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+//		AllenIntervalConstraint placeFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint holdingForkAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+//		AllenIntervalConstraint holdingFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		AllenIntervalConstraint pickFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+
+		AllenIntervalConstraint atCupAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
 		AllenIntervalConstraint atCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
-		AllenIntervalConstraint placeCupAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+		AllenIntervalConstraint placeCupAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
 		AllenIntervalConstraint placeCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
-		AllenIntervalConstraint holdingCupAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+		AllenIntervalConstraint holdingCupAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
 		AllenIntervalConstraint holdingCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 		AllenIntervalConstraint pickCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 
 		
-		AllenIntervalConstraint atKnifeAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+		AllenIntervalConstraint atKnifeAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
 		AllenIntervalConstraint atKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
-		AllenIntervalConstraint placeKnifeAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+		AllenIntervalConstraint placeKnifeAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
 		AllenIntervalConstraint placeKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
-		AllenIntervalConstraint holdingKnifeAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+		AllenIntervalConstraint holdingKnifeAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
 		AllenIntervalConstraint holdingKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 		AllenIntervalConstraint pickKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 
 		
-		AllenIntervalConstraint atForkAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+		AllenIntervalConstraint atForkAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
 		AllenIntervalConstraint atFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
-		AllenIntervalConstraint placeForkAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+		AllenIntervalConstraint placeForkAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
 		AllenIntervalConstraint placeFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
-		AllenIntervalConstraint holdingForkAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+		AllenIntervalConstraint holdingForkAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
 		AllenIntervalConstraint holdingFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 		AllenIntervalConstraint pickFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 
 		
-		SimpleOperator operator1 = new SimpleOperator("robot1::on_cup1_table1()",
+		
+		SimpleOperator operator1 = new SimpleOperator("locationConstraints::on_cup1_table1()",
 				new AllenIntervalConstraint[] {atCupAfterPlace},
-				new String[] {"robot1::place_cup1_table1(arm)"},
+				new String[] {"robot1_cup1::place_cup1_table1(arm)"},
 				new int[] {0});
 		operator1.addConstraint(atCup1Duration, 0, 0);
 		rd.addOperator(operator1);
 		
-		SimpleOperator operator2 = new SimpleOperator("robot1::place_cup1_table1(arm)",
+		SimpleOperator operator2 = new SimpleOperator("robot1_cup1::place_cup1_table1(arm)",
 				new AllenIntervalConstraint[] {placeCupAfterholding},
-				new String[] {"robot1::holding_cup1(arm)"},
-				new int[] {2});
+				new String[] {"robot1_cup1::holding_cup1(arm)"},
+				new int[] {1});
 		operator2.addConstraint(placeCup1Duration, 0, 0);
 		rd.addOperator(operator2);
 
-		SimpleOperator operator3 = new SimpleOperator("robot1::holding_cup1(arm)",
+		SimpleOperator operator3 = new SimpleOperator("robot1_cup1::holding_cup1(arm)",
 				new AllenIntervalConstraint[] {holdingCupAfterPick},
-				new String[] {"robot1::pick_cup1_table2(arm)"},
+				new String[] {"robot1_cup1::pick_cup1_table2(arm)"},
 				new int[] {1});
 		operator3.addConstraint(holdingCup1Duration, 0, 0);
 		rd.addOperator(operator3);
 		
-		SimpleOperator operator41 = new SimpleOperator("robot1::pick_cup1_table2(arm)",
+		SimpleOperator operator41 = new SimpleOperator("robot1_cup1::pick_cup1_table2(arm)",
 				new AllenIntervalConstraint[] {holdingCupAfterPick},
-				new String[] {"robot1::on_cup1_table2()"},
-				new int[] {2});
+				new String[] {"locationConstraints::on_cup1_table2()"},
+				new int[] {1});
 		operator41.addConstraint(holdingCup1Duration, 0, 0);
 		rd.addOperator(operator41);
 		
@@ -270,31 +296,31 @@ public class TestTimelineBaseSpatialReasoning3 {
 		
 		//........................
 
-		SimpleOperator operator4 = new SimpleOperator("robot1::on_knife1_table1()",
+		SimpleOperator operator4 = new SimpleOperator("locationConstraints::on_knife1_table1()",
 				new AllenIntervalConstraint[] {atKnifeAfterPlace},
-				new String[] {"robot1::place_knife1_table1(arm)"},
+				new String[] {"robot1_knife1::place_knife1_table1(arm)"},
 				new int[] {0});
 		operator4.addConstraint(atKnife1Duration, 0, 0);
 		rd.addOperator(operator4);
 		
-		SimpleOperator operator5 = new SimpleOperator("robot1::place_knife1_table1(arm)",
+		SimpleOperator operator5 = new SimpleOperator("robot1_knife1::place_knife1_table1(arm)",
 				new AllenIntervalConstraint[] {placeKnifeAfterholding},
-				new String[] {"robot1::holding_knife1(arm)"},
-				new int[] {2});
+				new String[] {"robot1_knife1::holding_knife1(arm)"},
+				new int[] {1});
 		operator5.addConstraint(placeKnife1Duration, 0, 0);
 		rd.addOperator(operator5);
 
-		SimpleOperator operator6 = new SimpleOperator("robot1::holding_knife1(arm)",
+		SimpleOperator operator6 = new SimpleOperator("robot1_knife1::holding_knife1(arm)",
 				new AllenIntervalConstraint[] {holdingKnifeAfterPick},
-				new String[] {"robot1::pick_knife1(arm)"},
+				new String[] {"robot1_knife1::pick_knife1(arm)"},
 				new int[] {1});
 		operator6.addConstraint(holdingKnife1Duration, 0, 0);
 		rd.addOperator(operator6);
 		
-		SimpleOperator operator2res = new SimpleOperator("robot1::pick_knife1(arm)",
+		SimpleOperator operator2res = new SimpleOperator("robot1_knife1::pick_knife1(arm)",
 				new AllenIntervalConstraint[] {holdingKnifeAfterPick},
-				new String[] {"robot1::on_knife1_table1()"},
-				new int[] {2});
+				new String[] {"locationConstraints::on_knife1_table1()"},
+				new int[] {1});
 		operator2res.addConstraint(pickKnife1Duration, 0, 0);
 		rd.addOperator(operator2res);
 		
@@ -308,31 +334,31 @@ public class TestTimelineBaseSpatialReasoning3 {
 		
 		//........................
 		
-		SimpleOperator operator7 = new SimpleOperator("robot1::on_fork1_table1()",
+		SimpleOperator operator7 = new SimpleOperator("locationConstraints::on_fork1_table1()",
 				new AllenIntervalConstraint[] {atForkAfterPlace},
-				new String[] {"robot1::place_fork1_table1(arm)"},
+				new String[] {"robot1_fork1::place_fork1_table1(arm)"},
 				new int[] {0});
 		operator7.addConstraint(atFork1Duration, 0, 0);
 		rd.addOperator(operator7);
 		
-		SimpleOperator operator8 = new SimpleOperator("robot1::place_fork1_table1(arm)",
+		SimpleOperator operator8 = new SimpleOperator("robot1_fork1::place_fork1_table1(arm)",
 				new AllenIntervalConstraint[] {placeForkAfterholding},
-				new String[] {"robot1::holding_fork1(arm)"},
-				new int[] {2});
+				new String[] {"robot1_fork1::holding_fork1(arm)"},
+				new int[] {1});
 		operator8.addConstraint(placeFork1Duration, 0, 0);
 		rd.addOperator(operator8);
 
-		SimpleOperator operator9 = new SimpleOperator("robot1::holding_fork1(arm)",
+		SimpleOperator operator9 = new SimpleOperator("robot1_fork1::holding_fork1(arm)",
 				new AllenIntervalConstraint[] {holdingForkAfterPick},
-				new String[] {"robot1::pick_fork1(arm)"},
+				new String[] {"robot1_fork1::pick_fork1(arm)"},
 				new int[] {1});
 		operator9.addConstraint(holdingFork1Duration, 0, 0);
 		rd.addOperator(operator9);
 		
-		SimpleOperator operator4res = new SimpleOperator("robot1::pick_fork1(arm)",
+		SimpleOperator operator4res = new SimpleOperator("robot1_fork1::pick_fork1(arm)",
 				new AllenIntervalConstraint[] {holdingKnifeAfterPick},
-				new String[] {"robot1::on_fork1_table1()"},
-				new int[] {2});
+				new String[] {"locationConstraints::on_fork1_table1()"},
+				new int[] {1});
 		operator4res.addConstraint(pickKnife1Duration, 0, 0);
 		rd.addOperator(operator4res);
 
