@@ -251,13 +251,13 @@ public class TestTimelineBaseSpatialReasoning {
 		onknife1Duration.setTo(knifeFlunet.getActivity());
 		cons.add(onknife1Duration);
 		
-		Activity one = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("robot1");
-		one.setSymbolicDomain("pick_cup1_table2(arm)");
-		one.setMarking(markings.JUSTIFIED);
-		AllenIntervalConstraint releasePickUp = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
-		releasePickUp.setFrom(one);
-		releasePickUp.setTo(one);
-		cons.add(releasePickUp);
+//		Activity one = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("robot1");
+//		one.setSymbolicDomain("pick_cup1_table2(arm)");
+//		one.setMarking(markings.JUSTIFIED);
+//		AllenIntervalConstraint releasePickUp = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
+//		releasePickUp.setFrom(one);
+//		releasePickUp.setTo(one);
+//		cons.add(releasePickUp);
 		
 		
 		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("robot1");
@@ -300,13 +300,28 @@ public class TestTimelineBaseSpatialReasoning {
 		AllenIntervalConstraint holdingFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 		AllenIntervalConstraint pickFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 		
+		
+		
 		SimpleOperator operator1 = new SimpleOperator("robot1::on_cup1_table1()",
 				new AllenIntervalConstraint[] {atCupAfterPlace},
 				new String[] {"robot1::place_cup1_table1(arm)"},
 				new int[] {0});
 		operator1.addConstraint(atCup1Duration, 0, 0);
 		operators.add(operator1);
+
+		SimpleOperator operator1a = new SimpleOperator("robot1::on_cup1_table2()",
+				new AllenIntervalConstraint[] {atCupAfterPlace},
+				new String[] {"robot1::place_cup1_table2(arm)"},
+				new int[] {0});
+		operator1a.addConstraint(atCup1Duration, 0, 0);
+		operators.add(operator1a);
 		
+		SimpleOperator operator10 = new SimpleOperator("robot1::on_cup1_tray1()",
+				new AllenIntervalConstraint[] {atCupAfterPlace},
+				new String[] {"robot1::place_cup1_tray1(arm)"},
+				new int[] {0});
+		operator10.addConstraint(atCup1Duration, 0, 0);
+		operators.add(operator10);
 		
 		SimpleOperator operator2 = new SimpleOperator("robot1::place_cup1_table1(arm)",
 				new AllenIntervalConstraint[] {placeCupAfterholding},
@@ -314,33 +329,75 @@ public class TestTimelineBaseSpatialReasoning {
 				new int[] {1});
 		operator2.addConstraint(placeCup1Duration, 0, 0);
 		operators.add(operator2);
-		
 
-		SimpleOperator operator3 = new SimpleOperator("robot1::holding_cup1(arm)",
+		SimpleOperator operator2a = new SimpleOperator("robot1::place_cup1_table2(arm)",
+				new AllenIntervalConstraint[] {placeCupAfterholding},
+				new String[] {"robot1::holding_cup1(arm)"},
+				new int[] {100});
+		operator2a.addConstraint(placeCup1Duration, 0, 0);
+		operators.add(operator2a);
+		
+		SimpleOperator operator11 = new SimpleOperator("robot1::place_cup1_tray1(arm)",
+				new AllenIntervalConstraint[] {placeCupAfterholding},
+				new String[] {"robot1::holding_cup1(arm)"},
+				new int[] {1});
+		operator11.addConstraint(placeCup1Duration, 0, 0);
+		operators.add(operator11);
+
+		SimpleOperator operator3a = new SimpleOperator("robot1::holding_cup1(arm)",
 				new AllenIntervalConstraint[] {holdingCupAfterPick},
 				new String[] {"robot1::pick_cup1_table2(arm)"},
+				new int[] {100});
+		operator3a.addConstraint(holdingCup1Duration, 0, 0);
+		operators.add(operator3a);
+
+		SimpleOperator operator3b = new SimpleOperator("robot1::holding_cup1(arm)",
+				new AllenIntervalConstraint[] {holdingCupAfterPick},
+				new String[] {"robot1::pick_cup1_table1(arm)"},
+				new int[] {100});
+		operator3b.addConstraint(holdingCup1Duration, 0, 0);
+		operators.add(operator3b);
+		
+		SimpleOperator operator3c = new SimpleOperator("robot1::holding_cup1(arm)",
+				new AllenIntervalConstraint[] {holdingCupAfterPick},
+				new String[] {"robot1::pick_cup1_tray1(arm)"},
 				new int[] {1});
-		operator3.addConstraint(holdingCup1Duration, 0, 0);
-		operators.add(operator3);
-		
-		
+		operator3c.addConstraint(holdingCup1Duration, 0, 0);
+		operators.add(operator3c);
+
+		SimpleOperator operator42 = new SimpleOperator("robot1::pick_cup1_table1(arm)",
+				new AllenIntervalConstraint[] {holdingCupAfterPick},
+				new String[] {"robot1::on_cup1_table1()"},
+				new int[] {100});
+		operator42.addConstraint(holdingCup1Duration, 0, 0);
+		operators.add(operator42);
+
 		SimpleOperator operator41 = new SimpleOperator("robot1::pick_cup1_table2(arm)",
 				new AllenIntervalConstraint[] {holdingCupAfterPick},
 				new String[] {"robot1::on_cup1_table2()"},
-				new int[] {1});
+				new int[] {100});
 		operator41.addConstraint(holdingCup1Duration, 0, 0);
 		operators.add(operator41);
 		
+		SimpleOperator operator411 = new SimpleOperator("robot1::pick_cup1_tray1(arm)",
+				new AllenIntervalConstraint[] {holdingCupAfterPick},
+				new String[] {"robot1::on_cup1_tray1()"},
+				new int[] {1});
+		operator411.addConstraint(holdingCup1Duration, 0, 0);
+		operators.add(operator411);
+	
 		
-//		SimpleOperator operator1res = new SimpleOperator("robot1::on_cup1_table2()",
-//				null,
-//				null,
-//				new int[] {0});
-//		operator1res.addConstraint(pickCup1Duration, 0, 0);
-//		rd.addOperator(operator1res);
-		
-		//........................
+		//		SimpleOperator operator13 = new SimpleOperator("robot1::holding_cup1(arm)",
+		//		new AllenIntervalConstraint[] {holdingCupAfterPick},
+		//		new String[] {"robot1::pick_cup1_table1(arm)"},
+		//		new int[] {1});
+		//operator13.addConstraint(holdingCup1Duration, 0, 0);
+		//operators.add(operator13);
 
+
+		
+		//.....................................................................
+		
 		SimpleOperator operator4 = new SimpleOperator("robot1::on_knife1_table1()",
 				new AllenIntervalConstraint[] {atKnifeAfterPlace},
 				new String[] {"robot1::place_knife1_table1(arm)"},
@@ -359,26 +416,18 @@ public class TestTimelineBaseSpatialReasoning {
 
 		SimpleOperator operator6 = new SimpleOperator("robot1::holding_knife1(arm)",
 				new AllenIntervalConstraint[] {holdingKnifeAfterPick},
-				new String[] {"robot1::pick_knife1(arm)"},
+				new String[] {"robot1::pick_knife1_table1(arm)"},
 				new int[] {1});
 		operator6.addConstraint(holdingKnife1Duration, 0, 0);
 		operators.add(operator6);
 		
 		
-		SimpleOperator operator2res = new SimpleOperator("robot1::pick_knife1(arm)",
+		SimpleOperator operator2res = new SimpleOperator("robot1::pick_knife1_table1(arm)",
 				new AllenIntervalConstraint[] {holdingKnifeAfterPick},
 				new String[] {"robot1::on_knife1_table1()"},
 				new int[] {1});
 		operator2res.addConstraint(pickKnife1Duration, 0, 0);
 		operators.add(operator2res);
-		
-//		SimpleOperator operator3res = new SimpleOperator("robot1::on_knife1_table1()",
-//				null,
-//				null,
-//				new int[] {0});
-//		operator3res.addConstraint(pickCup1Duration, 0, 0);
-//		rd.addOperator(operator3res);
-
 		
 		//........................
 		
@@ -400,26 +449,21 @@ public class TestTimelineBaseSpatialReasoning {
 
 		SimpleOperator operator9 = new SimpleOperator("robot1::holding_fork1(arm)",
 				new AllenIntervalConstraint[] {holdingForkAfterPick},
-				new String[] {"robot1::pick_fork1(arm)"},
+				new String[] {"robot1::pick_fork1_table1(arm)"},
 				new int[] {1});
 		operator9.addConstraint(holdingFork1Duration, 0, 0);
 		operators.add(operator9);
 		
 		
-		SimpleOperator operator4res = new SimpleOperator("robot1::pick_fork1(arm)",
+		SimpleOperator operator4res = new SimpleOperator("robot1::pick_fork1_table1(arm)",
 				new AllenIntervalConstraint[] {holdingKnifeAfterPick},
 				new String[] {"robot1::on_fork1_table1()"},
 				new int[] {1});
 		operator4res.addConstraint(pickFork1Duration, 0, 0);
 		operators.add(operator4res);
 				
-//		SimpleOperator operator3res = new SimpleOperator("robot1::on_fork1_table1()",
-//				null,
-//				null,
-//				new int[] {0});
-//		operator3res.addConstraint(pickFork1Duration, 0, 0);
-//		rd.addOperator(operator3res);
-
+		//......................
+		
 	}
 
 	private static void getSpatialKnowledge(Vector<SpatialRule2> srules){

@@ -18,6 +18,7 @@ import sandbox.spatial.rectangleAlgebra2.SpatialFluent;
 import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
 import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;
 import symbols.SymbolicValueConstraint;
+import time.APSPSolver;
 import time.Bounds;
 import framework.Constraint;
 import framework.ConstraintNetwork;
@@ -34,7 +35,6 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static  int counter = 1;
 	
 	public MetaSpatialScheduler(long origin, long horizon, long animationTime) {
 		super(new Class[] {RectangleConstraint2.class, UnaryRectangleConstraint2.class, AllenIntervalConstraint.class, SymbolicValueConstraint.class}, 
@@ -73,7 +73,7 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 			}
 		}
 
-		for (int j = 0; j < this.metaConstraints.size(); j++) 
+		for (int j = 0; j < this.metaConstraints.size(); j++){ 
 			if(this.metaConstraints.get(j) instanceof MetaCausalConstraint ){
 				MetaCausalConstraint mcc = (MetaCausalConstraint)this.metaConstraints.get(j);
 				for (Variable v : activityToRemove) {
@@ -82,7 +82,36 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 					}
 				}
 			}
+		}
+		
+		boolean isRtractingSpatialRelations = false;
+		for (int i = 0; i < metaValue.getVariables().length; i++) {
+			if(metaValue.getVariables()[i] instanceof RectangularRegion2 ){
+				isRtractingSpatialRelations = true;
+				break;
+			}
+		}
+		if(isRtractingSpatialRelations){
+			System.out.println("halooooooooooooooooooooooooooooo");
+			for (int i = 0; i < this.metaConstraints.size(); i++){
+				System.out.println(this.metaConstraints.get(i));
+				if(this.metaConstraints.get(i) instanceof SpatialSchedulable ){
+					System.out.println(this.metaConstraints.get(i));
+					for (int j = 0; j < ((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels().length; j++) {
+						if(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom().compareTo("knife1") == 0){
+							((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].
+							setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+								new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
+						}
+					}			
 
+				}
+			}
+			
+
+		}
+			
+		
 
 
 		groundSolver.removeVariables(activityToRemove.toArray(new Variable[activityToRemove.size()]));
@@ -108,7 +137,9 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 				metaValue.addSubstitution((VariablePrototype)v, tailActivity);
 			}
 		}
+		
 
+		
 		//Involve real variables in the constraints
 		for (Constraint con : metaValue.getConstraints()) {
 			Constraint clonedConstraint = (Constraint)con.clone();  
