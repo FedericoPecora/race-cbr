@@ -1,5 +1,6 @@
 package meta;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -231,9 +232,16 @@ public class MetaCausalConstraint extends MetaConstraint {
 		}
 		
 		
-		if (!retPossibleConstraintNetworks.isEmpty())
+		if (!retPossibleConstraintNetworks.isEmpty()){
+//			System.out.println("== TO JUSTIFY: " + problematicActivity + " ==");
+//			System.out.println("====== " + retPossibleConstraintNetworks.size() + " metaValues ======");
+//			for (ConstraintNetwork cn : retPossibleConstraintNetworks) {
+//				System.out.println("===> vars: " + Arrays.toString(cn.getVariables()));
+//				System.out.println("===> cons: " + Arrays.toString(cn.getConstraints()));
+//			}
 			return retPossibleConstraintNetworks.toArray(new ConstraintNetwork[retPossibleConstraintNetworks.size()]);
-
+		}
+		
 		ActivityNetwork nullActivityNetwork = new ActivityNetwork(null);
 		return new ConstraintNetwork[] {nullActivityNetwork};
 	}

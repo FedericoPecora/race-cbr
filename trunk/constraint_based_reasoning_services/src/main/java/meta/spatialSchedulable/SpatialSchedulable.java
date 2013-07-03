@@ -46,6 +46,7 @@ import meta.symbolsAndTime.Schedulable.PEAKCOLLECTION;
 import multi.activity.Activity;
 import multi.activity.ActivityComparator;
 import multi.activity.ActivityNetwork;
+import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
 import multi.allenInterval.AllenIntervalNetworkSolver;
 
@@ -106,6 +107,9 @@ public class SpatialSchedulable extends MetaConstraint {
 		this.sAssertionalRels = sAssertionalRels;
 	}
 	
+	public SpatialAssertionalRelation2[] getsAssertionalRels() {
+		return sAssertionalRels;
+	}
 	
 
 	public int getBeforeParameter() {
@@ -409,6 +413,7 @@ public class SpatialSchedulable extends MetaConstraint {
 				originalGoals.add(act);
 		}
 		
+		ActivityNetwork actNetwork = new ActivityNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1]);
 		//set new Goal After old activity
 		for (String st :newGoal) {			
 			//add new fluent
@@ -417,8 +422,11 @@ public class SpatialSchedulable extends MetaConstraint {
 			newgoalFlunet.setName(st);
 			((Activity)newgoalFlunet.getInternalVariables()[1]).setSymbolicDomain(culpritActivities.get(st).getSymbolicVariable().toString()
 					.subSequence(21, ((Activity)culpritActivities.get(st)).getSymbolicVariable().toString().length() - 1).toString());
+			
 			((Activity)newgoalFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
+			
 			newgoalFlunet.setRectangularRegion(activityToFluent.get(culpritActivities.get(st)).getRectangularRegion());			
+			
 			activityToFluent.put(((Activity)newgoalFlunet.getInternalVariables()[1]), newgoalFlunet);
 			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 			//update assertional rule
@@ -433,8 +441,10 @@ public class SpatialSchedulable extends MetaConstraint {
 					 AllenIntervalConstraint.Type.After.getDefaultBounds());
 			newOnAfteroldOn.setFrom(((Activity)newgoalFlunet.getInternalVariables()[1]));
 			newOnAfteroldOn.setTo(culpritActivities.get(st));
-			((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new
-					 Constraint[] {newOnAfteroldOn});
+//			((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new
+//					 Constraint[] {newOnAfteroldOn});
+			actNetwork.addConstraint(newOnAfteroldOn);
+			
 			System.out.println(newOnAfteroldOn);
 			 
 			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -453,9 +463,12 @@ public class SpatialSchedulable extends MetaConstraint {
 									AllenIntervalConstraint culpritsBeforeOldeGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before,
 											 AllenIntervalConstraint.Type.Before.getDefaultBounds());
 									culpritsBeforeOldeGoal.setFrom(((Activity)newgoalFlunet.getInternalVariables()[1]));
-									culpritsBeforeOldeGoal.setTo(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[k])); 
-									((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new
-											 Constraint[] {culpritsBeforeOldeGoal});
+									culpritsBeforeOldeGoal.setTo(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[k]));
+									
+									//add constraint to Activty constraint Network
+									actNetwork.addConstraint(culpritsBeforeOldeGoal);
+//									((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new
+//											 Constraint[] {culpritsBeforeOldeGoal});
 									System.out.println("culpritsBeforeOldeGoal: " + culpritsBeforeOldeGoal);
 								}
 							}
@@ -464,8 +477,11 @@ public class SpatialSchedulable extends MetaConstraint {
 				}
 			}			
 		}
-		ret.add(mvalue);
-//		System.out.println(ret);
+		
+		
+		actNetwork.join(mvalue);
+		ret.add(actNetwork);
+		
 		return ret.toArray(new ConstraintNetwork[ret.size()]);
 
 	}
@@ -487,6 +503,7 @@ public class SpatialSchedulable extends MetaConstraint {
 //		for (int i = 0; i < peak.length; i++) {
 //			System.out.println(peak[i]);
 //		}
+//		System.out.println("------------------------------------------------------------");
 		
 		Vector<UnaryRectangleConstraint2> atConstraints = new Vector<UnaryRectangleConstraint2>();
 		HashMap<String, SpatialFluent> currentFluent = new HashMap<String, SpatialFluent>();
@@ -730,7 +747,7 @@ public class SpatialSchedulable extends MetaConstraint {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return null;
+		return "SpatialScheduable ";
 	}
 
 	@Override
@@ -1331,5 +1348,6 @@ public class SpatialSchedulable extends MetaConstraint {
 
 		
 	}
+	
 
 }
