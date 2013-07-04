@@ -63,8 +63,7 @@ public class SpatialSchedulable extends MetaConstraint {
 	private HashMap<HashMap<String, Bounds[]>, Integer> permutation;
 	private Vector<String> initialUnboundedObjName = new Vector<String>();
 	private Vector<String> potentialCulprit = new Vector<String>();
-	private HashMap<Activity, SpatialFluent> activityToFluent = new HashMap<Activity, SpatialFluent>();
-	private Vector<Activity> activeCulprit = new Vector<Activity>();
+	private HashMap<Activity, SpatialFluent> activityToFluent = new HashMap<Activity, SpatialFluent>(); 
 	private HashMap<String, Rectangle> oldRectangularRegion = new HashMap<String, Rectangle>();
 	private Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
 	
@@ -158,22 +157,7 @@ public class SpatialSchedulable extends MetaConstraint {
 	}
 	
 	private Vector<Activity> removeCulpritsFromCurrentActivity() {
-		
-		if(activeCulprit.size() == 0) return activities;
 		return activities;
-//		Vector<Activity> tmpgroundVars = new Vector<Activity>(); 
-//		for (int i = 0; i < activities.size(); i++) {
-//			boolean mark = false;
-//			for (int j = 0; j < activeCulprit.size(); j++) {
-//				if(activities.get(i).getID() == activeCulprit.get(j).getID()){
-//					mark = true;
-//				}
-//			}
-//			if(!mark)
-//				tmpgroundVars.add(activities.get(i));
-//		}
-//		
-//		return tmpgroundVars;
 	}
 
 	
@@ -375,7 +359,6 @@ public class SpatialSchedulable extends MetaConstraint {
 		logger.finest("pregenerated meta value for scoring: " + mvalue);
 
 //		System.out.println("mvalue" + mvalue);
-		Vector<Activity> oldGoal = new Vector<Activity>();
 		Vector<String> newGoal = new Vector<String>();
 		HashMap<String, Activity> culpritActivities = new HashMap<String, Activity>(); 
 		
@@ -388,16 +371,22 @@ public class SpatialSchedulable extends MetaConstraint {
 							((UnaryRectangleConstraint2) mvalue.getConstraints()[i]).getBounds()[1],
 							((UnaryRectangleConstraint2) mvalue.getConstraints()[i]).getBounds()[2],
 							((UnaryRectangleConstraint2) mvalue.getConstraints()[i]).getBounds()[3])) {
-
+						System.out.println("%%%%%%%%");
 						for (int j = 0; j < metaVariable.getConstraintNetwork().getVariables().length; j++) {
 							if (((RectangularRegion2) mvalue.getConstraints()[i].getScope()[0]).getName().compareTo
 									(((SpatialFluent) activityToFluent.get((Activity)metaVariable.getConstraintNetwork().getVariables()[j]) ).getName()) == 0) {
 //								System.out.println("ADDED ACTIVITY: " + ((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));								
 								if (this.getPotentialCulprit().contains(((RectangularRegion2) mvalue.getConstraints()[i].getScope()[0]).getName())) {
-									culpritActivities.put(((RectangularRegion2)mvalue.getConstraints()[i].getScope()[0]).getName(), 
-											((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));
-									newGoal.add(((RectangularRegion2) mvalue.getConstraints()[i].getScope()[0]).getName());
-									activeCulprit.add(((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));									
+									
+									
+									if(((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])).getTemporalVariable().getEST() == 
+											((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])).getTemporalVariable().getLST()){
+										System.out.println(((RectangularRegion2)mvalue.getConstraints()[i].getScope()[0]).getName());
+										culpritActivities.put(((RectangularRegion2)mvalue.getConstraints()[i].getScope()[0]).getName(), 
+												((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));
+										if(!newGoal.contains(((RectangularRegion2) mvalue.getConstraints()[i].getScope()[0]).getName()))
+											newGoal.add(((RectangularRegion2) mvalue.getConstraints()[i].getScope()[0]).getName());
+									}
 								}
 							}
 						}
@@ -405,6 +394,12 @@ public class SpatialSchedulable extends MetaConstraint {
 				}						
 			}
 		}
+		System.out.println("%%%%%%%%");
+		
+		System.out.println("??????????????????????????????????????????????????????????");
+		System.out.println("newGoal: ---> " + newGoal);
+		System.out.println("culpritActivities: ---> " + culpritActivities);
+		System.out.println("??????????????????????????????????????????????????????????");
 		
 		//extract the fluent which is relevant to the original goal(s)
 		Vector<Activity> originalGoals = new Vector<Activity>(); //e.g., cup1 in the so called wellSetTable Scenario
@@ -415,19 +410,30 @@ public class SpatialSchedulable extends MetaConstraint {
 		
 		ActivityNetwork actNetwork = new ActivityNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1]);
 		//set new Goal After old activity
-		for (String st :newGoal) {			
-			//add new fluent
-//			SpatialFluent newgoalFlunet = (SpatialFluent)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).createVariable("locationConstraints");
-			SpatialFluent newgoalFlunet = (SpatialFluent)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).createVariable(culpritActivities.get(st).getComponent());
-			newgoalFlunet.setName(st);
-			((Activity)newgoalFlunet.getInternalVariables()[1]).setSymbolicDomain(culpritActivities.get(st).getSymbolicVariable().toString()
-					.subSequence(21, ((Activity)culpritActivities.get(st)).getSymbolicVariable().toString().length() - 1).toString());
-			
-			((Activity)newgoalFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
-			
-			newgoalFlunet.setRectangularRegion(activityToFluent.get(culpritActivities.get(st)).getRectangularRegion());			
-			
-			activityToFluent.put(((Activity)newgoalFlunet.getInternalVariables()[1]), newgoalFlunet);
+		for (String st :newGoal) {
+			//add new fluent if there is not already a fluent which represent the goal, 
+			//we make a difference between a fluent which has an activity with fixed release point (i.e., observation) 
+			//and with the one already generated subgoal and for some other reason (e.g., resources) retracted
+			SpatialFluent newgoalFlunet = null;
+			boolean existed = false;
+			for (Activity activity : activityToFluent.keySet()) {
+				if(activity.getSymbolicVariable().getDomain().toString().contains(st) &&
+						activity.getTemporalVariable().getEST() != activity.getTemporalVariable().getLST()){
+					newgoalFlunet = activityToFluent.get(activity);
+					((Activity)newgoalFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
+					existed = true;
+				}
+			}
+			if(!existed){
+				newgoalFlunet = (SpatialFluent)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0]))
+						.createVariable(culpritActivities.get(st).getComponent());
+				newgoalFlunet.setName(st);
+				((Activity)newgoalFlunet.getInternalVariables()[1]).setSymbolicDomain(culpritActivities.get(st).getSymbolicVariable().toString()
+						.subSequence(21, ((Activity)culpritActivities.get(st)).getSymbolicVariable().toString().length() - 1).toString());
+				((Activity)newgoalFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
+				newgoalFlunet.setRectangularRegion(activityToFluent.get(culpritActivities.get(st)).getRectangularRegion());			
+				activityToFluent.put(((Activity)newgoalFlunet.getInternalVariables()[1]), newgoalFlunet);
+			}
 			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 			//update assertional rule
 			for (int j = 0; j < sAssertionalRels.length; j++) {
@@ -436,7 +442,8 @@ public class SpatialSchedulable extends MetaConstraint {
 						new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 			}			
 			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-			activities.add(((Activity)newgoalFlunet.getInternalVariables()[1]));
+			if(!activities.contains(((Activity)newgoalFlunet.getInternalVariables()[1])))
+				activities.add(((Activity)newgoalFlunet.getInternalVariables()[1]));
 			AllenIntervalConstraint newOnAfteroldOn = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After,
 					 AllenIntervalConstraint.Type.After.getDefaultBounds());
 			newOnAfteroldOn.setFrom(((Activity)newgoalFlunet.getInternalVariables()[1]));
@@ -445,7 +452,7 @@ public class SpatialSchedulable extends MetaConstraint {
 //					 Constraint[] {newOnAfteroldOn});
 			actNetwork.addConstraint(newOnAfteroldOn);
 			
-			System.out.println(newOnAfteroldOn);
+			System.out.println("newOnAfteroldOn" + newOnAfteroldOn);
 			 
 			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 			//new goal before old goal e.g., on_knife before on_cup

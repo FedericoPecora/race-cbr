@@ -230,7 +230,7 @@ public class TestTimelineBaseSpatialReasoning {
 		((Activity)forkFlunet.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
 		spatialFleunts.add(forkFlunet);
 		
-		AllenIntervalConstraint releaseOnFork = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(30,30));
+		AllenIntervalConstraint releaseOnFork = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(20,20));
 		releaseOnFork.setFrom(forkFlunet.getActivity());
 		releaseOnFork.setTo(forkFlunet.getActivity());
 		cons.add(releaseOnFork);
@@ -240,7 +240,7 @@ public class TestTimelineBaseSpatialReasoning {
 		onFork1Duration.setTo(forkFlunet.getActivity());
 		cons.add(onFork1Duration);
 		
-		AllenIntervalConstraint releaseOnKnife = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(30,30));
+		AllenIntervalConstraint releaseOnKnife = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(20,20));
 		releaseOnKnife.setFrom(knifeFlunet.getActivity());
 		releaseOnKnife.setTo(knifeFlunet.getActivity());
 		cons.add(releaseOnKnife);

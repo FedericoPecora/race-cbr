@@ -92,23 +92,27 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 			}
 		}
 		if(isRtractingSpatialRelations){
-			System.out.println("halooooooooooooooooooooooooooooo");
 			for (int i = 0; i < this.metaConstraints.size(); i++){
-				System.out.println(this.metaConstraints.get(i));
-				if(this.metaConstraints.get(i) instanceof SpatialSchedulable ){
-					System.out.println(this.metaConstraints.get(i));
+				if(this.metaConstraints.get(i) instanceof SpatialSchedulable ){	
 					for (int j = 0; j < ((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels().length; j++) {
 						if(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom().compareTo("knife1") == 0){
+							System.out.println("byeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+							((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].
+//							setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+//								new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
+							setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+									new Bounds(30,30), new Bounds(36,36), new Bounds(10, 10), new Bounds(33, 33)));
+
+						}
+						if(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom().compareTo("fork1") == 0){
+							System.out.println("halooooooooooooooooooooooooooooooooooooooo");
 							((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].
 							setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
-								new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
+									new Bounds(20, 20), new Bounds(26, 26), new Bounds(13, 13), new Bounds(32, 32)));
 						}
 					}			
-
 				}
 			}
-			
-
 		}
 			
 		
