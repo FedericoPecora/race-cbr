@@ -45,7 +45,7 @@ import framework.VariableOrderingH;
 
 public class TestTimelineBaseSpatialReasoning2 {
 
-	static int arm_resources = 1;
+	static int arm_resources = 2;
 	
 	public static void main(String[] args) {
 
