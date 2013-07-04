@@ -66,6 +66,12 @@ public class SpatialSchedulable extends MetaConstraint {
 	private HashMap<Activity, SpatialFluent> activityToFluent = new HashMap<Activity, SpatialFluent>(); 
 	private HashMap<String, Rectangle> oldRectangularRegion = new HashMap<String, Rectangle>();
 	private Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
+	private HashMap<String, UnaryRectangleConstraint2> currentAssertionalCons;
+	
+	
+	public HashMap<String, UnaryRectangleConstraint2> getCurrentAssertionalCons(){
+		return currentAssertionalCons;
+	}
 	
 	public HashMap<String, Rectangle> getPreviosRectangularRegion(){
 		return oldRectangularRegion;
@@ -407,6 +413,17 @@ public class SpatialSchedulable extends MetaConstraint {
 			if(initialUnboundedObjName.contains(activityToFluent.get(act).getName()))
 				originalGoals.add(act);
 		}
+		//maintain the the current At unary constraint for retraction case
+		currentAssertionalCons = new HashMap<String, UnaryRectangleConstraint2>();
+		for (int j = 0; j < sAssertionalRels.length; j++) {
+			currentAssertionalCons.put(sAssertionalRels[j].getFrom(), new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At,
+					new Bounds(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[0].min, sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[0].max), 
+					new Bounds(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[1].min, sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[1].max),
+					new Bounds(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[2].min, sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[2].max),
+					new Bounds(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[3].min, sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[3].max)));
+		}
+		System.out.println("currentAssertionalCons: " + currentAssertionalCons);
+		
 		
 		ActivityNetwork actNetwork = new ActivityNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1]);
 		//set new Goal After old activity
