@@ -45,7 +45,7 @@ import framework.VariableOrderingH;
 
 public class TestTimelineBaseSpatialReasoning3 {
 
-	static int arm_resources = 2;
+	static int arm_resources = 1;
 	static int symblicPlaceResource = 1;
 	
 	public static void main(String[] args) {
@@ -371,7 +371,7 @@ public class TestTimelineBaseSpatialReasoning3 {
 		SimpleOperator operator41 = new SimpleOperator("robot1::pick_cup1_table2(arm)",
 				new AllenIntervalConstraint[] {holdingCupAfterPick},
 				new String[] {"atLocation::at_cup1_table2()"},
-				new int[] {1});
+				new int[] {100});
 		operator41.addConstraint(holdingCup1Duration, 0, 0);
 		operators.add(operator41);
 		
