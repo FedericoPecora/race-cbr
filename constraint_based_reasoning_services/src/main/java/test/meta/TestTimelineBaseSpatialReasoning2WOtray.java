@@ -43,8 +43,10 @@ import framework.ConstraintNetwork;
 import framework.ValueOrderingH;
 import framework.VariableOrderingH;
 
-public class TestTimelineBaseSpatialReasoning3 {
-
+public class TestTimelineBaseSpatialReasoning2WOtray {
+	
+	
+	//Two Culprits and when there is no tray...like Pr2 Example
 	static int arm_resources = 2;
 	
 	public static void main(String[] args) {

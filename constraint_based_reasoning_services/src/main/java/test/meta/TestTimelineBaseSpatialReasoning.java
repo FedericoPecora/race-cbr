@@ -44,8 +44,9 @@ import framework.ValueOrderingH;
 import framework.VariableOrderingH;
 
 public class TestTimelineBaseSpatialReasoning {
-
-	static int arm_resources = 1;
+	
+	//oneCulprit example
+	static int arm_resources = 2;
 	
 	public static void main(String[] args) {
 
