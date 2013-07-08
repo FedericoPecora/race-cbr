@@ -442,7 +442,7 @@ public class SpatialSchedulable extends MetaConstraint {
 				((Activity)newgoalFlunet.getInternalVariables()[1]).setSymbolicDomain(culpritActivities.get(st).getSymbolicVariable().toString()
 						.subSequence(21, ((Activity)culpritActivities.get(st)).getSymbolicVariable().toString().length() - 1).toString());
 				((Activity)newgoalFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
-				newgoalFlunet.setRectangularRegion(activityToFluent.get(culpritActivities.get(st)).getRectangularRegion());			
+				((RectangularRegion2)newgoalFlunet.getInternalVariables()[0]).setName(st);
 				activityToFluent.put(((Activity)newgoalFlunet.getInternalVariables()[1]), newgoalFlunet);
 			}
 			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
