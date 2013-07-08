@@ -23,9 +23,10 @@ import race_msgs.IsConsistentRequest;
 import race_msgs.IsConsistentResponse;
 import race_msgs.IsHumanWorkingRequest;
 import race_msgs.Property;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
-import spatial.rectangleAlgebra.SpatialRule;
+
 import spatial.*;
+import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
+import spatial.rectangleAlgebra_OLD.SpatialRule;
 
 
 
