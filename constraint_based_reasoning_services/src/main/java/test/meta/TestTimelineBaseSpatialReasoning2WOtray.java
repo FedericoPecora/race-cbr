@@ -47,7 +47,7 @@ public class TestTimelineBaseSpatialReasoning2WOtray {
 	
 	
 	//Two Culprits and when there is no tray...like Pr2 Example
-	static int arm_resources = 2;
+	static int arm_resources = 1;
 	
 	public static void main(String[] args) {
 
@@ -172,10 +172,10 @@ public class TestTimelineBaseSpatialReasoning2WOtray {
 		
 		Vector<Constraint> cons = new Vector<Constraint>();
 		
-		SpatialFluent tableFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("table1");
+		SpatialFluent tableFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("atLocation");
 		tableFlunet.setName("table1");
 		((RectangularRegion2)tableFlunet.getInternalVariables()[0]).setName("table1");
-		((Activity)tableFlunet.getInternalVariables()[1]).setSymbolicDomain("on_table1()");
+		((Activity)tableFlunet.getInternalVariables()[1]).setSymbolicDomain("at_table1()");
 		((Activity)tableFlunet.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
 		spatialFleunts.add(tableFlunet);
 		
@@ -204,26 +204,26 @@ public class TestTimelineBaseSpatialReasoning2WOtray {
 
 		
 		//...................................................it comes to the scene later
-		SpatialFluent knifeFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("robot1");
+		SpatialFluent knifeFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("atLocation");
 		knifeFlunet.setName("knife1");
 		((RectangularRegion2)knifeFlunet.getInternalVariables()[0]).setName("knife1");
-		((Activity)knifeFlunet.getInternalVariables()[1]).setSymbolicDomain("on_knife1_table1()");
+		((Activity)knifeFlunet.getInternalVariables()[1]).setSymbolicDomain("at_knife1_table1()");
 		((Activity)knifeFlunet.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
 		spatialFleunts.add(knifeFlunet);
 		
 		
-		SpatialFluent cupFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("robot1");
+		SpatialFluent cupFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("atLocation");
 		cupFlunet.setName("cup1");
 		((RectangularRegion2)cupFlunet.getInternalVariables()[0]).setName("cup1");
-		((Activity)cupFlunet.getInternalVariables()[1]).setSymbolicDomain("on_cup1_table1()");
+		((Activity)cupFlunet.getInternalVariables()[1]).setSymbolicDomain("at_cup1_table1()");
 		((Activity)cupFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
 		spatialFleunts.add(cupFlunet);
 		
 		
-		SpatialFluent forkFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("robot1");
+		SpatialFluent forkFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("atLocation");
 		forkFlunet.setName("fork1");
 		((RectangularRegion2)forkFlunet.getInternalVariables()[0]).setName("fork1");
-		((Activity)forkFlunet.getInternalVariables()[1]).setSymbolicDomain("on_fork1_table1()");
+		((Activity)forkFlunet.getInternalVariables()[1]).setSymbolicDomain("at_fork1_table1()");
 		((Activity)forkFlunet.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
 		spatialFleunts.add(forkFlunet);
 		
@@ -248,13 +248,13 @@ public class TestTimelineBaseSpatialReasoning2WOtray {
 		onknife1Duration.setTo(knifeFlunet.getActivity());
 		cons.add(onknife1Duration);
 		
-		Activity one = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("robot1");
-		one.setSymbolicDomain("pick_cup1_table2(arm)");
-		one.setMarking(markings.JUSTIFIED);
-		AllenIntervalConstraint releasePickUp = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
-		releasePickUp.setFrom(one);
-		releasePickUp.setTo(one);
-		cons.add(releasePickUp);
+//		Activity one = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("robot1");
+//		one.setSymbolicDomain("pick_cup1_table2(arm)");
+//		one.setMarking(markings.JUSTIFIED);
+//		AllenIntervalConstraint releasePickUp = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
+//		releasePickUp.setFrom(one);
+//		releasePickUp.setTo(one);
+//		cons.add(releasePickUp);
 		
 		
 		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("robot1");
@@ -299,21 +299,21 @@ public class TestTimelineBaseSpatialReasoning2WOtray {
 		
 
 		
-		SimpleOperator operator1 = new SimpleOperator("robot1::on_cup1_table1()",
+		SimpleOperator operator1 = new SimpleOperator("atLocation::at_cup1_table1()",
 				new AllenIntervalConstraint[] {atCupAfterPlace},
 				new String[] {"robot1::place_cup1_table1(arm)"},
 				new int[] {0});
 		operator1.addConstraint(atCup1Duration, 0, 0);
 		operators.add(operator1);
 
-		SimpleOperator operator1a = new SimpleOperator("robot1::on_cup1_table2()",
+		SimpleOperator operator1a = new SimpleOperator("atLocation::at_cup1_table2()",
 				new AllenIntervalConstraint[] {atCupAfterPlace},
 				new String[] {"robot1::place_cup1_table2(arm)"},
 				new int[] {0});
 		operator1a.addConstraint(atCup1Duration, 0, 0);
 		operators.add(operator1a);
 		
-		SimpleOperator operator10 = new SimpleOperator("robot1::on_cup1_tray1()",
+		SimpleOperator operator10 = new SimpleOperator("atLocation::at_cup1_tray1()",
 				new AllenIntervalConstraint[] {atCupAfterPlace},
 				new String[] {"robot1::place_cup1_tray1(arm)"},
 				new int[] {0});
@@ -364,21 +364,21 @@ public class TestTimelineBaseSpatialReasoning2WOtray {
 
 		SimpleOperator operator42 = new SimpleOperator("robot1::pick_cup1_table1(arm)",
 				new AllenIntervalConstraint[] {holdingCupAfterPick},
-				new String[] {"robot1::on_cup1_table1()"},
+				new String[] {"atLocation::at_cup1_table1()"},
 				new int[] {100});
 		operator42.addConstraint(holdingCup1Duration, 0, 0);
 		operators.add(operator42);
 
 		SimpleOperator operator41 = new SimpleOperator("robot1::pick_cup1_table2(arm)",
 				new AllenIntervalConstraint[] {holdingCupAfterPick},
-				new String[] {"robot1::on_cup1_table2()"},
+				new String[] {"atLocation::at_cup1_table2()"},
 				new int[] {1});
 		operator41.addConstraint(holdingCup1Duration, 0, 0);
 		operators.add(operator41);
 		
 		SimpleOperator operator411 = new SimpleOperator("robot1::pick_cup1_tray1(arm)",
 				new AllenIntervalConstraint[] {holdingCupAfterPick},
-				new String[] {"robot1::on_cup1_tray1()"},
+				new String[] {"atLocation::at_cup1_tray1()"},
 				new int[] {1});
 		operator411.addConstraint(holdingCup1Duration, 0, 0);
 		operators.add(operator411);
@@ -395,7 +395,7 @@ public class TestTimelineBaseSpatialReasoning2WOtray {
 		
 		//.....................................................................
 		
-		SimpleOperator operator4 = new SimpleOperator("robot1::on_knife1_table1()",
+		SimpleOperator operator4 = new SimpleOperator("atLocation::at_knife1_table1()",
 				new AllenIntervalConstraint[] {atKnifeAfterPlace},
 				new String[] {"robot1::place_knife1_table1(arm)"},
 				new int[] {0});
@@ -421,14 +421,14 @@ public class TestTimelineBaseSpatialReasoning2WOtray {
 		
 		SimpleOperator operator2res = new SimpleOperator("robot1::pick_knife1_table1(arm)",
 				new AllenIntervalConstraint[] {holdingKnifeAfterPick},
-				new String[] {"robot1::on_knife1_table1()"},
+				new String[] {"atLocation::at_knife1_table1()"},
 				new int[] {1});
 		operator2res.addConstraint(pickKnife1Duration, 0, 0);
 		operators.add(operator2res);
 		
 		//........................
 		
-		SimpleOperator operator7 = new SimpleOperator("robot1::on_fork1_table1()",
+		SimpleOperator operator7 = new SimpleOperator("atLocation::at_fork1_table1()",
 				new AllenIntervalConstraint[] {atForkAfterPlace},
 				new String[] {"robot1::place_fork1_table1(arm)"},
 				new int[] {0});
@@ -454,7 +454,7 @@ public class TestTimelineBaseSpatialReasoning2WOtray {
 		
 		SimpleOperator operator4res = new SimpleOperator("robot1::pick_fork1_table1(arm)",
 				new AllenIntervalConstraint[] {holdingKnifeAfterPick},
-				new String[] {"robot1::on_fork1_table1()"},
+				new String[] {"atLocation::at_fork1_table1()"},
 				new int[] {1});
 		operator4res.addConstraint(pickFork1Duration, 0, 0);
 		operators.add(operator4res);
