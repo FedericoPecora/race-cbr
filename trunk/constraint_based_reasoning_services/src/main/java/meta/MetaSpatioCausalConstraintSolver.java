@@ -9,11 +9,12 @@ import multi.activity.Activity;
 import multi.activity.ActivityNetworkSolver;
 
 import multi.allenInterval.AllenIntervalConstraint;
-import sandbox.spatial.rectangleAlgebra2.RectangleConstraint2;
-import sandbox.spatial.rectangleAlgebra2.RectangularRegion2;
-import sandbox.spatial.rectangleAlgebra2.SpatialFluent;
-import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
-import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;
+import multi.spatial.rectangleAlgebra.RectangleConstraint;
+import multi.spatial.rectangleAlgebra.RectangularRegion;
+import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
+import multi.spatioTemporal.SpatialFluent;
+import multi.spatioTemporal.SpatialFluentSolver;
+
 import symbols.SymbolicValueConstraint;
 import framework.Constraint;
 import framework.ConstraintNetwork;
@@ -31,7 +32,7 @@ public class MetaSpatioCausalConstraintSolver extends MetaConstraintSolver{
 	private static final long serialVersionUID = 1L;
 
 	public MetaSpatioCausalConstraintSolver(long origin, long horizon, long animationTime) {
-		super(new Class[] {RectangleConstraint2.class, UnaryRectangleConstraint2.class, AllenIntervalConstraint.class, SymbolicValueConstraint.class}, 
+		super(new Class[] {RectangleConstraint.class, UnaryRectangleConstraint.class, AllenIntervalConstraint.class, SymbolicValueConstraint.class}, 
 				animationTime, new SpatialFluentSolver(origin, horizon)	);
 		// TODO Auto-generated constructor stub
 	}
@@ -86,27 +87,27 @@ public class MetaSpatioCausalConstraintSolver extends MetaConstraintSolver{
 		Vector<String> oldGoal = new Vector<String>();
 		Vector<String> newGoal = new Vector<String>();
 		for (int i = 0; i < metaValue.getConstraints().length; i++) {
-			if(metaValue.getConstraints()[i] instanceof UnaryRectangleConstraint2){
+			if(metaValue.getConstraints()[i] instanceof UnaryRectangleConstraint){
 				//this if will check for unboudned obj in order to create the goal
-				if(((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getType().equals(UnaryRectangleConstraint2.Type.At)){ 
+				if(((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getType().equals(UnaryRectangleConstraint.Type.At)){ 
 					if(((MetaSpatialFluentConstraint)this.metaConstraints.get(0)).isUnboundedBoundingBox(
-							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[0], 
-							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[1], 
-							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[2], 
-							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[3])){
+							((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getBounds()[0], 
+							((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getBounds()[1], 
+							((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getBounds()[2], 
+							((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getBounds()[3])){
 
 						for (int j = 0; j < metaVariable.getVariables().length; j++) {
-							if(((RectangularRegion2)metaValue.getConstraints()[i].getScope()[0]).getName().compareTo
+							if(((RectangularRegion)metaValue.getConstraints()[i].getScope()[0]).getName().compareTo
 									(((SpatialFluent)metaVariable.getVariables()[j]).getName()) == 0){
 								((Activity)((SpatialFluent)metaVariable.getVariables()[j]).getActivity()).setMarking(markings.UNJUSTIFIED);
 								if(((MetaSpatialFluentConstraint)this.metaConstraints.get(0)).getPotentialCulprit()
-										.contains(((RectangularRegion2)metaValue.getConstraints()[i].getScope()[0]).getName())){
+										.contains(((RectangularRegion)metaValue.getConstraints()[i].getScope()[0]).getName())){
 //									System.out.println("HERE IS THE NEW GOAL: " + (((SpatialFluent)metaVariable.getVariables()[j]).getName()));									
-									newGoal.add(((RectangularRegion2)metaValue.getConstraints()[i].getScope()[0]).getName());
+									newGoal.add(((RectangularRegion)metaValue.getConstraints()[i].getScope()[0]).getName());
 								}
 								else {
-//									System.out.println("HERE IS THE OLD GOAL: " + ((RectangularRegion2)metaValue.getConstraints()[i].getScope()[0]).getName());
-									oldGoal.add(((RectangularRegion2)metaValue.getConstraints()[i].getScope()[0]).getName());
+//									System.out.println("HERE IS THE OLD GOAL: " + ((RectangularRegion)metaValue.getConstraints()[i].getScope()[0]).getName());
+									oldGoal.add(((RectangularRegion)metaValue.getConstraints()[i].getScope()[0]).getName());
 								}
 							}
 						}						
@@ -153,27 +154,27 @@ public class MetaSpatioCausalConstraintSolver extends MetaConstraintSolver{
 		Vector<String> oldGoal = new Vector<String>();
 		Vector<String> newGoal = new Vector<String>();
 		for (int i = 0; i < metaValue.getConstraints().length; i++) {
-			if(metaValue.getConstraints()[i] instanceof UnaryRectangleConstraint2){
+			if(metaValue.getConstraints()[i] instanceof UnaryRectangleConstraint){
 				//this if will check for unboudned obj in order to create the goal
-				if(((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getType().equals(UnaryRectangleConstraint2.Type.At)){ 
+				if(((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getType().equals(UnaryRectangleConstraint.Type.At)){ 
 					if(((MetaSpatialFluentConstraint)this.metaConstraints.get(0)).isUnboundedBoundingBox(
-							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[0], 
-							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[1], 
-							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[2], 
-							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[3])){
+							((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getBounds()[0], 
+							((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getBounds()[1], 
+							((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getBounds()[2], 
+							((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getBounds()[3])){
 
 						for (int j = 0; j < metaVariable.getVariables().length; j++) {
-							if(((RectangularRegion2)metaValue.getConstraints()[i].getScope()[0]).getName().compareTo
+							if(((RectangularRegion)metaValue.getConstraints()[i].getScope()[0]).getName().compareTo
 									(((SpatialFluent)metaVariable.getVariables()[j]).getName()) == 0){
 								((Activity)((SpatialFluent)metaVariable.getVariables()[j]).getActivity()).setMarking(markings.UNJUSTIFIED);
 								if(((MetaSpatialFluentConstraint)this.metaConstraints.get(0)).getPotentialCulprit()
-										.contains(((RectangularRegion2)metaValue.getConstraints()[i].getScope()[0]).getName())){
+										.contains(((RectangularRegion)metaValue.getConstraints()[i].getScope()[0]).getName())){
 //									System.out.println("HERE IS THE NEW GOAL: " + (((SpatialFluent)metaVariable.getVariables()[j]).getName()));									
-									newGoal.add(((RectangularRegion2)metaValue.getConstraints()[i].getScope()[0]).getName());
+									newGoal.add(((RectangularRegion)metaValue.getConstraints()[i].getScope()[0]).getName());
 								}
 								else {
-//									System.out.println("HERE IS THE OLD GOAL: " + ((RectangularRegion2)metaValue.getConstraints()[i].getScope()[0]).getName());
-									oldGoal.add(((RectangularRegion2)metaValue.getConstraints()[i].getScope()[0]).getName());
+//									System.out.println("HERE IS THE OLD GOAL: " + ((RectangularRegion)metaValue.getConstraints()[i].getScope()[0]).getName());
+									oldGoal.add(((RectangularRegion)metaValue.getConstraints()[i].getScope()[0]).getName());
 								}
 							}
 						}						

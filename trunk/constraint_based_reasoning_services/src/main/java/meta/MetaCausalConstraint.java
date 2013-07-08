@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
-import sandbox.spatial.rectangleAlgebra2.SpatialFluent;
-import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
+import multi.spatioTemporal.SpatialFluent;
+import multi.spatioTemporal.SpatialFluentSolver;
 
 import meta.simplePlanner.SimpleOperator;
 import meta.simplePlanner.SimpleDomain.markings;

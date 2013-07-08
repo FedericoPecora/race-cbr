@@ -2,14 +2,8 @@ package meta;
 
 import java.util.Vector;
 
-import sandbox.spatial.rectangleAlgebra2.RectangleConstraintSolver2;
-import sandbox.spatial.rectangleAlgebra2.SpatialAssertionalRelation2;
-import sandbox.spatial.rectangleAlgebra2.SpatialRule2;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraintSolver;
-import spatial.rectangleAlgebra.RectangularRegion;
-import spatial.rectangleAlgebra.SpatialAssertionalRelation;
-import spatial.rectangleAlgebra.SpatialRule;
+import spatial.utility.SpatialAssertionalRelation2;
+import spatial.utility.SpatialRule2;
 import time.APSPSolver;
 import time.Bounds;
 import meta.simplePlanner.SimpleDomain;

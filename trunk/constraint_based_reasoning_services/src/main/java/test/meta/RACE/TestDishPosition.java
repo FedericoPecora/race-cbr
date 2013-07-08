@@ -5,12 +5,12 @@ import java.util.Vector;
 import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraintSolver;
 import multi.allenInterval.AllenIntervalConstraint;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
-import spatial.rectangleAlgebra.BoundingBox;
-import spatial.rectangleAlgebra.QualitativeAllenIntervalConstraint;
-import spatial.rectangleAlgebra.SpatialAssertionalRelation;
-import spatial.rectangleAlgebra.SpatialRule;
-import spatial.rectangleAlgebra.TwoDimensionsAllenConstraint;
+import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
+import multi.spatial.rectangleAlgebra.BoundingBox;
+import time.qualitative.QualitativeAllenIntervalConstraint;
+import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
+import spatial.rectangleAlgebra_OLD.SpatialRule;
+import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
 import time.APSPSolver;
 import time.Bounds;
 

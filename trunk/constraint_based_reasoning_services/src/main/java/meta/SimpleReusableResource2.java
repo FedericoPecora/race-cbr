@@ -2,7 +2,6 @@ package meta;
 
 import java.util.Vector;
 
-import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
 import time.APSPSolver;
 import time.Bounds;
 import meta.MetaCausalConstraint.markings;

@@ -7,12 +7,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import multi.allenInterval.AllenIntervalConstraint;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraintSolver;
-import spatial.rectangleAlgebra.BoundingBox;
-import spatial.rectangleAlgebra.QualitativeAllenIntervalConstraint;
-import spatial.rectangleAlgebra.RectangularRegion;
-import spatial.rectangleAlgebra.TwoDimensionsAllenConstraint;
+import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
+import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraintSolver;
+import multi.spatial.rectangleAlgebra.BoundingBox;
+import time.qualitative.QualitativeAllenIntervalConstraint;
+import spatial.rectangleAlgebra_OLD.RectangularRegion;
+import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
 import time.Bounds;
 import framework.Constraint;
 import framework.Variable;
