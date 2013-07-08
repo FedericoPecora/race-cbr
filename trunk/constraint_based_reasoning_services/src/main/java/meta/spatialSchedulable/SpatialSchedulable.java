@@ -401,12 +401,6 @@ public class SpatialSchedulable extends MetaConstraint {
 			}
 		}
 		System.out.println("%%%%%%%%");
-		
-		System.out.println("??????????????????????????????????????????????????????????");
-		System.out.println("newGoal: ---> " + newGoal);
-		System.out.println("culpritActivities: ---> " + culpritActivities);
-		System.out.println("??????????????????????????????????????????????????????????");
-		
 		//extract the fluent which is relevant to the original goal(s)
 		Vector<Activity> originalGoals = new Vector<Activity>(); //e.g., cup1 in the so called wellSetTable Scenario
 		for (Activity act : activityToFluent.keySet()) {
@@ -422,7 +416,7 @@ public class SpatialSchedulable extends MetaConstraint {
 					new Bounds(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[2].min, sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[2].max),
 					new Bounds(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[3].min, sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[3].max)));
 		}
-		System.out.println("currentAssertionalCons: " + currentAssertionalCons);
+//		System.out.println("currentAssertionalCons: " + currentAssertionalCons);
 		
 		
 		ActivityNetwork actNetwork = new ActivityNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1]);
