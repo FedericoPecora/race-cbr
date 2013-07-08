@@ -14,7 +14,11 @@ import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraintSolver;
 import meta.TCSP.TCSPSolver;
 import multi.allenInterval.AllenIntervalConstraint;
+import multi.spatial.rectangleAlgebra.BoundingBox;
 import spatial.cardinal.CardinalConstraint;
+import spatial.rectangleAlgebra_OLD.RectangleConstraint;
+import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
+import spatial.rectangleAlgebra_OLD.SpatialRule;
 
 import org.ros.address.InetAddressFactory;
 import org.ros.concurrent.CancellableLoop;
@@ -51,19 +55,11 @@ import javax.vecmath.Point3d;
 
 import race_msgs.Fluent;
 import race_msgs.FluentArray;
-import spatial.cardinal.CardinalConstraint;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraintSolver;
-import spatial.rectangleAlgebra.BoundingBox;
-import spatial.rectangleAlgebra.QualitativeAllenIntervalConstraint;
-import spatial.rectangleAlgebra.QualitativeAllenIntervalConstraint.Type;
-import spatial.rectangleAlgebra.RectangleConstraint;
-import spatial.rectangleAlgebra.RectangleConstraintSolver;
-import spatial.rectangleAlgebra.RectangularRegion;
-import spatial.rectangleAlgebra.SpatialAssertionalRelation;
-import spatial.rectangleAlgebra.SpatialRule;
+
+
 import time.APSPSolver;
 import time.Bounds;
+import time.qualitative.QualitativeAllenIntervalConstraint;
 import utility.logging.LoggerNotDefined;
 import utility.logging.MetaCSPLogging;
 
@@ -92,8 +88,8 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	private HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
 	private HashMap<String, CardinalConstraint.Type> regionsOrientation = new HashMap<String, CardinalConstraint.Type>();
 	private HashMap<String, String> passObjToPoseFlunet = new HashMap<String, String>(); //<table1, poseTable1>
-	private HashMap<String, spatial.rectangleAlgebra.Point> passiveObjPose = new HashMap<String, spatial.rectangleAlgebra.Point>(); //<poseTable1, Point(3321, 4521)>
-	private HashMap<String, spatial.rectangleAlgebra.Point> passiveObjSize = new HashMap<String, spatial.rectangleAlgebra.Point>(); 
+	private HashMap<String, multi.spatial.rectangleAlgebra.Point> passiveObjPose = new HashMap<String, multi.spatial.rectangleAlgebra.Point>(); //<poseTable1, Point(3321, 4521)>
+	private HashMap<String, multi.spatial.rectangleAlgebra.Point> passiveObjSize = new HashMap<String, multi.spatial.rectangleAlgebra.Point>(); 
 	private enum subroutin {GETFLUNET, GETPOSE, ADDFLUNETS};
 	private ArrayList<Fluent> fluents = new ArrayList<Fluent>();
 
@@ -166,7 +162,6 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 			}
 		});
-
 
 	}
 
@@ -320,14 +315,14 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 	}
 
-	private spatial.rectangleAlgebra.Point getBoundingBoxSizeRelativeToOrientation(String str){
+	private multi.spatial.rectangleAlgebra.Point getBoundingBoxSizeRelativeToOrientation(String str){
 
 
 		if(regionsOrientation.get(str).compareTo(spatial.cardinal.CardinalConstraint.Type.North) == 0 ||
 				regionsOrientation.get(str).compareTo(spatial.cardinal.CardinalConstraint.Type.South) == 0)
-			return new spatial.rectangleAlgebra.Point((recs.get(str).height), (recs.get(str).width));
+			return new multi.spatial.rectangleAlgebra.Point((recs.get(str).height), (recs.get(str).width));
 		else 
-			return new spatial.rectangleAlgebra.Point((recs.get(str).width),(recs.get(str).height));
+			return new multi.spatial.rectangleAlgebra.Point((recs.get(str).width),(recs.get(str).height));
 	}
 
 
@@ -610,7 +605,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 					else if(p.getRoleType().compareTo("hasY") == 0)
 						y = (p.getFloatFiller() * 100);
 				}
-				passiveObjPose.put(posfluent, new spatial.rectangleAlgebra.Point(x, y));
+				passiveObjPose.put(posfluent, new multi.spatial.rectangleAlgebra.Point(x, y));
 				doneSubRoutines1[counter] = true;
 			}
 
@@ -651,6 +646,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 						if(spatialKnowledge.get(i).getFrom().compareTo(p.getFillerType()) == 0 && 
 								spatialKnowledge.get(i).getTo().compareTo(paasiveObjCategories.get(reifiedCons.get(response.getFluent().getName()))) == 0){
 							sr.add(spatialKnowledge.get(i));
+
 							regionsOrientation.put(p.getObjectFiller(), RectangleConstraint.getCardinalConstraint(
 									QualitativeAllenIntervalConstraint.lookupTypeByInt(spatialKnowledge.get(i).getRaCons().getBoundedConstraintX().getType().ordinal()),
 									QualitativeAllenIntervalConstraint.lookupTypeByInt(spatialKnowledge.get(i).getRaCons().getBoundedConstraintY().getType().ordinal())

@@ -1,14 +1,16 @@
-import java.awt.Rectangle;
+
 import java.util.Vector;
 
-import meta.MetaSpatialConstraint;
-import meta.MetaSpatialConstraintSolver;
+
 import multi.allenInterval.AllenIntervalConstraint;
+import multi.spatial.rectangleAlgebra.RectangleConstraint;
 
-import spatial.rectangleAlgebra.*;
-import time.APSPSolver;
+
+import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
+import spatial.rectangleAlgebra_OLD.SpatialRule;
+import spatial.utility.SpatialRule2;
+
 import time.Bounds;
-
 
 
 
@@ -334,5 +336,324 @@ public class StaticSpatialKnowledge {
 		
 	}
 	
+	public static Vector<SpatialRule2> getSpatialKnowledge2(Vector<SpatialRule2> spatialRelations){
+		
+		int manipulationAreaSize = 40;
+		int premanipulationAreaSize = 40;
+		int pmaSlack = 20; //before and after bounds for premanipulation Area
+		int maSlack = 10; //before and after bounds for manipulation Area
+		SpatialRule2 r1 = new SpatialRule2("ManipulationAreaSouth", "HorizontalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(maSlack,maSlack))
+						)
+		
+		
+		
+		);
+		spatialRelations.add(r1);
+		
+		SpatialRule2 r2 = new SpatialRule2("ManipulationAreaNorth", "HorizontalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(maSlack,maSlack))
+						)
+		);
+		spatialRelations.add(r2);
+		
+		SpatialRule2 r3 = new SpatialRule2("SittingAreaWest", "HorizontalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Meets),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, 5), new Bounds(5, 5))
+						)
+		);
+		spatialRelations.add(r3);
+		
+		SpatialRule2 r4 = new SpatialRule2("SittingAreaEast", "HorizontalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, 5), new Bounds(5, 5))
+						)
+		);
+		spatialRelations.add(r4);
+		
+		SpatialRule2 r5 = new SpatialRule2("PlacingAreaWestRight", "HorizontalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, 5), new Bounds(35, 35)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, 5), new Bounds(30, 30))
+						)
+		);
+		spatialRelations.add(r5);
 
+		SpatialRule2 r6 = new SpatialRule2("PlacingAreaWestLeft", "HorizontalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, 5), new Bounds(35, 35)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(30, 30), new Bounds(5, 5))
+						)
+		);
+		spatialRelations.add(r6);
+
+		SpatialRule2 r7 = new SpatialRule2("PlacingAreaEastRight", "HorizontalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(35, 35), new Bounds(5, 5)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(30, 30), new Bounds(5, 5))
+						)
+		);
+		spatialRelations.add(r7);
+		
+		SpatialRule2 r8 = new SpatialRule2("PlacingAreaEastLeft", "HorizontalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(35, 35), new Bounds(5, 5)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, 5), new Bounds(30, 30))
+						)
+		);
+		spatialRelations.add(r8);
+
+//		ManipulationAreaWest Meets, Equals VerticalTable
+		SpatialRule2 r9 = new SpatialRule2("ManipulationAreaWest", "VerticalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(maSlack,maSlack)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds())
+						)
+		);
+		spatialRelations.add(r9);
+		
+//		ManipulationAreaEast Meets , Equals VerticalTable
+		SpatialRule2 r10 = new SpatialRule2("ManipulationAreaEast", "VerticalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(maSlack,maSlack)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds())
+						)
+		);
+		spatialRelations.add(r10);
+
+//		SittingAreaSouth During[5, 5][5, 5], Meets VerticalTable 
+		SpatialRule2 r11 = new SpatialRule2("SittingAreaSouth", "VerticalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, 5), new Bounds(5, 5)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Meets)
+						)
+		);
+		spatialRelations.add(r11);
+
+//		SittingAreaNorth During[5, 5][5, 5], Meets VerticalTable
+		SpatialRule2 r12 = new SpatialRule2("SittingAreaNorth", "VerticalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, 5), new Bounds(5, 5)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy)
+						)
+		);
+		spatialRelations.add(r12);
+		
+//		PlacingAreaNorthRight During[5, 5][30, 30], During[35, 35][5, 5] VerticalTable (26)
+		SpatialRule2 r13 = new SpatialRule2("PlacingAreaNorthRight", "VerticalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, 5), new Bounds(30, 30)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(35, 35), new Bounds(5, 5))
+						)
+		);
+		spatialRelations.add(r13);
+
+		
+//		PlacingAreaNorthLeft During[30, 30][5, 5], During[35, 35][5, 5] VerticalTable (27)
+		SpatialRule2 r14 = new SpatialRule2("PlacingAreaNorthLeft", "VerticalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(30, 30), new Bounds(5, 5)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(35, 35), new Bounds(5, 5))
+						)
+		);
+		spatialRelations.add(r14);
+
+		
+		
+//		PlacingAreaSouthRight During[30, 30][5, 5], During[5, 5][35, 35] VerticalTable 
+		SpatialRule2 r15 = new SpatialRule2("PlacingAreaSouthRight", "VerticalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(30, 30), new Bounds(5, 5)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, 5), new Bounds(35, 35))
+						)
+		);
+		spatialRelations.add(r15);
+
+		
+//		PlacingAreaSouthLeft During[5, 5][30, 30], During[5, 5][35, 35] TableVertical (29)
+		SpatialRule2 r16 = new SpatialRule2("PlacingAreaSouthLeft", "VerticalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, 5), new Bounds(30, 30)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(5, 5), new Bounds(35, 35))
+						)
+		);
+		spatialRelations.add(r16);
+		
+//		the y axis is manipulated in order to close to hard code version! This number is not consistent with D1.3
+		SpatialRule2 r17 = new SpatialRule2("ManipulationAreaEast", "Counter", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(maSlack - 9,maSlack - 9)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds())
+						)
+		);
+		spatialRelations.add(r17);
+
+		
+//		PlacingAreaSouth During[35, 35][5, 5], During[15, 15][55, 55] Counter
+		SpatialRule2 r18 = new SpatialRule2("PlacingAreaEastLeft", "Counter", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(35, 35), new Bounds(5, 5)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(15, 15), new Bounds(55, 55))
+						)
+		);
+		spatialRelations.add(r18);
+
+		
+//		PlacingAreaNorth During[35, 35][5, 5], During[55, 55][15, 15] Counter (34)
+		SpatialRule2 r19 = new SpatialRule2("PlacingAreaEastRight", "Counter", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(35, 35), new Bounds(5, 5)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, new Bounds(55, 55), new Bounds(15, 15))
+						)
+		);
+		spatialRelations.add(r19);
+		
+		
+		SpatialRule2 r20 = new SpatialRule2("ManipulationAreaNorth", "ManipulationAreaNorth", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(manipulationAreaSize,manipulationAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(manipulationAreaSize,manipulationAreaSize))));
+		spatialRelations.add(r20);
+
+		SpatialRule2 r21 = new SpatialRule2("ManipulationAreaSouth", "ManipulationAreaSouth", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(manipulationAreaSize,manipulationAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(manipulationAreaSize,manipulationAreaSize))));
+		spatialRelations.add(r21);
+		
+		SpatialRule2 r22 = new SpatialRule2("ManipulationAreaWest", "ManipulationAreaWest", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(manipulationAreaSize,manipulationAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(manipulationAreaSize,manipulationAreaSize))));
+		spatialRelations.add(r22);
+		
+		SpatialRule2 r23 = new SpatialRule2("ManipulationAreaEast", "ManipulationAreaEast", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(manipulationAreaSize,manipulationAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(manipulationAreaSize,manipulationAreaSize))));
+		spatialRelations.add(r23);
+		
+		SpatialRule2 r24 = new SpatialRule2("SittingAreaWest", "SittingAreaWest", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(85,85)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(60,60))));
+		spatialRelations.add(r24);
+		
+		SpatialRule2 r25 = new SpatialRule2("SittingAreaEast", "SittingAreaEast", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(85,85)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(60,60))));
+		spatialRelations.add(r25);
+		
+		
+		SpatialRule2 r26 = new SpatialRule2("SittingAreaNorth", "SittingAreaNorth", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(60,60)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(85,85))));
+		spatialRelations.add(r26);
+		
+		SpatialRule2 r27 = new SpatialRule2("SittingAreaSouth", "SittingAreaSouth", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(60,60)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(85,85))));
+		spatialRelations.add(r27);
+
+		//..................................................................
+		SpatialRule2 r28 = new SpatialRule2("PreManipulationAreaNorth", "PreManipulationAreaNorth", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(premanipulationAreaSize,premanipulationAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(premanipulationAreaSize,premanipulationAreaSize))));
+		spatialRelations.add(r28);
+
+		SpatialRule2 r29 = new SpatialRule2("PreManipulationAreaSouth", "PreManipulationAreaSouth", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(premanipulationAreaSize,premanipulationAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(premanipulationAreaSize,premanipulationAreaSize))));
+		spatialRelations.add(r29);
+		
+		SpatialRule2 r30 = new SpatialRule2("PreManipulationAreaWest", "PreManipulationAreaWest", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(premanipulationAreaSize,premanipulationAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(premanipulationAreaSize,premanipulationAreaSize))));
+		spatialRelations.add(r30);
+		
+		SpatialRule2 r31 = new SpatialRule2("PreManipulationAreaEast", "PreManipulationAreaEast", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(premanipulationAreaSize,premanipulationAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(premanipulationAreaSize,premanipulationAreaSize))));
+		spatialRelations.add(r31);
+
+		SpatialRule2 r32 = new SpatialRule2("PreManipulationAreaSouth", "HorizontalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(manipulationAreaSize + pmaSlack + 20 ,manipulationAreaSize + pmaSlack + 20))
+						)
+		);
+		spatialRelations.add(r32);
+		
+		SpatialRule2 r33 = new SpatialRule2("PreManipulationAreaNorth", "HorizontalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(manipulationAreaSize + pmaSlack + 20 ,manipulationAreaSize + pmaSlack + 20))
+						)
+		);
+		spatialRelations.add(r33);
+
+
+	//		ManipulationAreaWest Meets, Equals VerticalTable
+		SpatialRule2 r34 = new SpatialRule2("PreManipulationAreaWest", "VerticalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(manipulationAreaSize + pmaSlack,manipulationAreaSize + pmaSlack)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds())
+						)
+		);
+		spatialRelations.add(r34);
+		
+//		ManipulationAreaEast Meets , Equals VerticalTable
+		SpatialRule2 r35 = new SpatialRule2("PreManipulationAreaEast", "VerticalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(manipulationAreaSize + pmaSlack,manipulationAreaSize + pmaSlack)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds())
+						)
+		);
+		spatialRelations.add(r35);
+
+//		ManipulationAreaEast Meets , During[35, 35][35, 35] Counter
+		SpatialRule2 r36 = new SpatialRule2("PreManipulationAreaEast", "Counter", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(manipulationAreaSize + pmaSlack,manipulationAreaSize + pmaSlack)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds())
+						)
+		);
+		spatialRelations.add(r36);
+		
+		
+		//NearAreaCounter
+		SpatialRule2 r37 = new SpatialRule2("NearAreaCounter", "Counter", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Contains, new Bounds(100, 100), new Bounds(100, 100)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Contains, new Bounds(100, 100), new Bounds(100, 100))
+						)
+		);
+		spatialRelations.add(r37);
+		
+		//NearAreaTable
+		SpatialRule2 r38 = new SpatialRule2("NearAreaTable", "VerticalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Contains, new Bounds(100, 100), new Bounds(100, 100)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Contains, new Bounds(100, 100), new Bounds(100, 100))
+						)
+		);
+		spatialRelations.add(r38);
+		
+		//NearAreaTable
+		SpatialRule2 r39 = new SpatialRule2("NearAreaTable", "HorizontalTable", 
+				new RectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Contains, new Bounds(100, 100), new Bounds(100, 100)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Contains, new Bounds(100, 100), new Bounds(100, 100))
+						)
+		);
+		spatialRelations.add(r39);
+		
+		
+		return spatialRelations;
+		
+	}
+
+	
+	
 }

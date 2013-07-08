@@ -1,14 +1,14 @@
 import java.awt.Rectangle;
 import java.util.Vector;
 
+import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
+import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
+import spatial.rectangleAlgebra_OLD.SpatialRule;
+import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
+import time.qualitative.QualitativeAllenIntervalConstraint;
+
 import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraintSolver;
-
-import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
-import spatial.rectangleAlgebra.QualitativeAllenIntervalConstraint;
-import spatial.rectangleAlgebra.SpatialAssertionalRelation;
-import spatial.rectangleAlgebra.SpatialRule;
-import spatial.rectangleAlgebra.TwoDimensionsAllenConstraint;
 
 
 
@@ -20,6 +20,7 @@ public class IsSpatiallyConsistent {
 	public void buildSpatialKnowledge(){
 		
 		srules = new Vector<SpatialRule>();
+
 		SpatialRule r1 = new SpatialRule("cup", "dish", 
 				new AugmentedRectangleConstraint(new TwoDimensionsAllenConstraint(QualitativeAllenIntervalConstraint.Type.During, 
 				QualitativeAllenIntervalConstraint.Type.After), new TwoDimensionsAllenConstraint(QualitativeAllenIntervalConstraint.Type.OverlappedBy, 
