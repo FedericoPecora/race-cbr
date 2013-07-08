@@ -1,7 +1,7 @@
 package meta;
 
-import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraintSolver;
+import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
+import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraintSolver;
 import framework.ConstraintNetwork;
 import framework.meta.MetaConstraintSolver;
 import framework.meta.MetaVariable;

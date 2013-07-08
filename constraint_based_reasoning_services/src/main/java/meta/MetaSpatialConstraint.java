@@ -4,23 +4,26 @@ import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Vector;
 
-import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraintNetwork;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraintSolver;
-import spatial.rectangleAlgebra.QualitativeAllenIntervalConstraint;
-import spatial.rectangleAlgebra.RectangularRegion;
-import spatial.rectangleAlgebra.SpatialAssertionalRelation;
-import spatial.rectangleAlgebra.SpatialRule;
-import spatial.rectangleAlgebra.TwoDimensionsAllenConstraint;
+import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
+import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraintNetwork;
+import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraintSolver;
+import time.qualitative.QualitativeAllenIntervalConstraint;
+import spatial.rectangleAlgebra_OLD.RectangularRegion;
+import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
+import spatial.rectangleAlgebra_OLD.SpatialRule;
+import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
 import framework.Constraint;
 import framework.ConstraintNetwork;
-import framework.ConstraintSolver;
 import framework.meta.MetaConstraint;
 import framework.meta.MetaVariable;
 
 public class MetaSpatialConstraint extends MetaConstraint{
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5141205719155181874L;
 	private SpatialAssertionalRelation[] sAssertionalRels;
 	private AugmentedRectangleConstraintSolver solver;
 	private HashMap<String, RectangularRegion> getVariableByName = new HashMap<String, RectangularRegion>();

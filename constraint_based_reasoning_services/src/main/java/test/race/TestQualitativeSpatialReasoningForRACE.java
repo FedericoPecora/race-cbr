@@ -2,11 +2,12 @@ package test.race;
 
 import java.util.Vector;
 
-import spatial.rectangleAlgebra.QualitativeAllenIntervalConstraint;
-import spatial.rectangleAlgebra.RectangleConstraint;
-import spatial.rectangleAlgebra.RectangleConstraintSolver;
-import spatial.rectangleAlgebra.RectangularRegion;
-import spatial.rectangleAlgebra.TwoDimensionsAllenConstraint;
+import multi.spatial.rectangleAlgebra.BoundingBox;
+import time.qualitative.QualitativeAllenIntervalConstraint;
+import spatial.rectangleAlgebra_OLD.RectangleConstraint;
+import spatial.rectangleAlgebra_OLD.RectangleConstraintSolver;
+import spatial.rectangleAlgebra_OLD.RectangularRegion;
+import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
 import framework.ConstraintNetwork;
 import framework.Variable;
 

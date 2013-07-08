@@ -1,11 +1,9 @@
 package meta;
 
-import sandbox.spatial.rectangleAlgebra2.RectangleConstraint2;
-import sandbox.spatial.rectangleAlgebra2.RectangleConstraintSolver2;
-import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraint;
-import spatial.rectangleAlgebra.AugmentedRectangleConstraintSolver;
-import time.Bounds;
+
+import multi.spatial.rectangleAlgebra.RectangleConstraint;
+import multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
+import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
 import framework.ConstraintNetwork;
 import framework.meta.MetaConstraintSolver;
 import framework.meta.MetaVariable;
@@ -18,8 +16,8 @@ public class MetaSpatialConstraintSolver2  extends MetaConstraintSolver{
 	private static final long serialVersionUID = 8700618716230870106L;
 
 	public MetaSpatialConstraintSolver2(long origin, long horizon, long animationTime) {
-		super(new Class[]{RectangleConstraint2.class, UnaryRectangleConstraint2.class}, 
-				animationTime, new RectangleConstraintSolver2(origin, horizon));
+		super(new Class[]{RectangleConstraint.class, UnaryRectangleConstraint.class}, 
+				animationTime, new RectangleConstraintSolver(origin, horizon));
 	}
 	
 
@@ -50,15 +48,15 @@ public class MetaSpatialConstraintSolver2  extends MetaConstraintSolver{
 //		System.out.println("metaValue: " + metaValue);
 		
 		for (int i = 0; i < metaValue.getConstraints().length; i++) {
-			if(metaValue.getConstraints()[i] instanceof UnaryRectangleConstraint2)
+			if(metaValue.getConstraints()[i] instanceof UnaryRectangleConstraint)
 				//this if will check for unboudned obj in order to create the goal
-				if(((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getType().equals(UnaryRectangleConstraint2.Type.At)) 
+				if(((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getType().equals(UnaryRectangleConstraint.Type.At)) 
 					if(((MetaSpatialConstraint2)this.metaConstraints.get(0)).isUnboundedBoundingBox(
-							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[0], 
-							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[1], 
-							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[2], 
-							((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getBounds()[3]));
-//						System.out.println(((UnaryRectangleConstraint2)metaValue.getConstraints()[i]).getTo());
+							((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getBounds()[0], 
+							((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getBounds()[1], 
+							((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getBounds()[2], 
+							((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getBounds()[3]));
+//						System.out.println(((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getTo());
 					
 		}
 		

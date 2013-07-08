@@ -12,11 +12,13 @@ import meta.symbolsAndTime.Schedulable.PEAKCOLLECTION;
 import multi.activity.Activity;
 import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
-import sandbox.spatial.rectangleAlgebra2.RectangleConstraint2;
-import sandbox.spatial.rectangleAlgebra2.RectangularRegion2;
-import sandbox.spatial.rectangleAlgebra2.SpatialFluent;
-import sandbox.spatial.rectangleAlgebra2.SpatialFluentSolver;
-import sandbox.spatial.rectangleAlgebra2.UnaryRectangleConstraint2;
+import multi.spatial.rectangleAlgebra.RectangleConstraint;
+import multi.spatial.rectangleAlgebra.RectangularRegion;
+import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
+import multi.spatioTemporal.SpatialFluentSolver;
+
+import spatial.utility.SpatialAssertionalRelation2;
+
 import symbols.SymbolicValueConstraint;
 import time.APSPSolver;
 import time.Bounds;
@@ -37,7 +39,7 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 	private static final long serialVersionUID = 1L;
 	
 	public MetaSpatialScheduler(long origin, long horizon, long animationTime) {
-		super(new Class[] {RectangleConstraint2.class, UnaryRectangleConstraint2.class, AllenIntervalConstraint.class, SymbolicValueConstraint.class}, 
+		super(new Class[] {RectangleConstraint.class, UnaryRectangleConstraint.class, AllenIntervalConstraint.class, SymbolicValueConstraint.class}, 
 				animationTime, new SpatialFluentSolver(origin, horizon)	);
 		// TODO Auto-generated constructor stub
 	}
@@ -86,7 +88,7 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 		
 		boolean isRtractingSpatialRelations = false;
 		for (int i = 0; i < metaValue.getVariables().length; i++) {
-			if(metaValue.getVariables()[i] instanceof RectangularRegion2 ){
+			if(metaValue.getVariables()[i] instanceof RectangularRegion ){
 				isRtractingSpatialRelations = true;
 				break;
 			}
@@ -99,16 +101,16 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 //						if(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom().compareTo("knife1") == 0){
 //							System.out.println("byeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 //							((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].
-////							setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+////							setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
 ////								new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
-//							setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+//							setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
 //									new Bounds(30,30), new Bounds(36,36), new Bounds(10, 10), new Bounds(33, 33)));
 //
 //						}
 //						if(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom().compareTo("fork1") == 0){
 //							System.out.println("halooooooooooooooooooooooooooooooooooooooo");
 //							((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].
-//							setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+//							setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
 //									new Bounds(20, 20), new Bounds(26, 26), new Bounds(13, 13), new Bounds(32, 32)));
 //						}
 //					}			
@@ -124,7 +126,7 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 					for (int j = 0; j < ((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels().length; j++) {
 						if(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom().compareTo("knife1") == 0){
 							((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].
-//							setUnaryAtRectangleConstraint(new UnaryRectangleConstraint2(UnaryRectangleConstraint2.Type.At, 
+//							setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
 //								new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
 							setUnaryAtRectangleConstraint(((SpatialSchedulable)this.metaConstraints.get(i)).getCurrentAssertionalCons().
 									get(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom()));
