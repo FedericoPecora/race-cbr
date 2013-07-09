@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.awt.Rectangle;
@@ -39,6 +40,7 @@ import multi.activity.Activity;
 import multi.activity.ActivityComparator;
 import multi.activity.ActivityNetwork;
 import multi.activity.ActivityNetworkSolver;
+import multi.allenInterval.AllenInterval;
 import multi.allenInterval.AllenIntervalConstraint;
 import multi.allenInterval.AllenIntervalNetworkSolver;
 import multi.spatial.rectangleAlgebra.BoundingBox;
@@ -64,19 +66,15 @@ public class SpatialSchedulable extends MetaConstraint {
 	private Vector<String> initialUnboundedObjName = new Vector<String>();
 	private Vector<String> potentialCulprit = new Vector<String>();
 	private HashMap<Activity, SpatialFluent> activityToFluent = new HashMap<Activity, SpatialFluent>(); 
-	private HashMap<String, Rectangle> oldRectangularRegion = new HashMap<String, Rectangle>();
 	private Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
 	private HashMap<String, UnaryRectangleConstraint> currentAssertionalCons;
-	
+	private Vector<HashMap<String, BoundingBox>> newRectangularRegion = null;
+	private HashMap<String, BoundingBox> oldRectangularRegion = null;
 	
 	public HashMap<String, UnaryRectangleConstraint> getCurrentAssertionalCons(){
 		return currentAssertionalCons;
 	}
-	
-	public HashMap<String, Rectangle> getPreviosRectangularRegion(){
-		return oldRectangularRegion;
-	}
-	
+		
 	public void addOperator(SimpleOperator r) {
 		operators.add(r);
 	}
@@ -300,26 +298,18 @@ public class SpatialSchedulable extends MetaConstraint {
 		Vector<SpatialFluent> conflictvars = new Vector<SpatialFluent>();
 		Vector<RectangularRegion> conflictRecvars = new Vector<RectangularRegion>();
 		HashMap<String, RectangularRegion> getVariableByName = new HashMap<String, RectangularRegion>();
-
+		newRectangularRegion = new Vector<HashMap<String, BoundingBox>>(); //this is for tracking the alternative position and check whether the new places is already overlapped by previous places 
+		oldRectangularRegion = new HashMap<String, BoundingBox>();
+		
 		for (int j = 0; j < conflict.getVariables().length; j++) {
 			conflictvars.add(activityToFluent.get((Activity) conflict.getVariables()[j]));
 			conflictRecvars.add(activityToFluent.get((Activity) conflict.getVariables()[j]).getRectangularRegion());
 		}
+		
 		setPermutationHashMAP(conflictvars, conflictRecvars);//it only generate permutation, does not perform any propagation
 		Vector<HashMap<String, Bounds[]>> alternativeSets = generateAllAlternativeSet(conflictRecvars);//it ranks the alternative
 		
-		for (int i = 0; i < sAssertionalRels.length; i++) {		
-			if(sAssertionalRels[i].getOntologicalProp() != null){
-				if(sAssertionalRels[i].getOntologicalProp().isMovable()){
-					BoundingBox bb = new BoundingBox(sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[0], 
-							sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[1],
-							sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[2],
-							sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[3]);
-					oldRectangularRegion.put(sAssertionalRels[i].getFrom(), bb.getAlmostCentreRectangle());
-				}
-			}
-		}
-
+		
 		HashMap<String, Bounds[]> alternativeSet = alternativeSets.get(0);
 		
 		// TBOX general knowledge in RectangleCN
@@ -362,7 +352,7 @@ public class SpatialSchedulable extends MetaConstraint {
 		}
 
 		//###########################################################################################################
-		logger.finest("pregenerated meta value for scoring: " + mvalue);
+//		logger.finest("pregenerated meta value for scoring: " + mvalue);
 
 //		System.out.println("mvalue" + mvalue);
 		Vector<String> newGoal = new Vector<String>();
@@ -388,6 +378,7 @@ public class SpatialSchedulable extends MetaConstraint {
 									if(((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])).getTemporalVariable().getEST() == 
 											((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])).getTemporalVariable().getLST()){
 										System.out.println(((RectangularRegion)mvalue.getConstraints()[i].getScope()[0]).getName());
+										System.out.println("==== " + ((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));
 										culpritActivities.put(((RectangularRegion)mvalue.getConstraints()[i].getScope()[0]).getName(), 
 												((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));
 										if(!newGoal.contains(((RectangularRegion) mvalue.getConstraints()[i].getScope()[0]).getName()))
@@ -409,15 +400,64 @@ public class SpatialSchedulable extends MetaConstraint {
 		}
 		//maintain the the current At unary constraint for retraction case
 		currentAssertionalCons = new HashMap<String, UnaryRectangleConstraint>();
+		Vector<String> nonMovableObj = new Vector<String>();
 		for (int j = 0; j < sAssertionalRels.length; j++) {
+			if(!sAssertionalRels[j].getOntologicalProp().isMovable()) {
+				nonMovableObj.add(sAssertionalRels[j].getFrom());
+				nonMovableObj.add(sAssertionalRels[j].getTo());
+			}
+			
 			currentAssertionalCons.put(sAssertionalRels[j].getFrom(), new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At,
 					new Bounds(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[0].min, sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[0].max), 
 					new Bounds(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[1].min, sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[1].max),
 					new Bounds(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[2].min, sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[2].max),
 					new Bounds(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[3].min, sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[3].max)));
+			
+			BoundingBox bb = new BoundingBox(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[0], 
+					sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[1],
+					sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[2],
+					sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[3]);
+			oldRectangularRegion.put(sAssertionalRels[j].getFrom(), bb);
+
 		}
-//		System.out.println("currentAssertionalCons: " + currentAssertionalCons);
 		
+		
+		class IntersectRectangluarRegion{
+			String rectangle1 = "";
+			String rectangle2 = "";			
+		}
+		
+		//check in the rectangleNetwork for the new placement
+		Vector<IntersectRectangluarRegion> iset = new Vector<IntersectRectangluarRegion>();
+		for (String newreg : newRectangularRegion.get(0).keySet()){
+			for (String oldreg : oldRectangularRegion.keySet()) {
+				if(oldreg.compareTo(newreg) != 0){
+					if(newGoal.contains(oldreg) &&  newGoal.contains(newreg) && !nonMovableObj.contains(newreg) && !nonMovableObj.contains(oldreg)){
+						if(newRectangularRegion.get(0).get(newreg).getAlmostCentreRectangle().intersects(oldRectangularRegion.get(oldreg).getAlmostCentreRectangle())){
+							
+							boolean isAdded = false;
+							for (int i = 0; i < iset.size(); i++) {
+								if((iset.get(i).rectangle1.compareTo(newreg) == 0 && iset.get(i).rectangle1.compareTo(oldreg) == 0) || (iset.get(i).rectangle1.compareTo(oldreg) == 0 && iset.get(i).rectangle1.compareTo(newreg) == 0))
+									isAdded = true;
+							}
+							if(!isAdded){
+								IntersectRectangluarRegion irr = new IntersectRectangluarRegion();
+								irr.rectangle1 = newreg;
+								irr.rectangle2 = oldreg;
+								iset.add(irr);
+							}
+//							System.out.println("newReg: " + newreg + " --- " + "oldReg: " + oldreg);
+//							System.out.println("newRec: " + newRectangularRegion.get(0).get(newreg).getAlmostCentreRectangle());
+//							System.out.println("oldRec: " +oldRectangularRegion.get(oldreg).getAlmostCentreRectangle());
+						}
+					}
+				}
+			}			
+		}
+		
+		for (int i = 0; i < iset.size(); i++) {
+			System.out.println(",,,,,,, " + iset.get(i).rectangle1 + " " + iset.get(i).rectangle2);
+		}
 		
 		ActivityNetwork actNetwork = new ActivityNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1]);
 		//set new Goal After old activity
@@ -459,6 +499,9 @@ public class SpatialSchedulable extends MetaConstraint {
 					 AllenIntervalConstraint.Type.After.getDefaultBounds());
 			newOnAfteroldOn.setFrom(((Activity)newgoalFlunet.getInternalVariables()[1]));
 			newOnAfteroldOn.setTo(culpritActivities.get(st));
+			
+			System.out.println("Culprit Activity: " + culpritActivities);
+			
 //			((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new
 //					 Constraint[] {newOnAfteroldOn});
 			actNetwork.addConstraint(newOnAfteroldOn);			
@@ -492,7 +535,16 @@ public class SpatialSchedulable extends MetaConstraint {
 						}
 					}
 				}
-			}			
+			}
+			
+			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			//Now it is the time for special cases! like swaping, in this case we want to state that if new places of the objects is physically overlapped
+			//by the old places of the object, it has to be considered. we handle this case by adding the temporal constraint (before) between old_on (x) and new_on(y) 
+			//where x and y are different
+			
+			
+			
+			
 		}
 		
 		
@@ -1017,6 +1069,16 @@ public class SpatialSchedulable extends MetaConstraint {
 		while (i.hasNext()) {
 			ConstraintNetwork ct = new RectangleConstraintNetwork(null);
 			ct = (RectangleConstraintNetwork) i.next();
+			HashMap<String, BoundingBox> strToBBs = new HashMap<String, BoundingBox>();
+			for (int j = 0; j < ct.getVariables().length; j++) {
+				BoundingBox bb = new BoundingBox(new Bounds(((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[0]).getEST(), ((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[0]).getLST()), 
+						new Bounds(((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[0]).getEET(), ((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[0]).getLET()), 
+						new Bounds(((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[1]).getEST(), ((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[1]).getLST()), 
+						new Bounds(((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[1]).getEET(), ((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[1]).getLET()));
+				
+				strToBBs.put(((RectangularRegion)ct.getVariables()[j]).getName(), bb);
+			}
+			newRectangularRegion.add(strToBBs);
 			alternativeSets.add(cnToInitPose.get(ct));
 
 		}
