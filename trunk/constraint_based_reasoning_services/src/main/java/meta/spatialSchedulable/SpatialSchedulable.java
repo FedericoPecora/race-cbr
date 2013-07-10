@@ -378,7 +378,7 @@ public class SpatialSchedulable extends MetaConstraint {
 									if(((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])).getTemporalVariable().getEST() == 
 											((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])).getTemporalVariable().getLST()){
 										System.out.println(((RectangularRegion)mvalue.getConstraints()[i].getScope()[0]).getName());
-										System.out.println("==== " + ((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));
+//										System.out.println("==== " + ((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));
 										culpritActivities.put(((RectangularRegion)mvalue.getConstraints()[i].getScope()[0]).getName(), 
 												((Activity)(metaVariable.getConstraintNetwork().getVariables()[j])));
 										if(!newGoal.contains(((RectangularRegion) mvalue.getConstraints()[i].getScope()[0]).getName()))
@@ -428,7 +428,7 @@ public class SpatialSchedulable extends MetaConstraint {
 		}
 		
 		//check in the rectangleNetwork for the new placement
-		Vector<IntersectRectangluarRegion> iset = new Vector<IntersectRectangluarRegion>();
+		Vector<IntersectRectangluarRegion> intersectionSet = new Vector<IntersectRectangluarRegion>();
 		for (String newreg : newRectangularRegion.get(0).keySet()){
 			for (String oldreg : oldRectangularRegion.keySet()) {
 				if(oldreg.compareTo(newreg) != 0){
@@ -436,29 +436,25 @@ public class SpatialSchedulable extends MetaConstraint {
 						if(newRectangularRegion.get(0).get(newreg).getAlmostCentreRectangle().intersects(oldRectangularRegion.get(oldreg).getAlmostCentreRectangle())){
 							
 							boolean isAdded = false;
-							for (int i = 0; i < iset.size(); i++) {
-								if((iset.get(i).rectangle1.compareTo(newreg) == 0 && iset.get(i).rectangle1.compareTo(oldreg) == 0) || (iset.get(i).rectangle1.compareTo(oldreg) == 0 && iset.get(i).rectangle1.compareTo(newreg) == 0))
+							for (int i = 0; i < intersectionSet.size(); i++) {
+								if((intersectionSet.get(i).rectangle1.compareTo(newreg) == 0 && intersectionSet.get(i).rectangle2.compareTo(oldreg) == 0) 
+										|| (intersectionSet.get(i).rectangle1.compareTo(oldreg) == 0 && intersectionSet.get(i).rectangle2.compareTo(newreg) == 0))
 									isAdded = true;
 							}
 							if(!isAdded){
 								IntersectRectangluarRegion irr = new IntersectRectangluarRegion();
 								irr.rectangle1 = newreg;
 								irr.rectangle2 = oldreg;
-								iset.add(irr);
+								intersectionSet.add(irr);
 							}
-//							System.out.println("newReg: " + newreg + " --- " + "oldReg: " + oldreg);
-//							System.out.println("newRec: " + newRectangularRegion.get(0).get(newreg).getAlmostCentreRectangle());
-//							System.out.println("oldRec: " +oldRectangularRegion.get(oldreg).getAlmostCentreRectangle());
 						}
 					}
 				}
 			}			
 		}
 		
-		for (int i = 0; i < iset.size(); i++) {
-			System.out.println(",,,,,,, " + iset.get(i).rectangle1 + " " + iset.get(i).rectangle2);
-		}
 		
+		Vector<SpatialFluent> newGoalFluentsVector = new Vector<SpatialFluent>();
 		ActivityNetwork actNetwork = new ActivityNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1]);
 		//set new Goal After old activity
 		for (String st :newGoal) {
@@ -485,6 +481,8 @@ public class SpatialSchedulable extends MetaConstraint {
 				((RectangularRegion)newgoalFlunet.getInternalVariables()[0]).setName(st);
 				activityToFluent.put(((Activity)newgoalFlunet.getInternalVariables()[1]), newgoalFlunet);
 			}
+			
+			newGoalFluentsVector.add(newgoalFlunet);
 			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 			//update assertional rule
 			for (int j = 0; j < sAssertionalRels.length; j++) {
@@ -500,9 +498,7 @@ public class SpatialSchedulable extends MetaConstraint {
 			newOnAfteroldOn.setFrom(((Activity)newgoalFlunet.getInternalVariables()[1]));
 			newOnAfteroldOn.setTo(culpritActivities.get(st));
 			
-			System.out.println("Culprit Activity: " + culpritActivities);
-			
-//			((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new
+			//((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new
 //					 Constraint[] {newOnAfteroldOn});
 			actNetwork.addConstraint(newOnAfteroldOn);			
 			System.out.println("newOnAfteroldOn" + newOnAfteroldOn);
@@ -537,15 +533,47 @@ public class SpatialSchedulable extends MetaConstraint {
 				}
 			}
 			
-			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-			//Now it is the time for special cases! like swaping, in this case we want to state that if new places of the objects is physically overlapped
-			//by the old places of the object, it has to be considered. we handle this case by adding the temporal constraint (before) between old_on (x) and new_on(y) 
-			//where x and y are different
-			
-			
-			
-			
 		}
+		
+		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		//Now it is the time for special cases! like swaping, in this case we want to state that if new places of the objects is physically overlapped
+		//by the old places of the object, it has to be considered. we handle this case by adding the temporal constraint (before) between old_on (x) and new_on(y) 
+		//where x and y are different
+		
+		//		--onculoritRegBeforeanotherNewOn---: (atLocation::<SymbolicVariable 3: [at_fork1_table1()]>U<AllenInterval 3 (I-TP: 8 9 ) [[20, 20], [21, 1000]]>/JUSTIFIED
+		//				) --[Before] [1, INF]--> (atLocation::<SymbolicVariable 7: [at_knife1_table1()]>U<AllenInterval 7 (I-TP: 16 17 ) [[0, 1000], [0, 1000]]>/UNJUSTIFIED
+
+		
+		for (int i = 0; i < intersectionSet.size(); i++) {			
+			for (SpatialFluent spatialFluent : newGoalFluentsVector) {
+				if(spatialFluent.getName().compareTo(intersectionSet.get(i).rectangle2) == 0){
+					
+					for (int j = 0; j < operators.size(); j++) {
+						if(culpritActivities.get(intersectionSet.get(i).rectangle1).getDomain().toString().
+								contains(operators.get(j).getHead().substring(operators.get(j).getHead().indexOf("::")+2, operators.get(j).getHead().length()))){
+							System.out.println("operators.get(j).getHead(): "  +operators.get(j).getHead());
+							for(String req: operators.get(j).getRequirementActivities()){
+									
+//									System.out.println("hallowww1: " + culpritActivities.get(intersectionSet.get(i).rectangle1).getDomain().toString());
+									System.out.println("hallowww2: " + req.substring(req.indexOf("::")+2, req.length()));
+									
+									
+//									AllenIntervalConstraint onculoritRegBeforeanotherNewOn = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After,
+//									AllenIntervalConstraint.Type.After.getDefaultBounds());
+//									//place knife after old_on of fork
+//									onculoritRegBeforeanotherNewOn.setFrom(culpritActivities.get(intersectionSet.get(i).rectangle1)); //placing 
+//									onculoritRegBeforeanotherNewOn.setTo(((Activity)spatialFluent.getInternalVariables()[1])); //old_on
+//									actNetwork.addConstraint(onculoritRegBeforeanotherNewOn);
+//									System.out.println("--onculoritRegBeforeanotherNewOn---: " + onculoritRegBeforeanotherNewOn);
+//									break;
+
+							}
+						}
+					}
+				}
+			}						
+		}
+	
 		
 		
 		actNetwork.join(mvalue);
