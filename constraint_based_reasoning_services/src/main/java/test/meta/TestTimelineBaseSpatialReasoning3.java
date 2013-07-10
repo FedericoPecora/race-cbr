@@ -48,8 +48,7 @@ import framework.VariableOrderingH;
 
 public class TestTimelineBaseSpatialReasoning3 {
 
-	static int arm_resources = 2;
-//	static int symblicPlaceResource = 1;
+	static int arm_resources = 1;
 	
 	public static void main(String[] args) {
 
@@ -111,7 +110,7 @@ public class TestTimelineBaseSpatialReasoning3 {
 		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
 		
-//		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
+		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
 		metaSpatioCasualSolver.backtrack();
   
 		//#####################################################################################################################
@@ -119,16 +118,18 @@ public class TestTimelineBaseSpatialReasoning3 {
 		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
 		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
 		
-		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
-				.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("cup1").getAlmostCentreRectangle());
-
+//		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
+//				.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("fork1").getAlmostCentreRectangle());
+		
+		
+		
 		
 		ActivityNetworkSolver actSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
-		TimelinePublisher tp = new TimelinePublisher(actSolver, new Bounds(0,100), "robot1");
-		TimelineVisualizer viz = new TimelineVisualizer(tp);
-		tp.publish(false, false);
-		tp.publish(false, true);
-		tp.publish(true, false);
+//		TimelinePublisher tp = new TimelinePublisher(actSolver, new Bounds(0,100), "robot1");
+//		TimelineVisualizer viz = new TimelineVisualizer(tp);
+//		tp.publish(false, false);
+//		tp.publish(false, true);
+//		tp.publish(true, false);
 		//#####################################################################################################################
 		//sort Activity based on the start time for debugging purpose
 		HashMap<Activity, Long> starttimes = new HashMap<Activity, Long>();
@@ -280,7 +281,7 @@ public class TestTimelineBaseSpatialReasoning3 {
 
 	private static void addOperator(Vector<SimpleOperator> operators) {
 		
-		AllenIntervalConstraint atCupAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
+		AllenIntervalConstraint atCupAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
 		AllenIntervalConstraint atCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 		AllenIntervalConstraint placeCupAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
 		AllenIntervalConstraint placeCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
@@ -289,7 +290,7 @@ public class TestTimelineBaseSpatialReasoning3 {
 		AllenIntervalConstraint pickCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 
 		
-		AllenIntervalConstraint atKnifeAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
+		AllenIntervalConstraint atKnifeAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
 		AllenIntervalConstraint atKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 		AllenIntervalConstraint placeKnifeAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
 		AllenIntervalConstraint placeKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
@@ -298,7 +299,7 @@ public class TestTimelineBaseSpatialReasoning3 {
 		AllenIntervalConstraint pickKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 
 		
-		AllenIntervalConstraint atForkAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
+		AllenIntervalConstraint atForkAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
 		AllenIntervalConstraint atFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 		AllenIntervalConstraint placeForkAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
 		AllenIntervalConstraint placeFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
