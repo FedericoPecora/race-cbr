@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.awt.Rectangle;
@@ -17,29 +16,21 @@ import orbital.algorithm.Combinatorical;
 
 import spatial.utility.SpatialAssertionalRelation2;
 import spatial.utility.SpatialRule2;
-import symbols.SymbolicDomain;
 import time.APSPSolver;
 import time.Bounds;
 import framework.Constraint;
 import framework.ConstraintNetwork;
 import framework.ConstraintSolver;
 import framework.ValueOrderingH;
-import framework.Variable;
 import framework.VariableOrderingH;
 import framework.meta.MetaConstraint;
 import framework.meta.MetaVariable;
 import framework.multi.MultiBinaryConstraint;
-import framework.multi.MultiDomain;
-import meta.MetaSpatialFluentConstraint;
 import meta.MetaCausalConstraint.markings;
 import meta.simplePlanner.SimpleOperator;
-import meta.symbolsAndTime.MCSData;
-import meta.symbolsAndTime.Schedulable;
-import meta.symbolsAndTime.Schedulable.PEAKCOLLECTION;
 import multi.activity.Activity;
 import multi.activity.ActivityComparator;
 import multi.activity.ActivityNetwork;
-import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenInterval;
 import multi.allenInterval.AllenIntervalConstraint;
 import multi.allenInterval.AllenIntervalNetworkSolver;
@@ -61,7 +52,6 @@ public class SpatialSchedulable extends MetaConstraint {
 	private long origin = 0, horizon = 1000;
 	private SpatialAssertionalRelation2[] sAssertionalRels;
 	private SpatialRule2[] rules;
-	private boolean markMetaVar = false;
 	private HashMap<HashMap<String, Bounds[]>, Integer> permutation;
 	private Vector<String> initialUnboundedObjName = new Vector<String>();
 	private Vector<String> potentialCulprit = new Vector<String>();
@@ -77,6 +67,10 @@ public class SpatialSchedulable extends MetaConstraint {
 		
 	public void addOperator(SimpleOperator r) {
 		operators.add(r);
+	}
+	
+	public HashMap<String, BoundingBox> getOldRectangularRegion(){
+		return oldRectangularRegion;
 	}
 	
 	public HashMap<String, Rectangle> getUpdatedRectangularRegion(){
@@ -177,7 +171,6 @@ public class SpatialSchedulable extends MetaConstraint {
 			Activity[] groundVars = currentacts.toArray(new Activity[currentacts.size()]);			
 			Arrays.sort(groundVars, new ActivityComparator(true));
 			Vector<ConstraintNetwork> ret = new Vector<ConstraintNetwork>();
-			HashMap<Activity, ActivityNetwork> usages = new HashMap<Activity, ActivityNetwork>();
 			Vector<Vector<Activity>> overlappingAll = new Vector<Vector<Activity>>();
 
 			// if an activity is spatially inconsistent even with itself
@@ -330,27 +323,8 @@ public class SpatialSchedulable extends MetaConstraint {
 			mvalue.addConstraint(atCon);
 			mvalue.addVariable(var.getRectangularRegion());
 		}
-		Vector<RectangleConstraint> assertionList = new Vector<RectangleConstraint>();
-		for (int i = 0; i < sAssertionalRels.length; i++) {
-			for (int j = 0; j < metaVaribales.size(); j++) {
-				if (sAssertionalRels[i].getFrom().compareTo(
-						((metaVaribales.get(j))).getName()) == 0) {
-					RectangleConstraint assertion = new RectangleConstraint(
-							new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals,
-									AllenIntervalConstraint.Type.Equals.getDefaultBounds()),
-							new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals,
-									AllenIntervalConstraint.Type.Equals.getDefaultBounds()));
-
-					assertion.setFrom(((RectangularRegion) metaVaribales.get(j)));
-					assertion.setTo(getVariableByName.get(sAssertionalRels[i].getTo()));
-
-//					System.out.println(assertion);
-					assertionList.add(assertion);
-					mvalue.addConstraint(assertion);
-				}
-			}
-		}
-
+		
+		
 		//###########################################################################################################
 //		logger.finest("pregenerated meta value for scoring: " + mvalue);
 
@@ -392,6 +366,10 @@ public class SpatialSchedulable extends MetaConstraint {
 			}
 		}
 		System.out.println("%%%%%%%%");
+
+		
+		
+
 		//extract the fluent which is relevant to the original goal(s)
 		Vector<Activity> originalGoals = new Vector<Activity>(); //e.g., cup1 in the so called wellSetTable Scenario
 		for (Activity act : activityToFluent.keySet()) {
@@ -420,39 +398,6 @@ public class SpatialSchedulable extends MetaConstraint {
 			oldRectangularRegion.put(sAssertionalRels[j].getFrom(), bb);
 
 		}
-		
-		
-		class IntersectRectangluarRegion{
-			String rectangle1 = "";
-			String rectangle2 = "";			
-		}
-		
-		//check in the rectangleNetwork for the new placement
-		Vector<IntersectRectangluarRegion> intersectionSet = new Vector<IntersectRectangluarRegion>();
-		for (String newreg : newRectangularRegion.get(0).keySet()){
-			for (String oldreg : oldRectangularRegion.keySet()) {
-				if(oldreg.compareTo(newreg) != 0){
-					if(newGoal.contains(oldreg) &&  newGoal.contains(newreg) && !nonMovableObj.contains(newreg) && !nonMovableObj.contains(oldreg)){
-						if(newRectangularRegion.get(0).get(newreg).getAlmostCentreRectangle().intersects(oldRectangularRegion.get(oldreg).getAlmostCentreRectangle())){
-							
-							boolean isAdded = false;
-							for (int i = 0; i < intersectionSet.size(); i++) {
-								if((intersectionSet.get(i).rectangle1.compareTo(newreg) == 0 && intersectionSet.get(i).rectangle2.compareTo(oldreg) == 0) 
-										|| (intersectionSet.get(i).rectangle1.compareTo(oldreg) == 0 && intersectionSet.get(i).rectangle2.compareTo(newreg) == 0))
-									isAdded = true;
-							}
-							if(!isAdded){
-								IntersectRectangluarRegion irr = new IntersectRectangluarRegion();
-								irr.rectangle1 = newreg;
-								irr.rectangle2 = oldreg;
-								intersectionSet.add(irr);
-							}
-						}
-					}
-				}
-			}			
-		}
-		
 		
 		Vector<SpatialFluent> newGoalFluentsVector = new Vector<SpatialFluent>();
 		ActivityNetwork actNetwork = new ActivityNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1]);
@@ -502,78 +447,107 @@ public class SpatialSchedulable extends MetaConstraint {
 //					 Constraint[] {newOnAfteroldOn});
 			actNetwork.addConstraint(newOnAfteroldOn);			
 			System.out.println("newOnAfteroldOn" + newOnAfteroldOn);
-			 
-			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-			//new goal before old goal e.g., on_knife before on_cup
-			//instead of that on_knife before precondition on_cup which is place_cup. the reason is I do not implement place_knife before plaace_cup
-			//is the activity place_knife is not existed!! it is not the valid argue, I will try later
-			for (int j = 0; j < originalGoals.size(); j++) {
-				//finding Precondition
-				for (int i = 0; i < operators.size(); i++) {
-					if(originalGoals.get(j).getSymbolicVariable().getDomain().toString().contains
-							(operators.get(i).getHead().substring(operators.get(i).getHead().indexOf("::")+2, operators.get(i).getHead().length()))){
-						for(String req: operators.get(i).getRequirementActivities()){
-							for (int k = 0; k < ((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables().length; k++) {
-								if(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[k]).getDomain().toString()
-								.contains(req.substring(req.indexOf("::")+2, req.length()))){
-									AllenIntervalConstraint culpritsBeforeOldeGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before,
-											 AllenIntervalConstraint.Type.Before.getDefaultBounds());
-									culpritsBeforeOldeGoal.setFrom(((Activity)newgoalFlunet.getInternalVariables()[1]));
-									culpritsBeforeOldeGoal.setTo(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[k]));
-									
-									//add constraint to Activty constraint Network
-									actNetwork.addConstraint(culpritsBeforeOldeGoal);
-//									((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new
-//											 Constraint[] {culpritsBeforeOldeGoal});
-									System.out.println("culpritsBeforeOldeGoal: " + culpritsBeforeOldeGoal);
-								}
-							}
-						}
-					}
-				}
-			}
+			
+			
+			//basically this commeneted block is not needed in the case of states overlappedby action
+//			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//			//new goal before old goal e.g., on_knife before on_cup
+//			//instead of that on_knife before precondition on_cup which is place_cup. the reason is I do not implement place_knife before plaace_cup
+//			//is the activity place_knife is not existed!! it is not the valid argue, I will try later
+//			for (int j = 0; j < originalGoals.size(); j++) {
+//				//finding Precondition
+//				for (int i = 0; i < operators.size(); i++) {
+//					if(originalGoals.get(j).getSymbolicVariable().getDomain().toString().contains
+//							(operators.get(i).getHead().substring(operators.get(i).getHead().indexOf("::")+2, operators.get(i).getHead().length()))){
+//						for(String req: operators.get(i).getRequirementActivities()){
+//							for (int k = 0; k < ((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables().length; k++) {
+//								if(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[k]).getDomain().toString()
+//								.contains(req.substring(req.indexOf("::")+2, req.length()))){
+//									AllenIntervalConstraint culpritsBeforeOldeGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before,
+//											 AllenIntervalConstraint.Type.Before.getDefaultBounds());
+//									culpritsBeforeOldeGoal.setFrom(((Activity)newgoalFlunet.getInternalVariables()[1]));
+//									culpritsBeforeOldeGoal.setTo(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[k]));
+//									
+//									//add constraint to Activty constraint Network
+//									actNetwork.addConstraint(culpritsBeforeOldeGoal);
+//									System.out.println("culpritsBeforeOldeGoal: " + culpritsBeforeOldeGoal);
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+			
+			
+			
+//			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//			//new goal before old goal e.g., on_knife before on_cup
+//			//instead of that on_knife before precondition on_cup which is place_cup. the reason is I do not implement place_knife before plaace_cup
+//			//is the activity place_knife is not existed!! it is not the valid argue, I will try later
+//			for (int j = 0; j < originalGoals.size(); j++) {
+//				for (int i = 0; i < operators.size(); i++) {
+//					if(originalGoals.get(j).getSymbolicVariable().getDomain().toString().contains
+//							(operators.get(i).getHead().substring(operators.get(i).getHead().indexOf("::")+2, operators.get(i).getHead().length()))){
+//						AllenIntervalConstraint culpritsBeforeOldeGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before,
+//											 AllenIntervalConstraint.Type.Before.getDefaultBounds());
+//						culpritsBeforeOldeGoal.setFrom(((Activity)newgoalFlunet.getInternalVariables()[1]));
+//						culpritsBeforeOldeGoal.setTo(originalGoals.get(j));
+//						//add constraint to Activty constraint Network
+//						actNetwork.addConstraint(culpritsBeforeOldeGoal);
+//						System.out.println("culpritsBeforeOldeGoal: " + culpritsBeforeOldeGoal);
+//					}
+//				}
+//			}
+			
 			
 		}
 		
-		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		//Now it is the time for special cases! like swaping, in this case we want to state that if new places of the objects is physically overlapped
-		//by the old places of the object, it has to be considered. we handle this case by adding the temporal constraint (before) between old_on (x) and new_on(y) 
-		//where x and y are different
-		
-		//		--onculoritRegBeforeanotherNewOn---: (atLocation::<SymbolicVariable 3: [at_fork1_table1()]>U<AllenInterval 3 (I-TP: 8 9 ) [[20, 20], [21, 1000]]>/JUSTIFIED
-		//				) --[Before] [1, INF]--> (atLocation::<SymbolicVariable 7: [at_knife1_table1()]>U<AllenInterval 7 (I-TP: 16 17 ) [[0, 1000], [0, 1000]]>/UNJUSTIFIED
 
-		
-		for (int i = 0; i < intersectionSet.size(); i++) {			
-			for (SpatialFluent spatialFluent : newGoalFluentsVector) {
-				if(spatialFluent.getName().compareTo(intersectionSet.get(i).rectangle2) == 0){
-					
-					for (int j = 0; j < operators.size(); j++) {
-						if(culpritActivities.get(intersectionSet.get(i).rectangle1).getDomain().toString().
-								contains(operators.get(j).getHead().substring(operators.get(j).getHead().indexOf("::")+2, operators.get(j).getHead().length()))){
-							System.out.println("operators.get(j).getHead(): "  +operators.get(j).getHead());
-							for(String req: operators.get(j).getRequirementActivities()){
-									
-//									System.out.println("hallowww1: " + culpritActivities.get(intersectionSet.get(i).rectangle1).getDomain().toString());
-									System.out.println("hallowww2: " + req.substring(req.indexOf("::")+2, req.length()));
-									
-									
-//									AllenIntervalConstraint onculoritRegBeforeanotherNewOn = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After,
-//									AllenIntervalConstraint.Type.After.getDefaultBounds());
-//									//place knife after old_on of fork
-//									onculoritRegBeforeanotherNewOn.setFrom(culpritActivities.get(intersectionSet.get(i).rectangle1)); //placing 
-//									onculoritRegBeforeanotherNewOn.setTo(((Activity)spatialFluent.getInternalVariables()[1])); //old_on
-//									actNetwork.addConstraint(onculoritRegBeforeanotherNewOn);
-//									System.out.println("--onculoritRegBeforeanotherNewOn---: " + onculoritRegBeforeanotherNewOn);
-//									break;
+		Vector<RectangleConstraint> assertionList = new Vector<RectangleConstraint>();
+//		newGoal
+		for(int i = 0; i < sAssertionalRels.length; i++) {
+			if(newGoal.contains(sAssertionalRels[i].getFrom())){
+				System.out.println("i am in the first: " + sAssertionalRels[i].getFrom());
+				for (int j = 0; j < newGoalFluentsVector.size(); j++) {
+					if (sAssertionalRels[i].getFrom().compareTo(
+							((newGoalFluentsVector.get(j))).getName()) == 0) {
+						RectangleConstraint assertion = new RectangleConstraint(
+								new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals,
+										AllenIntervalConstraint.Type.Equals.getDefaultBounds()),
+								new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals,
+										AllenIntervalConstraint.Type.Equals.getDefaultBounds()));
 
-							}
-						}
-					}
+						assertion.setFrom(((RectangularRegion) newGoalFluentsVector.get(j).getRectangularRegion()));
+						assertion.setTo(getVariableByName.get(sAssertionalRels[i].getTo()));
+						assertionList.add(assertion);
+						mvalue.addConstraint(assertion);
+					}				
 				}
-			}						
+			}
+			else{
+				System.out.println("I am in the second loop " + sAssertionalRels[i].getFrom());
+				for (int j = 0; j < metaVaribales.size(); j++) {
+					if (sAssertionalRels[i].getFrom().compareTo(((metaVaribales.get(j))).getName()) == 0) {
+
+						RectangleConstraint assertion = new RectangleConstraint(
+								new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals,
+										AllenIntervalConstraint.Type.Equals.getDefaultBounds()),
+								new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals,
+										AllenIntervalConstraint.Type.Equals.getDefaultBounds()));
+
+						assertion.setFrom(((RectangularRegion) metaVaribales.get(j)));
+						assertion.setTo(getVariableByName.get(sAssertionalRels[i].getTo()));
+						assertionList.add(assertion);
+						mvalue.addConstraint(assertion);
+	              }
+				}
+			}
 		}
-	
+		
+		
+//		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//		System.out.println(mvalue);
+//		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		
 		
 		actNetwork.join(mvalue);
