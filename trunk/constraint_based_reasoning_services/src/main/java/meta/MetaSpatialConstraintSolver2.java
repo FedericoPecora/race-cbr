@@ -42,7 +42,7 @@ public class MetaSpatialConstraintSolver2  extends MetaConstraintSolver{
 	}
 
 	@Override
-	protected void addResolverSub(ConstraintNetwork metaVariable,
+	protected boolean addResolverSub(ConstraintNetwork metaVariable,
 			ConstraintNetwork metaValue) {
 		
 //		System.out.println("metaValue: " + metaValue);
@@ -59,6 +59,7 @@ public class MetaSpatialConstraintSolver2  extends MetaConstraintSolver{
 //						System.out.println(((UnaryRectangleConstraint)metaValue.getConstraints()[i]).getTo());
 					
 		}
+		return true;
 		
 	}
 

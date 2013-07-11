@@ -144,7 +144,7 @@ public class MetaSpatioCausalConstraintSolver extends MetaConstraintSolver{
 	}
 
 	@Override
-	protected void addResolverSub(ConstraintNetwork metaVariable, ConstraintNetwork metaValue) {
+	protected boolean addResolverSub(ConstraintNetwork metaVariable, ConstraintNetwork metaValue) {
 
 		//		System.out.println("number: "+ metaVariable.getVariables().length);
 		//		for (int i = 0; i < metaVariable.getVariables().length; i++) {
@@ -259,6 +259,8 @@ public class MetaSpatioCausalConstraintSolver extends MetaConstraintSolver{
 		//				rr.setUsage((Activity)v);
 		//			}
 		//		}
+		
+		return true;
 
 	}
 

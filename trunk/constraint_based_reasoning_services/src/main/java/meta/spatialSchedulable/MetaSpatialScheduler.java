@@ -2,12 +2,15 @@ package meta.spatialSchedulable;
 
 import java.awt.Rectangle;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Vector;
 
 import meta.MetaCausalConstraint;
 import meta.MetaSpatialFluentConstraint;
 import meta.SimpleReusableResource2;
 import meta.MetaCausalConstraint.markings;
+import meta.simplePlanner.SimpleDomain;
+import meta.simplePlanner.SimpleOperator;
 import meta.symbolsAndTime.Schedulable.PEAKCOLLECTION;
 import multi.activity.Activity;
 import multi.activity.ActivityNetworkSolver;
@@ -30,7 +33,7 @@ import framework.VariablePrototype;
 import framework.meta.MetaConstraintSolver;
 import framework.meta.MetaVariable;
 
-public class MetaSpatialScheduler  extends MetaConstraintSolver{
+public class MetaSpatialScheduler  extends MetaConstraintSolver {
 
 	
 
@@ -38,7 +41,8 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+	public Vector<SimpleOperator> operatorsAlongBranch = new Vector<SimpleOperator>();
+
 	public MetaSpatialScheduler(long origin, long horizon, long animationTime) {
 		super(new Class[] {RectangleConstraint.class, UnaryRectangleConstraint.class, AllenIntervalConstraint.class, SymbolicValueConstraint.class}, 
 				animationTime, new SpatialFluentSolver(origin, horizon)	);
@@ -53,14 +57,18 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 	}
 
 	@Override
-	public void postBacktrack(MetaVariable metaVariable) {
-		// TODO Auto-generated method stub
-
+	public void postBacktrack(MetaVariable mv) {
+		if (mv.getMetaConstraint() instanceof MetaCausalConstraint)
+			for (Variable v : mv.getConstraintNetwork().getVariables()) v.setMarking(markings.UNJUSTIFIED);
 	}
 
 	@Override
-	protected void retractResolverSub(ConstraintNetwork metaVariable,
-			ConstraintNetwork metaValue) {
+	protected void retractResolverSub(ConstraintNetwork metaVariable, ConstraintNetwork metaValue) {
+		
+		if (metaValue.annotation != null && metaValue.annotation instanceof SimpleOperator) {
+			this.operatorsAlongBranch.remove(operatorsAlongBranch.size()-1);
+			System.out.println("-------------------> popped " + metaValue.annotation);
+		}
 
 		ActivityNetworkSolver groundSolver = (ActivityNetworkSolver)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getConstraintSolvers()[1];
 		Vector<Variable> activityToRemove = new Vector<Variable>();
@@ -116,8 +124,17 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 	}
 
 	@Override
-	protected void addResolverSub(ConstraintNetwork metaVariable, ConstraintNetwork metaValue) {
-		
+	protected boolean addResolverSub(ConstraintNetwork metaVariable, ConstraintNetwork metaValue) {
+
+		if (metaValue.annotation != null && metaValue.annotation instanceof SimpleOperator) {
+			if (operatorsAlongBranch.contains((metaValue.annotation))) {
+				System.out.println("-------------------> skipped " + metaValue.annotation);
+				return false;
+			}
+			operatorsAlongBranch.add((SimpleOperator)metaValue.annotation);
+			System.out.println("-------------------> pushed " + metaValue.annotation);
+		}
+				
 		ActivityNetworkSolver groundSolver = (ActivityNetworkSolver)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getConstraintSolvers()[1];
 
 		//Make real variables from variable prototypes
@@ -175,6 +192,8 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver{
 				}
 			}
 		}
+		
+		return true;
 	}
 		
 

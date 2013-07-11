@@ -154,6 +154,61 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 		return false;
 	}
 	
+//	private boolean isConflicting(Activity[] peak) {
+//		
+//		if(peak.length == 1) return false;
+//		
+//		System.out.println("_________________________________________________");
+//		for (int i = 0; i < peak.length; i++) {
+//			System.out.println("peak: " + activityToFluent.get(peak[i]));
+//		}
+//		System.out.println("_________________________________________________");
+//		
+//		
+//		Vector<SpatialFluent> unboundedsf = new Vector<SpatialFluent>();
+//		Vector<SpatialFluent> boundedsf = new Vector<SpatialFluent>();
+//		
+//		for (int i = 0; i < peak.length; i++) {
+//			if(isUnboundedBoundingBox(
+//							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getEST(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getLST()),
+//							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getEET(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getLET()), 
+//							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getEST(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getLST()), 
+//							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getEET(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getLET()))){//it was bouneded
+////				System.out.println("--isunbounded--: " + activityToFluent.get(peak[i]));
+//				unboundedsf.add(activityToFluent.get(peak[i]));
+//			}
+//			else{
+////				System.out.println("--isbounded--: " + activityToFluent.get(peak[i]));
+//				boundedsf.add(activityToFluent.get(peak[i]));
+//			}
+//		}
+//		
+//		if(unboundedsf.size() == 0 || boundedsf.size() == 0) return false;
+//		
+//		Rectangle rec1 = new BoundingBox(
+//				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[0]).getEST(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[0]).getLST()),
+//				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[0]).getEET(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[0]).getLET()), 
+//				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getEST(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getLST()), 
+//				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getEET(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getLET())).getAlmostCentreRectangle();
+//		
+//		Rectangle  rec2 = null;
+//		for (String str : ((MetaSpatialScheduler)this.metaCS).getOldRectangularRegion().keySet()) {
+//			if(unboundedsf.get(0).getRectangularRegion().getName().compareTo(str) == 0)
+//				rec2 = ((MetaSpatialScheduler)this.metaCS).getOldRectangularRegion().get(str).getAlmostCentreRectangle();
+//		}
+//		
+//				
+//		
+//		if(rec1.intersects(rec2)){
+//			
+//			System.out.println("rec1: " + rec1);
+//			System.out.println("rec2: " + rec2);					
+//			return true;
+//		}
+//		
+//		return false;
+//	}
+
 	private boolean isUnboundedBoundingBox(Bounds xLB, Bounds xUB, Bounds yLB, Bounds yUB) {
 
 		long horizon = ((ActivityNetworkSolver)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]).getHorizon();
