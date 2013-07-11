@@ -2,6 +2,7 @@ package meta;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Vector;
 
 import multi.spatioTemporal.SpatialFluent;
@@ -9,6 +10,7 @@ import multi.spatioTemporal.SpatialFluentSolver;
 
 import meta.simplePlanner.SimpleOperator;
 import meta.simplePlanner.SimpleDomain.markings;
+import meta.spatialSchedulable.MetaSpatialScheduler;
 import meta.symbolsAndTime.Schedulable;
 import multi.activity.Activity;
 import multi.activity.ActivityNetwork;
@@ -226,6 +228,7 @@ public class MetaCausalConstraint extends MetaConstraint {
 			if (opeatorHeadComponent.equals(problematicActivity.getComponent())) {
 				if (problematicActivitySymbolicDomain.contains(operatorHeadSymbol)) {
 					ConstraintNetwork newResolver = expandOperator(r,problematicActivity);
+					newResolver.annotation = r;
 					retPossibleConstraintNetworks.add(newResolver);
 				}
 			}

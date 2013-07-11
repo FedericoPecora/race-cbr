@@ -2,6 +2,7 @@ package test.meta;
 
 import java.awt.List;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -105,7 +106,10 @@ public class TestTimelineBaseSpatialReasoning2 {
 		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
 		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
+		
+		long timeNow = Calendar.getInstance().getTimeInMillis();
 		metaSpatioCasualSolver.backtrack();
+		System.out.println("TOTAL TIME: " + (Calendar.getInstance().getTimeInMillis()-timeNow));
   
 		//#####################################################################################################################
 		//visualization
@@ -304,9 +308,7 @@ public class TestTimelineBaseSpatialReasoning2 {
 		AllenIntervalConstraint holdingForkAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
 		AllenIntervalConstraint holdingFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
 		AllenIntervalConstraint pickFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
-		
-
-		
+				
 		SimpleOperator operator1 = new SimpleOperator("atLocation::at_cup1_table1()",
 				new AllenIntervalConstraint[] {atCupAfterPlace},
 				new String[] {"robot1::place_cup1_table1(arm)"},
