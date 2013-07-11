@@ -48,7 +48,7 @@ import framework.VariableOrderingH;
 
 public class TestTimelineBaseSpatialReasoning3 {
 
-	static int arm_resources = 1;
+	static int arm_resources = 2;
 	
 	public static void main(String[] args) {
 
@@ -115,16 +115,17 @@ public class TestTimelineBaseSpatialReasoning3 {
   
 		//#####################################################################################################################
 		//visualization
-		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
-		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
-		
-//		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
-//				.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("fork1").getAlmostCentreRectangle());
-		
-		
-		
-		
 		ActivityNetworkSolver actSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
+//		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
+//		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
+//		
+////		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
+////				.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("fork1").getAlmostCentreRectangle());
+//		
+//		
+//		
+//		
+//		
 //		TimelinePublisher tp = new TimelinePublisher(actSolver, new Bounds(0,100), "robot1");
 //		TimelineVisualizer viz = new TimelineVisualizer(tp);
 //		tp.publish(false, false);

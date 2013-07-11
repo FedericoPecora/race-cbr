@@ -11,6 +11,7 @@ import multi.activity.Activity;
 import multi.activity.ActivityNetwork;
 import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenInterval;
+import multi.allenInterval.AllenIntervalConstraint;
 import multi.spatial.rectangleAlgebra.BoundingBox;
 import multi.spatial.rectangleAlgebra.RectangularRegion;
 import multi.spatioTemporal.SpatialFluent;
@@ -33,6 +34,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 	protected Vector<Activity> activities;
 	private HashMap<Activity, SpatialFluent> activityToFluent;
 
+	long beforeParameter = 1;
 	public MetaOccupiedConstraint(VariableOrderingH varOH, ValueOrderingH valOH) {
 		super(varOH, valOH);
 
@@ -107,58 +109,48 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 		}
 		System.out.println("_________________________________________________");
 		
-//		class IntersectRectangluarRegion{
-//		String rectangle1 = "";
-//		String rectangle2 = "";			
-//		}
-//	
-//		
-//		Vector<HashMap<String, BoundingBox>> newRectangularRegion = new Vector<HashMap<String,BoundingBox>>();
-//		HashMap<String, BoundingBox> oldRectangularRegion = new HashMap<String, BoundingBox>();
-//
-//		for (int i = 0; i < peak.length; i++) {
-//			System.out.println(",,,," + ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getEST());
-//
-//			if(isUnboundedBoundingBox(
-//							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getEST(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getLST()),
-//							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getEET(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getLET()), 
-//							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getEST(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getLST()), 
-//							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getEET(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getLET()))){//it was bouneded
+		
+		Vector<SpatialFluent> unboundedsf = new Vector<SpatialFluent>();
+		Vector<SpatialFluent> boundedsf = new Vector<SpatialFluent>();
+		
+		for (int i = 0; i < peak.length; i++) {
+			if(isUnboundedBoundingBox(
+							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getEST(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getLST()),
+							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getEET(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getLET()), 
+							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getEST(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getLST()), 
+							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getEET(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getLET()))){//it was bouneded
 //				System.out.println("--isunbounded--: " + activityToFluent.get(peak[i]));
-//				//newRectangularRegion.put()
-//			}
-//			else{
-//				System.out.println();
-////				oldRectangularRegion.put{}
-//			}
-//		}
-
+				unboundedsf.add(activityToFluent.get(peak[i]));
+			}
+			else{
+//				System.out.println("--isbounded--: " + activityToFluent.get(peak[i]));
+				boundedsf.add(activityToFluent.get(peak[i]));
+			}
+		}
 		
+		if(unboundedsf.size() == 0 || boundedsf.size() == 0) return false;
 		
-//		//check in the rectangleNetwork for the new placement
-//		Vector<IntersectRectangluarRegion> intersectionSet = new Vector<IntersectRectangluarRegion>();
-//		for (String newreg : newRectangularRegion.get(0).keySet()){
-//			for (String oldreg : oldRectangularRegion.keySet()) {
-//				if(oldreg.compareTo(newreg) != 0){
-//					if(newRectangularRegion.get(0).get(newreg).getAlmostCentreRectangle().intersects(oldRectangularRegion.get(oldreg).getAlmostCentreRectangle())){						
-//						boolean isAdded = false;
-//						for (int i = 0; i < intersectionSet.size(); i++) {
-//							if((intersectionSet.get(i).rectangle1.compareTo(newreg) == 0 && intersectionSet.get(i).rectangle2.compareTo(oldreg) == 0) 
-//									|| (intersectionSet.get(i).rectangle1.compareTo(oldreg) == 0 && intersectionSet.get(i).rectangle2.compareTo(newreg) == 0))
-//								isAdded = true;
-//						}
-//						if(!isAdded){
-//							IntersectRectangluarRegion irr = new IntersectRectangluarRegion();
-//							irr.rectangle1 = newreg;
-//							irr.rectangle2 = oldreg;
-//							intersectionSet.add(irr);
-//						}
-//					}
-//				}
-//			}
-//		}			
-	
-
+		Rectangle rec1 = new BoundingBox(
+				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[0]).getEST(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[0]).getLST()),
+				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[0]).getEET(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[0]).getLET()), 
+				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getEST(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getLST()), 
+				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getEET(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getLET())).getAlmostCentreRectangle();
+		
+		Rectangle  rec2 = null;
+		for (String str : ((MetaSpatialScheduler)this.metaCS).getOldRectangularRegion().keySet()) {
+			if(unboundedsf.get(0).getRectangularRegion().getName().compareTo(str) == 0)
+				rec2 = ((MetaSpatialScheduler)this.metaCS).getOldRectangularRegion().get(str).getAlmostCentreRectangle();
+		}
+		
+				
+		
+		if(rec1.intersects(rec2)){
+			
+			System.out.println("rec1: " + rec1);
+			System.out.println("rec2: " + rec2);					
+			return true;
+		}
+		
 		return false;
 	}
 	
@@ -176,59 +168,38 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 
 	@Override
 	public ConstraintNetwork[] getMetaValues(MetaVariable metaVariable) {
-		
-		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		//Now it is the time for special cases! like swaping, in this case we want to state that if new places of the objects is physically overlapped
-		//by the old places of the object, it has to be considered. we handle this case by adding the temporal constraint (before) between old_on (x) and new_on(y) 
-		//where x and y are different
-		
-		//		--onculoritRegBeforeanotherNewOn---: (atLocation::<SymbolicVariable 3: [at_fork1_table1()]>U<AllenInterval 3 (I-TP: 8 9 ) [[20, 20], [21, 1000]]>/JUSTIFIED
-		//				) --[Before] [1, INF]--> (atLocation::<SymbolicVariable 7: [at_knife1_table1()]>U<AllenInterval 7 (I-TP: 16 17 ) [[0, 1000], [0, 1000]]>/UNJUSTIFIED
 
+		ConstraintNetwork conflict = metaVariable.getConstraintNetwork();
 		
+		System.out.println("====MetaVaribales====");
+		for (int i = 0; i < conflict.getVariables().length; i++) {
+			System.out.println(conflict.getVariables()[i]);
+		}
+		System.out.println("====MetaVaribales====");
 		
-//		for (int i = 0; i < intersectionSet.size(); i++) {			
-//		for (SpatialFluent spatialFluent : newGoalFluentsVector) {
-//			if(spatialFluent.getName().compareTo(intersectionSet.get(i).rectangle2) == 0){
-//				
-//				for (int j = 0; j < operators.size(); j++) {
-//					if(culpritActivities.get(intersectionSet.get(i).rectangle1).getDomain().toString().
-//							contains(operators.get(j).getHead().substring(operators.get(j).getHead().indexOf("::")+2, operators.get(j).getHead().length()))){
-//						System.out.println("operators.get(j).getHead(): "  +operators.get(j).getHead());
-//						for(String req: operators.get(j).getRequirementActivities()){
-//								
-//								System.out.println("hallowww2: " + req.substring(req.indexOf("::")+2, req.length()));
-//								AllenIntervalConstraint onculoritRegBeforeanotherNewOn = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After,
-//								AllenIntervalConstraint.Type.After.getDefaultBounds());
-//								//place knife after old_on of fork
-//								Activity placing = (Activity)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1].createVariable("test");
-//								placing.setMarking(markings.JUSTIFIED);
-//								
-//								onculoritRegBeforeanotherNewOn.setFrom(culpritActivities.get(intersectionSet.get(i).rectangle1)); //placing 
-//								onculoritRegBeforeanotherNewOn.setTo(((Activity)spatialFluent.getInternalVariables()[1])); //old_on
-//								actNetwork.addConstraint(onculoritRegBeforeanotherNewOn);
-//								System.out.println("--onculoritRegBeforeanotherNewOn---: " + onculoritRegBeforeanotherNewOn);
-//								break;
-//								
-//								
-////								AllenIntervalConstraint onculoritRegBeforeanotherNewOn = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After,
-////								AllenIntervalConstraint.Type.After.getDefaultBounds());
-////								//place knife after old_on of fork
-////								onculoritRegBeforeanotherNewOn.setFrom(culpritActivities.get(intersectionSet.get(i).rectangle1)); //new_on
-////								onculoritRegBeforeanotherNewOn.setTo(((Activity)spatialFluent.getInternalVariables()[1])); //old_on
-////								actNetwork.addConstraint(onculoritRegBeforeanotherNewOn);
-////								System.out.println("--onculoritRegBeforeanotherNewOn---: " + onculoritRegBeforeanotherNewOn);
-////								break;
-//
-//						}
-//					}
-//				}
-//			}
-//		}						
-//	}
-
+		//we know that is the result of binary conflict! so it is safe not to enumerate all, and hard coded
+		Vector<ConstraintNetwork> ret = new Vector<ConstraintNetwork>();
 		
-		return null;
+		AllenIntervalConstraint before01 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(this.beforeParameter, APSPSolver.INF));
+		before01.setFrom((Activity) conflict.getVariables()[0]);			
+		before01.setTo((Activity) conflict.getVariables()[1]);
+		ActivityNetwork resolver0 = new ActivityNetwork(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
+		resolver0.addVariable((Activity) conflict.getVariables()[0]);
+		resolver0.addVariable((Activity) conflict.getVariables()[1]);
+		resolver0.addConstraint(before01);
+		ret.add(resolver0);
+		
+		AllenIntervalConstraint before10 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(this.beforeParameter, APSPSolver.INF));
+		before10.setFrom((Activity) conflict.getVariables()[1]);			
+		before10.setTo((Activity) conflict.getVariables()[0]);
+		ActivityNetwork resolver = new ActivityNetwork(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
+		resolver.addVariable((Activity) conflict.getVariables()[1]);
+		resolver.addVariable((Activity) conflict.getVariables()[0]);
+		resolver.addConstraint(before10);
+		ret.add(resolver);
+		
+		return ret.toArray(new ConstraintNetwork[ret.size()]);
+		
 	}
 
 	@Override
@@ -254,7 +225,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return null;
+		return "MetaOccupiedConstraint";
 	}
 
 	@Override

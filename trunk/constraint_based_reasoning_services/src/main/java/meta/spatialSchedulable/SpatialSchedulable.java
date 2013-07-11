@@ -73,21 +73,6 @@ public class SpatialSchedulable extends MetaConstraint {
 		return oldRectangularRegion;
 	}
 	
-	public HashMap<String, Rectangle> getUpdatedRectangularRegion(){
-		HashMap<String, Rectangle> newRectangularRegion = new HashMap<String, Rectangle>();
-		for (int i = 0; i < sAssertionalRels.length; i++) {	
-			if(sAssertionalRels[i].getOntologicalProp() != null){
-				if(sAssertionalRels[i].getOntologicalProp().isMovable()){
-					BoundingBox bb = new BoundingBox(sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[0], 
-							sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[1],
-							sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[2],
-							sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[3]);
-					newRectangularRegion.put(sAssertionalRels[i].getFrom(), bb.getAlmostCentreRectangle());
-				}
-			}
-		}
-		return newRectangularRegion;
-	}
 	
 	public SpatialSchedulable(VariableOrderingH varOH, ValueOrderingH valOH) {
 		super(varOH, valOH);
@@ -507,7 +492,6 @@ public class SpatialSchedulable extends MetaConstraint {
 //		newGoal
 		for(int i = 0; i < sAssertionalRels.length; i++) {
 			if(newGoal.contains(sAssertionalRels[i].getFrom())){
-				System.out.println("i am in the first: " + sAssertionalRels[i].getFrom());
 				for (int j = 0; j < newGoalFluentsVector.size(); j++) {
 					if (sAssertionalRels[i].getFrom().compareTo(
 							((newGoalFluentsVector.get(j))).getName()) == 0) {
@@ -525,7 +509,6 @@ public class SpatialSchedulable extends MetaConstraint {
 				}
 			}
 			else{
-				System.out.println("I am in the second loop " + sAssertionalRels[i].getFrom());
 				for (int j = 0; j < metaVaribales.size(); j++) {
 					if (sAssertionalRels[i].getFrom().compareTo(((metaVaribales.get(j))).getName()) == 0) {
 
