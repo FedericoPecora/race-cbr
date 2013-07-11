@@ -10,6 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 
+import org.apache.commons.codec.language.Metaphone;
+
 import orbital.math.Stat;
 
 import meta.MetaCausalConstraint;
@@ -17,6 +19,7 @@ import meta.MetaSpatialFluentConstraint;
 import meta.MetaSpatioCausalConstraintSolver;
 import meta.MetaCausalConstraint.markings;
 import meta.simplePlanner.SimpleOperator;
+import meta.spatialSchedulable.MetaOccupiedConstraint;
 import meta.spatialSchedulable.MetaSpatialScheduler;
 import meta.spatialSchedulable.SpatialSchedulable;
 import meta.symbolsAndTime.Schedulable;
@@ -46,7 +49,7 @@ import framework.VariableOrderingH;
 public class TestTimelineBaseSpatialReasoning {
 	
 	//oneCulprit example
-	static int arm_resources = 1;
+	static int arm_resources = 2;
 	
 	public static void main(String[] args) {
 
@@ -71,6 +74,9 @@ public class TestTimelineBaseSpatialReasoning {
 		
 		MetaCSPLogging.setLevel(MetaSpatialScheduler.class, Level.FINEST);
 		MetaCSPLogging.setLevel(SpatialSchedulable.class, Level.FINEST);
+		//#################################################################################################################
+		//add metaOccupiedConstraint
+		MetaOccupiedConstraint metaOccupiedConstraint = new MetaOccupiedConstraint(null, null);
 		//#################################################################################################################
 		MetaCausalConstraint metaCausalConstraint = new MetaCausalConstraint(new int[] {arm_resources}, new String[] {"arm"}, "WellSetTableDomain");
 		Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
@@ -105,7 +111,7 @@ public class TestTimelineBaseSpatialReasoning {
 		}
 		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
-		
+		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
 
 		metaSpatioCasualSolver.backtrack();
 
@@ -189,7 +195,7 @@ public class TestTimelineBaseSpatialReasoning {
 //		ontable1Duration.setTo(tableFlunet.getActivity());
 //		cons.add(ontable1Duration);
 		
-		AllenIntervalConstraint releaseOnTable = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(8,8));
+		AllenIntervalConstraint releaseOnTable = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
 		releaseOnTable.setFrom(tableFlunet.getActivity());
 		releaseOnTable.setTo(tableFlunet.getActivity());
 		cons.add(releaseOnTable);
@@ -232,7 +238,7 @@ public class TestTimelineBaseSpatialReasoning {
 		((Activity)forkFlunet.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
 		spatialFleunts.add(forkFlunet);
 		
-		AllenIntervalConstraint releaseOnFork = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(8,8));
+		AllenIntervalConstraint releaseOnFork = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
 		releaseOnFork.setFrom(forkFlunet.getActivity());
 		releaseOnFork.setTo(forkFlunet.getActivity());
 		cons.add(releaseOnFork);
@@ -242,7 +248,7 @@ public class TestTimelineBaseSpatialReasoning {
 		onFork1Duration.setTo(forkFlunet.getActivity());
 		cons.add(onFork1Duration);
 		
-		AllenIntervalConstraint releaseOnKnife = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(8,8));
+		AllenIntervalConstraint releaseOnKnife = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
 		releaseOnKnife.setFrom(knifeFlunet.getActivity());
 		releaseOnKnife.setTo(knifeFlunet.getActivity());
 		cons.add(releaseOnKnife);

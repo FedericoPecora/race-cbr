@@ -17,6 +17,7 @@ import meta.MetaSpatialFluentConstraint;
 import meta.MetaSpatioCausalConstraintSolver;
 import meta.MetaCausalConstraint.markings;
 import meta.simplePlanner.SimpleOperator;
+import meta.spatialSchedulable.MetaOccupiedConstraint;
 import meta.spatialSchedulable.MetaSpatialScheduler;
 import meta.spatialSchedulable.SpatialSchedulable;
 import meta.symbolsAndTime.Schedulable;
@@ -77,7 +78,9 @@ public class TestTimelineBaseSpatialReasoning2 {
 		for (int i = 0; i < operators.size(); i++) {
 			metaCausalConstraint.addOperator(operators.get(i));
 		}
-		
+		//#################################################################################################################
+		//add metaOccupiedConstraint
+		MetaOccupiedConstraint metaOccupiedConstraint = new MetaOccupiedConstraint(null, null);
 		//#################################################################################################################
 		//this is spatial general and assetional rule
 		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
@@ -101,6 +104,7 @@ public class TestTimelineBaseSpatialReasoning2 {
 		//add meta constraint
 		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
+		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
 		metaSpatioCasualSolver.backtrack();
   
 		//#####################################################################################################################
@@ -182,7 +186,7 @@ public class TestTimelineBaseSpatialReasoning2 {
 //		ontable1Duration.setTo(tableFlunet.getActivity());
 //		cons.add(ontable1Duration);
 		
-		AllenIntervalConstraint releaseOnTable = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(20,20));
+		AllenIntervalConstraint releaseOnTable = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
 		releaseOnTable.setFrom(tableFlunet.getActivity());
 		releaseOnTable.setTo(tableFlunet.getActivity());
 		cons.add(releaseOnTable);
@@ -225,7 +229,7 @@ public class TestTimelineBaseSpatialReasoning2 {
 		((Activity)forkFlunet.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
 		spatialFleunts.add(forkFlunet);
 		
-		AllenIntervalConstraint releaseOnFork = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(20,20));
+		AllenIntervalConstraint releaseOnFork = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
 		releaseOnFork.setFrom(forkFlunet.getActivity());
 		releaseOnFork.setTo(forkFlunet.getActivity());
 		cons.add(releaseOnFork);
@@ -235,7 +239,7 @@ public class TestTimelineBaseSpatialReasoning2 {
 		onFork1Duration.setTo(forkFlunet.getActivity());
 		cons.add(onFork1Duration);
 		
-		AllenIntervalConstraint releaseOnKnife = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(20,20));
+		AllenIntervalConstraint releaseOnKnife = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
 		releaseOnKnife.setFrom(knifeFlunet.getActivity());
 		releaseOnKnife.setTo(knifeFlunet.getActivity());
 		cons.add(releaseOnKnife);
@@ -262,6 +266,11 @@ public class TestTimelineBaseSpatialReasoning2 {
 		releaseHolding.setFrom(two);
 		releaseHolding.setTo(two);
 		cons.add(releaseHolding);
+		
+		AllenIntervalConstraint durationHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(1,APSPSolver.INF));
+		durationHolding.setFrom(two);
+		durationHolding.setTo(two);
+		cons.add(durationHolding);
 		
 		grounSpatialFluentSolver.getConstraintSolvers()[1].addConstraints(cons.toArray(new Constraint[cons.size()]));
 		
