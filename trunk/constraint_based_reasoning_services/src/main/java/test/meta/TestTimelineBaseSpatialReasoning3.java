@@ -48,7 +48,7 @@ import framework.VariableOrderingH;
 
 public class TestTimelineBaseSpatialReasoning3 {
 
-	static int arm_resources = 2;
+	static int arm_resources = 1;
 	
 	public static void main(String[] args) {
 
@@ -190,10 +190,10 @@ public class TestTimelineBaseSpatialReasoning3 {
 		((Activity)tableFlunet.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
 		spatialFleunts.add(tableFlunet);
 		
-//		AllenIntervalConstraint ontable1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
-//		ontable1Duration.setFrom(tableFlunet.getActivity());
-//		ontable1Duration.setTo(tableFlunet.getActivity());
-//		cons.add(ontable1Duration);
+		AllenIntervalConstraint ontable1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(1,APSPSolver.INF));
+		ontable1Duration.setFrom(tableFlunet.getActivity());
+		ontable1Duration.setTo(tableFlunet.getActivity());
+		cons.add(ontable1Duration);
 		
 		AllenIntervalConstraint releaseOnTable = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(20,20));
 		releaseOnTable.setFrom(tableFlunet.getActivity());

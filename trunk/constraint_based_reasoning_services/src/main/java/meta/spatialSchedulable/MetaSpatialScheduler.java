@@ -19,6 +19,7 @@ import multi.spatial.rectangleAlgebra.BoundingBox;
 import multi.spatial.rectangleAlgebra.RectangleConstraint;
 import multi.spatial.rectangleAlgebra.RectangularRegion;
 import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
+import multi.spatioTemporal.SpatialFluent;
 import multi.spatioTemporal.SpatialFluentSolver;
 
 import spatial.utility.SpatialAssertionalRelation2;
@@ -46,13 +47,12 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 	public MetaSpatialScheduler(long origin, long horizon, long animationTime) {
 		super(new Class[] {RectangleConstraint.class, UnaryRectangleConstraint.class, AllenIntervalConstraint.class, SymbolicValueConstraint.class}, 
 				animationTime, new SpatialFluentSolver(origin, horizon)	);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 
 	@Override
 	public void preBacktrack() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -67,7 +67,7 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 		
 		if (metaValue.annotation != null && metaValue.annotation instanceof SimpleOperator) {
 			this.operatorsAlongBranch.remove(operatorsAlongBranch.size()-1);
-			System.out.println("-------------------> popped " + metaValue.annotation);
+//			System.out.println("-------------------> popped " + metaValue.annotation);
 		}
 
 		ActivityNetworkSolver groundSolver = (ActivityNetworkSolver)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getConstraintSolvers()[1];
@@ -117,7 +117,7 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 			}
 		}
 		
-
+		
 		groundSolver.removeVariables(activityToRemove.toArray(new Variable[activityToRemove.size()]));
 		
 		
@@ -128,11 +128,11 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 
 		if (metaValue.annotation != null && metaValue.annotation instanceof SimpleOperator) {
 			if (operatorsAlongBranch.contains((metaValue.annotation))) {
-				System.out.println("-------------------> skipped " + metaValue.annotation);
+//				System.out.println("-------------------> skipped " + metaValue.annotation);
 				return false;
 			}
 			operatorsAlongBranch.add((SimpleOperator)metaValue.annotation);
-			System.out.println("-------------------> pushed " + metaValue.annotation);
+//			System.out.println("-------------------> pushed " + metaValue.annotation);
 		}
 				
 		ActivityNetworkSolver groundSolver = (ActivityNetworkSolver)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getConstraintSolvers()[1];
@@ -168,19 +168,6 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 		}
 		
 
-//		for (int j = 0; j < this.metaConstraints.size(); j++) {
-//			if(this.metaConstraints.get(j) instanceof SpatialSchedulable ){
-//				HashMap<String, Rectangle> old_on = ((SpatialSchedulable)this.metaConstraints.elementAt(j)).getPreviosRectangularRegion();
-//				HashMap<String, Rectangle> new_on = ((SpatialSchedulable)this.metaConstraints.elementAt(j)).getUpdatedRectangularRegion();
-////				System.out.println("old: " + old_on);
-////				System.out.println("new: " + new_on);
-//				for (int j2 = 0; j2 < this.metaConstraints.size(); j2++) {
-//					if(this.metaConstraints.get(j2) instanceof MetaOccupiedConstraint){
-//						((MetaOccupiedConstraint)this.metaConstraints.elementAt(j2)).setUsage(old_on, new_on);
-//					}
-//				}
-//			}
-//		}
 		
 		for (Variable v : metaValue.getVariables()) {
 			for (int j = 0; j < this.metaConstraints.size(); j++) {
@@ -192,6 +179,21 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 				}
 			}
 		}
+		
+		
+
+		
+//		for (Variable v : metaValue.getVariables()) {
+//			for (int j = 0; j < this.metaConstraints.size(); j++) {
+//				if(this.metaConstraints.get(j) instanceof SpatialSchedulable ){
+//					SpatialSchedulable spatialSchedulable = (SpatialSchedulable)this.metaConstraints.elementAt(j);
+//					for (int i = 0; i < ((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables().length; i++) {
+//						System.out.println((SpatialFluent)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables()[i]);
+//					}
+////					spatialSchedulable.setUsage(sfs)
+//				}
+//			}
+//		}
 		
 		return true;
 	}
