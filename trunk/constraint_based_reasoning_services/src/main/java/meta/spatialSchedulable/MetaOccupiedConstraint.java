@@ -180,17 +180,10 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 	public ConstraintNetwork[] getMetaValues(MetaVariable metaVariable) {
 
 		ConstraintNetwork conflict = metaVariable.getConstraintNetwork();
-				
-//		System.out.println("====MetaVaribales====");
-//		for (int i = 0; i < conflict.getVariables().length; i++) {
-//			System.out.println(conflict.getVariables()[i]);
-//		}
-//		System.out.println("====MetaVaribales====");
-
 		//we know that is the result of binary conflict! so it is safe not to enumerate all, and hard coded
 		Vector<ConstraintNetwork> ret = new Vector<ConstraintNetwork>();
 		
-		AllenIntervalConstraint before01 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds());
+		AllenIntervalConstraint before01 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(beforeParameter, APSPSolver.INF));
 		before01.setFrom((Activity) conflict.getVariables()[0]);			
 		before01.setTo((Activity) conflict.getVariables()[1]);
 		ActivityNetwork resolver0 = new ActivityNetwork(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
@@ -199,7 +192,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 		resolver0.addConstraint(before01);
 		ret.add(resolver0);
 		
-		AllenIntervalConstraint before10 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds());
+		AllenIntervalConstraint before10 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(beforeParameter, APSPSolver.INF));
 		before10.setFrom((Activity) conflict.getVariables()[1]);			
 		before10.setTo((Activity) conflict.getVariables()[0]);
 		ActivityNetwork resolver = new ActivityNetwork(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
@@ -234,7 +227,6 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return "MetaOccupiedConstraint";
 	}
 
