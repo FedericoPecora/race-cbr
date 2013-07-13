@@ -41,6 +41,7 @@ import multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
 import multi.spatial.rectangleAlgebra.RectangularRegion;
 import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
 import multi.spatioTemporal.SpatialFluent;
+import multi.spatioTemporal.SpatialFluentNetwork;
 import multi.spatioTemporal.SpatialFluentSolver;
 
 public class SpatialSchedulable extends MetaConstraint {
@@ -267,8 +268,8 @@ public class SpatialSchedulable extends MetaConstraint {
 //		System.out.println("activityToFluent: " + activityToFluent);
 //		System.out.println("==========================================================================");
 		
-		return samplingPeakCollection(activityToFluent);
-//		return completePeakCollection(activityToFluent);
+//		return samplingPeakCollection(activityToFluent);
+		return completePeakCollection(activityToFluent);
 	}
 
 	@Override
@@ -421,15 +422,16 @@ public class SpatialSchedulable extends MetaConstraint {
 			//and with the one already generated subgoal and for some other reason (e.g., resources) retracted
 			SpatialFluent newgoalFlunet = null;
 			boolean existed = false;
-			for (Activity activity : activityToFluent.keySet()) { //this if should be deleted
-				if(activity.getSymbolicVariable().getDomain().toString().contains(st) &&
-						activity.getTemporalVariable().getEST() != activity.getTemporalVariable().getLST()){
-					
-					newgoalFlunet = activityToFluent.get(activity);
-					((Activity)newgoalFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
-					existed = true;
-				}
-			}
+//			for (Activity activity : activityToFluent.keySet()) { //this if should be deleted
+//				if(activity.getSymbolicVariable().getDomain().toString().contains(st) &&
+//						activity.getTemporalVariable().getEST() != activity.getTemporalVariable().getLST()){
+//					
+//					newgoalFlunet = activityToFluent.get(activity);
+//					((Activity)newgoalFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
+//					System.out.println("heloooooooooooooooooooooooooooooooooooooooooooooooooo");
+//					existed = true;
+//				}
+//			}
 			if(!existed){
 				newgoalFlunet = (SpatialFluent)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0]))
 						.createVariable(culpritActivities.get(st).getComponent());
@@ -578,22 +580,13 @@ public class SpatialSchedulable extends MetaConstraint {
 			}
 		}
 		
-//		Vector<Activity> sfToBeRemoved = new Vector<Activity>();
-////		System.out.println("mvalue: " + mvalue);
-//		for (Activity act : activityToFluent.keySet()) {
-//			for (int j = 0; j < newGoalFluentsVector.size(); j++) {
-//				if(activityToFluent.get(act).equals(newGoalFluentsVector.get(j))){
-//					sfToBeRemoved.add(act);
-//				}
-//			}
+//		SpatialFluentNetwork sfNetwork = new SpatialFluentNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])));
+//		for (int j = 0; j < newGoalFluentsVector.size(); j++) {
+//			sfNetwork.addVariable(newGoalFluentsVector.get(j));
 //		}
-//		
-//		System.out.println("Before: " + activityToFluent);
-//		activityToFluent.remove(sfToBeRemoved.lastElement());
-//		System.out.println("After: " + activityToFluent);
-		
-		
 		actNetwork.join(mvalue);
+//		actNetwork.join(sfNetwork);
+
 		ret.add(actNetwork);
 		
 		return ret.toArray(new ConstraintNetwork[ret.size()]);
@@ -627,33 +620,28 @@ public class SpatialSchedulable extends MetaConstraint {
 			currentFluent.put(aTOsf.get(peak[i]).getName(),aTOsf.get(peak[i]));
 			targetRecs.add(aTOsf.get(peak[i]).getRectangularRegion());
 		}
-
+		
 		// ###################################################################################################
-		RectangleConstraintSolver iterSolver = new RectangleConstraintSolver(
-				origin, horizon);
+		RectangleConstraintSolver iterSolver = new RectangleConstraintSolver(origin, horizon);
 		HashMap<String, RectangularRegion> getVariableByName = new HashMap<String, RectangularRegion>();
 
 		Vector<MultiBinaryConstraint> addedGeneralKn = new Vector<MultiBinaryConstraint>();
 		for (int i = 0; i < this.rules.length; i++) {
 
 			if (this.rules[i].getFrom().compareTo(this.rules[i].getTo()) == 0) {
-				Bounds[] sizeBounds = new Bounds[this.rules[i]
-						.getUnaryRAConstraint().getBounds().length];
+				Bounds[] sizeBounds = new Bounds[this.rules[i].getUnaryRAConstraint().getBounds().length];
 				for (int j = 0; j < sizeBounds.length; j++) {
 					Bounds bSize = new Bounds(
 							this.rules[i].getUnaryRAConstraint().getBounds()[j].min,
 							this.rules[i].getUnaryRAConstraint().getBounds()[j].max);
 					sizeBounds[j] = bSize;
 				}
-				UnaryRectangleConstraint uConsSize = new UnaryRectangleConstraint(
-						UnaryRectangleConstraint.Type.Size, sizeBounds);
+				UnaryRectangleConstraint uConsSize = new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.Size, sizeBounds);
 
 				if (getVariableByName.get(this.rules[i].getFrom()) != null)
-					uConsSize.setFrom(getVariableByName.get(this.rules[i]
-							.getFrom()));
+					uConsSize.setFrom(getVariableByName.get(this.rules[i].getFrom()));
 				else {
-					RectangularRegion var = (RectangularRegion) iterSolver
-							.createVariable();
+					RectangularRegion var = (RectangularRegion) iterSolver.createVariable();
 					var.setName(this.rules[i].getFrom());
 					uConsSize.setFrom(var);
 					getVariableByName.put(this.rules[i].getFrom(), var);
@@ -662,8 +650,7 @@ public class SpatialSchedulable extends MetaConstraint {
 					uConsSize
 							.setTo(getVariableByName.get(this.rules[i].getTo()));
 				else {
-					RectangularRegion var = (RectangularRegion) iterSolver
-							.createVariable();
+					RectangularRegion var = (RectangularRegion) iterSolver.createVariable();
 					var.setName(this.rules[i].getTo());
 					uConsSize.setTo(var);
 					getVariableByName.put(this.rules[i].getTo(), var);
@@ -672,58 +659,41 @@ public class SpatialSchedulable extends MetaConstraint {
 				addedGeneralKn.add(uConsSize);
 			} else {
 
-				Bounds[] allenBoundsX = new Bounds[(this.rules[i]
-						.getBinaryRAConstraint())
-						.getInternalAllenIntervalConstraints()[0].getBounds().length];
+				Bounds[] allenBoundsX = new Bounds[(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getBounds().length];
 				for (int j = 0; j < allenBoundsX.length; j++) {
 					Bounds bx = new Bounds(
-							(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0]
-									.getBounds()[j].min, (this.rules[i]
-									.getBinaryRAConstraint())
-									.getInternalAllenIntervalConstraints()[0]
-									.getBounds()[j].max);
+							(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getBounds()[j].min, (this.rules[i]
+									.getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getBounds()[j].max);
 					allenBoundsX[j] = bx;
 				}
 
-				Bounds[] allenBoundsY = new Bounds[(this.rules[i]
-						.getBinaryRAConstraint())
-						.getInternalAllenIntervalConstraints()[1].getBounds().length];
+				Bounds[] allenBoundsY = new Bounds[(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1].getBounds().length];
 				for (int j = 0; j < allenBoundsY.length; j++) {
 					Bounds by = new Bounds(
 							(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1]
-									.getBounds()[j].min, (this.rules[i]
-									.getBinaryRAConstraint())
-									.getInternalAllenIntervalConstraints()[1]
-									.getBounds()[j].max);
+									.getBounds()[j].min, (this.rules[i].getBinaryRAConstraint())
+									.getInternalAllenIntervalConstraints()[1].getBounds()[j].max);
 					allenBoundsY[j] = by;
 				}
 
-				AllenIntervalConstraint xAllenCon = new AllenIntervalConstraint(
-						(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0]
-								.getType(), allenBoundsX);
+				AllenIntervalConstraint xAllenCon = new AllenIntervalConstraint((this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getType(), allenBoundsX);
 				AllenIntervalConstraint yAllenCon = new AllenIntervalConstraint(
-						(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1]
-								.getType(), allenBoundsY);
+						(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1].getType(), allenBoundsY);
 
-				RectangleConstraint uConsBinary = new RectangleConstraint(
-						xAllenCon, yAllenCon);
+				RectangleConstraint uConsBinary = new RectangleConstraint(xAllenCon, yAllenCon);
 
 				if (getVariableByName.get(this.rules[i].getFrom()) != null)
-					uConsBinary.setFrom(getVariableByName.get(this.rules[i]
-							.getFrom()));
+					uConsBinary.setFrom(getVariableByName.get(this.rules[i].getFrom()));
 				else {
-					RectangularRegion var = (RectangularRegion) iterSolver
-							.createVariable();
+					RectangularRegion var = (RectangularRegion) iterSolver.createVariable();
 					var.setName(this.rules[i].getFrom());
 					uConsBinary.setFrom(var);
 					getVariableByName.put(this.rules[i].getFrom(), var);
 				}
 				if (getVariableByName.get(this.rules[i].getTo()) != null)
-					uConsBinary.setTo(getVariableByName.get(this.rules[i]
-							.getTo()));
+					uConsBinary.setTo(getVariableByName.get(this.rules[i].getTo()));
 				else {
-					RectangularRegion var = (RectangularRegion) iterSolver
-							.createVariable();
+					RectangularRegion var = (RectangularRegion) iterSolver.createVariable();
 					var.setName(this.rules[i].getTo());
 					uConsBinary.setTo(var);
 					getVariableByName.put(this.rules[i].getTo(), var);
@@ -732,10 +702,9 @@ public class SpatialSchedulable extends MetaConstraint {
 			}
 		}
 
-		if (!iterSolver.addConstraints(addedGeneralKn
-				.toArray(new MultiBinaryConstraint[addedGeneralKn.size()])))
+		if (!iterSolver.addConstraints(addedGeneralKn.toArray(new MultiBinaryConstraint[addedGeneralKn.size()])))
 			System.out.println("Failed to general knowledge add");
-
+		
 		// ####################################################################################
 		// Add at constraint
 		Vector<RectangularRegion> metaVaribales = new Vector<RectangularRegion>();
@@ -746,23 +715,18 @@ public class SpatialSchedulable extends MetaConstraint {
 				continue;
 			// Add at constraint of indivisuals
 			if (sAssertionalRels[i].getUnaryAtRectangleConstraint() != null) {
-				RectangularRegion var = (RectangularRegion) iterSolver
-						.createVariable();
+				RectangularRegion var = (RectangularRegion) iterSolver.createVariable();
 				var.setName(sAssertionalRels[i].getFrom());
 
-				Bounds[] atBounds = new Bounds[sAssertionalRels[i]
-						.getUnaryAtRectangleConstraint().getBounds().length];
+				Bounds[] atBounds = new Bounds[sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds().length];
 				for (int j = 0; j < atBounds.length; j++) {
 					Bounds b = new Bounds(
-							sAssertionalRels[i].getUnaryAtRectangleConstraint()
-									.getBounds()[j].min, sAssertionalRels[i]
-									.getUnaryAtRectangleConstraint()
-									.getBounds()[j].max);
+							sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[j].min, sAssertionalRels[i]
+									.getUnaryAtRectangleConstraint().getBounds()[j].max);
 					atBounds[j] = b;
 				}
 
-				UnaryRectangleConstraint atCon = new UnaryRectangleConstraint(
-						UnaryRectangleConstraint.Type.At, atBounds);
+				UnaryRectangleConstraint atCon = new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, atBounds);
 				atCon.setFrom(var);
 				atCon.setTo(var);
 				atConstraints.add(atCon);
@@ -773,8 +737,7 @@ public class SpatialSchedulable extends MetaConstraint {
 			}
 
 			if (sAssertionalRels[i].getOntologicalProp() != null)
-				sf.getRectangularRegion().setOntologicalProp(
-						sAssertionalRels[i].getOntologicalProp());
+				sf.getRectangularRegion().setOntologicalProp(sAssertionalRels[i].getOntologicalProp());
 			// targetRecs.add(sf);
 		}
 
@@ -783,35 +746,27 @@ public class SpatialSchedulable extends MetaConstraint {
 		Vector<RectangleConstraint> assertionList = new Vector<RectangleConstraint>();
 		for (int i = 0; i < sAssertionalRels.length; i++) {
 			for (int j = 0; j < metaVaribales.size(); j++) {
-				if (sAssertionalRels[i].getFrom()
-						.compareTo(
-								((RectangularRegion) (metaVaribales.get(j)))
-										.getName()) == 0) {
+				if (sAssertionalRels[i].getFrom().compareTo(((RectangularRegion) (metaVaribales.get(j))).getName()) == 0) {
 					RectangleConstraint assertion = new RectangleConstraint(
 							new AllenIntervalConstraint(
 									AllenIntervalConstraint.Type.Equals,
-									AllenIntervalConstraint.Type.Equals
-											.getDefaultBounds()),
+									AllenIntervalConstraint.Type.Equals.getDefaultBounds()),
 							new AllenIntervalConstraint(
 									AllenIntervalConstraint.Type.Equals,
-									AllenIntervalConstraint.Type.Equals
-											.getDefaultBounds()));
+									AllenIntervalConstraint.Type.Equals.getDefaultBounds()));
 
-					assertion.setFrom(((RectangularRegion) metaVaribales
-							.get(j)));
-					assertion.setTo(getVariableByName.get(sAssertionalRels[i]
-							.getTo()));
+					assertion.setFrom(((RectangularRegion) metaVaribales.get(j)));
+					assertion.setTo(getVariableByName.get(sAssertionalRels[i].getTo()));
 					// System.out.println(assertion);
 					assertionList.add(assertion);
 				}
 			}
 		}
-
+		
 		boolean isConsistent = true;
 
 		// MetaCSPLogging.setLevel(Level.FINE);
-		if (!iterSolver.addConstraints(assertionList
-				.toArray(new RectangleConstraint[assertionList.size()])))
+		if (!iterSolver.addConstraints(assertionList.toArray(new RectangleConstraint[assertionList.size()])))
 			isConsistent = false;
 		
 //		System.out.println(isConsistent);
@@ -880,9 +835,6 @@ public class SpatialSchedulable extends MetaConstraint {
 		return potentialCulprit;
 	}
 
-	private Vector<String> getInitialUnboundedObject() {
-		return initialUnboundedObjName;
-	}
 
 	public Vector<HashMap<String, Bounds[]>> generateAllAlternativeSet(Vector<RectangularRegion> targetRecs) {
 
