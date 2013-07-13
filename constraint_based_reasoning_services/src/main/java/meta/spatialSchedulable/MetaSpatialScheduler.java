@@ -42,11 +42,13 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private long horizon = 0;
 	public Vector<SimpleOperator> operatorsAlongBranch = new Vector<SimpleOperator>();
 
 	public MetaSpatialScheduler(long origin, long horizon, long animationTime) {
 		super(new Class[] {RectangleConstraint.class, UnaryRectangleConstraint.class, AllenIntervalConstraint.class, SymbolicValueConstraint.class}, 
 				animationTime, new SpatialFluentSolver(origin, horizon)	);
+		this.horizon = horizon;
 		
 	}
 
@@ -105,7 +107,17 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 					
 		
 		if(isRtractingSpatialRelations){
+			Vector<SpatialFluent> spatialFluentToBeRemoved = new Vector<SpatialFluent>();
 			System.out.println("Meta Value of MetaSpatialConstraint is retracted");
+			System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+			for (int i = 0; i < this.getConstraintSolvers()[0].getVariables().length; i++) {
+				if(((Activity)((SpatialFluent)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables()[i]).getActivity()).getTemporalVariable().getEST() == 0 &&
+						((Activity)((SpatialFluent)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables()[i]).getActivity()).getTemporalVariable().getLST() == horizon){
+					spatialFluentToBeRemoved.add((SpatialFluent)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables()[i]);
+					System.out.println((SpatialFluent)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables()[i]);
+				}
+			}
+			System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 			for (int i = 0; i < this.metaConstraints.size(); i++){
 				if(this.metaConstraints.get(i) instanceof SpatialSchedulable ){	
 					for (int j = 0; j < ((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels().length; j++) {
@@ -115,6 +127,7 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 					}			
 				}
 			}
+			((SpatialFluentSolver)this.getConstraintSolvers()[0]).removeVariables(spatialFluentToBeRemoved.toArray(new Variable[spatialFluentToBeRemoved.size()]));
 		}
 		
 		
