@@ -9,7 +9,7 @@ import time.Bounds;
 import meta.simplePlanner.SimpleDomain;
 import meta.simplePlanner.SimpleDomain.markings;
 import multi.activity.Activity;
-import multi.activity.ActivityNetwork;
+
 import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
 import multi.allenInterval.AllenIntervalNetworkSolver;

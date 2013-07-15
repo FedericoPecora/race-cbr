@@ -9,7 +9,7 @@ import meta.simplePlanner.SimpleDomain;
 import meta.symbolsAndTime.MCSData;
 import meta.symbolsAndTime.Schedulable;
 import multi.activity.Activity;
-import multi.activity.ActivityNetwork;
+
 import multi.allenInterval.AllenIntervalConstraint;
 import framework.Constraint;
 import framework.ConstraintNetwork;
@@ -59,7 +59,7 @@ public class SimpleReusableResource2 extends Schedulable {
 			AllenIntervalConstraint before = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(beforeParameter, APSPSolver.INF));
 			before.setFrom(mcs.mcsActFrom);			
 			before.setTo(mcs.mcsActTo);
-			ActivityNetwork resolver = new ActivityNetwork(mcs.mcsActFrom.getConstraintSolver());
+			ConstraintNetwork resolver = new ConstraintNetwork(mcs.mcsActFrom.getConstraintSolver());
 			resolver.addVariable(mcs.mcsActFrom);
 			resolver.addVariable(mcs.mcsActTo);
 			resolver.addConstraint(before);

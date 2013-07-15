@@ -24,7 +24,7 @@ import multi.spatioTemporal.SpatialFluentSolver;
 
 import spatial.utility.SpatialAssertionalRelation2;
 
-import symbols.SymbolicValueConstraint;
+import multi.symbols.SymbolicValueConstraint;
 import time.APSPSolver;
 import time.Bounds;
 import framework.Constraint;
@@ -109,7 +109,7 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 		
 		if(isRtractingSpatialRelations){
 			Vector<SpatialFluent> spatialFluentToBeRemoved = new Vector<SpatialFluent>();
-			System.out.println("Meta Value of MetaSpatialConstraint is retracted");
+//			System.out.println("Meta Value of MetaSpatialConstraint is retracted");
 			
 			for (int i = 0; i < this.getConstraintSolvers()[0].getVariables().length; i++) {
 				if(((Activity)((SpatialFluent)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables()[i]).getActivity()).getTemporalVariable().getEST() == 0 &&
@@ -125,12 +125,8 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 							((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].setUnaryAtRectangleConstraint
 							(((SpatialSchedulable)this.metaConstraints.get(i)).getCurrentAssertionalCons().
 									get(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom()));
-							System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-							System.out.println("Name: " + ((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom());
-							System.out.println("Assertional Realtion: " + (((SpatialSchedulable)this.metaConstraints.get(i)).getCurrentAssertionalCons().
-									get(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom())));
-							System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-							
+//							System.out.println("Assertional Realtion: " + (((SpatialSchedulable)this.metaConstraints.get(i)).getCurrentAssertionalCons().
+//									get(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom())));
 					}			
 				}
 			}
@@ -200,12 +196,17 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 			}
 		}
 		
-		for (int i = 0; i < this.metaConstraints.size(); i++) {
-			if(this.metaConstraints.get(i) instanceof SpatialSchedulable){
-				SpatialSchedulable metaCausalConatraint = (SpatialSchedulable)this.metaConstraints.elementAt(i);
-				currentRelationsQuque.add(metaCausalConatraint.getCurrentAssertionalCons());
-			}
-		}		
+
+		
+//		for (int i = 0; i < this.metaConstraints.size(); i++) {
+//			if(this.metaConstraints.get(i) instanceof SpatialSchedulable){
+//				SpatialSchedulable metaCausalConatraint = (SpatialSchedulable)this.metaConstraints.elementAt(i);
+////				currentRelationsQuque.add(metaCausalConatraint.getCurrentAssertionalCons());
+//				System.out.println("-----------------------------------------------------------");
+//				System.out.println("currentRelationsQuque: " + metaValue.annotation);
+//				System.out.println("-----------------------------------------------------------");
+//			}
+//		}		
 		
 
 		

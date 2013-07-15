@@ -15,7 +15,7 @@ import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
 import multi.spatioTemporal.SpatialFluent;
 import multi.spatioTemporal.SpatialFluentSolver;
 
-import symbols.SymbolicValueConstraint;
+import multi.symbols.SymbolicValueConstraint;
 import framework.Constraint;
 import framework.ConstraintNetwork;
 import framework.Variable;

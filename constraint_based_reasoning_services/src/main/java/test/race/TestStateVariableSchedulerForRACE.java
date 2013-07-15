@@ -6,7 +6,7 @@ import meta.symbolsAndTime.SymbolicTimeline;
 import multi.activity.Activity;
 import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
-import symbols.SymbolicDomain;
+
 import time.Bounds;
 import framework.Constraint;
 import framework.ConstraintNetwork;
@@ -189,7 +189,7 @@ public class TestStateVariableSchedulerForRACE {
 			}
 		};
 		
-		StateVariable sv = new StateVariable(varOH, valOH, metaSolver, new SymbolicDomain(null, "task1", "task2"));
+		StateVariable sv = new StateVariable(varOH, valOH, metaSolver, new String[] {"task1", "task2"});
 		sv.setUsage(one,oneA);
 		metaSolver.addMetaConstraint(sv);
 		metaSolver.backtrack();
