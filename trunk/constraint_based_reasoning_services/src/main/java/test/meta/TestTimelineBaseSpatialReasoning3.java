@@ -47,7 +47,7 @@ import framework.VariableOrderingH;
 
 public class TestTimelineBaseSpatialReasoning3 {
 	//two culprit examples
-	static int arm_resources = 2;
+	static int arm_resources = 1;
 
 	public static void main(String[] args) {
 
@@ -106,16 +106,17 @@ public class TestTimelineBaseSpatialReasoning3 {
 		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
 		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
-
+		
 		long timeNow = Calendar.getInstance().getTimeInMillis();
 		metaSpatioCasualSolver.backtrack();
 		System.out.println("TOTAL TIME: " + (Calendar.getInstance().getTimeInMillis()-timeNow));
-
+		
 		//#####################################################################################################################
 		//visualization
+		
 		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
 		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
-
+		metaSpatioCasualSolver.draw();
 		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
 				.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("cup1").getAlmostCentreRectangle());
 
@@ -328,12 +329,12 @@ public class TestTimelineBaseSpatialReasoning3 {
 		operator1.addConstraint(atCup1Duration, 0, 0);
 		operators.add(operator1);
 
-		SimpleOperator operator1a = new SimpleOperator("atLocation::at_cup1_table2()",
-				new AllenIntervalConstraint[] {atCupAfterPlace},
-				new String[] {"robot1::place_cup1_table2(arm)"},
-				new int[] {0});
-		operator1a.addConstraint(atCup1Duration, 0, 0);
-		operators.add(operator1a);
+//		SimpleOperator operator1a = new SimpleOperator("atLocation::at_cup1_table2()",
+//				new AllenIntervalConstraint[] {atCupAfterPlace},
+//				new String[] {"robot1::place_cup1_table2(arm)"},
+//				new int[] {0});
+//		operator1a.addConstraint(atCup1Duration, 0, 0);
+//		operators.add(operator1a);
 
 		SimpleOperator operator10 = new SimpleOperator("atLocation::at_cup1_tray1()",
 				new AllenIntervalConstraint[] {atCupAfterPlace},
@@ -349,12 +350,12 @@ public class TestTimelineBaseSpatialReasoning3 {
 		operator2.addConstraint(placeCup1Duration, 0, 0);
 		operators.add(operator2);
 
-		SimpleOperator operator2a = new SimpleOperator("robot1::place_cup1_table2(arm)",
-				new AllenIntervalConstraint[] {placeCupAfterholding},
-				new String[] {"robot1::holding_cup1(arm)"},
-				new int[] {1});
-		operator2a.addConstraint(placeCup1Duration, 0, 0);
-		operators.add(operator2a);
+//		SimpleOperator operator2a = new SimpleOperator("robot1::place_cup1_table2(arm)",
+//				new AllenIntervalConstraint[] {placeCupAfterholding},
+//				new String[] {"robot1::holding_cup1(arm)"},
+//				new int[] {1});
+//		operator2a.addConstraint(placeCup1Duration, 0, 0);
+//		operators.add(operator2a);
 
 		SimpleOperator operator11 = new SimpleOperator("robot1::place_cup1_tray1(arm)",
 				new AllenIntervalConstraint[] {placeCupAfterholding},
@@ -363,12 +364,12 @@ public class TestTimelineBaseSpatialReasoning3 {
 		operator11.addConstraint(placeCup1Duration, 0, 0);
 		operators.add(operator11);
 
-		SimpleOperator operator3a = new SimpleOperator("robot1::holding_cup1(arm)",
-				new AllenIntervalConstraint[] {holdingCupAfterPick},
-				new String[] {"robot1::pick_cup1_table2(arm)"},
-				new int[] {100});
-		operator3a.addConstraint(holdingCup1Duration, 0, 0);
-		operators.add(operator3a);
+//		SimpleOperator operator3a = new SimpleOperator("robot1::holding_cup1(arm)",
+//				new AllenIntervalConstraint[] {holdingCupAfterPick},
+//				new String[] {"robot1::pick_cup1_table2(arm)"},
+//				new int[] {100});
+//		operator3a.addConstraint(holdingCup1Duration, 0, 0);
+//		operators.add(operator3a);
 
 		SimpleOperator operator3b = new SimpleOperator("robot1::holding_cup1(arm)",
 				new AllenIntervalConstraint[] {holdingCupAfterPick},
@@ -471,11 +472,11 @@ public class TestTimelineBaseSpatialReasoning3 {
 		/*---*/SimpleOperator operator411a = new SimpleOperator("robot1::pick_knife1_tray1(arm)",
 				new AllenIntervalConstraint[] {holdingCupAfterPick},
 				new String[] {"atLocation::at_knife1_tray1()"},
-				new int[] {100});
+				new int[] {1});
 		operator411a.addConstraint(holdingCup1Duration, 0, 0);
 		operators.add(operator411a);
 
-
+		
 		//........................
 
 		SimpleOperator operator7 = new SimpleOperator("atLocation::at_fork1_table1()",
@@ -532,10 +533,13 @@ public class TestTimelineBaseSpatialReasoning3 {
 		/*---*/SimpleOperator operator411b = new SimpleOperator("robot1::pick_fork1_tray1(arm)",
 				new AllenIntervalConstraint[] {holdingCupAfterPick},
 				new String[] {"atLocation::at_fork1_tray1()"},
-				new int[] {100});
+				new int[] {1});
 		operator411b.addConstraint(holdingCup1Duration, 0, 0);
 		operators.add(operator411b);
 
+		
+
+		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

@@ -7,7 +7,6 @@ import time.APSPSolver;
 import time.Bounds;
 
 import multi.activity.Activity;
-import multi.activity.ActivityNetwork;
 import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenInterval;
 import multi.allenInterval.AllenIntervalConstraint;
@@ -30,7 +29,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 	private static final long serialVersionUID = 886075917563921380L;
 	private HashMap<String, Rectangle> old_on;
 	private HashMap<String, Rectangle> new_on;
-	private int pad = 2;
+	private int pad = 0;
 
 	long beforeParameter = 1;
 	public MetaOccupiedConstraint(VariableOrderingH varOH, ValueOrderingH valOH) {
@@ -59,7 +58,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 			}
 		}
 		
-		System.out.println("activities: " + activityToFluent);
+//		System.out.println("activities: " + activityToFluent);
 		
 		return binaryPeakCollection(activityToFluent);
 	}
@@ -81,7 +80,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 			Activity[] groundVars = activities.toArray(new Activity[activities.size()]);
 			for (Activity a : groundVars) {
 				if (isConflicting(new Activity[] {a}, aTOsf)) {
-					ActivityNetwork cn = new ActivityNetwork(null);
+					ConstraintNetwork cn = new ConstraintNetwork(null);
 					cn.addVariable(a);
 					ret.add(cn);
 				}
@@ -94,7 +93,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 					Bounds bi = new Bounds(groundVars[i].getTemporalVariable().getEST(), groundVars[i].getTemporalVariable().getEET());
 					Bounds bj = new Bounds(groundVars[j].getTemporalVariable().getEST(), groundVars[j].getTemporalVariable().getEET());
 					if (bi.intersectStrict(bj) != null && isConflicting(new Activity[] {groundVars[i], groundVars[j]}, aTOsf)) {
-						ActivityNetwork cn = new ActivityNetwork(null);
+						ConstraintNetwork cn = new ConstraintNetwork(null);
 						cn.addVariable(groundVars[i]);
 						cn.addVariable(groundVars[j]);
 						ret.add(cn);
@@ -146,33 +145,33 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[0]).getEET(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[0]).getLET()), 
 				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getEST(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getLST()), 
 				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getEET(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getLET())).getAlmostCentreRectangle();
-		System.out.println("rec1: " + boundedsf.get(0).getRectangularRegion());
+//		System.out.println("rec1: " + boundedsf.get(0).getRectangularRegion());
 		Rectangle  rec2 = null;
 		for (String str : ((MetaSpatialScheduler)this.metaCS).getOldRectangularRegion().keySet()) {
 			if(unboundedsf.get(0).getRectangularRegion().getName().compareTo(str) == 0){
 				rec2 = ((MetaSpatialScheduler)this.metaCS).getOldRectangularRegion().get(str).getAlmostCentreRectangle();
-				System.out.println("rec2: " + unboundedsf.get(0).getRectangularRegion());
+//				System.out.println("rec2: " + unboundedsf.get(0).getRectangularRegion());
 			}
 		}
 		
 		Rectangle r1new = new Rectangle(((int)rec1.getMinX()) - pad, ((int)rec1.getMinY()) - pad, (int)rec1.getWidth() + (2 * pad), (int)rec1.getHeight() + (2 * pad));
 		Rectangle r2new = new Rectangle(((int)rec2.getMinX()) - pad, ((int)rec2.getMinY()) - pad, (int)rec2.getWidth() + (2 * pad), (int)rec2.getHeight() + (2 * pad));
 		
-		System.out.println("=================================================");
-		System.out.println("rec1: " + rec1);
-		System.out.println("rec1new: " + r1new);
-		System.out.println("rec2: " + rec2);
-		System.out.println("rec2new: " + r2new);
-		System.out.println("=================================================");
+//		System.out.println("=================================================");
+//		System.out.println("rec1: " + rec1);
+//		System.out.println("rec1new: " + r1new);
+//		System.out.println("rec2: " + rec2);
+//		System.out.println("rec2new: " + r2new);
+//		System.out.println("=================================================");
 		
 		if(r1new.intersects(r2new)){
-			System.out.println("--These are conflicting--");
-			System.out.println("---------------------------");
+//			System.out.println("--These are conflicting--");
+//			System.out.println("---------------------------");
 			return true;
 		}
 		else{
-			System.out.println("These are not conflicting");
-			System.out.println("---------------------------");
+//			System.out.println("These are not conflicting");
+//			System.out.println("---------------------------");
 		}
 		
 		
@@ -204,7 +203,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 		AllenIntervalConstraint before01 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(beforeParameter, APSPSolver.INF));
 		before01.setFrom((Activity) conflict.getVariables()[0]);			
 		before01.setTo((Activity) conflict.getVariables()[1]);
-		ActivityNetwork resolver0 = new ActivityNetwork(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
+		ConstraintNetwork resolver0 = new ConstraintNetwork(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
 		resolver0.addVariable((Activity) conflict.getVariables()[0]);
 		resolver0.addVariable((Activity) conflict.getVariables()[1]);
 		resolver0.addConstraint(before01);
@@ -213,7 +212,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 		AllenIntervalConstraint before10 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(beforeParameter, APSPSolver.INF));
 		before10.setFrom((Activity) conflict.getVariables()[1]);			
 		before10.setTo((Activity) conflict.getVariables()[0]);
-		ActivityNetwork resolver = new ActivityNetwork(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
+		ConstraintNetwork resolver = new ConstraintNetwork(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
 		resolver.addVariable((Activity) conflict.getVariables()[1]);
 		resolver.addVariable((Activity) conflict.getVariables()[0]);
 		resolver.addConstraint(before10);

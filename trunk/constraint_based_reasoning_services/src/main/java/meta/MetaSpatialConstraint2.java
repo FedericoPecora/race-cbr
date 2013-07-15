@@ -21,7 +21,7 @@ import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
 import multi.allenInterval.AllenIntervalNetworkSolver;
 import multi.spatial.rectangleAlgebra.RectangleConstraint;
-import multi.spatial.rectangleAlgebra.RectangleConstraintNetwork;
+
 import multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
 import multi.spatial.rectangleAlgebra.RectangularRegion;
 import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
@@ -279,15 +279,15 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 		Collections.sort( as , new Comparator() {  
 			public int compare( Object o1 , Object o2 )  
 			{  
-				RectangleConstraintNetwork l1 = (RectangleConstraintNetwork)o1 ;  
-				RectangleConstraintNetwork l2 = (RectangleConstraintNetwork)o2 ;  
+				ConstraintNetwork l1 = (ConstraintNetwork)o1 ;  
+				ConstraintNetwork l2 = (ConstraintNetwork)o2 ;  
 				Integer first = (Integer)sortingCN.get(l1).culpritLevel;  
 				Integer second = (Integer)sortingCN.get(l2).culpritLevel;
 				int i = first.compareTo(second);				
 				if(i != 0 ) return i;
 
-				RectangleConstraintNetwork r1 = (RectangleConstraintNetwork)o1 ;  
-				RectangleConstraintNetwork r2 = (RectangleConstraintNetwork)o2 ;  
+				ConstraintNetwork r1 = (ConstraintNetwork)o1 ;  
+				ConstraintNetwork r2 = (ConstraintNetwork)o2 ;  
 				Double firstRig = (Double)sortingCN.get(r1).rigidityNumber;  
 				Double secondRig = (Double)sortingCN.get(r2).rigidityNumber;
 
@@ -300,8 +300,8 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 		Iterator i = as.iterator();  
 		while ( i.hasNext() )  
 		{  
-			ConstraintNetwork ct = new RectangleConstraintNetwork(null); 
-			ct = (RectangleConstraintNetwork)i.next();
+			ConstraintNetwork ct = new ConstraintNetwork(null); 
+			ct = (ConstraintNetwork)i.next();
 //			System.out.println("======================================================================");
 //			System.out.println(ct);
 //			System.out.println(cnToInitPose.get(ct));
@@ -449,7 +449,7 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 
 		generateCombinantion(atConstraints);
 
-		RectangleConstraintNetwork raNetwork = new RectangleConstraintNetwork(null);
+		ConstraintNetwork raNetwork = new ConstraintNetwork(null);
 		for (int i = 0; i < targetRecs.size(); i++) {
 			raNetwork.addVariable(targetRecs.get(i));
 		}
@@ -477,7 +477,7 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 		Vector<HashMap<String, Bounds[]>> alternativeSets = generateAllAlternativeSet(conflictvars);
 		for (int k = 0; k < alternativeSets.size(); k++) {
 			
-			RectangleConstraintNetwork mvalue = new RectangleConstraintNetwork(this.metaCS.getConstraintSolvers()[0]);
+			ConstraintNetwork mvalue = new ConstraintNetwork(this.metaCS.getConstraintSolvers()[0]);
 			HashMap<String, Bounds[]> alternativeSet = alternativeSets.get(k);
 
 			mvalue.join(createTBOXspatialNetwork(this.metaCS.getConstraintSolvers()[0], getVariableByName)); //TBOX general knowledge in RectangleCN
@@ -535,10 +535,10 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 	}
 
 
-	private RectangleConstraintNetwork createTBOXspatialNetwork(ConstraintSolver solver, HashMap<String, RectangularRegion> getVariableByName) {
+	private ConstraintNetwork createTBOXspatialNetwork(ConstraintSolver solver, HashMap<String, RectangularRegion> getVariableByName) {
 
 		//general knowledge
-		RectangleConstraintNetwork ret = new RectangleConstraintNetwork(solver);
+		ConstraintNetwork ret = new ConstraintNetwork(solver);
 //		Vector<MultiBinaryConstraint> addedGeneralKn = new Vector<MultiBinaryConstraint>();
 		for (int i = 0; i < this.rules.length; i++) {
 

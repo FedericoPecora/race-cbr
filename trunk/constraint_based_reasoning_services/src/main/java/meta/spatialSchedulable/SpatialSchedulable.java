@@ -30,18 +30,17 @@ import meta.MetaCausalConstraint.markings;
 import meta.simplePlanner.SimpleOperator;
 import multi.activity.Activity;
 import multi.activity.ActivityComparator;
-import multi.activity.ActivityNetwork;
+
 import multi.allenInterval.AllenInterval;
 import multi.allenInterval.AllenIntervalConstraint;
 import multi.allenInterval.AllenIntervalNetworkSolver;
 import multi.spatial.rectangleAlgebra.BoundingBox;
 import multi.spatial.rectangleAlgebra.RectangleConstraint;
-import multi.spatial.rectangleAlgebra.RectangleConstraintNetwork;
+
 import multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
 import multi.spatial.rectangleAlgebra.RectangularRegion;
 import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
 import multi.spatioTemporal.SpatialFluent;
-import multi.spatioTemporal.SpatialFluentNetwork;
 import multi.spatioTemporal.SpatialFluentSolver;
 
 public class SpatialSchedulable extends MetaConstraint {
@@ -163,7 +162,7 @@ public class SpatialSchedulable extends MetaConstraint {
 			// if an activity is spatially inconsistent even with itself
 			for (Activity act : activities) {
 				if (isConflicting(new Activity[] { act }, aTOsf)) {
-					ActivityNetwork temp = new ActivityNetwork(null);
+					ConstraintNetwork temp = new ConstraintNetwork(null);
 					temp.addVariable(act);
 					ret.add(temp);
 				}
@@ -208,7 +207,7 @@ public class SpatialSchedulable extends MetaConstraint {
 				retActivities.add(current);
 				
 				for (Vector<Activity> actVec : retActivities) {
-					ActivityNetwork tmp = new ActivityNetwork(null);
+					ConstraintNetwork tmp = new ConstraintNetwork(null);
 					for (Activity act : actVec){
 						tmp.addVariable(act);
 					}
@@ -267,8 +266,8 @@ public class SpatialSchedulable extends MetaConstraint {
 //		System.out.println("activityToFluent: " + activityToFluent);
 //		System.out.println("==========================================================================");
 		
-		return samplingPeakCollection(activityToFluent);
-//		return completePeakCollection(activityToFluent);
+//		return samplingPeakCollection(activityToFluent);
+		return completePeakCollection(activityToFluent);
 	}
 
 	@Override
@@ -295,7 +294,7 @@ public class SpatialSchedulable extends MetaConstraint {
 		permutation = new HashMap<HashMap<String, Bounds[]>, Integer>();
 		potentialCulprit = new Vector<String>();
 		Vector<ConstraintNetwork> ret = new Vector<ConstraintNetwork>();
-		RectangleConstraintNetwork mvalue = new RectangleConstraintNetwork(this.metaCS.getConstraintSolvers()[0]);
+		ConstraintNetwork mvalue = new ConstraintNetwork(this.metaCS.getConstraintSolvers()[0]);
 		ConstraintNetwork conflict = metaVariable.getConstraintNetwork();
 		Vector<SpatialFluent> conflictvars = new Vector<SpatialFluent>();
 		Vector<RectangularRegion> conflictRecvars = new Vector<RectangularRegion>();
@@ -414,7 +413,7 @@ public class SpatialSchedulable extends MetaConstraint {
 		}
 		
 		Vector<SpatialFluent> newGoalFluentsVector = new Vector<SpatialFluent>();
-		ActivityNetwork actNetwork = new ActivityNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1]);
+		ConstraintNetwork actNetwork = new ConstraintNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1]);
 		//set new Goal After old activity
 		for (String st :newGoal) {
 			//add new fluent if there is not already a fluent which represent the goal, 
@@ -436,8 +435,9 @@ public class SpatialSchedulable extends MetaConstraint {
 				newgoalFlunet = (SpatialFluent)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0]))
 						.createVariable(culpritActivities.get(st).getComponent());
 				newgoalFlunet.setName(st);
-				((Activity)newgoalFlunet.getInternalVariables()[1]).setSymbolicDomain(culpritActivities.get(st).getSymbolicVariable().toString()
-						.subSequence(21, ((Activity)culpritActivities.get(st)).getSymbolicVariable().toString().length() - 1).toString());
+				((Activity)newgoalFlunet.getInternalVariables()[1]).setSymbolicDomain(culpritActivities.get(st).getSymbolicVariable().getSymbols()[0]);
+//				((Activity)newgoalFlunet.getInternalVariables()[1]).setSymbolicDomain(culpritActivities.get(st).getSymbolicVariable().toString()
+//						.subSequence(21, ((Activity)culpritActivities.get(st)).getSymbolicVariable().toString().length() - 1).toString());
 				((Activity)newgoalFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
 				((RectangularRegion)newgoalFlunet.getInternalVariables()[0]).setName(st);
 				mvalue.addVariable(newgoalFlunet);
@@ -580,14 +580,10 @@ public class SpatialSchedulable extends MetaConstraint {
 			}
 		}
 		
-//		SpatialFluentNetwork sfNetwork = new SpatialFluentNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])));
-//		for (int j = 0; j < newGoalFluentsVector.size(); j++) {
-//			sfNetwork.addVariable(newGoalFluentsVector.get(j));
-//		}
 		actNetwork.join(mvalue);
-//		actNetwork.join(sfNetwork);
-
 		ret.add(actNetwork);
+		actNetwork.annotation = this.currentAssertionalCons;
+		
 		
 		return ret.toArray(new ConstraintNetwork[ret.size()]);
 
@@ -1031,16 +1027,16 @@ public class SpatialSchedulable extends MetaConstraint {
 		ArrayList as = new ArrayList(sortingCN.keySet());
 		Collections.sort(as, new Comparator() {
 			public int compare(Object o1, Object o2) {
-				RectangleConstraintNetwork l1 = (RectangleConstraintNetwork) o1;
-				RectangleConstraintNetwork l2 = (RectangleConstraintNetwork) o2;
+				ConstraintNetwork l1 = (ConstraintNetwork) o1;
+				ConstraintNetwork l2 = (ConstraintNetwork) o2;
 				Integer first = (Integer) sortingCN.get(l1).culpritLevel;
 				Integer second = (Integer) sortingCN.get(l2).culpritLevel;
 				int i = first.compareTo(second);
 				if (i != 0)
 					return i;
 
-				RectangleConstraintNetwork r1 = (RectangleConstraintNetwork) o1;
-				RectangleConstraintNetwork r2 = (RectangleConstraintNetwork) o2;
+				ConstraintNetwork r1 = (ConstraintNetwork) o1;
+				ConstraintNetwork r2 = (ConstraintNetwork) o2;
 				Double firstRig = (Double) sortingCN.get(r1).rigidityNumber;
 				Double secondRig = (Double) sortingCN.get(r2).rigidityNumber;
 
@@ -1053,8 +1049,8 @@ public class SpatialSchedulable extends MetaConstraint {
 		Vector<HashMap<String, Bounds[]>> alternativeSets = new Vector<HashMap<String, Bounds[]>>();
 		Iterator i = as.iterator();
 		while (i.hasNext()) {
-			ConstraintNetwork ct = new RectangleConstraintNetwork(null);
-			ct = (RectangleConstraintNetwork) i.next();
+			ConstraintNetwork ct = new ConstraintNetwork(null);
+			ct = (ConstraintNetwork) i.next();
 			HashMap<String, BoundingBox> strToBBs = new HashMap<String, BoundingBox>();
 			for (int j = 0; j < ct.getVariables().length; j++) {
 				BoundingBox bb = new BoundingBox(new Bounds(((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[0]).getEST(), ((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[0]).getLST()), 
@@ -1114,7 +1110,7 @@ public class SpatialSchedulable extends MetaConstraint {
 			for (HashSet<Activity> superSet : superPeaks) {
 				for (Set<Activity> s : powerSet(superSet)) {
 					if (!s.isEmpty()) {
-						ActivityNetwork cn = new ActivityNetwork(null);
+						ConstraintNetwork cn = new ConstraintNetwork(null);
 						for (Activity a : s) cn.addVariable(a); 
 						if (!ret.contains(cn) && isConflicting(s.toArray(new Activity[s.size()]), aTOsf)) ret.add(cn);
 					}
@@ -1247,11 +1243,11 @@ public class SpatialSchedulable extends MetaConstraint {
 		return true;
 	}
 
-	private RectangleConstraintNetwork createTBOXspatialNetwork(ConstraintSolver solver,
+	private ConstraintNetwork createTBOXspatialNetwork(ConstraintSolver solver,
 			HashMap<String, RectangularRegion> getVariableByName) {
 
 		// general knowledge
-		RectangleConstraintNetwork ret = new RectangleConstraintNetwork(
+		ConstraintNetwork ret = new ConstraintNetwork(
 				solver);
 		// Vector<MultiBinaryConstraint> addedGeneralKn = new
 		// Vector<MultiBinaryConstraint>();

@@ -1,16 +1,16 @@
 package test;
 
-import symbols.SymbolicValueConstraint;
-import symbols.SymbolicVariable;
-import symbols.SymbolicVariableConstraintSolver;
-import symbols.SymbolicVariableNetwork;
+import multi.symbols.SymbolicValueConstraint;
+import multi.symbols.SymbolicVariable;
+import multi.symbols.SymbolicVariableConstraintSolver;
 import framework.Constraint;
+import framework.ConstraintNetwork;
 import framework.Variable;
 
 public class IRANTestSymbolicVariableConstraintSolver {
 	
 	public static void main(String[] args) {
-		SymbolicVariableConstraintSolver solver = new SymbolicVariableConstraintSolver();
+		SymbolicVariableConstraintSolver solver = new SymbolicVariableConstraintSolver(new String[] {"A","B","C","D","E","F","G"},100);
 		Variable[] vars = solver.createVariables(3);
 		
 		SymbolicVariable var0 = (SymbolicVariable)vars[0];
@@ -22,7 +22,7 @@ public class IRANTestSymbolicVariableConstraintSolver {
 		SymbolicVariable var2 = (SymbolicVariable)vars[2];
 		var2.setDomain("A", "B", "C");
 
-		SymbolicVariableNetwork.draw(solver.getConstraintNetwork());
+		ConstraintNetwork.draw(solver.getConstraintNetwork());
 		
 		try {
 			Thread.sleep(1000);
@@ -77,7 +77,7 @@ public class IRANTestSymbolicVariableConstraintSolver {
 		SymbolicValueConstraint con3 = new SymbolicValueConstraint(SymbolicValueConstraint.Type.UNARYEQUALS);
 		con3.setFrom(var2);
 		con3.setTo(var2);
-		con3.setUnaryValue("B");
+		con2.setUnaryValue(new boolean[] {false,true,false,false,false,false});
 		solver.addConstraint(con3);
 		
 		Constraint[] cons = {con1, con2, con3}; 

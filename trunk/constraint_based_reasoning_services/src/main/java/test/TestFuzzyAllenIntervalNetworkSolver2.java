@@ -3,7 +3,7 @@ package test;
 import framework.ConstraintNetwork;
 import fuzzyAllenInterval.FuzzyAllenIntervalConstraint;
 import fuzzyAllenInterval.FuzzyAllenIntervalNetworkSolver;
-import fuzzyAllenInterval.SimpleAllenInterval;
+import time.qualitative.SimpleAllenInterval;
 
 public class TestFuzzyAllenIntervalNetworkSolver2 {
 	

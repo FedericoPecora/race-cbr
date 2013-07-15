@@ -57,7 +57,7 @@ public class RectangleConstraintSolver extends ConstraintSolver{
 	
 	
 	public RectangleConstraintSolver() {
-		super(new Class[]{RectangleConstraint.class},new Class[]{RectangularRegion.class});
+		super(new Class[]{RectangleConstraint.class},RectangularRegion.class);
 		this.setOptions(OPTIONS.AUTO_PROPAGATE);
 	}
 	
@@ -77,11 +77,6 @@ public class RectangleConstraintSolver extends ConstraintSolver{
 
 	public Vector<AugmentedRectangleConstraint> getBoundedConstraint() {
 		return boundedCons;
-	}
-
-	@Override
-	protected ConstraintNetwork createConstraintNetwork() {
-		return new RectangleConstraintNetwork(this);
 	}
 
 	@Override
@@ -373,6 +368,12 @@ public class RectangleConstraintSolver extends ConstraintSolver{
 				tdr.add(new TwoDimensionsAllenConstraint(QualitativeAllenIntervalConstraint.Type.values()[i], QualitativeAllenIntervalConstraint.Type.values()[j]));
 
 		return new RectangleConstraint(tdr.toArray(new TwoDimensionsAllenConstraint[tdr.size()]));
+	}
+
+	@Override
+	public void registerValueChoiceFunctions() {
+		// TODO Auto-generated method stub
+		
 	}	
 	
 	

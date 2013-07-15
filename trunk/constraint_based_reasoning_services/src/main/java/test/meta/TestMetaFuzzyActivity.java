@@ -8,7 +8,7 @@ import onLineMonitoring.MonitoredComponent;
 import onLineMonitoring.PhysicalSensor;
 import onLineMonitoring.Requirement;
 import onLineMonitoring.Rule;
-import symbols.SymbolicValueConstraint;
+import multi.symbols.SymbolicValueConstraint;
 import framework.ConstraintNetwork;
 import fuzzyAllenInterval.FuzzyAllenIntervalConstraint;
 

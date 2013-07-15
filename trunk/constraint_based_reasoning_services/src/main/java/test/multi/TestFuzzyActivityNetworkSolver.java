@@ -2,8 +2,8 @@ package test.multi;
 
 import multi.fuzzyActivity.FuzzyActivity;
 import multi.fuzzyActivity.FuzzyActivityNetworkSolver;
-import symbols.SymbolicValueConstraint;
-import symbols.fuzzySymbols.FuzzySymbolicVariableConstraintSolver;
+import multi.symbols.SymbolicValueConstraint;
+import fuzzySymbols.FuzzySymbolicVariableConstraintSolver;
 import framework.Constraint;
 import framework.ConstraintNetwork;
 import fuzzyAllenInterval.FuzzyAllenIntervalConstraint;
