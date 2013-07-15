@@ -542,6 +542,7 @@ public class TestTimelineBaseSpatialReasoning2 {
 		SpatialAssertionalRelation2 sa3 = new SpatialAssertionalRelation2("fork1", "fork");		
 		sa3.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
 				new Bounds(20, 20), new Bounds(26, 26), new Bounds(13, 13), new Bounds(32, 32)));
+//				new Bounds(23, 23), new Bounds(29, 29), new Bounds(13, 13), new Bounds(32, 32)));
 		OntologicalSpatialProperty forkOnto = new OntologicalSpatialProperty();
 		forkOnto.setMovable(true);
 		sa3.setOntologicalProp(forkOnto);
@@ -557,6 +558,7 @@ public class TestTimelineBaseSpatialReasoning2 {
 		SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("knife1", "knife");
 		sa2.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
 				new Bounds(30,30), new Bounds(36,36), new Bounds(10, 10), new Bounds(33, 33)));
+
 		OntologicalSpatialProperty knifeOnto = new OntologicalSpatialProperty();
 		knifeOnto.setMovable(true);
 		sa2.setOntologicalProp(knifeOnto);

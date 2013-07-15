@@ -55,7 +55,7 @@ public class SpatialSchedulable extends MetaConstraint {
 	private SpatialRule2[] rules;
 	private HashMap<HashMap<String, Bounds[]>, Integer> permutation;
 	private Vector<String> initialUnboundedObjName = new Vector<String>();
-	private Vector<String> potentialCulprit = new Vector<String>(); 
+	private Vector<String> potentialCulprit; 
 	private Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
 	private HashMap<String, UnaryRectangleConstraint> currentAssertionalCons;
 	private Vector<HashMap<String, BoundingBox>> newRectangularRegion = null;
@@ -176,7 +176,6 @@ public class SpatialSchedulable extends MetaConstraint {
 				long start = (groundVars[i]).getTemporalVariable().getEST();
 				long end = (groundVars[i]).getTemporalVariable().getEET();
 				Bounds intersection = new Bounds(start, end);
-//				System.out.println("intersection1: " + groundVars[i] + " " +intersection);
 				for (int j = 0; j < groundVars.length; j++) {
 					if (i != j) {
 						start = (groundVars[j]).getTemporalVariable().getEST();
@@ -268,8 +267,8 @@ public class SpatialSchedulable extends MetaConstraint {
 //		System.out.println("activityToFluent: " + activityToFluent);
 //		System.out.println("==========================================================================");
 		
-//		return samplingPeakCollection(activityToFluent);
-		return completePeakCollection(activityToFluent);
+		return samplingPeakCollection(activityToFluent);
+//		return completePeakCollection(activityToFluent);
 	}
 
 	@Override
@@ -294,6 +293,7 @@ public class SpatialSchedulable extends MetaConstraint {
 		}
 		//########################################################################################################
 		permutation = new HashMap<HashMap<String, Bounds[]>, Integer>();
+		potentialCulprit = new Vector<String>();
 		Vector<ConstraintNetwork> ret = new Vector<ConstraintNetwork>();
 		RectangleConstraintNetwork mvalue = new RectangleConstraintNetwork(this.metaCS.getConstraintSolvers()[0]);
 		ConstraintNetwork conflict = metaVariable.getConstraintNetwork();
@@ -611,6 +611,8 @@ public class SpatialSchedulable extends MetaConstraint {
 //			System.out.println(peak[i]);
 //		}
 //		System.out.println("------------------------------------------------------------");
+		
+		if(peak.length == 0) return false;
 		
 		Vector<UnaryRectangleConstraint> atConstraints = new Vector<UnaryRectangleConstraint>();
 		HashMap<String, SpatialFluent> currentFluent = new HashMap<String, SpatialFluent>();
