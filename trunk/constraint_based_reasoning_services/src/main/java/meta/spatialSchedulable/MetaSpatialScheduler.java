@@ -44,6 +44,7 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 	private static final long serialVersionUID = 1L;
 	private long horizon = 0;
 	public Vector<SimpleOperator> operatorsAlongBranch = new Vector<SimpleOperator>();
+	private Vector<HashMap<String, UnaryRectangleConstraint>> currentRelationsQuque = new Vector<HashMap<String,UnaryRectangleConstraint>>();
 
 	public MetaSpatialScheduler(long origin, long horizon, long animationTime) {
 		super(new Class[] {RectangleConstraint.class, UnaryRectangleConstraint.class, AllenIntervalConstraint.class, SymbolicValueConstraint.class}, 
@@ -109,7 +110,7 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 		if(isRtractingSpatialRelations){
 			Vector<SpatialFluent> spatialFluentToBeRemoved = new Vector<SpatialFluent>();
 			System.out.println("Meta Value of MetaSpatialConstraint is retracted");
-			System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+			
 			for (int i = 0; i < this.getConstraintSolvers()[0].getVariables().length; i++) {
 				if(((Activity)((SpatialFluent)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables()[i]).getActivity()).getTemporalVariable().getEST() == 0 &&
 						((Activity)((SpatialFluent)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables()[i]).getActivity()).getTemporalVariable().getLST() == horizon){
@@ -117,13 +118,19 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 					System.out.println((SpatialFluent)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables()[i]);
 				}
 			}
-			System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+			
 			for (int i = 0; i < this.metaConstraints.size(); i++){
 				if(this.metaConstraints.get(i) instanceof SpatialSchedulable ){	
 					for (int j = 0; j < ((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels().length; j++) {
 							((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].setUnaryAtRectangleConstraint
 							(((SpatialSchedulable)this.metaConstraints.get(i)).getCurrentAssertionalCons().
 									get(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom()));
+							System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+							System.out.println("Name: " + ((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom());
+							System.out.println("Assertional Realtion: " + (((SpatialSchedulable)this.metaConstraints.get(i)).getCurrentAssertionalCons().
+									get(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom())));
+							System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+							
 					}			
 				}
 			}
@@ -192,6 +199,15 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 				}
 			}
 		}
+		
+		for (int i = 0; i < this.metaConstraints.size(); i++) {
+			if(this.metaConstraints.get(i) instanceof SpatialSchedulable){
+				SpatialSchedulable metaCausalConatraint = (SpatialSchedulable)this.metaConstraints.elementAt(i);
+				currentRelationsQuque.add(metaCausalConatraint.getCurrentAssertionalCons());
+			}
+		}		
+		
+
 		
 		
 

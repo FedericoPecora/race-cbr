@@ -30,6 +30,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 	private static final long serialVersionUID = 886075917563921380L;
 	private HashMap<String, Rectangle> old_on;
 	private HashMap<String, Rectangle> new_on;
+	private int pad = 2;
 
 	long beforeParameter = 1;
 	public MetaOccupiedConstraint(VariableOrderingH varOH, ValueOrderingH valOH) {
@@ -58,7 +59,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 			}
 		}
 		
-//		System.out.println("activities: " + activities);
+		System.out.println("activities: " + activityToFluent);
 		
 		return binaryPeakCollection(activityToFluent);
 	}
@@ -131,7 +132,8 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 //				System.out.println("--isunbounded--: " + activityToFluent.get(peak[i]));
 				unboundedsf.add(activityToFluent.get(peak[i]));
 			}
-			else{
+			else if (((Activity)activityToFluent.get(peak[i]).getActivity()).getTemporalVariable().getEST() != ((Activity)activityToFluent.get(peak[i]).getActivity()).getTemporalVariable().getLST()){
+
 //				System.out.println("--isbounded--: " + activityToFluent.get(peak[i]));
 				boundedsf.add(activityToFluent.get(peak[i]));
 			}
@@ -144,21 +146,37 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[0]).getEET(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[0]).getLET()), 
 				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getEST(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getLST()), 
 				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getEET(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[1]).getLET())).getAlmostCentreRectangle();
-		
+		System.out.println("rec1: " + boundedsf.get(0).getRectangularRegion());
 		Rectangle  rec2 = null;
 		for (String str : ((MetaSpatialScheduler)this.metaCS).getOldRectangularRegion().keySet()) {
-			if(unboundedsf.get(0).getRectangularRegion().getName().compareTo(str) == 0)
+			if(unboundedsf.get(0).getRectangularRegion().getName().compareTo(str) == 0){
 				rec2 = ((MetaSpatialScheduler)this.metaCS).getOldRectangularRegion().get(str).getAlmostCentreRectangle();
+				System.out.println("rec2: " + unboundedsf.get(0).getRectangularRegion());
+			}
 		}
 		
-				
+		Rectangle r1new = new Rectangle(((int)rec1.getMinX()) - pad, ((int)rec1.getMinY()) - pad, (int)rec1.getWidth() + (2 * pad), (int)rec1.getHeight() + (2 * pad));
+		Rectangle r2new = new Rectangle(((int)rec2.getMinX()) - pad, ((int)rec2.getMinY()) - pad, (int)rec2.getWidth() + (2 * pad), (int)rec2.getHeight() + (2 * pad));
 		
-		if(rec1.intersects(rec2)){
-			
-			System.out.println("rec1: " + rec1);
-			System.out.println("rec2: " + rec2);					
+		System.out.println("=================================================");
+		System.out.println("rec1: " + rec1);
+		System.out.println("rec1new: " + r1new);
+		System.out.println("rec2: " + rec2);
+		System.out.println("rec2new: " + r2new);
+		System.out.println("=================================================");
+		
+		if(r1new.intersects(r2new)){
+			System.out.println("--These are conflicting--");
+			System.out.println("---------------------------");
 			return true;
 		}
+		else{
+			System.out.println("These are not conflicting");
+			System.out.println("---------------------------");
+		}
+		
+		
+
 		
 		return false;
 	}
