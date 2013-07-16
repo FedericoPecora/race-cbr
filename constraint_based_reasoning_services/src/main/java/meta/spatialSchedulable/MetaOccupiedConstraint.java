@@ -27,8 +27,6 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 	 * 
 	 */
 	private static final long serialVersionUID = 886075917563921380L;
-	private HashMap<String, Rectangle> old_on;
-	private HashMap<String, Rectangle> new_on;
 	private int pad = 0;
 
 	long beforeParameter = 1;
@@ -37,12 +35,8 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 
 	}
 	
-	public void setUsage(HashMap<String, Rectangle> old_on, HashMap<String, Rectangle> new_on) {
-		
-		this.old_on = new HashMap<String, Rectangle>();
-		this.new_on = new HashMap<String, Rectangle>();
-		this.old_on = old_on;
-		this.new_on = new_on;
+	public void setPad(int pad){
+		this.pad = pad;
 	}
 	
 	@Override
