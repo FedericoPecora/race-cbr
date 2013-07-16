@@ -148,9 +148,12 @@ public class SpatialSchedulable extends MetaConstraint {
 	// conflicting (e.g., over-consuming a resource)
 	private ConstraintNetwork[] samplingPeakCollection(HashMap<Activity, SpatialFluent> aTOsf) {
 		
+		Vector<Activity> observation = new Vector<Activity>();
 		Vector<Activity> activities = new Vector<Activity>();
 		for (Activity act : aTOsf.keySet()) {
 			activities.add(act);
+			if(act.getTemporalVariable().getEST() == act.getTemporalVariable().getLST())
+				observation.add(act);
 		}
 		if (activities != null && !activities.isEmpty()) {
 			
@@ -187,7 +190,8 @@ public class SpatialSchedulable extends MetaConstraint {
 							overlapping.add(groundVars[j]);
 							if (isConflicting(overlapping.toArray(new Activity[overlapping.size()]), aTOsf)) {
 								overlappingAll.add(overlapping);
-								break;
+								if(overlapping.containsAll(observation))
+									break;
 							}
 							else
 								intersection = intersectionNew;
@@ -266,8 +270,8 @@ public class SpatialSchedulable extends MetaConstraint {
 //		System.out.println("activityToFluent: " + activityToFluent);
 //		System.out.println("==========================================================================");
 		
-//		return samplingPeakCollection(activityToFluent);
-		return completePeakCollection(activityToFluent);
+		return samplingPeakCollection(activityToFluent);
+//		return completePeakCollection(activityToFluent);
 	}
 
 	@Override
@@ -354,7 +358,7 @@ public class SpatialSchedulable extends MetaConstraint {
 							((UnaryRectangleConstraint) mvalue.getConstraints()[i]).getBounds()[1],
 							((UnaryRectangleConstraint) mvalue.getConstraints()[i]).getBounds()[2],
 							((UnaryRectangleConstraint) mvalue.getConstraints()[i]).getBounds()[3])) {
-						System.out.println("%%%%%%%%");
+//						System.out.println("%%%%%%%%");
 						for (int j = 0; j < metaVariable.getConstraintNetwork().getVariables().length; j++) {
 							if (((RectangularRegion) mvalue.getConstraints()[i].getScope()[0]).getName().compareTo
 									(((SpatialFluent) activityToFluent.get((Activity)metaVariable.getConstraintNetwork().getVariables()[j]) ).getName()) == 0) {
@@ -378,7 +382,7 @@ public class SpatialSchedulable extends MetaConstraint {
 				}						
 			}
 		}
-		System.out.println("%%%%%%%%");
+//		System.out.println("%%%%%%%%");
 
 		
 		
@@ -463,7 +467,7 @@ public class SpatialSchedulable extends MetaConstraint {
 			//((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].addConstraints(new
 //					 Constraint[] {newOnAfteroldOn});
 			actNetwork.addConstraint(newOnAfteroldOn);			
-			System.out.println("newOnAfteroldOn" + newOnAfteroldOn);
+//			System.out.println("newOnAfteroldOn" + newOnAfteroldOn);
 			
 			
 			//basically this commeneted block is not needed in the case of states overlappedby action
