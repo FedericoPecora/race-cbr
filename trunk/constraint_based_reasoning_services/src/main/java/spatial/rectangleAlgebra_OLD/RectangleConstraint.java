@@ -25,12 +25,12 @@ package spatial.rectangleAlgebra_OLD;
 import java.util.Collections;
 import java.util.Vector;
 
-import spatial.RCC.RCCConstraint;
-import spatial.cardinal.CardinalConstraint;
-import spatial.cardinal.CardinalConstraint.Type;
-import time.qualitative.QualitativeAllenIntervalConstraint;
 import framework.BinaryConstraint;
 import framework.Constraint;
+import spatial.RCC.RCCConstraint;
+import spatial.cardinal.CardinalConstraint;
+import time.qualitative.QualitativeAllenIntervalConstraint;
+
 
 public class RectangleConstraint extends BinaryConstraint {
 
@@ -103,7 +103,7 @@ public class RectangleConstraint extends BinaryConstraint {
 
 	}
 	
-	private static Type makeCardinalBy2Dim(Type t1, Type t2) {
+	private static CardinalConstraint.Type makeCardinalBy2Dim(CardinalConstraint.Type t1, CardinalConstraint.Type t2) {
 		
 		if(t1.compareTo(CardinalConstraint.Type.NO) == 0 && t2.compareTo(CardinalConstraint.Type.NO) == 0)
 			return CardinalConstraint.Type.NO;

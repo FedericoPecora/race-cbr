@@ -10,20 +10,19 @@ import java.util.LinkedHashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 
-import orbital.math.Stat;
 
 import meta.MetaCausalConstraint;
-import meta.MetaSpatialFluentConstraint;
-import meta.MetaSpatioCausalConstraintSolver;
+
+
 import meta.MetaCausalConstraint.markings;
 import meta.simplePlanner.SimpleOperator;
+import meta.spatialSchedulable.MetaOccupiedConstraint;
 import meta.spatialSchedulable.MetaSpatialScheduler;
 import meta.spatialSchedulable.SpatialSchedulable;
 import meta.symbolsAndTime.Schedulable;
 import multi.activity.Activity;
 import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
-
 import multi.spatial.rectangleAlgebra.RectangleConstraint;
 import multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
 import multi.spatial.rectangleAlgebra.RectangularRegion;
@@ -34,7 +33,6 @@ import multi.spatioTemporal.SpatialFluentSolver;
 
 import spatial.utility.SpatialAssertionalRelation2;
 import spatial.utility.SpatialRule2;
-
 import time.APSPSolver;
 import time.Bounds;
 import utility.logging.MetaCSPLogging;
@@ -44,6 +42,7 @@ import framework.Constraint;
 import framework.ConstraintNetwork;
 import framework.ValueOrderingH;
 import framework.VariableOrderingH;
+
 
 public class TestTimelineBaseSpatialReasoning2WOtray {
 	
@@ -97,7 +96,7 @@ public class TestTimelineBaseSpatialReasoning2WOtray {
 		//add spatial general and assertional rule to MetaSpatialFluentConstraint
 		metaSpatialSchedulable.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
 		metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
-		metaSpatialSchedulable.setUsage(spatialFleunts.toArray(new SpatialFluent[spatialFleunts.size()]));
+		metaSpatialSchedulable.setInitialGoal(new String[]{"cup1"});
 		
 		for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
 			metaSpatioCasualSolver.addMetaConstraint(sch);

@@ -1,29 +1,16 @@
 package test.tableConfiguration;
 
 import java.util.Vector;
-import java.util.logging.Level;
-
-import framework.Constraint;
-import framework.ConstraintNetwork;
-
 import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraintSolver;
-import multi.allenInterval.AllenInterval;
 import multi.allenInterval.AllenIntervalConstraint;
-import multi.allenInterval.AllenIntervalNetworkSolver;
 import multi.spatial.rectangleAlgebra.BoundingBox;
-import time.qualitative.QualitativeAllenIntervalConstraint;
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
-import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraintSolver;
-import spatial.rectangleAlgebra_OLD.RectangleConstraint;
-import spatial.rectangleAlgebra_OLD.RectangleConstraintSolver;
-import spatial.rectangleAlgebra_OLD.RectangularRegion;
 import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
 import spatial.rectangleAlgebra_OLD.SpatialRule;
-import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
 import time.APSPSolver;
 import time.Bounds;
-import utility.logging.MetaCSPLogging;
+
 
 public class TestSetTableFromScratch2 {
 

@@ -1,23 +1,17 @@
 package meta;
 
-import java.awt.Rectangle;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
+
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 import orbital.algorithm.Combinatorical;
 
-import com.hp.hpl.jena.graph.query.Bound;
-import com.hp.hpl.jena.shared.NotFoundException;
-
-import meta.simplePlanner.SimpleDomain.markings;
-import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
 import multi.allenInterval.AllenIntervalNetworkSolver;
 import multi.spatial.rectangleAlgebra.RectangleConstraint;
@@ -29,10 +23,8 @@ import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
 
 import spatial.utility.SpatialAssertionalRelation2;
 import spatial.utility.SpatialRule2;
-import throwables.ConstraintNotFound;
 import time.APSPSolver;
 import time.Bounds;
-import utility.logging.MetaCSPLogging;
 import framework.Constraint;
 import framework.ConstraintNetwork;
 import framework.ConstraintSolver;

@@ -2,24 +2,15 @@ package test.tableConfiguration;
 
 import java.util.Vector;
 import java.util.logging.Level;
-
-import orbital.algorithm.Combinatorical;
-
 import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraintSolver;
-import meta.MetaSpatialConstraintSolver2;
 import multi.allenInterval.AllenIntervalConstraint;
 import multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
 import multi.spatial.rectangleAlgebra.BoundingBox;
-import time.qualitative.QualitativeAllenIntervalConstraint;
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
-import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraintSolver;
-import spatial.rectangleAlgebra_OLD.RectangleConstraint;
-import spatial.rectangleAlgebra_OLD.RectangleConstraintSolver;
-import spatial.rectangleAlgebra_OLD.RectangularRegion;
 import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
 import spatial.rectangleAlgebra_OLD.SpatialRule;
-import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
+
 import time.APSPSolver;
 import time.Bounds;
 import utility.logging.MetaCSPLogging;

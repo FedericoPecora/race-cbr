@@ -22,13 +22,16 @@
  ******************************************************************************/
 package spatial.rectangleAlgebra_OLD;
 
+import framework.ConstraintSolver;
+import framework.Domain;
+import framework.Variable;
 import multi.spatial.rectangleAlgebra.BoundingBox;
 import multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
 import spatial.RCC.Rectangle;
 import spatial.RCC.Region;
-import framework.ConstraintSolver;
-import framework.Domain;
-import framework.Variable;
+
+
+
 
 public class RectangularRegion extends Region{
 

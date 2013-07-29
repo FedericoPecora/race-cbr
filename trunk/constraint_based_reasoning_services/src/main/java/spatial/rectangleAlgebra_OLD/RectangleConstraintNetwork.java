@@ -25,6 +25,7 @@ package spatial.rectangleAlgebra_OLD;
 import framework.ConstraintNetwork;
 import framework.ConstraintSolver;
 
+
 public class RectangleConstraintNetwork extends ConstraintNetwork {
 
 	/**

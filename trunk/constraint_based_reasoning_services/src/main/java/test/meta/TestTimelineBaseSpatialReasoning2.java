@@ -11,11 +11,10 @@ import java.util.LinkedHashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 
-import orbital.math.Stat;
 
 import meta.MetaCausalConstraint;
-import meta.MetaSpatialFluentConstraint;
-import meta.MetaSpatioCausalConstraintSolver;
+
+
 import meta.MetaCausalConstraint.markings;
 import meta.simplePlanner.SimpleOperator;
 import meta.spatialSchedulable.MetaOccupiedConstraint;
@@ -44,6 +43,7 @@ import framework.Constraint;
 import framework.ConstraintNetwork;
 import framework.ValueOrderingH;
 import framework.VariableOrderingH;
+
 
 public class TestTimelineBaseSpatialReasoning2 {
 	//two culprit examples
@@ -99,7 +99,7 @@ public class TestTimelineBaseSpatialReasoning2 {
 		//add spatial general and assertional rule to MetaSpatialFluentConstraint
 		metaSpatialSchedulable.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
 		metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
-		metaSpatialSchedulable.setUsage(spatialFleunts.toArray(new SpatialFluent[spatialFleunts.size()]));
+		metaSpatialSchedulable.setInitialGoal(new String[]{"cup1"});
 		
 		for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
 			metaSpatioCasualSolver.addMetaConstraint(sch);
