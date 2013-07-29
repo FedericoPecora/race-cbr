@@ -24,7 +24,9 @@ package spatial.rectangleAlgebra_OLD;
 
 import multi.spatial.rectangleAlgebra.BoundingBox;
 import multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
+
 import spatial.utility.AssertionalRelation;
+
 
 public class SpatialAssertionalRelation extends AssertionalRelation{
 

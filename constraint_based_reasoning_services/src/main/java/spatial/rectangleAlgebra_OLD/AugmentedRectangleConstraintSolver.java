@@ -28,14 +28,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
+
 import java.util.Vector;
-
-import javax.xml.datatype.Duration;
-
-import org.w3c.dom.css.Rect;
-
-import framework.ConstraintNetwork;
 import framework.Variable;
 
 import multi.allenInterval.AllenInterval;
@@ -662,7 +656,6 @@ public class AugmentedRectangleConstraintSolver extends RectangleConstraintSolve
 	
 
 }
-
 
 
 

@@ -28,7 +28,6 @@ import framework.Constraint;
 import framework.ConstraintNetwork;
 import framework.ConstraintSolver;
 import framework.meta.MetaConstraint;
-import framework.meta.MetaConstraintSolver;
 import framework.meta.MetaVariable;
 import framework.multi.MultiBinaryConstraint;
 

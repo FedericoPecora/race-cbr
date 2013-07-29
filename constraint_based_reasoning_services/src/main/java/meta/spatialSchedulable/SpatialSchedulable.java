@@ -313,9 +313,6 @@ public class SpatialSchedulable extends MetaConstraint {
 			conflictRecvars.add(activityToFluent.get((Activity) conflict.getVariables()[j]).getRectangularRegion());
 		}
 		
-		
-		
-		
 		setPermutationHashMAP(conflictvars, conflictRecvars);//it only generate permutation, does not perform any propagation
 		Vector<HashMap<String, Bounds[]>> alternativeSets = generateAllAlternativeSet(conflictRecvars);//it ranks the alternative
 		HashMap<String, Bounds[]> alternativeSet = alternativeSets.get(0);
@@ -384,8 +381,6 @@ public class SpatialSchedulable extends MetaConstraint {
 		}
 //		System.out.println("%%%%%%%%");
 
-		
-		
 
 		//extract the fluent which is relevant to the original goal(s)
 		Vector<Activity> originalGoals = new Vector<Activity>(); //e.g., cup1 in the so called wellSetTable Scenario
@@ -424,29 +419,19 @@ public class SpatialSchedulable extends MetaConstraint {
 			//we make a difference between a fluent which has an activity with fixed release point (i.e., observation) 
 			//and with the one already generated subgoal and for some other reason (e.g., resources) retracted
 			SpatialFluent newgoalFlunet = null;
-			boolean existed = false;
-//			for (Activity activity : activityToFluent.keySet()) { //this if should be deleted
-//				if(activity.getSymbolicVariable().getDomain().toString().contains(st) &&
-//						activity.getTemporalVariable().getEST() != activity.getTemporalVariable().getLST()){
-//					
-//					newgoalFlunet = activityToFluent.get(activity);
-//					((Activity)newgoalFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
-//					System.out.println("heloooooooooooooooooooooooooooooooooooooooooooooooooo");
-//					existed = true;
-//				}
-//			}
-			if(!existed){
-				newgoalFlunet = (SpatialFluent)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0]))
+
+
+			newgoalFlunet = (SpatialFluent)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0]))
 						.createVariable(culpritActivities.get(st).getComponent());
-				newgoalFlunet.setName(st);
-				((Activity)newgoalFlunet.getInternalVariables()[1]).setSymbolicDomain(culpritActivities.get(st).getSymbolicVariable().getSymbols()[0]);
-//				((Activity)newgoalFlunet.getInternalVariables()[1]).setSymbolicDomain(culpritActivities.get(st).getSymbolicVariable().toString()
+			newgoalFlunet.setName(st);
+			((Activity)newgoalFlunet.getInternalVariables()[1]).setSymbolicDomain(culpritActivities.get(st).getSymbolicVariable().getSymbols()[0]);
+//			((Activity)newgoalFlunet.getInternalVariables()[1]).setSymbolicDomain(culpritActivities.get(st).getSymbolicVariable().toString()
 //						.subSequence(21, ((Activity)culpritActivities.get(st)).getSymbolicVariable().toString().length() - 1).toString());
-				((Activity)newgoalFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
-				((RectangularRegion)newgoalFlunet.getInternalVariables()[0]).setName(st);
-				mvalue.addVariable(newgoalFlunet);
-				activityToFluent.put(((Activity)newgoalFlunet.getInternalVariables()[1]), newgoalFlunet);
-			}
+			((Activity)newgoalFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
+			((RectangularRegion)newgoalFlunet.getInternalVariables()[0]).setName(st);
+			mvalue.addVariable(newgoalFlunet);
+			activityToFluent.put(((Activity)newgoalFlunet.getInternalVariables()[1]), newgoalFlunet);
+			
 			
 			newGoalFluentsVector.add(newgoalFlunet);
 			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -468,57 +453,6 @@ public class SpatialSchedulable extends MetaConstraint {
 //					 Constraint[] {newOnAfteroldOn});
 			actNetwork.addConstraint(newOnAfteroldOn);			
 //			System.out.println("newOnAfteroldOn" + newOnAfteroldOn);
-			
-			
-			//basically this commeneted block is not needed in the case of states overlappedby action
-//			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//			//new goal before old goal e.g., on_knife before on_cup
-//			//instead of that on_knife before precondition on_cup which is place_cup. the reason is I do not implement place_knife before plaace_cup
-//			//is the activity place_knife is not existed!! it is not the valid argue, I will try later
-//			for (int j = 0; j < originalGoals.size(); j++) {
-//				//finding Precondition
-//				for (int i = 0; i < operators.size(); i++) {
-//					if(originalGoals.get(j).getSymbolicVariable().getDomain().toString().contains
-//							(operators.get(i).getHead().substring(operators.get(i).getHead().indexOf("::")+2, operators.get(i).getHead().length()))){
-//						for(String req: operators.get(i).getRequirementActivities()){
-//							for (int k = 0; k < ((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables().length; k++) {
-//								if(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[k]).getDomain().toString()
-//								.contains(req.substring(req.indexOf("::")+2, req.length()))){
-//									AllenIntervalConstraint culpritsBeforeOldeGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before,
-//											 AllenIntervalConstraint.Type.Before.getDefaultBounds());
-//									culpritsBeforeOldeGoal.setFrom(((Activity)newgoalFlunet.getInternalVariables()[1]));
-//									culpritsBeforeOldeGoal.setTo(((Activity)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1].getVariables()[k]));
-//									
-//									//add constraint to Activty constraint Network
-//									actNetwork.addConstraint(culpritsBeforeOldeGoal);
-//									System.out.println("culpritsBeforeOldeGoal: " + culpritsBeforeOldeGoal);
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-			
-			
-			
-//			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//			//new goal before old goal e.g., on_knife before on_cup
-//			//instead of that on_knife before precondition on_cup which is place_cup. the reason is I do not implement place_knife before plaace_cup
-//			//is the activity place_knife is not existed!! it is not the valid argue, I will try later
-//			for (int j = 0; j < originalGoals.size(); j++) {
-//				for (int i = 0; i < operators.size(); i++) {
-//					if(originalGoals.get(j).getSymbolicVariable().getDomain().toString().contains
-//							(operators.get(i).getHead().substring(operators.get(i).getHead().indexOf("::")+2, operators.get(i).getHead().length()))){
-//						AllenIntervalConstraint culpritsBeforeOldeGoal = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before,
-//											 AllenIntervalConstraint.Type.Before.getDefaultBounds());
-//						culpritsBeforeOldeGoal.setFrom(((Activity)newgoalFlunet.getInternalVariables()[1]));
-//						culpritsBeforeOldeGoal.setTo(originalGoals.get(j));
-//						//add constraint to Activty constraint Network
-//						actNetwork.addConstraint(culpritsBeforeOldeGoal);
-//						System.out.println("culpritsBeforeOldeGoal: " + culpritsBeforeOldeGoal);
-//					}
-//				}
-//			}
 			
 			
 		}
@@ -776,30 +710,12 @@ public class SpatialSchedulable extends MetaConstraint {
 		return (!isConsistent);
 	}
 
-	public void setUsage(SpatialFluent... sfs) {
-//		if (activities == null)
-//			activities = new Vector<Activity>();
-//		for (SpatialFluent sf : sfs){
-//			if (!activities.contains(sf.getActivity())) {
-//				activities.add(sf.getActivity());
-//				activityToFluent.put(sf.getActivity(), sf);
-//			}
-//		}
+	public void setInitialGoal(String[] initialGoals) {
 		
-		for (int i = 0; i < sfs.length; i++) {
-			for (int j = 0; j < sAssertionalRels.length; j++) {
-				if(sAssertionalRels[j].getFrom().compareTo(sfs[i].getRectangularRegion().getName()) == 0){
-					if(isUnboundedBoundingBox(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[0], 
-							sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[1], 
-							sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[2],
-							sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[3])){
-						initialUnboundedObjName.add(sfs[i].getRectangularRegion().getName());
-					}
-				}
-			}
+		
+		for (int i = 0; i < initialGoals.length; i++) {
+			initialUnboundedObjName.add(initialGoals[i]);
 		}
-		
-		
 
 	}
 

@@ -1,26 +1,16 @@
 package meta;
 
-import java.util.Vector;
-
 import spatial.utility.SpatialAssertionalRelation2;
 import spatial.utility.SpatialRule2;
-import time.APSPSolver;
-import time.Bounds;
 import meta.simplePlanner.SimpleDomain;
-import meta.simplePlanner.SimpleDomain.markings;
 import multi.activity.Activity;
 
 import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenIntervalConstraint;
-import multi.allenInterval.AllenIntervalNetworkSolver;
+
 import framework.Constraint;
 import framework.ConstraintNetwork;
-import framework.ConstraintSolver;
-import framework.ValueOrderingH;
-import framework.Variable;
-import framework.VariableOrderingH;
-import framework.meta.MetaConstraint;
-import framework.meta.MetaVariable;
+
 
 public class MetaSpatioCausalConstraint extends SimpleDomain{
 

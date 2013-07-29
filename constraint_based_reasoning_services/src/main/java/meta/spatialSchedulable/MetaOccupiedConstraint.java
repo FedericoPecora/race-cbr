@@ -11,7 +11,6 @@ import multi.activity.ActivityNetworkSolver;
 import multi.allenInterval.AllenInterval;
 import multi.allenInterval.AllenIntervalConstraint;
 import multi.spatial.rectangleAlgebra.BoundingBox;
-import multi.spatial.rectangleAlgebra.RectangularRegion;
 import multi.spatioTemporal.SpatialFluent;
 import multi.spatioTemporal.SpatialFluentSolver;
 import framework.Constraint;

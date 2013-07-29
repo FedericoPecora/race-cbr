@@ -25,6 +25,8 @@ package spatial.rectangleAlgebra_OLD;
 import time.qualitative.QualitativeAllenIntervalConstraint;
 
 
+
+
 public class TwoDimensionsAllenConstraint extends QualitativeAllenIntervalConstraint {
 
 	/**

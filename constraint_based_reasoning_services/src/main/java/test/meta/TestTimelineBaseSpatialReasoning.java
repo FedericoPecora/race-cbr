@@ -10,13 +10,10 @@ import java.util.LinkedHashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 
-import org.apache.commons.codec.language.Metaphone;
-
-import orbital.math.Stat;
 
 import meta.MetaCausalConstraint;
-import meta.MetaSpatialFluentConstraint;
-import meta.MetaSpatioCausalConstraintSolver;
+
+
 import meta.MetaCausalConstraint.markings;
 import meta.simplePlanner.SimpleOperator;
 import meta.spatialSchedulable.MetaOccupiedConstraint;
@@ -103,7 +100,7 @@ public class TestTimelineBaseSpatialReasoning {
 		//add spatial general and assertional rule to MetaSpatialFluentConstraint
 		metaSpatialSchedulable.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
 		metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
-		metaSpatialSchedulable.setUsage(spatialFleunts.toArray(new SpatialFluent[spatialFleunts.size()]));
+		metaSpatialSchedulable.setInitialGoal(new String[]{"cup1"});
 		
 		
 		//add meta constraint

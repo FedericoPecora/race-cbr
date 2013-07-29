@@ -4,6 +4,7 @@ package meta;
 import multi.spatial.rectangleAlgebra.RectangleConstraint;
 import multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
 import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
+
 import framework.ConstraintNetwork;
 import framework.meta.MetaConstraintSolver;
 import framework.meta.MetaVariable;

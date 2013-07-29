@@ -25,14 +25,13 @@ package spatial.rectangleAlgebra_OLD;
 import java.util.HashMap;
 import java.util.Vector;
 
-import multi.allenInterval.AllenIntervalConstraint;
-import time.qualitative.QualitativeAllenIntervalConstraint;
-import time.qualitative.QualitativeAllenIntervalConstraint.Type;
-import time.Bounds;
 import framework.Constraint;
-import framework.ConstraintNetwork;
 import framework.ConstraintSolver;
 import framework.Variable;
+import time.Bounds;
+import time.qualitative.QualitativeAllenIntervalConstraint;
+
+
 /**
  * This class represents Rectangle constraints. Each constraint represents two dimension Allen relations between spatial entities.    
  * In rectangle Algebra, each spatial entity is restricted to be an axes parallel rectangle.
@@ -291,7 +290,7 @@ public class RectangleConstraintSolver extends ConstraintSolver{
 
 
 	private Vector<Integer> getNonExistedIndices(
-			RectangleConstraint originalRealtions, Vector<Type> comRelation, int dimension) {
+			RectangleConstraint originalRealtions, Vector<QualitativeAllenIntervalConstraint.Type> comRelation, int dimension) {
 		
 		Vector<Integer> nonexists = new Vector<Integer>();
 		boolean exist = false;

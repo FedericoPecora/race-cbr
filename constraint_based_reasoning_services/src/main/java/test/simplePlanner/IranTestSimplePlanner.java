@@ -29,7 +29,6 @@ import meta.simplePlanner.SimpleDomain;
 import meta.simplePlanner.SimpleDomain.markings;
 import meta.simplePlanner.SimpleOperator;
 import meta.simplePlanner.SimplePlanner;
-import meta.simplePlanner.SimpleReusableResource;
 import meta.symbolsAndTime.Schedulable;
 import multi.activity.Activity;
 import multi.activity.ActivityNetworkSolver;

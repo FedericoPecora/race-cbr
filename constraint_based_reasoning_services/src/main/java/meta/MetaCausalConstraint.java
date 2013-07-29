@@ -1,16 +1,10 @@
 package meta;
 
-import java.util.Arrays;
+
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Vector;
-
-import multi.spatioTemporal.SpatialFluent;
 import multi.spatioTemporal.SpatialFluentSolver;
-
 import meta.simplePlanner.SimpleOperator;
-import meta.simplePlanner.SimpleDomain.markings;
-import meta.spatialSchedulable.MetaSpatialScheduler;
 import meta.symbolsAndTime.Schedulable;
 import multi.activity.Activity;
 import multi.activity.ActivityNetworkSolver;

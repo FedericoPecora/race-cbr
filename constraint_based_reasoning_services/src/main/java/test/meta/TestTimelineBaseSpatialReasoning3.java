@@ -47,7 +47,7 @@ import framework.VariableOrderingH;
 
 public class TestTimelineBaseSpatialReasoning3 {
 	//two culprit examples
-	static int arm_resources = 1;
+	static int arm_resources = 2;
 	static int pad = 0;
 
 	public static void main(String[] args) {
@@ -92,14 +92,15 @@ public class TestTimelineBaseSpatialReasoning3 {
 		getSpatialKnowledge(srules);
 		getAssertionalRule(saRelations);
 		insertCurrentStateCurrentGoal(groundSolver, spatialFleunts);
-		for (int i = 0; i < operators.size(); i++) {
-			metaSpatialSchedulable.addOperator(operators.get(i));
-		}
+//		for (int i = 0; i < operators.size(); i++) {
+//			metaSpatialSchedulable.addOperator(operators.get(i));
+//		}
 		//#################################################################################################################
 		//add spatial general and assertional rule to MetaSpatialFluentConstraint
 		metaSpatialSchedulable.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
 		metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
-		metaSpatialSchedulable.setUsage(spatialFleunts.toArray(new SpatialFluent[spatialFleunts.size()]));
+		metaSpatialSchedulable.setInitialGoal(new String[]{"cup1"});
+		
 
 		for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
 			metaSpatioCasualSolver.addMetaConstraint(sch);
@@ -187,6 +188,7 @@ public class TestTimelineBaseSpatialReasoning3 {
 
 	private static void insertCurrentStateCurrentGoal(SpatialFluentSolver grounSpatialFluentSolver, 
 			Vector<SpatialFluent> spatialFleunts) {
+
 		Vector<Constraint> cons = new Vector<Constraint>();
 
 		SpatialFluent tableFlunet = (SpatialFluent)grounSpatialFluentSolver.createVariable("atLocation");

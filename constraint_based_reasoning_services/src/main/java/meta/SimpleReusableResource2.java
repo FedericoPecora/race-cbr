@@ -4,8 +4,6 @@ import java.util.Vector;
 
 import time.APSPSolver;
 import time.Bounds;
-import meta.MetaCausalConstraint.markings;
-import meta.simplePlanner.SimpleDomain;
 import meta.symbolsAndTime.MCSData;
 import meta.symbolsAndTime.Schedulable;
 import multi.activity.Activity;
