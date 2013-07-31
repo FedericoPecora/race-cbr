@@ -540,13 +540,15 @@ public class SpatialSchedulable extends MetaConstraint {
 
 	public boolean isConflicting(Activity[] peak, HashMap<Activity, SpatialFluent> aTOsf) {
 		
+
+		
+		if(peak.length == 1) return false;
+		
 //		System.out.println("------------------------------------------------------------");
 //		for (int i = 0; i < peak.length; i++) {
 //			System.out.println(peak[i]);
 //		}
 //		System.out.println("------------------------------------------------------------");
-		
-		if(peak.length == 0) return false;
 		
 		Vector<UnaryRectangleConstraint> atConstraints = new Vector<UnaryRectangleConstraint>();
 		HashMap<String, SpatialFluent> currentFluent = new HashMap<String, SpatialFluent>();
