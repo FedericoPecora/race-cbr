@@ -4,13 +4,13 @@ import java.util.Vector;
 
 import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraintSolver;
-import multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
 import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
 import spatial.rectangleAlgebra_OLD.SpatialRule;
 import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
-import time.qualitative.QualitativeAllenIntervalConstraint;
-import time.Bounds;
+import org.metacsp.time.qualitative.QualitativeAllenIntervalConstraint;
+import org.metacsp.time.Bounds;
 
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;

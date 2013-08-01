@@ -5,7 +5,7 @@ import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
 import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
 import spatial.rectangleAlgebra_OLD.SpatialRule;
 import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
-import time.qualitative.QualitativeAllenIntervalConstraint;
+import org.metacsp.time.qualitative.QualitativeAllenIntervalConstraint;
 
 import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraintSolver;
