@@ -1,9 +1,9 @@
 package test;
 
-import time.APSPSolver;
-import time.SimpleDistanceConstraint;
-import framework.ConstraintNetwork;
-import framework.Variable;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.SimpleDistanceConstraint;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.Variable;
 
 
 public class IranTestAPSPSolver {

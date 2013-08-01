@@ -1,24 +1,24 @@
 package test.meta.RACE;
 
 import java.util.Vector;
-import framework.ConstraintNetwork;
+import org.metacsp.framework.ConstraintNetwork;
 import meta.MetaSpatialConstraint2;
 import meta.MetaSpatialConstraintSolver2;
-import multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
 
-import multi.spatial.rectangleAlgebra.RectangleConstraint;
-import multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
-import multi.spatial.rectangleAlgebra.RectangularRegion;
-import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
-import multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
-import multi.spatioTemporal.SpatialFluent;
-import multi.spatioTemporal.SpatialFluentSolver;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangularRegion;
+import org.metacsp.multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
+import org.metacsp.multi.spatioTemporal.SpatialFluent;
+import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
 
 import spatial.utility.SpatialAssertionalRelation2;
 import spatial.utility.SpatialRule2;
 
-import time.APSPSolver;
-import time.Bounds;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
 
 public class TestNewImplementaionRA {
 

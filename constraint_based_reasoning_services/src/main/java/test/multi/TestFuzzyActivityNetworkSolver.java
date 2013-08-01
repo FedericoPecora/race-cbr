@@ -1,13 +1,13 @@
 package test.multi;
 
-import multi.fuzzyActivity.FuzzyActivity;
-import multi.fuzzyActivity.FuzzyActivityNetworkSolver;
-import multi.symbols.SymbolicValueConstraint;
-import fuzzySymbols.FuzzySymbolicVariableConstraintSolver;
-import framework.Constraint;
-import framework.ConstraintNetwork;
-import fuzzyAllenInterval.FuzzyAllenIntervalConstraint;
-import fuzzyAllenInterval.FuzzyAllenIntervalNetworkSolver;
+import org.metacsp.multi.fuzzyActivity.FuzzyActivity;
+import org.metacsp.multi.fuzzyActivity.FuzzyActivityNetworkSolver;
+import org.metacsp.multi.symbols.SymbolicValueConstraint;
+import org.metacsp.fuzzySymbols.FuzzySymbolicVariableConstraintSolver;
+import org.metacsp.framework.Constraint;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.fuzzyAllenInterval.FuzzyAllenIntervalConstraint;
+import org.metacsp.fuzzyAllenInterval.FuzzyAllenIntervalNetworkSolver;
 
 public class TestFuzzyActivityNetworkSolver {
 	

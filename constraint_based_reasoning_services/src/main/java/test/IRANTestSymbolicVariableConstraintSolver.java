@@ -1,11 +1,11 @@
 package test;
 
-import multi.symbols.SymbolicValueConstraint;
-import multi.symbols.SymbolicVariable;
-import multi.symbols.SymbolicVariableConstraintSolver;
-import framework.Constraint;
-import framework.ConstraintNetwork;
-import framework.Variable;
+import org.metacsp.framework.Constraint;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.Variable;
+import org.metacsp.multi.symbols.SymbolicValueConstraint;
+import org.metacsp.multi.symbols.SymbolicVariable;
+import org.metacsp.multi.symbols.SymbolicVariableConstraintSolver;
 
 public class IRANTestSymbolicVariableConstraintSolver {
 	

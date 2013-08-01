@@ -3,22 +3,22 @@ package meta.spatialSchedulable;
 import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Vector;
-import time.APSPSolver;
-import time.Bounds;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
 
-import multi.activity.Activity;
-import multi.activity.ActivityNetworkSolver;
-import multi.allenInterval.AllenInterval;
-import multi.allenInterval.AllenIntervalConstraint;
-import multi.spatial.rectangleAlgebra.BoundingBox;
-import multi.spatioTemporal.SpatialFluent;
-import multi.spatioTemporal.SpatialFluentSolver;
-import framework.Constraint;
-import framework.ConstraintNetwork;
-import framework.ValueOrderingH;
-import framework.VariableOrderingH;
-import framework.meta.MetaConstraint;
-import framework.meta.MetaVariable;
+import org.metacsp.multi.activity.Activity;
+import org.metacsp.multi.activity.ActivityNetworkSolver;
+import org.metacsp.multi.allenInterval.AllenInterval;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.BoundingBox;
+import org.metacsp.multi.spatioTemporal.SpatialFluent;
+import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
+import org.metacsp.framework.Constraint;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.ValueOrderingH;
+import org.metacsp.framework.VariableOrderingH;
+import org.metacsp.framework.meta.MetaConstraint;
+import org.metacsp.framework.meta.MetaVariable;
 
 public class MetaOccupiedConstraint extends MetaConstraint {
 

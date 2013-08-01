@@ -2,18 +2,18 @@ package meta;
 
 import java.util.Vector;
 
-import time.APSPSolver;
-import time.Bounds;
-import meta.symbolsAndTime.MCSData;
-import meta.symbolsAndTime.Schedulable;
-import multi.activity.Activity;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
+import org.metacsp.meta.symbolsAndTime.MCSData;
+import org.metacsp.meta.symbolsAndTime.Schedulable;
+import org.metacsp.multi.activity.Activity;
 
-import multi.allenInterval.AllenIntervalConstraint;
-import framework.Constraint;
-import framework.ConstraintNetwork;
-import framework.ValueOrderingH;
-import framework.VariableOrderingH;
-import framework.meta.MetaVariable;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.framework.Constraint;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.ValueOrderingH;
+import org.metacsp.framework.VariableOrderingH;
+import org.metacsp.framework.meta.MetaVariable;
 
 public class SimpleReusableResource2 extends Schedulable {
 	

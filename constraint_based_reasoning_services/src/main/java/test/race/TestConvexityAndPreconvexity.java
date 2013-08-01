@@ -2,11 +2,11 @@ package test.race;
 
 import java.util.Vector;
 
-import time.qualitative.QualitativeAllenIntervalConstraint;
+import org.metacsp.time.qualitative.QualitativeAllenIntervalConstraint;
 import spatial.rectangleAlgebra_OLD.RectangleConstraint;
 import spatial.rectangleAlgebra_OLD.RectangleConstraintSolver;
 import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
-import framework.Variable;
+import org.metacsp.framework.Variable;
 
 public class TestConvexityAndPreconvexity {
 

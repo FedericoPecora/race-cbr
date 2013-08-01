@@ -8,28 +8,28 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import multi.allenInterval.AllenIntervalConstraint;
-import multi.allenInterval.AllenIntervalNetworkSolver;
-import multi.spatial.rectangleAlgebra.RectangleConstraint;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.allenInterval.AllenIntervalNetworkSolver;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraint;
 
-import multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
-import multi.spatial.rectangleAlgebra.RectangularRegion;
-import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
-import multi.spatioTemporal.SpatialFluent;
-import multi.spatioTemporal.SpatialFluentSolver;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangularRegion;
+import org.metacsp.multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
+import org.metacsp.multi.spatioTemporal.SpatialFluent;
+import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
 import orbital.algorithm.Combinatorical;
 
 import spatial.utility.SpatialAssertionalRelation2;
 import spatial.utility.SpatialRule2;
-import time.APSPSolver;
-import time.Bounds;
-import utility.logging.MetaCSPLogging;
-import framework.Constraint;
-import framework.ConstraintNetwork;
-import framework.ConstraintSolver;
-import framework.meta.MetaConstraint;
-import framework.meta.MetaVariable;
-import framework.multi.MultiBinaryConstraint;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
+import org.metacsp.utility.logging.MetaCSPLogging;
+import org.metacsp.framework.Constraint;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.ConstraintSolver;
+import org.metacsp.framework.meta.MetaConstraint;
+import org.metacsp.framework.meta.MetaVariable;
+import org.metacsp.framework.multi.MultiBinaryConstraint;
 
 public class MetaSpatialFluentConstraint extends MetaConstraint {
 	

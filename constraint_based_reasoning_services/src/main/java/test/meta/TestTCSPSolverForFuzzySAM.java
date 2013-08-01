@@ -1,18 +1,18 @@
 package test.meta;
 
-import meta.TCSP.MostConstrainedFirstVarOH;
-import meta.TCSP.TCSPLabeling;
-import meta.TCSP.TCSPSolver;
-import meta.TCSP.WidestIntervalFirstValOH;
-import multi.TCSP.DistanceConstraint;
-import multi.TCSP.DistanceConstraintSolver;
-import multi.TCSP.MultiTimePoint;
-import time.APSPSolver;
-import time.Bounds;
-import framework.ConstraintNetwork;
-import framework.ValueOrderingH;
-import framework.Variable;
-import framework.VariableOrderingH;
+import org.metacsp.meta.TCSP.MostConstrainedFirstVarOH;
+import org.metacsp.meta.TCSP.TCSPLabeling;
+import org.metacsp.meta.TCSP.TCSPSolver;
+import org.metacsp.meta.TCSP.WidestIntervalFirstValOH;
+import org.metacsp.multi.TCSP.DistanceConstraint;
+import org.metacsp.multi.TCSP.DistanceConstraintSolver;
+import org.metacsp.multi.TCSP.MultiTimePoint;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.ValueOrderingH;
+import org.metacsp.framework.Variable;
+import org.metacsp.framework.VariableOrderingH;
 
 
 public class TestTCSPSolverForFuzzySAM {

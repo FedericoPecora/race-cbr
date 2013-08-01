@@ -1,12 +1,12 @@
 package test.multi;
 
-import multi.allenInterval.AllenInterval;
-import multi.allenInterval.AllenIntervalConstraint;
-import multi.allenInterval.AllenIntervalConstraint.Type;
-import multi.allenInterval.AllenIntervalNetworkSolver;
-import time.APSPSolver;
-import time.Bounds;
-import framework.ConstraintNetwork;
+import org.metacsp.multi.allenInterval.AllenInterval;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint.Type;
+import org.metacsp.multi.allenInterval.AllenIntervalNetworkSolver;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
+import org.metacsp.framework.ConstraintNetwork;
 
 public class TestAllenIntervalNetworkSolver1 {
 	

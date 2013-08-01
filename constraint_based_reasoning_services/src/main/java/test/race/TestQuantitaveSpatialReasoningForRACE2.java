@@ -2,15 +2,15 @@ package test.race;
 
 import java.util.Vector;
 
-import multi.spatial.rectangleAlgebra.BoundingBox;
-import time.qualitative.QualitativeAllenIntervalConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.BoundingBox;
+import org.metacsp.time.qualitative.QualitativeAllenIntervalConstraint;
 import spatial.rectangleAlgebra_OLD.RectangleConstraint;
 import spatial.rectangleAlgebra_OLD.RectangleConstraintSolver;
 import spatial.rectangleAlgebra_OLD.RectangularRegion;
 import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
-import time.Bounds;
-import framework.ConstraintNetwork;
-import framework.Variable;
+import org.metacsp.time.Bounds;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.Variable;
 
 public class TestQuantitaveSpatialReasoningForRACE2 {
 

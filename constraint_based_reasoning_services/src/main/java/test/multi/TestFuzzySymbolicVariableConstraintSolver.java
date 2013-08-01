@@ -1,10 +1,10 @@
 package test.multi;
 
-import multi.symbols.SymbolicValueConstraint;
-import fuzzySymbols.FuzzySymbolicVariable;
-import fuzzySymbols.FuzzySymbolicVariableConstraintSolver;
-import framework.ConstraintNetwork;
-import framework.Variable;
+import org.metacsp.multi.symbols.SymbolicValueConstraint;
+import org.metacsp.fuzzySymbols.FuzzySymbolicVariable;
+import org.metacsp.fuzzySymbols.FuzzySymbolicVariableConstraintSolver;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.Variable;
 
 public class TestFuzzySymbolicVariableConstraintSolver {
 	

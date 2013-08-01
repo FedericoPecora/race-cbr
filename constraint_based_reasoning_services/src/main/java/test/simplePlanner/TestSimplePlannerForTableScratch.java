@@ -2,20 +2,20 @@ package test.simplePlanner;
 
 import java.util.logging.Level;
 
-import meta.simplePlanner.SimpleDomain;
-import meta.simplePlanner.SimpleOperator;
-import meta.simplePlanner.SimplePlanner;
-import meta.simplePlanner.SimpleDomain.markings;
-import meta.symbolsAndTime.Schedulable;
-import multi.activity.Activity;
-import multi.activity.ActivityNetworkSolver;
-import multi.allenInterval.AllenIntervalConstraint;
-import time.APSPSolver;
-import time.Bounds;
-import utility.logging.MetaCSPLogging;
-import utility.timelinePlotting.TimelinePublisher;
-import utility.timelinePlotting.TimelineVisualizer;
-import framework.ConstraintNetwork;
+import org.metacsp.meta.simplePlanner.SimpleDomain;
+import org.metacsp.meta.simplePlanner.SimpleOperator;
+import org.metacsp.meta.simplePlanner.SimplePlanner;
+import org.metacsp.meta.simplePlanner.SimpleDomain.markings;
+import org.metacsp.meta.symbolsAndTime.Schedulable;
+import org.metacsp.multi.activity.Activity;
+import org.metacsp.multi.activity.ActivityNetworkSolver;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
+import org.metacsp.utility.logging.MetaCSPLogging;
+import org.metacsp.utility.timelinePlotting.TimelinePublisher;
+import org.metacsp.utility.timelinePlotting.TimelineVisualizer;
+import org.metacsp.framework.ConstraintNetwork;
 
 public class TestSimplePlannerForTableScratch {
 

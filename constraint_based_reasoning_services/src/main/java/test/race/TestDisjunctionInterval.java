@@ -1,10 +1,10 @@
 package test.race;
 
-import multi.allenInterval.AllenInterval;
-import multi.allenInterval.AllenIntervalConstraint;
-import multi.allenInterval.AllenIntervalNetworkSolver;
-import framework.Constraint;
-import framework.ConstraintNetwork;
+import org.metacsp.multi.allenInterval.AllenInterval;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.allenInterval.AllenIntervalNetworkSolver;
+import org.metacsp.framework.Constraint;
+import org.metacsp.framework.ConstraintNetwork;
 
 public class TestDisjunctionInterval {
 

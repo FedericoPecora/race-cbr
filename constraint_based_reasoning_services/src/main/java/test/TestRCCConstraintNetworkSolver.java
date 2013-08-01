@@ -1,10 +1,10 @@
 package test;
 
-import spatial.RCC.RCCConstraint;
-import spatial.RCC.RCCConstraintSolver;
-import spatial.RCC.Region;
-import framework.ConstraintNetwork;
-import framework.Variable;
+import org.metacsp.spatial.RCC.RCCConstraint;
+import org.metacsp.spatial.RCC.RCCConstraintSolver;
+import org.metacsp.spatial.RCC.Region;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.Variable;
 
 
 public class TestRCCConstraintNetworkSolver {

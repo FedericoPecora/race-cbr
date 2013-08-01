@@ -1,16 +1,16 @@
 package test.meta;
 
 //import onLineMonitoring.DomainDescription;
-import meta.fuzzyActivity.FuzzyActivityDomain;
-import meta.fuzzyActivity.FuzzyActivityMetaSolver;
-import onLineMonitoring.FuzzySensorEvent;
-import onLineMonitoring.MonitoredComponent;
-import onLineMonitoring.PhysicalSensor;
-import onLineMonitoring.Requirement;
-import onLineMonitoring.Rule;
-import multi.symbols.SymbolicValueConstraint;
-import framework.ConstraintNetwork;
-import fuzzyAllenInterval.FuzzyAllenIntervalConstraint;
+import org.metacsp.meta.fuzzyActivity.FuzzyActivityDomain;
+import org.metacsp.meta.fuzzyActivity.FuzzyActivityMetaSolver;
+import org.metacsp.onLineMonitoring.FuzzySensorEvent;
+import org.metacsp.onLineMonitoring.MonitoredComponent;
+import org.metacsp.onLineMonitoring.PhysicalSensor;
+import org.metacsp.onLineMonitoring.Requirement;
+import org.metacsp.onLineMonitoring.Rule;
+import org.metacsp.multi.symbols.SymbolicValueConstraint;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.fuzzyAllenInterval.FuzzyAllenIntervalConstraint;
 
 public class TestMetaFuzzyActivity {
 	

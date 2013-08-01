@@ -4,16 +4,14 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import multi.allenInterval.AllenIntervalConstraint;
-import multi.spatial.rectangleAlgebra.BoundingBox;
-import time.qualitative.QualitativeAllenIntervalConstraint;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.BoundingBox;
+import org.metacsp.time.qualitative.QualitativeAllenIntervalConstraint;
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraintSolver;
-import spatial.rectangleAlgebra_OLD.RectangleConstraint;
-import spatial.rectangleAlgebra_OLD.RectangleConstraintSolver;
 import spatial.rectangleAlgebra_OLD.RectangularRegion;
 import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
-import time.Bounds;
+import org.metacsp.time.Bounds;
 
 public class TestQuantitaveSpatialReasoningForRACE {
 

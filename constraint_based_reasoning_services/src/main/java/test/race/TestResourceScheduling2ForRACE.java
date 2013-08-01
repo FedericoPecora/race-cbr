@@ -1,16 +1,16 @@
 package test.race;
 
-import meta.symbolsAndTime.ReusableResource;
-import meta.symbolsAndTime.Scheduler;
-import meta.symbolsAndTime.SymbolicTimeline;
-import multi.activity.Activity;
-import multi.activity.ActivityNetworkSolver;
-import multi.allenInterval.AllenIntervalConstraint;
-import time.Bounds;
-import framework.Constraint;
-import framework.ConstraintNetwork;
-import framework.ValueOrderingH;
-import framework.VariableOrderingH;
+import org.metacsp.meta.symbolsAndTime.ReusableResource;
+import org.metacsp.meta.symbolsAndTime.Scheduler;
+import org.metacsp.meta.symbolsAndTime.SymbolicTimeline;
+import org.metacsp.multi.activity.Activity;
+import org.metacsp.multi.activity.ActivityNetworkSolver;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.time.Bounds;
+import org.metacsp.framework.Constraint;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.ValueOrderingH;
+import org.metacsp.framework.VariableOrderingH;
 
 public class TestResourceScheduling2ForRACE {
 

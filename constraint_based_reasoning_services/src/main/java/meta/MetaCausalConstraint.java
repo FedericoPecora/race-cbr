@@ -3,20 +3,20 @@ package meta;
 
 import java.util.HashMap;
 import java.util.Vector;
-import multi.spatioTemporal.SpatialFluentSolver;
-import meta.simplePlanner.SimpleOperator;
-import meta.symbolsAndTime.Schedulable;
-import multi.activity.Activity;
-import multi.activity.ActivityNetworkSolver;
-import multi.allenInterval.AllenIntervalConstraint;
-import framework.Constraint;
-import framework.ConstraintNetwork;
-import framework.ValueOrderingH;
-import framework.Variable;
-import framework.VariableOrderingH;
-import framework.VariablePrototype;
-import framework.meta.MetaConstraint;
-import framework.meta.MetaVariable;
+import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
+import org.metacsp.meta.simplePlanner.SimpleOperator;
+import org.metacsp.meta.symbolsAndTime.Schedulable;
+import org.metacsp.multi.activity.Activity;
+import org.metacsp.multi.activity.ActivityNetworkSolver;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.framework.Constraint;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.ValueOrderingH;
+import org.metacsp.framework.Variable;
+import org.metacsp.framework.VariableOrderingH;
+import org.metacsp.framework.VariablePrototype;
+import org.metacsp.framework.meta.MetaConstraint;
+import org.metacsp.framework.meta.MetaVariable;
 
 public class MetaCausalConstraint extends MetaConstraint {
 	/**

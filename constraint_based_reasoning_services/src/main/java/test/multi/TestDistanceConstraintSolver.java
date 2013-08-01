@@ -1,13 +1,18 @@
 package test.multi;
 
-import multi.TCSP.DistanceConstraint;
-import multi.TCSP.DistanceConstraintSolver;
-import multi.TCSP.MultiTimePoint;
-import time.APSPSolver;
-import time.Bounds;
-import framework.Constraint;
-import framework.ConstraintNetwork;
-import framework.multi.MultiConstraint;
+import org.metacsp.multi.TCSP.DistanceConstraint;
+import org.metacsp.multi.TCSP.DistanceConstraintSolver;
+import org.metacsp.multi.TCSP.MultiTimePoint;
+import org.metacsp.multi.allenInterval.AllenInterval;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint.Type;
+import org.metacsp.multi.allenInterval.AllenIntervalNetworkSolver;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
+import org.metacsp.framework.Constraint;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.multi.MultiConstraint;
+
 
 
 public class TestDistanceConstraintSolver {

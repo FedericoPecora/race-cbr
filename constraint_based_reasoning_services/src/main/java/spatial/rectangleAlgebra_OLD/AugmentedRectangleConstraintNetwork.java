@@ -22,7 +22,7 @@
  ******************************************************************************/
 package spatial.rectangleAlgebra_OLD;
 
-import framework.ConstraintSolver;
+import org.metacsp.framework.ConstraintSolver;
 
 public class AugmentedRectangleConstraintNetwork extends RectangleConstraintNetwork{
 

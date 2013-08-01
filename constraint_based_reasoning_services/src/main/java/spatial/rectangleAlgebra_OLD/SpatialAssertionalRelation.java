@@ -22,8 +22,8 @@
  ******************************************************************************/
 package spatial.rectangleAlgebra_OLD;
 
-import multi.spatial.rectangleAlgebra.BoundingBox;
-import multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
+import org.metacsp.multi.spatial.rectangleAlgebra.BoundingBox;
+import org.metacsp.multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
 
 import spatial.utility.AssertionalRelation;
 

@@ -1,18 +1,18 @@
 package test.race;
 
-import meta.simplePlanner.SimpleDomain;
-import meta.simplePlanner.SimpleDomain.markings;
-import meta.simplePlanner.SimpleOperator;
-import meta.simplePlanner.SimplePlanner;
-import meta.symbolsAndTime.Schedulable;
-import meta.symbolsAndTime.Scheduler;
-import meta.symbolsAndTime.SymbolicTimeline;
-import multi.activity.Activity;
-import multi.activity.ActivityNetworkSolver;
-import multi.allenInterval.AllenIntervalConstraint;
-import time.APSPSolver;
-import time.Bounds;
-import framework.ConstraintNetwork;
+import org.metacsp.meta.simplePlanner.SimpleDomain;
+import org.metacsp.meta.simplePlanner.SimpleDomain.markings;
+import org.metacsp.meta.simplePlanner.SimpleOperator;
+import org.metacsp.meta.simplePlanner.SimplePlanner;
+import org.metacsp.meta.symbolsAndTime.Schedulable;
+import org.metacsp.meta.symbolsAndTime.Scheduler;
+import org.metacsp.meta.symbolsAndTime.SymbolicTimeline;
+import org.metacsp.multi.activity.Activity;
+import org.metacsp.multi.activity.ActivityNetworkSolver;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
+import org.metacsp.framework.ConstraintNetwork;
 
 
 public class TestReusableResourceSchedulerForRACE {

@@ -30,14 +30,14 @@ import java.util.Iterator;
 import java.util.Map;
 
 import java.util.Vector;
-import framework.Variable;
+import org.metacsp.framework.Variable;
 
-import multi.allenInterval.AllenInterval;
-import multi.allenInterval.AllenIntervalConstraint;
-import multi.allenInterval.AllenIntervalNetworkSolver;
-import multi.spatial.rectangleAlgebra.BoundingBox;
-import time.APSPSolver;
-import time.Bounds;
+import org.metacsp.multi.allenInterval.AllenInterval;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.allenInterval.AllenIntervalNetworkSolver;
+import org.metacsp.multi.spatial.rectangleAlgebra.BoundingBox;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
 
 /**
  * 
