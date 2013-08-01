@@ -2,9 +2,9 @@ package test.multi;
 
 import java.util.logging.Level;
 
-import multi.activity.ActivityNetworkSolver;
-import utility.logging.MetaCSPLogging;
-import framework.Variable;
+import org.metacsp.multi.activity.ActivityNetworkSolver;
+import org.metacsp.utility.logging.MetaCSPLogging;
+import org.metacsp.framework.Variable;
 
 public class TestActivityNetworkSolver {
 	

@@ -1,13 +1,13 @@
 package meta;
 
 
-import multi.spatial.rectangleAlgebra.RectangleConstraint;
-import multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
-import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
+import org.metacsp.multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
 
-import framework.ConstraintNetwork;
-import framework.meta.MetaConstraintSolver;
-import framework.meta.MetaVariable;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.meta.MetaConstraintSolver;
+import org.metacsp.framework.meta.MetaVariable;
 
 public class MetaSpatialConstraintSolver2  extends MetaConstraintSolver{
 

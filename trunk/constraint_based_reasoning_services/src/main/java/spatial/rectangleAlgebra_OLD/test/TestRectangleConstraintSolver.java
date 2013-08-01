@@ -22,13 +22,13 @@
  ******************************************************************************/
 package spatial.rectangleAlgebra_OLD.test;
 
-import time.qualitative.QualitativeAllenIntervalConstraint;
+import org.metacsp.time.qualitative.QualitativeAllenIntervalConstraint;
 import spatial.rectangleAlgebra_OLD.RectangleConstraint;
 import spatial.rectangleAlgebra_OLD.RectangleConstraintSolver;
 import spatial.rectangleAlgebra_OLD.RectangularRegion;
 import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
-import framework.ConstraintNetwork;
-import framework.Variable;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.Variable;
 
 public class TestRectangleConstraintSolver {
 

@@ -2,9 +2,9 @@ package meta;
 
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraintSolver;
-import framework.ConstraintNetwork;
-import framework.meta.MetaConstraintSolver;
-import framework.meta.MetaVariable;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.meta.MetaConstraintSolver;
+import org.metacsp.framework.meta.MetaVariable;
 
 
 public class MetaSpatialConstraintSolver  extends MetaConstraintSolver{

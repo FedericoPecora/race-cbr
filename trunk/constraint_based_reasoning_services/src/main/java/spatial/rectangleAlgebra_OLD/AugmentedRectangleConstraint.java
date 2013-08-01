@@ -22,7 +22,7 @@
  ******************************************************************************/
 package spatial.rectangleAlgebra_OLD;
 
-import multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
 
 /**
  * This class augment the rectangle Algebra class with Quantified knowledge namely Duration of interval and bounded Allen

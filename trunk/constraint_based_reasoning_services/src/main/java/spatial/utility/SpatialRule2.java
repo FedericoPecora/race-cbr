@@ -1,7 +1,7 @@
 package spatial.utility;
 
-import multi.spatial.rectangleAlgebra.RectangleConstraint;
-import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
 
 
 public class SpatialRule2 {

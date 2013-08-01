@@ -1,10 +1,10 @@
 package test;
 
-import multi.symbols.SymbolicValueConstraint;
-import multi.symbols.SymbolicVariable;
-import multi.symbols.SymbolicVariableConstraintSolver;
-import framework.ConstraintNetwork;
-import framework.Variable;
+import org.metacsp.multi.symbols.SymbolicValueConstraint;
+import org.metacsp.multi.symbols.SymbolicVariable;
+import org.metacsp.multi.symbols.SymbolicVariableConstraintSolver;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.Variable;
 
 public class TestSymbolicVariableConstraintSolver {
 	

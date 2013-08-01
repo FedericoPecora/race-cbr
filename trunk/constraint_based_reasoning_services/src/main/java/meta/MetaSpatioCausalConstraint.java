@@ -2,14 +2,14 @@ package meta;
 
 import spatial.utility.SpatialAssertionalRelation2;
 import spatial.utility.SpatialRule2;
-import meta.simplePlanner.SimpleDomain;
-import multi.activity.Activity;
+import org.metacsp.meta.simplePlanner.SimpleDomain;
+import org.metacsp.multi.activity.Activity;
 
-import multi.activity.ActivityNetworkSolver;
-import multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.activity.ActivityNetworkSolver;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
 
-import framework.Constraint;
-import framework.ConstraintNetwork;
+import org.metacsp.framework.Constraint;
+import org.metacsp.framework.ConstraintNetwork;
 
 
 public class MetaSpatioCausalConstraint extends SimpleDomain{

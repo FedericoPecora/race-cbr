@@ -7,15 +7,15 @@ import java.util.Vector;
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraintNetwork;
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraintSolver;
-import time.qualitative.QualitativeAllenIntervalConstraint;
+import org.metacsp.time.qualitative.QualitativeAllenIntervalConstraint;
 import spatial.rectangleAlgebra_OLD.RectangularRegion;
 import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
 import spatial.rectangleAlgebra_OLD.SpatialRule;
 import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
-import framework.Constraint;
-import framework.ConstraintNetwork;
-import framework.meta.MetaConstraint;
-import framework.meta.MetaVariable;
+import org.metacsp.framework.Constraint;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.meta.MetaConstraint;
+import org.metacsp.framework.meta.MetaVariable;
 
 public class MetaSpatialConstraint extends MetaConstraint{
 

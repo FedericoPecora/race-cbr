@@ -4,9 +4,9 @@ import java.util.Vector;
 
 import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraintSolver;
-import multi.allenInterval.AllenIntervalConstraint;
-import multi.spatial.rectangleAlgebra.BoundingBox;
-import time.qualitative.QualitativeAllenIntervalConstraint;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.BoundingBox;
+import org.metacsp.time.qualitative.QualitativeAllenIntervalConstraint;
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraintSolver;
 import spatial.rectangleAlgebra_OLD.RectangleConstraint;
@@ -15,8 +15,8 @@ import spatial.rectangleAlgebra_OLD.RectangularRegion;
 import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
 import spatial.rectangleAlgebra_OLD.SpatialRule;
 import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
-import time.APSPSolver;
-import time.Bounds;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
 
 public class TestSetTableFromScratch {
 

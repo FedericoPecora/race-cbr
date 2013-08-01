@@ -1,8 +1,8 @@
 package spatial.utility;
 
-import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
-import multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
-import multi.spatioTemporal.SpatialFluent;
+import org.metacsp.multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
+import org.metacsp.multi.spatioTemporal.SpatialFluent;
 
 
 public class SpatialAssertionalRelation2 extends AssertionalRelation{

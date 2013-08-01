@@ -9,30 +9,30 @@ import meta.MetaCausalConstraint;
 import meta.MetaSpatialFluentConstraint;
 import meta.SimpleReusableResource2;
 import meta.MetaCausalConstraint.markings;
-import meta.simplePlanner.SimpleDomain;
-import meta.simplePlanner.SimpleOperator;
-import meta.symbolsAndTime.Schedulable.PEAKCOLLECTION;
-import multi.activity.Activity;
-import multi.activity.ActivityNetworkSolver;
-import multi.allenInterval.AllenIntervalConstraint;
-import multi.spatial.rectangleAlgebra.BoundingBox;
-import multi.spatial.rectangleAlgebra.RectangleConstraint;
-import multi.spatial.rectangleAlgebra.RectangularRegion;
-import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
-import multi.spatioTemporal.SpatialFluent;
-import multi.spatioTemporal.SpatialFluentSolver;
+import org.metacsp.meta.simplePlanner.SimpleDomain;
+import org.metacsp.meta.simplePlanner.SimpleOperator;
+import org.metacsp.meta.symbolsAndTime.Schedulable.PEAKCOLLECTION;
+import org.metacsp.multi.activity.Activity;
+import org.metacsp.multi.activity.ActivityNetworkSolver;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.BoundingBox;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangularRegion;
+import org.metacsp.multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
+import org.metacsp.multi.spatioTemporal.SpatialFluent;
+import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
 
 import spatial.utility.SpatialAssertionalRelation2;
 
-import multi.symbols.SymbolicValueConstraint;
-import time.APSPSolver;
-import time.Bounds;
-import framework.Constraint;
-import framework.ConstraintNetwork;
-import framework.Variable;
-import framework.VariablePrototype;
-import framework.meta.MetaConstraintSolver;
-import framework.meta.MetaVariable;
+import org.metacsp.multi.symbols.SymbolicValueConstraint;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
+import org.metacsp.framework.Constraint;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.Variable;
+import org.metacsp.framework.VariablePrototype;
+import org.metacsp.framework.meta.MetaConstraintSolver;
+import org.metacsp.framework.meta.MetaVariable;
 
 public class MetaSpatialScheduler  extends MetaConstraintSolver {
 

@@ -2,6 +2,7 @@ package test.meta;
 
 import java.awt.List;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -15,33 +16,33 @@ import meta.MetaCausalConstraint;
 
 
 import meta.MetaCausalConstraint.markings;
-import meta.simplePlanner.SimpleOperator;
+import org.metacsp.meta.simplePlanner.SimpleOperator;
 import meta.spatialSchedulable.MetaOccupiedConstraint;
 import meta.spatialSchedulable.MetaSpatialScheduler;
 import meta.spatialSchedulable.SpatialSchedulable;
-import meta.symbolsAndTime.Schedulable;
-import multi.activity.Activity;
-import multi.activity.ActivityNetworkSolver;
-import multi.allenInterval.AllenIntervalConstraint;
-import multi.spatial.rectangleAlgebra.RectangleConstraint;
-import multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
-import multi.spatial.rectangleAlgebra.RectangularRegion;
-import multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
-import multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
-import multi.spatioTemporal.SpatialFluent;
-import multi.spatioTemporal.SpatialFluentSolver;
+import org.metacsp.meta.symbolsAndTime.Schedulable;
+import org.metacsp.multi.activity.Activity;
+import org.metacsp.multi.activity.ActivityNetworkSolver;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangularRegion;
+import org.metacsp.multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
+import org.metacsp.multi.spatioTemporal.SpatialFluent;
+import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
 
 import spatial.utility.SpatialAssertionalRelation2;
 import spatial.utility.SpatialRule2;
-import time.APSPSolver;
-import time.Bounds;
-import utility.logging.MetaCSPLogging;
-import utility.timelinePlotting.TimelinePublisher;
-import utility.timelinePlotting.TimelineVisualizer;
-import framework.Constraint;
-import framework.ConstraintNetwork;
-import framework.ValueOrderingH;
-import framework.VariableOrderingH;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
+import org.metacsp.utility.logging.MetaCSPLogging;
+import org.metacsp.utility.timelinePlotting.TimelinePublisher;
+import org.metacsp.utility.timelinePlotting.TimelineVisualizer;
+import org.metacsp.framework.Constraint;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.ValueOrderingH;
+import org.metacsp.framework.VariableOrderingH;
 
 
 public class TestTimelineBaseSpatialReasoning2WOtray {

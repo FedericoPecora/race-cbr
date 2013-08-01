@@ -1,9 +1,9 @@
 package test.multi;
 
-import framework.ConstraintNetwork;
-import fuzzyAllenInterval.FuzzyAllenIntervalConstraint;
-import fuzzyAllenInterval.FuzzyAllenIntervalNetworkSolver;
-import time.qualitative.SimpleAllenInterval;
+import org.metacsp.time.qualitative.SimpleAllenInterval;
+import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.fuzzyAllenInterval.FuzzyAllenIntervalConstraint;
+import org.metacsp.fuzzyAllenInterval.FuzzyAllenIntervalNetworkSolver;
 
 public class TestFuzzyAllenIntervalNetworkSolver {
 	

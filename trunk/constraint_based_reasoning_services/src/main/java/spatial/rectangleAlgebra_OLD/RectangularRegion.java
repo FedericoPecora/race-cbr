@@ -22,13 +22,13 @@
  ******************************************************************************/
 package spatial.rectangleAlgebra_OLD;
 
-import framework.ConstraintSolver;
-import framework.Domain;
-import framework.Variable;
-import multi.spatial.rectangleAlgebra.BoundingBox;
-import multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
-import spatial.RCC.Rectangle;
-import spatial.RCC.Region;
+import org.metacsp.framework.ConstraintSolver;
+import org.metacsp.framework.Domain;
+import org.metacsp.framework.Variable;
+import org.metacsp.multi.spatial.rectangleAlgebra.BoundingBox;
+import org.metacsp.multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
+import org.metacsp.spatial.RCC.Rectangle;
+import org.metacsp.spatial.RCC.Region;
 
 
 

@@ -25,11 +25,11 @@ package spatial.rectangleAlgebra_OLD;
 import java.util.HashMap;
 import java.util.Vector;
 
-import framework.Constraint;
-import framework.ConstraintSolver;
-import framework.Variable;
-import time.Bounds;
-import time.qualitative.QualitativeAllenIntervalConstraint;
+import org.metacsp.framework.Constraint;
+import org.metacsp.framework.ConstraintSolver;
+import org.metacsp.framework.Variable;
+import org.metacsp.time.Bounds;
+import org.metacsp.time.qualitative.QualitativeAllenIntervalConstraint;
 
 
 /**

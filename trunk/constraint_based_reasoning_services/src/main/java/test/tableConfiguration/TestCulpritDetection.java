@@ -4,16 +4,16 @@ import java.util.Vector;
 import java.util.logging.Level;
 import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraintSolver;
-import multi.allenInterval.AllenIntervalConstraint;
-import multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
-import multi.spatial.rectangleAlgebra.BoundingBox;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
+import org.metacsp.multi.spatial.rectangleAlgebra.BoundingBox;
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
 import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
 import spatial.rectangleAlgebra_OLD.SpatialRule;
 
-import time.APSPSolver;
-import time.Bounds;
-import utility.logging.MetaCSPLogging;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
+import org.metacsp.utility.logging.MetaCSPLogging;
 
 public class TestCulpritDetection {
 

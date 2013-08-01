@@ -25,11 +25,11 @@ package spatial.rectangleAlgebra_OLD;
 import java.util.Collections;
 import java.util.Vector;
 
-import framework.BinaryConstraint;
-import framework.Constraint;
-import spatial.RCC.RCCConstraint;
-import spatial.cardinal.CardinalConstraint;
-import time.qualitative.QualitativeAllenIntervalConstraint;
+import org.metacsp.framework.BinaryConstraint;
+import org.metacsp.framework.Constraint;
+import org.metacsp.spatial.RCC.RCCConstraint;
+import org.metacsp.spatial.cardinal.CardinalConstraint;
+import org.metacsp.time.qualitative.QualitativeAllenIntervalConstraint;
 
 
 public class RectangleConstraint extends BinaryConstraint {

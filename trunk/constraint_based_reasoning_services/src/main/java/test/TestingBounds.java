@@ -1,6 +1,6 @@
 package test;
 
-import time.Bounds;
+import org.metacsp.time.Bounds;
 
 public class TestingBounds {
 //tets
