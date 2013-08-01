@@ -12,10 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import meta.MetaSpatialConstraint;
 import meta.MetaSpatialConstraintSolver;
-import meta.TCSP.TCSPSolver;
-import multi.allenInterval.AllenIntervalConstraint;
-import multi.spatial.rectangleAlgebra.BoundingBox;
-import spatial.cardinal.CardinalConstraint;
+import org.metacsp.meta.TCSP.TCSPSolver;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.BoundingBox;
+import org.metacsp.spatial.cardinal.CardinalConstraint;
 import spatial.rectangleAlgebra_OLD.RectangleConstraint;
 import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
 import spatial.rectangleAlgebra_OLD.SpatialRule;
@@ -57,11 +57,11 @@ import race_msgs.Fluent;
 import race_msgs.FluentArray;
 
 
-import time.APSPSolver;
-import time.Bounds;
-import time.qualitative.QualitativeAllenIntervalConstraint;
-import utility.logging.LoggerNotDefined;
-import utility.logging.MetaCSPLogging;
+import org.metacsp.time.APSPSolver;
+import org.metacsp.time.Bounds;
+import org.metacsp.time.qualitative.QualitativeAllenIntervalConstraint;
+import org.metacsp.utility.logging.LoggerNotDefined;
+import org.metacsp.utility.logging.MetaCSPLogging;
 
 
 import race_msgs.*;
@@ -88,8 +88,8 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	private HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
 	private HashMap<String, CardinalConstraint.Type> regionsOrientation = new HashMap<String, CardinalConstraint.Type>();
 	private HashMap<String, String> passObjToPoseFlunet = new HashMap<String, String>(); //<table1, poseTable1>
-	private HashMap<String, multi.spatial.rectangleAlgebra.Point> passiveObjPose = new HashMap<String, multi.spatial.rectangleAlgebra.Point>(); //<poseTable1, Point(3321, 4521)>
-	private HashMap<String, multi.spatial.rectangleAlgebra.Point> passiveObjSize = new HashMap<String, multi.spatial.rectangleAlgebra.Point>(); 
+	private HashMap<String, org.metacsp.multi.spatial.rectangleAlgebra.Point> passiveObjPose = new HashMap<String, org.metacsp.multi.spatial.rectangleAlgebra.Point>(); //<poseTable1, Point(3321, 4521)>
+	private HashMap<String, org.metacsp.multi.spatial.rectangleAlgebra.Point> passiveObjSize = new HashMap<String, org.metacsp.multi.spatial.rectangleAlgebra.Point>(); 
 	private enum subroutin {GETFLUNET, GETPOSE, ADDFLUNETS};
 	private ArrayList<Fluent> fluents = new ArrayList<Fluent>();
 
@@ -315,14 +315,14 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 	}
 
-	private multi.spatial.rectangleAlgebra.Point getBoundingBoxSizeRelativeToOrientation(String str){
+	private org.metacsp.multi.spatial.rectangleAlgebra.Point getBoundingBoxSizeRelativeToOrientation(String str){
 
 
-		if(regionsOrientation.get(str).compareTo(spatial.cardinal.CardinalConstraint.Type.North) == 0 ||
-				regionsOrientation.get(str).compareTo(spatial.cardinal.CardinalConstraint.Type.South) == 0)
-			return new multi.spatial.rectangleAlgebra.Point((recs.get(str).height), (recs.get(str).width));
+		if(regionsOrientation.get(str).compareTo(org.metacsp.spatial.cardinal.CardinalConstraint.Type.North) == 0 ||
+				regionsOrientation.get(str).compareTo(org.metacsp.spatial.cardinal.CardinalConstraint.Type.South) == 0)
+			return new org.metacsp.multi.spatial.rectangleAlgebra.Point((recs.get(str).height), (recs.get(str).width));
 		else 
-			return new multi.spatial.rectangleAlgebra.Point((recs.get(str).width),(recs.get(str).height));
+			return new org.metacsp.multi.spatial.rectangleAlgebra.Point((recs.get(str).width),(recs.get(str).height));
 	}
 
 
@@ -514,7 +514,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		//we can do it in a systematic way, if we use block algebra or add some rule as meta constraint to the spatial constraint network.. 
 		if(str.contains("near"))  
 			return (float)0.0; 
-		if(regionsOrientation.get(str).compareTo(spatial.cardinal.CardinalConstraint.Type.NO) == 0)
+		if(regionsOrientation.get(str).compareTo(org.metacsp.spatial.cardinal.CardinalConstraint.Type.NO) == 0)
 			return (float)(getPassiveObjSize(paasiveObjCategories.get(reifiedCons.get(areaInsToConsIns.get(str)))).z ) / 100;
 
 		return (float)0.0;
@@ -605,7 +605,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 					else if(p.getRoleType().compareTo("hasY") == 0)
 						y = (p.getFloatFiller() * 100);
 				}
-				passiveObjPose.put(posfluent, new multi.spatial.rectangleAlgebra.Point(x, y));
+				passiveObjPose.put(posfluent, new org.metacsp.multi.spatial.rectangleAlgebra.Point(x, y));
 				doneSubRoutines1[counter] = true;
 			}
 

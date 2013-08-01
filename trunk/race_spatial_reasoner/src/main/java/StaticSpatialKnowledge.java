@@ -2,15 +2,15 @@
 import java.util.Vector;
 
 
-import multi.allenInterval.AllenIntervalConstraint;
-import multi.spatial.rectangleAlgebra.RectangleConstraint;
+import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
+import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraint;
 
 
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
 import spatial.rectangleAlgebra_OLD.SpatialRule;
 import spatial.utility.SpatialRule2;
 
-import time.Bounds;
+import org.metacsp.time.Bounds;
 
 
 
