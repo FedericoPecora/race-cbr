@@ -114,7 +114,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 		
 		Vector<SpatialFluent> unboundedsf = new Vector<SpatialFluent>();
 		Vector<SpatialFluent> boundedsf = new Vector<SpatialFluent>();
-		
+		//this is between unbounded object which refers to the objects in the past and bounded objects which 
 		for (int i = 0; i < peak.length; i++) {
 			if(isUnboundedBoundingBox(
 							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getEST(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getLST()),
@@ -124,7 +124,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 //				System.out.println("--isunbounded--: " + activityToFluent.get(peak[i]));
 				unboundedsf.add(activityToFluent.get(peak[i]));
 			}
-			else if (((Activity)activityToFluent.get(peak[i]).getActivity()).getTemporalVariable().getEST() != ((Activity)activityToFluent.get(peak[i]).getActivity()).getTemporalVariable().getLST()){
+			else{ //if (((Activity)activityToFluent.get(peak[i]).getActivity()).getTemporalVariable().getEST() != ((Activity)activityToFluent.get(peak[i]).getActivity()).getTemporalVariable().getLST()){
 
 //				System.out.println("--isbounded--: " + activityToFluent.get(peak[i]));
 				boundedsf.add(activityToFluent.get(peak[i]));
@@ -132,6 +132,8 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 		}
 		
 		if(unboundedsf.size() == 0 || boundedsf.size() == 0) return false;
+		
+		if(unboundedsf.lastElement().getName().compareTo(boundedsf.lastElement().getName()) == 0) return false; 
 		
 		Rectangle rec1 = new BoundingBox(
 				new Bounds(((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[0]).getEST(), ((AllenInterval)boundedsf.get(0).getRectangularRegion().getInternalVariables()[0]).getLST()),
