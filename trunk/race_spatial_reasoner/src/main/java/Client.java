@@ -24,7 +24,7 @@ import race_msgs.IsConsistentResponse;
 import race_msgs.IsHumanWorkingRequest;
 import race_msgs.Property;
 
-import spatial.*;
+
 import spatial.rectangleAlgebra_OLD.AugmentedRectangleConstraint;
 import spatial.rectangleAlgebra_OLD.SpatialRule;
 
