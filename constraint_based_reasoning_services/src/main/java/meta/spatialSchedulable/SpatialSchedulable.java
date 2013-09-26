@@ -544,9 +544,12 @@ public class SpatialSchedulable extends MetaConstraint {
 		
 		if(peak.length == 1) return false;
 		
+		
+		
 //		System.out.println("------------------------------------------------------------");
 //		for (int i = 0; i < peak.length; i++) {
-//			System.out.println(peak[i]);
+////			System.out.println(peak[i]);
+//			System.out.println(aTOsf.get(peak[i]));
 //		}
 //		System.out.println("------------------------------------------------------------");
 		
@@ -775,6 +778,14 @@ public class SpatialSchedulable extends MetaConstraint {
 		final HashMap<ConstraintNetwork, ConstraintNetworkSortingCritera> sortingCN = new HashMap<ConstraintNetwork, ConstraintNetworkSortingCritera>();
 		HashMap<ConstraintNetwork, HashMap<String, Bounds[]>> cnToInitPose = new HashMap<ConstraintNetwork, HashMap<String, Bounds[]>>();
 		for (HashMap<String, Bounds[]> iterCN : permutation.keySet()) {
+//			System.out.println("--");
+//			for (String st : iterCN.keySet()) {
+//				System.out.print(st + "  ");
+//				for (int i = 0; i < iterCN.get(st).length; i++) {
+//					System.out.print(iterCN.get(st)[i] + "  ");
+//				}
+//				
+//			}
 			RectangleConstraintSolver iterSolver = new RectangleConstraintSolver(origin, horizon);
 			HashMap<String, RectangularRegion> getVariableByName = new HashMap<String, RectangularRegion>();
 
@@ -934,12 +945,16 @@ public class SpatialSchedulable extends MetaConstraint {
 					.getConstraintSolvers()[0]).getRigidityNumber()) + (double) (((AllenIntervalNetworkSolver) iterSolver
 					.getConstraintSolvers()[1]).getRigidityNumber())) / 2;
 
+//			System.out.println("rigidityAvg:" + rigidityavg);
+			
+			
 			if (isConsistent) {
 				sortingCN.put(iterSolver.getConstraintNetwork(),
 						new ConstraintNetworkSortingCritera(rigidityavg,permutation.get(iterCN)));
 				cnToInitPose.put(iterSolver.getConstraintNetwork(), iterCN);
 			}
-
+			
+//			System.out.println(iterSolver.getConstraintNetwork());
 //			 System.out.println(iterSolver.extractBoundingBoxesFromSTPs("cup1").getAlmostCentreRectangle());
 //			
 //			 System.out.println("_______________________________________________________________________________");

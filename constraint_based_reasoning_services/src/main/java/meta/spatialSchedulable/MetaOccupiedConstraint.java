@@ -51,7 +51,9 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 			}
 		}
 		
+//		System.out.println("===================================================");
 //		System.out.println("activities: " + activityToFluent);
+//		System.out.println("===================================================");
 		
 		return binaryPeakCollection(activityToFluent);
 	}
@@ -110,27 +112,33 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 //			System.out.println("peak: " + activityToFluent.get(peak[i]));
 //		}
 //		System.out.println("_________________________________________________");
-		
+//		System.out.println("==============================================================");
 		
 		Vector<SpatialFluent> unboundedsf = new Vector<SpatialFluent>();
 		Vector<SpatialFluent> boundedsf = new Vector<SpatialFluent>();
-		//this is between unbounded object which refers to the objects in the past and bounded objects which 
+		//this is between unbounded object which refers to the objects in the past that has to moved, therefore neew spatial fluent generated and previous one becomes spatially unbounded 
 		for (int i = 0; i < peak.length; i++) {
 			if(isUnboundedBoundingBox(
 							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getEST(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getLST()),
 							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getEET(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getLET()), 
 							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getEST(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getLST()), 
-							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getEET(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getLET()))){//it was bouneded
-//				System.out.println("--isunbounded--: " + activityToFluent.get(peak[i]));
+							new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getEET(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getLET()))							
+							 //&& (((Activity)activityToFluent.get(peak[i]).getActivity()).getTemporalVariable().getEST() != ((Activity)activityToFluent.get(peak[i]).getActivity()).getTemporalVariable().getLST())
+							){//it was bouneded
+//					System.out.println("--isunbounded--: " + activityToFluent.get(peak[i]));
 				unboundedsf.add(activityToFluent.get(peak[i]));
 			}
-			else{ //if (((Activity)activityToFluent.get(peak[i]).getActivity()).getTemporalVariable().getEST() != ((Activity)activityToFluent.get(peak[i]).getActivity()).getTemporalVariable().getLST()){
+			else{ 
+//				if (((Activity)activityToFluent.get(peak[i]).getActivity()).getTemporalVariable().getEST() != ((Activity)activityToFluent.get(peak[i]).getActivity()).getTemporalVariable().getLST())
+					boundedsf.add(activityToFluent.get(peak[i]));
+//			}
 
 //				System.out.println("--isbounded--: " + activityToFluent.get(peak[i]));
-				boundedsf.add(activityToFluent.get(peak[i]));
+				
 			}
 		}
 		
+//		System.out.println("==============================================================");
 		if(unboundedsf.size() == 0 || boundedsf.size() == 0) return false;
 		
 		if(unboundedsf.lastElement().getName().compareTo(boundedsf.lastElement().getName()) == 0) return false; 
