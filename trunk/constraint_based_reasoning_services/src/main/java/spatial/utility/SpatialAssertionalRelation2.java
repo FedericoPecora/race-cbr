@@ -1,15 +1,19 @@
 package spatial.utility;
 
+import org.metacsp.multi.spatial.blockAlgebra.UnaryBlockConstraint;
 import org.metacsp.multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
 import org.metacsp.multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
 import org.metacsp.multi.spatioTemporal.SpatialFluent;
+import org.metacsp.multi.spatioTemporal.SpatialFluent2;
 
 
 public class SpatialAssertionalRelation2 extends AssertionalRelation{
 	
-	OntologicalSpatialProperty ontologicalProp;
-	UnaryRectangleConstraint unaryRAConstraint;
-	SpatialFluent spatialFluent;
+	private OntologicalSpatialProperty ontologicalProp;
+	private UnaryRectangleConstraint unaryRAConstraint;
+	private UnaryBlockConstraint unaryBAConstraint;
+
+	
 	
 	public SpatialAssertionalRelation2(String from, String to) {
 		super(from, to);
@@ -19,11 +23,20 @@ public class SpatialAssertionalRelation2 extends AssertionalRelation{
 	public void setUnaryAtRectangleConstraint(UnaryRectangleConstraint unaryRAConstraint){
 		this.unaryRAConstraint = unaryRAConstraint;
 	}
+
+	public void setUnaryAtBlockConstraint(UnaryBlockConstraint unaryBAConstraint){
+		this.unaryBAConstraint = unaryBAConstraint;
+	}
+
 	
 	public UnaryRectangleConstraint getUnaryAtRectangleConstraint(){
 		return this.unaryRAConstraint;
 	}
-		
+
+	public UnaryBlockConstraint getUnaryAtBlockConstraint(){
+		return this.unaryBAConstraint;
+	}
+
 	public void setOntologicalProp(OntologicalSpatialProperty ontologicalProp) {
 		this.ontologicalProp = ontologicalProp;
 	}
@@ -32,12 +45,5 @@ public class SpatialAssertionalRelation2 extends AssertionalRelation{
 		return ontologicalProp;
 	}
 	
-	public void associateSpatialFlunt (SpatialFluent spatialFluent){
-		this.spatialFluent = spatialFluent;
-	}
-	
-	public SpatialFluent getSpatialFleunt(){
-		return this.spatialFluent;
-	}
 	
 }
