@@ -129,16 +129,13 @@ public class TestTimelineBaseSpatialReasoning3 {
 //		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
 //				.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPsByName("knife1").lastElement().getAlmostCentreRectangle());
 		
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		for (int i = 0; i < ((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
-				.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().length; i++) {
-			System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
-					.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs()[i].getAlmostCentreRectangle());
-		}
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		
 		
-		
+		for (String str : ((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
+				.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().keySet()) {
+			System.out.println(str + " --> " +((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
+					.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
+		}		
 
 		ActivityNetworkSolver actSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
 //		System.out.println("IRAAAAAAAAN: " + actSolver.getVariables().length);

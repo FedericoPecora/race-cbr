@@ -109,7 +109,7 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 		
 		if(isRtractingSpatialRelations){
 			Vector<SpatialFluent> spatialFluentToBeRemoved = new Vector<SpatialFluent>();
-//			System.out.println("Meta Value of MetaSpatialConstraint is retracted");
+			System.out.println("Meta Value of MetaSpatialConstraint is retracted");
 			
 			for (int i = 0; i < this.getConstraintSolvers()[0].getVariables().length; i++) {
 				if(((Activity)((SpatialFluent)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables()[i]).getActivity()).getTemporalVariable().getEST() == 0 &&
