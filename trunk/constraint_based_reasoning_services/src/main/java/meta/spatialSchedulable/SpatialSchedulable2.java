@@ -620,6 +620,7 @@ public class SpatialSchedulable2 extends MetaConstraint {
 					allenBoundsX[j] = bx;
 				}
 
+
 				Bounds[] allenBoundsY = new Bounds[(this.rules[i].getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[1].getBounds().length];
 				for (int j = 0; j < allenBoundsY.length; j++) {
 					Bounds by = new Bounds(
@@ -636,12 +637,21 @@ public class SpatialSchedulable2 extends MetaConstraint {
 									.getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[2].getBounds()[j].max);
 					allenBoundsZ[j] = bz;
 				}
-
-				//IRAN
+				
+				
 				AllenIntervalConstraint xAllenCon = new AllenIntervalConstraint((this.rules[i].getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[0].getType(), allenBoundsX);
 				AllenIntervalConstraint yAllenCon = new AllenIntervalConstraint((this.rules[i].getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[1].getType(), allenBoundsY);
 				AllenIntervalConstraint zAllenCon = new AllenIntervalConstraint((this.rules[i].getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[2].getType(), allenBoundsZ);
-			
+				
+				
+				//This part is for the Allen intervals do not have any bounds e.g., Equals
+				if((this.rules[i].getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[0].getBounds().length == 0)
+					xAllenCon = (AllenIntervalConstraint)(this.rules[i].getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[0].clone();
+				if((this.rules[i].getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[1].getBounds().length == 0)
+					yAllenCon = (AllenIntervalConstraint)(this.rules[i].getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[1].clone();
+				if((this.rules[i].getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[2].getBounds().length == 0)
+					zAllenCon = (AllenIntervalConstraint)(this.rules[i].getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[2].clone();
+
 				
 				BlockAlgebraConstraint uConsBinary = new BlockAlgebraConstraint(xAllenCon, yAllenCon, zAllenCon);
 				
@@ -1347,7 +1357,6 @@ public class SpatialSchedulable2 extends MetaConstraint {
 		}
 
 		generateCombinantion(atConstraints);
-
 		
 	}
 	

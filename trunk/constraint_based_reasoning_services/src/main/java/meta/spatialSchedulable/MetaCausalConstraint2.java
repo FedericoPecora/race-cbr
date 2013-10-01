@@ -19,8 +19,11 @@ import org.metacsp.framework.meta.MetaConstraint;
 import org.metacsp.framework.meta.MetaVariable;
 
 public class MetaCausalConstraint2 extends MetaConstraint {
+	
 	/**
-	 * 
+	 * The conflict is Overlapped and inside and On (Top (tangent from above)) 
+	 * For Overlap the resolver(b or b^-1 and for the other two conflict should be during)
+	 * the Spatial part should provide the heuristic for the causal part to first choose the spatial fluent with lower z value 
 	 */
 	private static final long serialVersionUID = 5143516447467774523L;
 	private Vector<SimpleOperator> operators;

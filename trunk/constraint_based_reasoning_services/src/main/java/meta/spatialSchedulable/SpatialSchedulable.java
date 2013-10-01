@@ -620,7 +620,15 @@ public class SpatialSchedulable extends MetaConstraint {
 				AllenIntervalConstraint xAllenCon = new AllenIntervalConstraint((this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getType(), allenBoundsX);
 				AllenIntervalConstraint yAllenCon = new AllenIntervalConstraint(
 						(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1].getType(), allenBoundsY);
-
+				
+				
+				//This part is for the Allen intervals do not have any bounds e.g., Equals
+				if((this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getBounds().length == 0)
+					xAllenCon = (AllenIntervalConstraint)(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].clone();
+				if((this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1].getBounds().length == 0)
+					yAllenCon = (AllenIntervalConstraint)(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1].clone();
+				
+				
 				RectangleConstraint uConsBinary = new RectangleConstraint(xAllenCon, yAllenCon);
 
 				if (getVariableByName.get(this.rules[i].getFrom()) != null)

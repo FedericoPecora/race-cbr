@@ -540,6 +540,8 @@ public class TestTimelineBaseSpatialReasoning {
 				);
 		srules.add(r2);
 
+
+
 		SpatialRule2 r3 = new SpatialRule2("cup", "fork", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(15,20)),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During , AllenIntervalConstraint.Type.During.getDefaultBounds()))

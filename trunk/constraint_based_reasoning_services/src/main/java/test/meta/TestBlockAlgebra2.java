@@ -125,6 +125,23 @@ public class TestBlockAlgebra2 {
 		System.out.println(((BlockConstraintSolver)((SpatialFluentSolver2)metaSpatioCasualSolver.getConstraintSolvers()[0])
 				.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPs("block3").getAlmostCentreRecCuboid());
 
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//		for (int i = 0; i < ((BlockConstraintSolver)((SpatialFluentSolver2)metaSpatioCasualSolver.getConstraintSolvers()[0])
+//				.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().length; i++) {
+//			System.out.println(((BlockConstraintSolver)((SpatialFluentSolver2)metaSpatioCasualSolver.getConstraintSolvers()[0])
+//					.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs()[i].getAlmostCentreRectangle());
+//		}
+		
+		for (String str : ((BlockConstraintSolver)((SpatialFluentSolver2)metaSpatioCasualSolver.getConstraintSolvers()[0])
+				.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().keySet()) {
+			System.out.println(str + "--> " +((BlockConstraintSolver)((SpatialFluentSolver2)metaSpatioCasualSolver.getConstraintSolvers()[0])
+					.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRecCuboid());
+			
+		}
+		
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+		
 		
 		ActivityNetworkSolver actSolver = ((ActivityNetworkSolver)((SpatialFluentSolver2)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
 		TimelinePublisher tp = new TimelinePublisher(actSolver, new Bounds(0,100), "robot1", "atLocation");
@@ -587,7 +604,7 @@ public class TestBlockAlgebra2 {
 		saRelations.add(sa1);
 		//............................................................................................
 
-		SpatialAssertionalRelation2 sa3 = new SpatialAssertionalRelation2("block1", "BlockA");		
+		SpatialAssertionalRelation2 sa3 = new SpatialAssertionalRelation2("block1", "blockA");		
 		sa3.setUnaryAtBlockConstraint(new UnaryBlockConstraint(UnaryBlockConstraint.Type.At, 
 				new Bounds(18,18), new Bounds(28,28), new Bounds(10, 10), new Bounds(16, 16), new Bounds(1, 1), new Bounds(6, 6)));
 		OntologicalSpatialProperty forkOnto = new OntologicalSpatialProperty();
@@ -597,7 +614,7 @@ public class TestBlockAlgebra2 {
 
 		
 		//.........................................................................................
-		SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("block2", "BlockB");
+		SpatialAssertionalRelation2 sa2 = new SpatialAssertionalRelation2("block2", "blockB");
 		sa2.setUnaryAtBlockConstraint(new UnaryBlockConstraint(UnaryBlockConstraint.Type.At, 
 //				new Bounds(45,45), new Bounds(51,51), new Bounds(10, 10), new Bounds(33, 33)));
 				new Bounds(40,40), new Bounds(46,46), new Bounds(15, 15), new Bounds(25, 25), new Bounds(1, 1), new Bounds(6, 6)));
