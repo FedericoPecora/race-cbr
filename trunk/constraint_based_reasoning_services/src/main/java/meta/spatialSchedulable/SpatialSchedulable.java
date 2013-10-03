@@ -57,7 +57,7 @@ public class SpatialSchedulable extends MetaConstraint {
 	private Vector<String> potentialCulprit; 
 	private Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
 	private HashMap<String, UnaryRectangleConstraint> currentAssertionalCons;
-	private Vector<HashMap<String, BoundingBox>> newRectangularRegion = null;
+//	private Vector<HashMap<String, BoundingBox>> newRectangularRegion = null;
 	private HashMap<String, BoundingBox> oldRectangularRegion = null;
 //	private HashMap<Activity, SpatialFluent> activityToFluent = new HashMap<Activity, SpatialFluent>();
 //	private HashMap<Activity, SpatialFluent> activityToFluent;
@@ -303,7 +303,7 @@ public class SpatialSchedulable extends MetaConstraint {
 		Vector<SpatialFluent> conflictvars = new Vector<SpatialFluent>();
 		Vector<RectangularRegion> conflictRecvars = new Vector<RectangularRegion>();
 		HashMap<String, RectangularRegion> getVariableByName = new HashMap<String, RectangularRegion>();
-		newRectangularRegion = new Vector<HashMap<String, BoundingBox>>(); //this is for tracking the alternative position and check whether the new places is already overlapped by previous places 
+//		newRectangularRegion = new Vector<HashMap<String, BoundingBox>>(); //this is for tracking the alternative position and check whether the new places is already overlapped by previous places 
 		oldRectangularRegion = new HashMap<String, BoundingBox>();
 		
 		//#########################################################################################################
@@ -783,21 +783,22 @@ public class SpatialSchedulable extends MetaConstraint {
 		
 //		System.out.println("targetRecs: " + targetRecs);
 		
-		final HashMap<ConstraintNetwork, ConstraintNetworkSortingCritera> sortingCN = new HashMap<ConstraintNetwork, ConstraintNetworkSortingCritera>();
-		HashMap<ConstraintNetwork, HashMap<String, Bounds[]>> cnToInitPose = new HashMap<ConstraintNetwork, HashMap<String, Bounds[]>>();
+		final HashMap<Integer, ConstraintNetworkSortingCritera> sortingCN = new HashMap<Integer, ConstraintNetworkSortingCritera>();
+		HashMap<Integer, HashMap<String, Bounds[]>> cnToInitPose = new HashMap<Integer, HashMap<String, Bounds[]>>();
+		int counter = 0;
 		for (HashMap<String, Bounds[]> iterCN : permutation.keySet()) {
-			System.out.println("------------------------------------------");
-			for (String st : iterCN.keySet()) {
-				System.out.print(st + "  ");
-				for (int i = 0; i < iterCN.get(st).length; i++) {
-					System.out.print(iterCN.get(st)[i] + "  ");
-				}
-				System.out.println();
-			}
-			System.out.println("------------------------------------------");
+//			System.out.println("------------------------------------------");
+//			for (String st : iterCN.keySet()) {
+//				System.out.print(st + "  ");
+//				for (int i = 0; i < iterCN.get(st).length; i++) {
+//					System.out.print(iterCN.get(st)[i] + "  ");
+//				}
+//				System.out.println();
+//			}
+//			System.out.println("------------------------------------------");
 			RectangleConstraintSolver iterSolver = new RectangleConstraintSolver(origin, horizon);
 			HashMap<String, RectangularRegion> getVariableByName = new HashMap<String, RectangularRegion>();
-			System.out.println("I AM HERE");
+			
 			Vector<MultiBinaryConstraint> addedGeneralKn = new Vector<MultiBinaryConstraint>();
 			for (int i = 0; i < this.rules.length; i++) {
 
@@ -821,11 +822,9 @@ public class SpatialSchedulable extends MetaConstraint {
 						getVariableByName.put(this.rules[i].getFrom(), var);
 					}
 					if (getVariableByName.get(this.rules[i].getTo()) != null)
-						uConsSize.setTo(getVariableByName.get(this.rules[i]
-								.getTo()));
+						uConsSize.setTo(getVariableByName.get(this.rules[i].getTo()));
 					else {
-						RectangularRegion var = (RectangularRegion) iterSolver
-								.createVariable();
+						RectangularRegion var = (RectangularRegion) iterSolver.createVariable();
 						var.setName(this.rules[i].getTo());
 						uConsSize.setTo(var);
 						getVariableByName.put(this.rules[i].getTo(), var);
@@ -834,18 +833,11 @@ public class SpatialSchedulable extends MetaConstraint {
 					addedGeneralKn.add(uConsSize);
 				} else {
 
-					Bounds[] allenBoundsX = new Bounds[(this.rules[i]
-							.getBinaryRAConstraint())
-							.getInternalAllenIntervalConstraints()[0]
-							.getBounds().length];
+					Bounds[] allenBoundsX = new Bounds[(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getBounds().length];
 					for (int j = 0; j < allenBoundsX.length; j++) {
 						Bounds bx = new Bounds(
-								(this.rules[i].getBinaryRAConstraint())
-										.getInternalAllenIntervalConstraints()[0]
-										.getBounds()[j].min,
-								(this.rules[i].getBinaryRAConstraint())
-										.getInternalAllenIntervalConstraints()[0]
-										.getBounds()[j].max);
+								(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getBounds()[j].min,
+								(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getBounds()[j].max);
 						allenBoundsX[j] = bx;
 					}
 
@@ -856,32 +848,29 @@ public class SpatialSchedulable extends MetaConstraint {
 						allenBoundsY[j] = by;
 					}
 
-					AllenIntervalConstraint xAllenCon = new AllenIntervalConstraint(
-							(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0]
-									.getType(), allenBoundsX);
-					AllenIntervalConstraint yAllenCon = new AllenIntervalConstraint(
-							(this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1]
-									.getType(), allenBoundsY);
+					AllenIntervalConstraint xAllenCon = new AllenIntervalConstraint((this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getType(), allenBoundsX);
+					AllenIntervalConstraint yAllenCon = new AllenIntervalConstraint((this.rules[i].getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1].getType(), allenBoundsY);
 
-					RectangleConstraint uConsBinary = new RectangleConstraint(
-							xAllenCon, yAllenCon);
+//					//This part is for the Allen intervals do not have any bounds e.g., Equals
+//					if((this.rules[i].getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[0].getBounds().length == 0)
+//						xAllenCon = (AllenIntervalConstraint)(this.rules[i].getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[0].clone();
+//					if((this.rules[i].getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[1].getBounds().length == 0)
+//						yAllenCon = (AllenIntervalConstraint)(this.rules[i].getBinaryBAConstraint()).getInternalAllenIntervalConstraints()[1].clone();
+					
+					RectangleConstraint uConsBinary = new RectangleConstraint(xAllenCon, yAllenCon);
 
 					if (getVariableByName.get(this.rules[i].getFrom()) != null)
-						uConsBinary.setFrom(getVariableByName.get(this.rules[i]
-								.getFrom()));
+						uConsBinary.setFrom(getVariableByName.get(this.rules[i].getFrom()));
 					else {
-						RectangularRegion var = (RectangularRegion) iterSolver
-								.createVariable();
+						RectangularRegion var = (RectangularRegion) iterSolver.createVariable();
 						var.setName(this.rules[i].getFrom());
 						uConsBinary.setFrom(var);
 						getVariableByName.put(this.rules[i].getFrom(), var);
 					}
 					if (getVariableByName.get(this.rules[i].getTo()) != null)
-						uConsBinary.setTo(getVariableByName.get(this.rules[i]
-								.getTo()));
+						uConsBinary.setTo(getVariableByName.get(this.rules[i].getTo()));
 					else {
-						RectangularRegion var = (RectangularRegion) iterSolver
-								.createVariable();
+						RectangularRegion var = (RectangularRegion) iterSolver.createVariable();
 						var.setName(this.rules[i].getTo());
 						uConsBinary.setTo(var);
 						getVariableByName.put(this.rules[i].getTo(), var);
@@ -890,8 +879,7 @@ public class SpatialSchedulable extends MetaConstraint {
 				}
 			}
 
-			if (!iterSolver.addConstraints(addedGeneralKn
-					.toArray(new MultiBinaryConstraint[addedGeneralKn.size()])))
+			if (!iterSolver.addConstraints(addedGeneralKn.toArray(new MultiBinaryConstraint[addedGeneralKn.size()])))
 				System.out.println("Failed to general knowledge add");
 
 			// Att At cpnstraint
@@ -944,8 +932,7 @@ public class SpatialSchedulable extends MetaConstraint {
 			boolean isConsistent = true;
 
 			// MetaCSPLogging.setLevel(Level.FINE);
-			if (!iterSolver.addConstraints(assertionList
-					.toArray(new RectangleConstraint[assertionList.size()]))) {
+			if (!iterSolver.addConstraints(assertionList.toArray(new RectangleConstraint[assertionList.size()]))) {
 				isConsistent = false;
 				logger.fine("Failed to add Assertinal Constraint in first generation of all culprit..alternatives generate later...");
 			}
@@ -958,11 +945,16 @@ public class SpatialSchedulable extends MetaConstraint {
 			
 			
 			if (isConsistent) {
-				System.out.println("THIS IS CONSISTENT");
-				sortingCN.put(iterSolver.getConstraintNetwork(),
-						new ConstraintNetworkSortingCritera(rigidityavg,permutation.get(iterCN)));
-				cnToInitPose.put(iterSolver.getConstraintNetwork(), iterCN);
+//				System.out.println("THIS IS CONSISTENT");
+//				sortingCN.put(iterSolver.getConstraintNetwork(), new ConstraintNetworkSortingCritera(rigidityavg,permutation.get(iterCN)));
+//				cnToInitPose.put(iterSolver.getConstraintNetwork(), iterCN);
+				sortingCN.put(counter, new ConstraintNetworkSortingCritera(rigidityavg,permutation.get(iterCN)));
+				cnToInitPose.put(counter, iterCN);
+
 			}
+			counter++;
+			
+
 			
 //			System.out.println(iterSolver.getConstraintNetwork());
 //			 System.out.println(iterSolver.extractBoundingBoxesFromSTPs("cup1").getAlmostCentreRectangle());
@@ -970,20 +962,20 @@ public class SpatialSchedulable extends MetaConstraint {
 //			 System.out.println("_______________________________________________________________________________");
 
 		}
-
+		
 		ArrayList as = new ArrayList(sortingCN.keySet());
 		Collections.sort(as, new Comparator() {
 			public int compare(Object o1, Object o2) {
-				ConstraintNetwork l1 = (ConstraintNetwork) o1;
-				ConstraintNetwork l2 = (ConstraintNetwork) o2;
+				Integer l1 = (Integer) o1;
+				Integer l2 = (Integer) o2;
 				Integer first = (Integer) sortingCN.get(l1).culpritLevel;
 				Integer second = (Integer) sortingCN.get(l2).culpritLevel;
 				int i = first.compareTo(second);
 				if (i != 0)
 					return i;
 
-				ConstraintNetwork r1 = (ConstraintNetwork) o1;
-				ConstraintNetwork r2 = (ConstraintNetwork) o2;
+				Integer r1 = (Integer) o1;
+				Integer r2 = (Integer) o2;
 				Double firstRig = (Double) sortingCN.get(r1).rigidityNumber;
 				Double secondRig = (Double) sortingCN.get(r2).rigidityNumber;
 
@@ -996,18 +988,17 @@ public class SpatialSchedulable extends MetaConstraint {
 		Vector<HashMap<String, Bounds[]>> alternativeSets = new Vector<HashMap<String, Bounds[]>>();
 		Iterator i = as.iterator();
 		while (i.hasNext()) {
-			ConstraintNetwork ct = new ConstraintNetwork(null);
-			ct = (ConstraintNetwork) i.next();
-			HashMap<String, BoundingBox> strToBBs = new HashMap<String, BoundingBox>();
-			for (int j = 0; j < ct.getVariables().length; j++) {
-				BoundingBox bb = new BoundingBox(new Bounds(((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[0]).getEST(), ((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[0]).getLST()), 
-						new Bounds(((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[0]).getEET(), ((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[0]).getLET()), 
-						new Bounds(((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[1]).getEST(), ((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[1]).getLST()), 
-						new Bounds(((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[1]).getEET(), ((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[1]).getLET()));
-				
-				strToBBs.put(((RectangularRegion)ct.getVariables()[j]).getName(), bb);
-			}
-			newRectangularRegion.add(strToBBs);
+			int ct = (Integer) i.next();
+//			HashMap<String, BoundingBox> strToBBs = new HashMap<String, BoundingBox>();
+//			for (int j = 0; j < ct.getVariables().length; j++) {
+//				BoundingBox bb = new BoundingBox(new Bounds(((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[0]).getEST(), ((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[0]).getLST()), 
+//						new Bounds(((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[0]).getEET(), ((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[0]).getLET()), 
+//						new Bounds(((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[1]).getEST(), ((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[1]).getLST()), 
+//						new Bounds(((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[1]).getEET(), ((AllenInterval)((RectangularRegion)ct.getVariables()[j]).getInternalVariables()[1]).getLET()));
+//				
+//				strToBBs.put(((RectangularRegion)ct.getVariables()[j]).getName(), bb);
+//			}
+//			newRectangularRegion.add(strToBBs);
 			alternativeSets.add(cnToInitPose.get(ct));
 
 		}

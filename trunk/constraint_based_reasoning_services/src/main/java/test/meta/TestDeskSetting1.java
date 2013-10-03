@@ -45,12 +45,12 @@ import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ValueOrderingH;
 import org.metacsp.framework.VariableOrderingH;
 
-
+//All things are misplaced
 //3 arm  =10 or 13
 public class TestDeskSetting1 {
 	
-	//oneCulprit example
-	static int arm_resources = 4;
+	
+	static int arm_resources = 3;
 	static int pad = 0;
 	
 	static long duration = 5;
