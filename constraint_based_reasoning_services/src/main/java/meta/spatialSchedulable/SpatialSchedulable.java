@@ -786,17 +786,18 @@ public class SpatialSchedulable extends MetaConstraint {
 		final HashMap<ConstraintNetwork, ConstraintNetworkSortingCritera> sortingCN = new HashMap<ConstraintNetwork, ConstraintNetworkSortingCritera>();
 		HashMap<ConstraintNetwork, HashMap<String, Bounds[]>> cnToInitPose = new HashMap<ConstraintNetwork, HashMap<String, Bounds[]>>();
 		for (HashMap<String, Bounds[]> iterCN : permutation.keySet()) {
-//			System.out.println("--");
-//			for (String st : iterCN.keySet()) {
-//				System.out.print(st + "  ");
-//				for (int i = 0; i < iterCN.get(st).length; i++) {
-//					System.out.print(iterCN.get(st)[i] + "  ");
-//				}
-//				
-//			}
+			System.out.println("------------------------------------------");
+			for (String st : iterCN.keySet()) {
+				System.out.print(st + "  ");
+				for (int i = 0; i < iterCN.get(st).length; i++) {
+					System.out.print(iterCN.get(st)[i] + "  ");
+				}
+				System.out.println();
+			}
+			System.out.println("------------------------------------------");
 			RectangleConstraintSolver iterSolver = new RectangleConstraintSolver(origin, horizon);
 			HashMap<String, RectangularRegion> getVariableByName = new HashMap<String, RectangularRegion>();
-
+			System.out.println("I AM HERE");
 			Vector<MultiBinaryConstraint> addedGeneralKn = new Vector<MultiBinaryConstraint>();
 			for (int i = 0; i < this.rules.length; i++) {
 
@@ -957,6 +958,7 @@ public class SpatialSchedulable extends MetaConstraint {
 			
 			
 			if (isConsistent) {
+				System.out.println("THIS IS CONSISTENT");
 				sortingCN.put(iterSolver.getConstraintNetwork(),
 						new ConstraintNetworkSortingCritera(rigidityavg,permutation.get(iterCN)));
 				cnToInitPose.put(iterSolver.getConstraintNetwork(), iterCN);

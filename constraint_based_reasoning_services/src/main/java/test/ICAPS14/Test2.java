@@ -1,4 +1,4 @@
-package test.meta;
+package test.ICAPS14;
 
 import java.awt.List;
 import java.awt.Rectangle;
@@ -45,19 +45,19 @@ import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ValueOrderingH;
 import org.metacsp.framework.VariableOrderingH;
 
+//full consistent example
 
-//3 arm  =10 or 13
-public class TestDeskSetting1 {
+public class Test2 {
 	
 	//oneCulprit example
-	static int arm_resources = 4;
+	static int arm_resources = 1;
 	static int pad = 0;
 	
 	static long duration = 5;
 	
 	public static void main(String[] args) {
 
-//		String[] objects = new String[]{"cup", "book","keyboard", "pen", "monitor", "phone", "penHolder", "ashtray"};
+
 		MetaSpatialScheduler metaSpatioCasualSolver = new MetaSpatialScheduler(0, 1000, 0);
 		
 		
@@ -120,7 +120,10 @@ public class TestDeskSetting1 {
 		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
 
-
+		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).
+				getConstraintSolvers()[0]).drawAlmostCentreRectangle(130, observation)); 
+		
+		
 		long timeNow = Calendar.getInstance().getTimeInMillis();
 		metaSpatioCasualSolver.backtrack();
 		System.out.println("TOTAL TIME: " + (Calendar.getInstance().getTimeInMillis()-timeNow));
@@ -136,8 +139,8 @@ public class TestDeskSetting1 {
 		for (String str : ((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
 				.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().keySet()) {
 			if(str.endsWith("1")){
-				System.out.println(str + " --> " +((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
-						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
+//				System.out.println(str + " --> " +((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
+//						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
 				recs.put( str,((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
 						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
 			}
@@ -231,18 +234,16 @@ public class TestDeskSetting1 {
 		Vector<Constraint> cons = new Vector<Constraint>();
 		
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "table1", "at_table1()", markings.JUSTIFIED,  10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "monitor1", "at_monitor1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "keyboard1", "at_keyboard1_table1()", markings.JUSTIFIED,  10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "ashtray1", "at_ashtray1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "book1", "at_book1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "pen1", "at_pen1_table1()", markings.JUSTIFIED,  10);
-		
-		
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, 10);
 		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "phone1", "at_phone1_table1()", markings.JUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "monitor1", "at_monitor1_table1()", markings.JUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "keyboard1", "at_keyboard1_table1()", markings.JUSTIFIED,  10);		
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "pen1", "at_pen1_table1()", markings.JUSTIFIED,  10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "phone1", "at_phone1_table1()", markings.JUSTIFIED, 10);		
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "notebook1", "at_notebook1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "penHolder1", "at_penHolder1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "ashtray1", "at_ashtray1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "notebook1", "at_notebook1_table1()", markings.JUSTIFIED, 10);		
 		//===================================================================================================================		
 		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("robot1");
 		two.setSymbolicDomain("holding_cup1(arm)");
@@ -403,12 +404,13 @@ public class TestDeskSetting1 {
 		
 		operators.addAll(getObjectPickAndPlaceOperator("cup1"));
 		operators.addAll(getObjectPickAndPlaceOperator("book1"));
+		operators.addAll(getObjectPickAndPlaceOperator("ashtray1"));
+
 		operators.addAll(getObjectPickAndPlaceOperator("keyboard1"));
 		operators.addAll(getObjectPickAndPlaceOperator("pen1"));
 		operators.addAll(getObjectPickAndPlaceOperator("monitor1"));
 		operators.addAll(getObjectPickAndPlaceOperator("phone1"));
-		operators.addAll(getObjectPickAndPlaceOperator("penHolder1"));
-		operators.addAll(getObjectPickAndPlaceOperator("ashtray1"));
+		operators.addAll(getObjectPickAndPlaceOperator("penHolder1"));		
 		operators.addAll(getObjectPickAndPlaceOperator("notebook1"));
 		
 		
@@ -420,15 +422,15 @@ public class TestDeskSetting1 {
 				
 		//Size part
 		addSizeConstraint(srules, "table", 120, 120);
+		addSizeConstraint(srules, "ashtray", 6, 4);
+		addSizeConstraint(srules, "book", 10, 10);		
 		addSizeConstraint(srules, "monitor", 45, 15);
 		addSizeConstraint(srules, "keyboard", 40, 20);
 		addSizeConstraint(srules, "notebook",15, 20);
 		addSizeConstraint(srules, "cup", 5, 5);
-		addSizeConstraint(srules, "pen", 1, 18);
-		addSizeConstraint(srules, "book", 10, 10);
-		addSizeConstraint(srules, "phone", 10, 12);
+		addSizeConstraint(srules, "pen", 1, 18);		
+		addSizeConstraint(srules, "phone", 10, 12);		
 		addSizeConstraint(srules, "penHolder", 10, 5);
-		addSizeConstraint(srules, "ashtray", 6, 4);
 
 		
 		
@@ -548,29 +550,25 @@ public class TestDeskSetting1 {
 	private static HashMap<String, Rectangle> getAssertionalRule(Vector<SpatialAssertionalRelation2> saRelations){
 		
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
+
 		
 		insertAtConstraint(recs, saRelations, "table", 0, 120, 0, 120, false);
-		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
-		insertAtConstraint(recs, saRelations, "pen", 6, 7, 20, 38, true);
-		insertAtConstraint(recs, saRelations, "book", 45, 55, 20, 30, true);
-		insertAtConstraint(recs, saRelations, "keyboard", 56, 106, 20, 40, true);
 		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
-		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); //15 20
-		insertAtConstraint(recs, saRelations, "phone", 26, 36, 6, 18, true);
-		insertAtConstraint(recs, saRelations, "penHolder", 30, 40, 30, 35, true);
-		insertAtConstraint(recs, saRelations, "ashtray", 100, 106, 10, 14, true);
+		insertAtConstraint(recs, saRelations, "book", 100, 110, 10, 20, true); //10, 10
+		insertAtConstraint(recs, saRelations, "ashtray", 98, 104, 57, 61, true); //6, 4
+														
+		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
+		insertAtConstraint(recs, saRelations, "pen", 28, 29, 22, 40, true);
+		insertAtConstraint(recs, saRelations, "keyboard", 27, 67, 45, 65, true);
+		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); //15 20
+		insertAtConstraint(recs, saRelations, "phone", 9, 19, 74, 86, true);
+		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true);
+		
 
+		
 		return recs;
 
-//		insertAtConstraint(saRelations, "monitor", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "pen", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "book", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "keyboard", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "cup", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "notebook", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "phone", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "penHolder", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "ashtray", 0, 0, 0, 0, true);
+
 		
 
 
@@ -579,3 +577,4 @@ public class TestDeskSetting1 {
 	}
 	
 }
+
