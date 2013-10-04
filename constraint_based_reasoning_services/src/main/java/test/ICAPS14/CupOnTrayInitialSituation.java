@@ -45,10 +45,11 @@ import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ValueOrderingH;
 import org.metacsp.framework.VariableOrderingH;
 
-public class Test2 {
+public class CupOnTrayInitialSituation {
 	
-	//Two misplaced book and ashtray, it is meant to iteratively add the objects and with one hand measure the time
-	static int arm_resources = 3;
+	//18, sec 1 arm
+	//17 sec 2 arm
+	static int arm_resources = 1;
 	static int pad = 0;
 	
 	static long duration = 5;
@@ -111,12 +112,16 @@ public class Test2 {
 		
 		//add meta constraint
 		
+		
 		for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
 			metaSpatioCasualSolver.addMetaConstraint(sch);
 		}
 		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
+
+
+		
 
 		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).
 				getConstraintSolvers()[0]).drawAlmostCentreRectangle(130, observation)); 
@@ -242,11 +247,14 @@ public class Test2 {
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "phone1", "at_phone1_table1()", markings.JUSTIFIED, 10);		
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "notebook1", "at_notebook1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "penHolder1", "at_penHolder1_table1()", markings.JUSTIFIED, 10);
-		//===================================================================================================================		
-		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("robot1");
-		two.setSymbolicDomain("holding_cup1(arm)");
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "vase1", "at_vase1_table1()", markings.JUSTIFIED, 10);
+		//===================================================================================================================
+		
+		
+		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
+		two.setSymbolicDomain("at_cup1_tray1()");
 		two.setMarking(markings.JUSTIFIED);
-		AllenIntervalConstraint releaseHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
+		AllenIntervalConstraint releaseHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
 		releaseHolding.setFrom(two);
 		releaseHolding.setTo(two);
 		cons.add(releaseHolding);
@@ -351,6 +359,13 @@ public class Test2 {
 		operator3cc.addConstraint(holdingDuration, 0, 0);
 		operators.add(operator3cc);
 		
+		SimpleOperator operator111 = new SimpleOperator("robot1::place_"+ obj +"_tray1(arm)",
+				new AllenIntervalConstraint[] {placeMetByholding},
+				new String[] {"robot1::holding_"+ obj +"(arm)"},
+				new int[] {1});
+		operator111.addConstraint(placeDuration, 0, 0);
+		operators.add(operator111);
+		
 		SimpleOperator operator411a = new SimpleOperator("robot1::pick_"+ obj +"_tray1(arm)",
 				new AllenIntervalConstraint[] {pickFinishesAt},
 				new String[] {"atLocation::at_"+ obj +"_tray1()"},
@@ -365,12 +380,7 @@ public class Test2 {
 		operator100.addConstraint(atDuration, 0, 0);
 		operators.add(operator100);	
 		
-		SimpleOperator operator111 = new SimpleOperator("robot1::place_"+ obj +"_tray1(arm)",
-				new AllenIntervalConstraint[] {placeMetByholding},
-				new String[] {"robot1::holding_"+ obj +"(arm)"},
-				new int[] {1});
-		operator111.addConstraint(placeDuration, 0, 0);
-		operators.add(operator111);
+
 		
 		
 		SimpleOperator operator2res = new SimpleOperator("robot1::pick_"+ obj +"_table1(arm)",
@@ -394,6 +404,9 @@ public class Test2 {
 				new int[] {1});
 		operator5.addConstraint(placeDuration, 0, 0);
 		operators.add(operator5);
+		
+		
+		
 
 		return operators;
 	}
@@ -410,6 +423,7 @@ public class Test2 {
 		operators.addAll(getObjectPickAndPlaceOperator("phone1"));
 		operators.addAll(getObjectPickAndPlaceOperator("penHolder1"));		
 		operators.addAll(getObjectPickAndPlaceOperator("notebook1"));
+		operators.addAll(getObjectPickAndPlaceOperator("vase1"));
 		
 		
 		
@@ -417,7 +431,6 @@ public class Test2 {
 
 	private static void getSpatialKnowledge(Vector<SpatialRule2> srules){
 		
-				
 		//Size part
 		addSizeConstraint(srules, "table", 120, 120);
 		addSizeConstraint(srules, "ashtray", 6, 4);
@@ -429,10 +442,11 @@ public class Test2 {
 		addSizeConstraint(srules, "pen", 1, 18);		
 		addSizeConstraint(srules, "phone", 10, 12);		
 		addSizeConstraint(srules, "penHolder", 10, 5);
-
+		addSizeConstraint(srules, "vase", 5, 5);
 		
 		
-
+		
+		
 		//Every thing should be on the table		
 		addOnTableConstraint(srules, "monitor");
 		addOnTableConstraint(srules, "keyboard");
@@ -443,13 +457,14 @@ public class Test2 {
 		addOnTableConstraint(srules, "phone");
 		addOnTableConstraint(srules, "penHolder");
 		addOnTableConstraint(srules, "ashtray");
+		addOnTableConstraint(srules, "vase");
 		
 		SpatialRule2 pen_notebook = new SpatialRule2("pen", "notebook", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(3,5)),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds() ))
 				);
 		srules.add(pen_notebook);
-
+		
 		SpatialRule2 notebook_keyboard = new SpatialRule2("notebook", "keyboard", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds()),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
@@ -461,7 +476,7 @@ public class Test2 {
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
 				);
 		srules.add(keyboard_monitor);
-
+		
 		SpatialRule2 cup_keyboard= new SpatialRule2("cup", "keyboard", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds()),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
@@ -479,18 +494,24 @@ public class Test2 {
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Overlaps, AllenIntervalConstraint.Type.Overlaps.getDefaultBounds() ))
 				);
 		srules.add(phone_monitor);
-
+		
 		SpatialRule2 ashtray_book= new SpatialRule2("ashtray", "book", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
 				);
 		srules.add(ashtray_book);
-
+		
 		SpatialRule2 penHolder_book= new SpatialRule2("penHolder", "book", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Overlaps, AllenIntervalConstraint.Type.Overlaps.getDefaultBounds()),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds() ))
 				);
 		srules.add(penHolder_book);
+
+		SpatialRule2 vase_monitor= new SpatialRule2("vase", "monitor", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(10,APSPSolver.INF)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(10,APSPSolver.INF)))
+				);
+		srules.add(vase_monitor);
 
 		
 	}
@@ -550,27 +571,39 @@ public class Test2 {
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
 
 		
-		insertAtConstraint(recs, saRelations, "table", 0, 120, 0, 120, false);
-		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
-		insertAtConstraint(recs, saRelations, "book", 100, 110, 10, 20, true); //10, 10
-		insertAtConstraint(recs, saRelations, "ashtray", 98, 104, 57, 61, true); //6, 4
-														
-		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
-		insertAtConstraint(recs, saRelations, "pen", 28, 29, 22, 40, true);
-		insertAtConstraint(recs, saRelations, "keyboard", 27, 67, 45, 65, true);
-		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); //15 20
-		insertAtConstraint(recs, saRelations, "phone", 9, 19, 74, 86, true);
-		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true);
+//		insertAtConstraint(recs, saRelations, "table", 0, 120, 0, 120, false);
+//		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
+//		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
+//		
+//		
+//		insertAtConstraint(recs, saRelations, "book", 45, 55, 20, 30, true);
+////		insertAtConstraint(recs, saRelations, "keyboard", 50, 90, 35, 55, true); //40, 20
+//		insertAtConstraint(recs, saRelations, "keyboard", 56, 106, 20, 40, true);
+//
+//		
+//		insertAtConstraint(recs, saRelations, "pen", 6, 7, 20, 38, true);
+//		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); //15 20		
+//		insertAtConstraint(recs, saRelations, "penHolder", 9, 19, 74, 79, true); //10, 5
+		
 		
 
 		
+		insertAtConstraint(recs, saRelations, "table", 0, 120, 0, 120, false);
+		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, true);
+		insertAtConstraint(recs, saRelations, "pen", 6, 7, 20, 38, true);
+		insertAtConstraint(recs, saRelations, "book", 45, 55, 20, 30, true);
+		insertAtConstraint(recs, saRelations, "keyboard", 56, 106, 20, 40, true);
+		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
+		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); //15 20
+		insertAtConstraint(recs, saRelations, "phone", 26, 36, 6, 18, true);
+		insertAtConstraint(recs, saRelations, "penHolder", 30, 40, 30, 35, true);
+		insertAtConstraint(recs, saRelations, "ashtray", 100, 106, 10, 14, true);
+		insertAtConstraint(recs, saRelations, "vase", 75, 80, 100, 105, true); //5 5
+
 		return recs;
 
-
 		
-
-
-
+		
 
 	}
 	

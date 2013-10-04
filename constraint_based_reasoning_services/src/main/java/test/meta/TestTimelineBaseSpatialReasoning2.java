@@ -112,6 +112,7 @@ public class TestTimelineBaseSpatialReasoning2 {
 		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
 		
 		
+		
 		long timeNow = Calendar.getInstance().getTimeInMillis();
 		metaSpatioCasualSolver.backtrack();
 		System.out.println("TOTAL TIME: " + (Calendar.getInstance().getTimeInMillis()-timeNow));

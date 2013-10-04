@@ -63,6 +63,8 @@ public class SpatialSchedulable extends MetaConstraint {
 //	private HashMap<Activity, SpatialFluent> activityToFluent;
 //	protected Vector<Activity> activities;
 	
+
+	
 	public HashMap<String, UnaryRectangleConstraint> getCurrentAssertionalCons(){
 		return currentAssertionalCons;
 	}
@@ -413,6 +415,19 @@ public class SpatialSchedulable extends MetaConstraint {
 		
 		Vector<SpatialFluent> newGoalFluentsVector = new Vector<SpatialFluent>();
 		ConstraintNetwork actNetwork = new ConstraintNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1]);
+		
+		//################################################################################
+//		//[pen1, notebook1, book1, penHolder1, phone1, keyboard1]
+//		newGoal.removeAllElements();
+//		newGoal.add("keyboard1");
+//		newGoal.add("pen1");
+//		newGoal.add("phone1");
+//		newGoal.add("penHolder1");
+//		newGoal.add("book1");
+//		newGoal.add("notebook1");
+//		newGoal.add("vase1");
+		//################################################################################
+
 		//set new Goal After old activity
 		for (String st :newGoal) {
 			//add new fluent if there is not already a fluent which represent the goal, 

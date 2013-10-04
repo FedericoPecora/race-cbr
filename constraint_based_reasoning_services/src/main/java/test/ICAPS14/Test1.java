@@ -45,11 +45,13 @@ import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ValueOrderingH;
 import org.metacsp.framework.VariableOrderingH;
 
-//full consistent example
+
 
 public class Test1 {
 	
-	//oneCulprit example
+
+	//full consistent example
+
 	static int arm_resources = 3;
 	static int pad = 0;
 	
