@@ -47,8 +47,8 @@ import org.metacsp.framework.VariableOrderingH;
 
 public class Test3 {
 	
-	//Two misplaced 4 objects: , it is meant to iteratively add the objects and with one hand measure the time
-	static int arm_resources = 1;
+	//Two misplaced 3 objects: , it is meant to iteratively add the objects and with one hand measure the time
+	static int arm_resources = 2;
 	static int pad = 0;
 	
 	static long duration = 5;
@@ -555,20 +555,15 @@ public class Test3 {
 		insertAtConstraint(recs, saRelations, "book", 100, 110, 10, 20, true); //10, 10
 		insertAtConstraint(recs, saRelations, "ashtray", 98, 104, 57, 61, true); //6, 4
 		insertAtConstraint(recs, saRelations, "keyboard", 56, 106, 20, 40, true);
-		
-		
+		insertAtConstraint(recs, saRelations, "phone", 26, 36, 6, 18, true);
+
 		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
 		insertAtConstraint(recs, saRelations, "pen", 28, 29, 22, 40, true);
 		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); //15 20		
 		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true);
-		insertAtConstraint(recs, saRelations, "phone", 9, 19, 74, 86, true);
+
 
 		return recs;
-
-
-		
-
-
 
 
 	}

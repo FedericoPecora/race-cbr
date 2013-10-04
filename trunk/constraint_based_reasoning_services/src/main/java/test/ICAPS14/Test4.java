@@ -45,10 +45,12 @@ import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ValueOrderingH;
 import org.metacsp.framework.VariableOrderingH;
 
-public class Test2 {
+public class Test4 {
 	
-	//Two misplaced book and ashtray, it is meant to iteratively add the objects and with one hand measure the time
-	static int arm_resources = 3;
+	//the Number of Objects are the same= 6
+	//missplaced:  2, 4, 6
+	//variance: 1 , 2, 3 arms
+	static int arm_resources = 2;
 	static int pad = 0;
 	
 	static long duration = 5;
@@ -232,14 +234,12 @@ public class Test2 {
 		Vector<Constraint> cons = new Vector<Constraint>();
 		
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "table1", "at_table1()", markings.JUSTIFIED,  10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "ashtray1", "at_ashtray1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "book1", "at_book1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, 10);
 		
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "monitor1", "at_monitor1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "keyboard1", "at_keyboard1_table1()", markings.JUSTIFIED,  10);		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "pen1", "at_pen1_table1()", markings.JUSTIFIED,  10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "phone1", "at_phone1_table1()", markings.JUSTIFIED, 10);		
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "pen1", "at_pen1_table1()", markings.JUSTIFIED,  10);		
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "notebook1", "at_notebook1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "penHolder1", "at_penHolder1_table1()", markings.JUSTIFIED, 10);
 		//===================================================================================================================		
@@ -351,6 +351,13 @@ public class Test2 {
 		operator3cc.addConstraint(holdingDuration, 0, 0);
 		operators.add(operator3cc);
 		
+		SimpleOperator operator111 = new SimpleOperator("robot1::place_"+ obj +"_tray1(arm)",
+				new AllenIntervalConstraint[] {placeMetByholding},
+				new String[] {"robot1::holding_"+ obj +"(arm)"},
+				new int[] {1});
+		operator111.addConstraint(placeDuration, 0, 0);
+		operators.add(operator111);
+		
 		SimpleOperator operator411a = new SimpleOperator("robot1::pick_"+ obj +"_tray1(arm)",
 				new AllenIntervalConstraint[] {pickFinishesAt},
 				new String[] {"atLocation::at_"+ obj +"_tray1()"},
@@ -365,12 +372,7 @@ public class Test2 {
 		operator100.addConstraint(atDuration, 0, 0);
 		operators.add(operator100);	
 		
-		SimpleOperator operator111 = new SimpleOperator("robot1::place_"+ obj +"_tray1(arm)",
-				new AllenIntervalConstraint[] {placeMetByholding},
-				new String[] {"robot1::holding_"+ obj +"(arm)"},
-				new int[] {1});
-		operator111.addConstraint(placeDuration, 0, 0);
-		operators.add(operator111);
+
 		
 		
 		SimpleOperator operator2res = new SimpleOperator("robot1::pick_"+ obj +"_table1(arm)",
@@ -402,12 +404,9 @@ public class Test2 {
 		
 		operators.addAll(getObjectPickAndPlaceOperator("cup1"));
 		operators.addAll(getObjectPickAndPlaceOperator("book1"));
-		operators.addAll(getObjectPickAndPlaceOperator("ashtray1"));
-
 		operators.addAll(getObjectPickAndPlaceOperator("keyboard1"));
 		operators.addAll(getObjectPickAndPlaceOperator("pen1"));
-		operators.addAll(getObjectPickAndPlaceOperator("monitor1"));
-		operators.addAll(getObjectPickAndPlaceOperator("phone1"));
+		operators.addAll(getObjectPickAndPlaceOperator("monitor1"));		
 		operators.addAll(getObjectPickAndPlaceOperator("penHolder1"));		
 		operators.addAll(getObjectPickAndPlaceOperator("notebook1"));
 		
@@ -420,14 +419,12 @@ public class Test2 {
 				
 		//Size part
 		addSizeConstraint(srules, "table", 120, 120);
-		addSizeConstraint(srules, "ashtray", 6, 4);
 		addSizeConstraint(srules, "book", 10, 10);		
 		addSizeConstraint(srules, "monitor", 45, 15);
 		addSizeConstraint(srules, "keyboard", 40, 20);
 		addSizeConstraint(srules, "notebook",15, 20);
 		addSizeConstraint(srules, "cup", 5, 5);
 		addSizeConstraint(srules, "pen", 1, 18);		
-		addSizeConstraint(srules, "phone", 10, 12);		
 		addSizeConstraint(srules, "penHolder", 10, 5);
 
 		
@@ -440,9 +437,8 @@ public class Test2 {
 		addOnTableConstraint(srules, "pen");
 		addOnTableConstraint(srules, "book");
 		addOnTableConstraint(srules, "cup");
-		addOnTableConstraint(srules, "phone");
 		addOnTableConstraint(srules, "penHolder");
-		addOnTableConstraint(srules, "ashtray");
+		
 		
 		SpatialRule2 pen_notebook = new SpatialRule2("pen", "notebook", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(3,5)),
@@ -474,17 +470,6 @@ public class Test2 {
 				);
 		srules.add(cup_book);
 		
-		SpatialRule2 phone_monitor= new SpatialRule2("phone", "monitor", 
-				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds()),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Overlaps, AllenIntervalConstraint.Type.Overlaps.getDefaultBounds() ))
-				);
-		srules.add(phone_monitor);
-
-		SpatialRule2 ashtray_book= new SpatialRule2("ashtray", "book", 
-				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
-				);
-		srules.add(ashtray_book);
 
 		SpatialRule2 penHolder_book= new SpatialRule2("penHolder", "book", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Overlaps, AllenIntervalConstraint.Type.Overlaps.getDefaultBounds()),
@@ -552,25 +537,25 @@ public class Test2 {
 		
 		insertAtConstraint(recs, saRelations, "table", 0, 120, 0, 120, false);
 		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
-		insertAtConstraint(recs, saRelations, "book", 100, 110, 10, 20, true); //10, 10
-		insertAtConstraint(recs, saRelations, "ashtray", 98, 104, 57, 61, true); //6, 4
-														
 		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
-		insertAtConstraint(recs, saRelations, "pen", 28, 29, 22, 40, true);
-		insertAtConstraint(recs, saRelations, "keyboard", 27, 67, 45, 65, true);
-		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); //15 20
-		insertAtConstraint(recs, saRelations, "phone", 9, 19, 74, 86, true);
-		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true);
 		
+		
+		insertAtConstraint(recs, saRelations, "book", 45, 55, 20, 30, true);
+//		insertAtConstraint(recs, saRelations, "keyboard", 50, 90, 35, 55, true); //40, 20
+		insertAtConstraint(recs, saRelations, "keyboard", 56, 106, 20, 40, true);
 
 		
+		insertAtConstraint(recs, saRelations, "pen", 6, 7, 20, 38, true);
+		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); //15 20		
+		insertAtConstraint(recs, saRelations, "penHolder", 9, 19, 74, 79, true); //10, 5
+		
+		
+
+
 		return recs;
 
-
 		
-
-
-
+		
 
 	}
 	

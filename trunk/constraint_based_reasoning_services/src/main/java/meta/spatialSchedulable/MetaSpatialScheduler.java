@@ -56,13 +56,33 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 
 	@Override
 	public void preBacktrack() {
-
 	}
 
 	@Override
 	public void postBacktrack(MetaVariable mv) {
+		
 		if (mv.getMetaConstraint() instanceof MetaCausalConstraint)
-			for (Variable v : mv.getConstraintNetwork().getVariables()) v.setMarking(markings.UNJUSTIFIED);
+			for (Variable v : mv.getConstraintNetwork().getVariables()) {
+				v.setMarking(markings.UNJUSTIFIED);
+			}
+		
+//		for (int j = 0; j < this.metaConstraints.size(); j++){ 
+//			if(this.metaConstraints.get(j) instanceof SpatialSchedulable ){
+//				SpatialSchedulable mcc = (SpatialSchedulable)this.metaConstraints.get(j);
+//				if(mcc.test()){
+//					for (int i = 0; i < this.getConstraintSolvers()[0].getVariables().length; i++) {
+//						if(((Activity)((SpatialFluent)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables()[i]).getActivity()).getTemporalVariable().getEST() == 0 &&
+//								((Activity)((SpatialFluent)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables()[i]).getActivity()).getTemporalVariable().getLST() == horizon){
+//						}
+//						else{
+//							((Activity)((SpatialFluent)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables()[i]).getActivity()).setMarking(markings.UNJUSTIFIED);
+//							((SpatialFluent)((SpatialFluentSolver)this.getConstraintSolvers()[0]).getVariables()[i]).setMarking(markings.UNJUSTIFIED);
+//						}
+//					}
+//				}
+//			}
+//		}
+		
 	}
 
 	@Override
@@ -266,15 +286,12 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 	}
 	
 	public HashMap<String, BoundingBox> getOldRectangularRegion(){
-		
-		
+				
 		for (int j = 0; j < this.metaConstraints.size(); j++){ 
 			if(this.metaConstraints.get(j) instanceof SpatialSchedulable ){
 				return ((SpatialSchedulable)this.metaConstraints.get(j)).getOldRectangularRegion();
 			}
 		}
-		
-		
 		return null;
 	}
 
