@@ -131,49 +131,49 @@ public class CupOnTrayInitialSituation4 {
 		System.out.println("TOTAL TIME: " + (Calendar.getInstance().getTimeInMillis()-timeNow));
 		
 		//#####################################################################################################################
-		//visualization
-		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
-		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
-		
-
-		
-		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>(); 
-		for (String str : ((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
-				.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().keySet()) {
-			if(str.endsWith("1")){
-//				System.out.println(str + " --> " +((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
+//		//visualization
+//		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
+//		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
+//		
+//
+//		
+//		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>(); 
+//		for (String str : ((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
+//				.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().keySet()) {
+//			if(str.endsWith("1")){
+////				System.out.println(str + " --> " +((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
+////						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
+//				recs.put( str,((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
 //						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
-				recs.put( str,((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
-						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
-			}
-		}		
-		
-		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).
-				getConstraintSolvers()[0]).drawAlmostCentreRectangle(130, observation));
-		
-		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).
-				getConstraintSolvers()[0]).drawAlmostCentreRectangle(130, recs));
-		
-		
-		
-		ActivityNetworkSolver actSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
-		TimelinePublisher tp = new TimelinePublisher(actSolver, new Bounds(0,100), "robot1", "atLocation");
-		TimelineVisualizer viz = new TimelineVisualizer(tp);
-		tp.publish(false, false);
-		tp.publish(false, true);
-		tp.publish(true, false);
-		//#####################################################################################################################
-		//sort Activity based on the start time for debugging purpose
-		HashMap<Activity, Long> starttimes = new HashMap<Activity, Long>();
-		for (int i = 0; i < actSolver.getVariables().length; i++) {
-			starttimes.put((Activity) actSolver.getVariables()[i], ((Activity)actSolver.getVariables()[i]).getTemporalVariable().getStart().getLowerBound());			
-		}
-		
-//		Collections.sort(starttimes.values());
-		starttimes =  sortHashMapByValuesD(starttimes);
-		for (Activity act : starttimes.keySet()) {
-			System.out.println(act + " --> " + starttimes.get(act));
-		}
+//			}
+//		}		
+//		
+//		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).
+//				getConstraintSolvers()[0]).drawAlmostCentreRectangle(130, observation));
+//		
+//		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).
+//				getConstraintSolvers()[0]).drawAlmostCentreRectangle(130, recs));
+//		
+//		
+//		
+//		ActivityNetworkSolver actSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
+//		TimelinePublisher tp = new TimelinePublisher(actSolver, new Bounds(0,100), "robot1", "atLocation");
+//		TimelineVisualizer viz = new TimelineVisualizer(tp);
+//		tp.publish(false, false);
+//		tp.publish(false, true);
+//		tp.publish(true, false);
+//		//#####################################################################################################################
+//		//sort Activity based on the start time for debugging purpose
+//		HashMap<Activity, Long> starttimes = new HashMap<Activity, Long>();
+//		for (int i = 0; i < actSolver.getVariables().length; i++) {
+//			starttimes.put((Activity) actSolver.getVariables()[i], ((Activity)actSolver.getVariables()[i]).getTemporalVariable().getStart().getLowerBound());			
+//		}
+//		
+////		Collections.sort(starttimes.values());
+//		starttimes =  sortHashMapByValuesD(starttimes);
+//		for (Activity act : starttimes.keySet()) {
+//			System.out.println(act + " --> " + starttimes.get(act));
+//		}
 		//#####################################################################################################################
 	}
 	
@@ -239,16 +239,17 @@ public class CupOnTrayInitialSituation4 {
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "ashtray1", "at_ashtray1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "book1", "at_book1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "phone1", "at_phone1_table1()", markings.JUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "keyboard1", "at_keyboard1_table1()", markings.JUSTIFIED,  10);
 		
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "monitor1", "at_monitor1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "pen1", "at_pen1_table1()", markings.JUSTIFIED,  10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "keyboard1", "at_keyboard1_table1()", markings.JUSTIFIED,  10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "notebook1", "at_notebook1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "phone1", "at_phone1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "penHolder1", "at_penHolder1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "vase1", "at_vase1_table1()", markings.JUSTIFIED, 10);
 		//===================================================================================================================
 		
+
 		
 		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
 		two.setSymbolicDomain("at_cup1_tray1()");
