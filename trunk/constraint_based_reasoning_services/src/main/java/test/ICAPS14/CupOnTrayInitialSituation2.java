@@ -241,11 +241,11 @@ public class CupOnTrayInitialSituation2 {
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, 10);
 		
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "monitor1", "at_monitor1_table1()", markings.JUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "penHolder1", "at_penHolder1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "pen1", "at_pen1_table1()", markings.JUSTIFIED,  10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "keyboard1", "at_keyboard1_table1()", markings.JUSTIFIED,  10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "notebook1", "at_notebook1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "phone1", "at_phone1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "penHolder1", "at_penHolder1_table1()", markings.JUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "phone1", "at_phone1_table1()", markings.JUSTIFIED, 10);		
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "vase1", "at_vase1_table1()", markings.JUSTIFIED, 10);
 		//===================================================================================================================
 		
@@ -574,11 +574,11 @@ public class CupOnTrayInitialSituation2 {
 		insertAtConstraint(recs, saRelations, "ashtray", 98, 104, 57, 61, true); //6, 4
 														
 		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
+		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true);
 		insertAtConstraint(recs, saRelations, "pen", 28, 29, 22, 40, true);
 		insertAtConstraint(recs, saRelations, "keyboard", 27, 67, 45, 65, true);
 		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true);
 		insertAtConstraint(recs, saRelations, "phone", 9, 19, 74, 86, true);
-		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true);
 		insertAtConstraint(recs, saRelations, "vase", 85, 90, 110, 115, true);
 
 		return recs;
