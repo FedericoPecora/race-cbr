@@ -50,6 +50,7 @@ public class Test4 {
 	//the Number of Objects are the same= 6
 	//missplaced:  2, 4, 6
 	//variance: 1 , 2, 3 arms
+	//Initial situation: Holding
 	static int arm_resources = 2;
 	static int pad = 0;
 	

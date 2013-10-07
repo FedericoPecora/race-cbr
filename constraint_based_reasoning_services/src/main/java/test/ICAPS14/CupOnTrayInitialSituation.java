@@ -47,9 +47,12 @@ import org.metacsp.framework.VariableOrderingH;
 
 public class CupOnTrayInitialSituation {
 	
+	//----------------
+	//
+	//-----------------
 	//18, sec 1 arm
 	//17 sec 2 arm
-	static int arm_resources = 1;
+	static int arm_resources = 4;
 	static int pad = 0;
 	
 	static long duration = 5;
