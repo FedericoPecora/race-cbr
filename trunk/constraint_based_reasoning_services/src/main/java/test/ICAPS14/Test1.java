@@ -247,7 +247,8 @@ public class Test1 {
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "phone1", "at_phone1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "penHolder1", "at_penHolder1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "ashtray1", "at_ashtray1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "notebook1", "at_notebook1_table1()", markings.JUSTIFIED, 10);		
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "notebook1", "at_notebook1_table1()", markings.JUSTIFIED, 10);	
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "vase1", "at_vase1_table1()", markings.JUSTIFIED, 10);	
 		//===================================================================================================================		
 		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("robot1");
 		two.setSymbolicDomain("holding_cup1(arm)");
@@ -415,6 +416,7 @@ public class Test1 {
 		operators.addAll(getObjectPickAndPlaceOperator("penHolder1"));
 		operators.addAll(getObjectPickAndPlaceOperator("ashtray1"));
 		operators.addAll(getObjectPickAndPlaceOperator("notebook1"));
+		operators.addAll(getObjectPickAndPlaceOperator("vase1"));
 		
 		
 		
@@ -434,6 +436,7 @@ public class Test1 {
 		addSizeConstraint(srules, "phone", 10, 12);
 		addSizeConstraint(srules, "penHolder", 10, 5);
 		addSizeConstraint(srules, "ashtray", 6, 4);
+		addSizeConstraint(srules, "vase", 5, 5);		
 
 		
 		
@@ -448,6 +451,7 @@ public class Test1 {
 		addOnTableConstraint(srules, "phone");
 		addOnTableConstraint(srules, "penHolder");
 		addOnTableConstraint(srules, "ashtray");
+		addOnTableConstraint(srules, "vase");
 		
 		SpatialRule2 pen_notebook = new SpatialRule2("pen", "notebook", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(3,5)),
@@ -496,6 +500,12 @@ public class Test1 {
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds() ))
 				);
 		srules.add(penHolder_book);
+		
+		SpatialRule2 vase_monitor= new SpatialRule2("vase", "monitor", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(10,APSPSolver.INF)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(10,APSPSolver.INF)))
+				);
+		srules.add(vase_monitor);
 
 		
 	}
@@ -565,6 +575,7 @@ public class Test1 {
 		insertAtConstraint(recs, saRelations, "phone", 9, 19, 74, 86, true);
 		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true);
 		insertAtConstraint(recs, saRelations, "ashtray", 100, 106, 10, 14, true);
+		insertAtConstraint(recs, saRelations, "vase", 85, 90, 110, 115, true);
 
 		
 //		insertAtConstraint(recs,saRelations, "monitor", 0, 0, 0, 0, true);

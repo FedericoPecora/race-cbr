@@ -45,25 +45,17 @@ import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ValueOrderingH;
 import org.metacsp.framework.VariableOrderingH;
 
-//1 arm = 11
-//2 arm = 10
-//3 arm  = 10
-
-//---------------
-//goal: placing Phone -- culprit number 6 
-// initial Situation Holding
-
-public class Test0 {
+public class CupOnTrayInitialSituation4 {
 	
-	//oneCulprit example
-	static int arm_resources = 3;
+	//Four misplaced book and ashtray, keyborad pen, it is meant to iteratively add the objects and with one hand measure the time
+	static int arm_resources = 1;
 	static int pad = 0;
 	
 	static long duration = 5;
 	
 	public static void main(String[] args) {
 
-//		String[] objects = new String[]{"cup", "book","keyboard", "pen", "monitor", "phone", "penHolder", "ashtray"};
+
 		MetaSpatialScheduler metaSpatioCasualSolver = new MetaSpatialScheduler(0, 1000, 0);
 		
 		
@@ -119,6 +111,7 @@ public class Test0 {
 		
 		//add meta constraint
 		
+		
 		for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
 			metaSpatioCasualSolver.addMetaConstraint(sch);
 		}
@@ -127,6 +120,12 @@ public class Test0 {
 		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
 
 
+		
+
+		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).
+				getConstraintSolvers()[0]).drawAlmostCentreRectangle(130, observation)); 
+		
+		
 		long timeNow = Calendar.getInstance().getTimeInMillis();
 		metaSpatioCasualSolver.backtrack();
 		System.out.println("TOTAL TIME: " + (Calendar.getInstance().getTimeInMillis()-timeNow));
@@ -135,6 +134,8 @@ public class Test0 {
 		//visualization
 		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
 		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
+		
+
 		
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>(); 
 		for (String str : ((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
@@ -235,23 +236,24 @@ public class Test0 {
 		Vector<Constraint> cons = new Vector<Constraint>();
 		
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "table1", "at_table1()", markings.JUSTIFIED,  10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "monitor1", "at_monitor1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "keyboard1", "at_keyboard1_table1()", markings.JUSTIFIED,  10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "book1", "at_book1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "pen1", "at_pen1_table1()", markings.JUSTIFIED,  10);
-		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "notebook1", "at_notebook1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.JUSTIFIED, 10);
-		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "phone1", "at_phone1_table1()", markings.UNJUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "penHolder1", "at_penHolder1_table1()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "ashtray1", "at_ashtray1_table1()", markings.JUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "book1", "at_book1_table1()", markings.JUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, 10);
 		
-		//===================================================================================================================		
-		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("robot1");
-		two.setSymbolicDomain("holding_phone1(arm)");
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "monitor1", "at_monitor1_table1()", markings.JUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "pen1", "at_pen1_table1()", markings.JUSTIFIED,  10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "keyboard1", "at_keyboard1_table1()", markings.JUSTIFIED,  10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "notebook1", "at_notebook1_table1()", markings.JUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "phone1", "at_phone1_table1()", markings.JUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "penHolder1", "at_penHolder1_table1()", markings.JUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "vase1", "at_vase1_table1()", markings.JUSTIFIED, 10);
+		//===================================================================================================================
+		
+		
+		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
+		two.setSymbolicDomain("at_cup1_tray1()");
 		two.setMarking(markings.JUSTIFIED);
-		AllenIntervalConstraint releaseHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
+		AllenIntervalConstraint releaseHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
 		releaseHolding.setFrom(two);
 		releaseHolding.setTo(two);
 		cons.add(releaseHolding);
@@ -356,6 +358,13 @@ public class Test0 {
 		operator3cc.addConstraint(holdingDuration, 0, 0);
 		operators.add(operator3cc);
 		
+		SimpleOperator operator111 = new SimpleOperator("robot1::place_"+ obj +"_tray1(arm)",
+				new AllenIntervalConstraint[] {placeMetByholding},
+				new String[] {"robot1::holding_"+ obj +"(arm)"},
+				new int[] {1});
+		operator111.addConstraint(placeDuration, 0, 0);
+		operators.add(operator111);
+		
 		SimpleOperator operator411a = new SimpleOperator("robot1::pick_"+ obj +"_tray1(arm)",
 				new AllenIntervalConstraint[] {pickFinishesAt},
 				new String[] {"atLocation::at_"+ obj +"_tray1()"},
@@ -370,12 +379,7 @@ public class Test0 {
 		operator100.addConstraint(atDuration, 0, 0);
 		operators.add(operator100);	
 		
-		SimpleOperator operator111 = new SimpleOperator("robot1::place_"+ obj +"_tray1(arm)",
-				new AllenIntervalConstraint[] {placeMetByholding},
-				new String[] {"robot1::holding_"+ obj +"(arm)"},
-				new int[] {1});
-		operator111.addConstraint(placeDuration, 0, 0);
-		operators.add(operator111);
+
 		
 		
 		SimpleOperator operator2res = new SimpleOperator("robot1::pick_"+ obj +"_table1(arm)",
@@ -399,6 +403,9 @@ public class Test0 {
 				new int[] {1});
 		operator5.addConstraint(placeDuration, 0, 0);
 		operators.add(operator5);
+		
+		
+		
 
 		return operators;
 	}
@@ -407,13 +414,15 @@ public class Test0 {
 		
 		operators.addAll(getObjectPickAndPlaceOperator("cup1"));
 		operators.addAll(getObjectPickAndPlaceOperator("book1"));
+		operators.addAll(getObjectPickAndPlaceOperator("ashtray1"));
+
 		operators.addAll(getObjectPickAndPlaceOperator("keyboard1"));
 		operators.addAll(getObjectPickAndPlaceOperator("pen1"));
 		operators.addAll(getObjectPickAndPlaceOperator("monitor1"));
 		operators.addAll(getObjectPickAndPlaceOperator("phone1"));
-		operators.addAll(getObjectPickAndPlaceOperator("penHolder1"));
-		operators.addAll(getObjectPickAndPlaceOperator("ashtray1"));
+		operators.addAll(getObjectPickAndPlaceOperator("penHolder1"));		
 		operators.addAll(getObjectPickAndPlaceOperator("notebook1"));
+		operators.addAll(getObjectPickAndPlaceOperator("vase1"));
 		
 		
 		
@@ -421,22 +430,22 @@ public class Test0 {
 
 	private static void getSpatialKnowledge(Vector<SpatialRule2> srules){
 		
-				
 		//Size part
 		addSizeConstraint(srules, "table", 120, 120);
+		addSizeConstraint(srules, "ashtray", 6, 4);
+		addSizeConstraint(srules, "book", 10, 10);		
 		addSizeConstraint(srules, "monitor", 45, 15);
 		addSizeConstraint(srules, "keyboard", 40, 20);
 		addSizeConstraint(srules, "notebook",15, 20);
 		addSizeConstraint(srules, "cup", 5, 5);
-		addSizeConstraint(srules, "pen", 1, 18);
-		addSizeConstraint(srules, "book", 10, 10);
-		addSizeConstraint(srules, "phone", 10, 12);
+		addSizeConstraint(srules, "pen", 1, 18);		
+		addSizeConstraint(srules, "phone", 10, 12);		
 		addSizeConstraint(srules, "penHolder", 10, 5);
-		addSizeConstraint(srules, "ashtray", 6, 4);
-
+		addSizeConstraint(srules, "vase", 5, 5);
 		
 		
-
+		
+		
 		//Every thing should be on the table		
 		addOnTableConstraint(srules, "monitor");
 		addOnTableConstraint(srules, "keyboard");
@@ -447,13 +456,14 @@ public class Test0 {
 		addOnTableConstraint(srules, "phone");
 		addOnTableConstraint(srules, "penHolder");
 		addOnTableConstraint(srules, "ashtray");
+		addOnTableConstraint(srules, "vase");
 		
 		SpatialRule2 pen_notebook = new SpatialRule2("pen", "notebook", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(3,5)),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds() ))
 				);
 		srules.add(pen_notebook);
-
+		
 		SpatialRule2 notebook_keyboard = new SpatialRule2("notebook", "keyboard", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds()),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
@@ -465,7 +475,7 @@ public class Test0 {
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
 				);
 		srules.add(keyboard_monitor);
-
+		
 		SpatialRule2 cup_keyboard= new SpatialRule2("cup", "keyboard", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds()),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
@@ -483,18 +493,24 @@ public class Test0 {
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Overlaps, AllenIntervalConstraint.Type.Overlaps.getDefaultBounds() ))
 				);
 		srules.add(phone_monitor);
-
+		
 		SpatialRule2 ashtray_book= new SpatialRule2("ashtray", "book", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
 				);
 		srules.add(ashtray_book);
-
+		
 		SpatialRule2 penHolder_book= new SpatialRule2("penHolder", "book", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Overlaps, AllenIntervalConstraint.Type.Overlaps.getDefaultBounds()),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds() ))
 				);
 		srules.add(penHolder_book);
+
+		SpatialRule2 vase_monitor= new SpatialRule2("vase", "monitor", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(10,APSPSolver.INF)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(10,APSPSolver.INF)))
+				);
+		srules.add(vase_monitor);
 
 		
 	}
@@ -552,33 +568,25 @@ public class Test0 {
 	private static HashMap<String, Rectangle> getAssertionalRule(Vector<SpatialAssertionalRelation2> saRelations){
 		
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
+
 		
 		insertAtConstraint(recs, saRelations, "table", 0, 120, 0, 120, false);
-		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
-		insertAtConstraint(recs, saRelations, "pen", 6, 7, 20, 38, true);
-		insertAtConstraint(recs, saRelations, "book", 45, 55, 20, 30, true);
+		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
+		insertAtConstraint(recs, saRelations, "book", 100, 110, 10, 20, true); //10, 10
+		insertAtConstraint(recs, saRelations, "ashtray", 98, 104, 57, 61, true); //6, 4
 		insertAtConstraint(recs, saRelations, "keyboard", 56, 106, 20, 40, true);
-		insertAtConstraint(recs, saRelations, "cup", 80, 85, 80, 85, true);
-		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); //15 20
-		insertAtConstraint(recs, saRelations, "phone", 0, 0, 0, 0, true);
-		insertAtConstraint(recs, saRelations, "penHolder", 30, 40, 30, 35, true);
-		insertAtConstraint(recs, saRelations, "ashtray", 100, 106, 10, 14, true);
+		insertAtConstraint(recs, saRelations, "phone", 26, 36, 6, 18, true);
+
+		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
+		insertAtConstraint(recs, saRelations, "pen", 28, 29, 22, 40, true);
+		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); 
+		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true);
+		insertAtConstraint(recs, saRelations, "vase", 85, 90, 110, 115, true);
 
 		return recs;
 
-//		insertAtConstraint(saRelations, "monitor", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "pen", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "book", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "keyboard", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "cup", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "notebook", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "phone", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "penHolder", 0, 0, 0, 0, true);
-//		insertAtConstraint(saRelations, "ashtray", 0, 0, 0, 0, true);
 		
-
-
-
+		
 
 	}
 	
