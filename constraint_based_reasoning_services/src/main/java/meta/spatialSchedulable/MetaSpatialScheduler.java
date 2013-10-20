@@ -1,6 +1,7 @@
 package meta.spatialSchedulable;
 
 import java.awt.Rectangle;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
@@ -46,11 +47,11 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 	public Vector<SimpleOperator> operatorsAlongBranch = new Vector<SimpleOperator>();
 	private Vector<HashMap<String, UnaryRectangleConstraint>> currentRelationsQuque = new Vector<HashMap<String,UnaryRectangleConstraint>>();
 
+	
 	public MetaSpatialScheduler(long origin, long horizon, long animationTime) {
 		super(new Class[] {RectangleConstraint.class, UnaryRectangleConstraint.class, AllenIntervalConstraint.class, SymbolicValueConstraint.class}, 
 				animationTime, new SpatialFluentSolver(origin, horizon)	);
 		this.horizon = horizon;
-		
 	}
 
 
@@ -161,7 +162,7 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 
 	@Override
 	protected boolean addResolverSub(ConstraintNetwork metaVariable, ConstraintNetwork metaValue) {
-
+		
 		if (metaValue.annotation != null && metaValue.annotation instanceof SimpleOperator) {
 			if (operatorsAlongBranch.contains((metaValue.annotation))) {
 //				System.out.println("-------------------> skipped " + metaValue.annotation);
