@@ -1,7 +1,14 @@
 package test.ICAPS14;
 
+
 import java.awt.List;
 import java.awt.Rectangle;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -45,135 +52,186 @@ import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ValueOrderingH;
 import org.metacsp.framework.VariableOrderingH;
 
-public class Test4 {
+public class BenchmarkGeneration {
 	
 	//the Number of Objects are the same= 6 + 1 (including cup)
-	//missplaced: 3
-	//variance: 1 , 2, 3 arms
-	//Initial situation: Holding
-	static int arm_resources = 5;
-	static int pad = 0;
+	//Initial situation: Holding cup
 	
+	static int totalExp  = 1;
+	static int armsCounter = 6;
+	static String PATH = "/home/iran/Desktop/Benchmark/";
+	static String PATH_INIT_PLOT = "/home/iran/Desktop/Benchmark/Plot_INIT/";
+	static String PATH_FINAL_PLOT = "/home/iran/Desktop/Benchmark/Plot_FINAL/";
+	
+	
+	static int pad = 0;	
 	static long duration = 5;
-	
+
 	public static void main(String[] args) {
-
-
-		MetaSpatialScheduler metaSpatioCasualSolver = new MetaSpatialScheduler(0, 1000, 0);
 		
 		
-		//Most critical conflict is the one with most activities 
-		VariableOrderingH varOH = new VariableOrderingH() {
-			@Override
-			public int compare(ConstraintNetwork arg0, ConstraintNetwork arg1) {
-				return arg1.getVariables().length - arg0.getVariables().length;
+		for (int ii = 0; ii < totalExp; ii++) {
+			for (int arm_resources = 5; arm_resources < armsCounter; arm_resources++) {
+				MetaSpatialScheduler metaSpatioCasualSolver = new MetaSpatialScheduler(0, 1000, 0);
+				
+				//Most critical conflict is the one with most activities 
+				VariableOrderingH varOH = new VariableOrderingH() {
+					@Override
+					public int compare(ConstraintNetwork arg0, ConstraintNetwork arg1) {
+						return arg1.getVariables().length - arg0.getVariables().length;
+					}
+					@Override
+					public void collectData(ConstraintNetwork[] allMetaVariables) { }
+				};
+				// no value ordering
+				ValueOrderingH valOH = new ValueOrderingH() {
+					@Override
+					public int compare(ConstraintNetwork o1, ConstraintNetwork o2) { return 0; }
+				};
+				SpatialSchedulable metaSpatialSchedulable = new SpatialSchedulable(varOH, valOH);
+				SpatialFluentSolver groundSolver = (SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0];
+				
+//				MetaCSPLogging.setLevel(MetaSpatialScheduler.class, Level.FINEST);
+//				MetaCSPLogging.setLevel(SpatialSchedulable.class, Level.FINEST);
+				//#################################################################################################################
+				//add metaOccupiedConstraint
+				MetaOccupiedConstraint metaOccupiedConstraint = new MetaOccupiedConstraint(null, null);
+				metaOccupiedConstraint.setPad(pad);
+				//#################################################################################################################
+				MetaCausalConstraint metaCausalConstraint = new MetaCausalConstraint(new int[] {arm_resources}, new String[] {"arm"}, "WellSetDeskDomain");
+				Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
+				addOperator(operators);
+				for (int i = 0; i < operators.size(); i++) {
+					metaCausalConstraint.addOperator(operators.get(i));
+				}
+				
+				//#################################################################################################################
+				//this is spatial general and assetional rule
+				Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
+				Vector<SpatialAssertionalRelation2> saRelations = new Vector<SpatialAssertionalRelation2>();
+				HashMap<String, Rectangle> observation = new HashMap<String, Rectangle>();
+				
+				getSpatialKnowledge(srules);
+				observation = getAssertionalRule(saRelations, ii);
+				insertCurrentStateCurrentGoal(groundSolver);
+				for (int i = 0; i < operators.size(); i++) {
+					metaSpatialSchedulable.addOperator(operators.get(i));
+				}
+				//#################################################################################################################
+				//add spatial general and assertional rule to MetaSpatialFluentConstraint
+				metaSpatialSchedulable.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
+				metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
+				metaSpatialSchedulable.setInitialGoal(new String[]{"cup1"});
+				
+				
+				//add meta constraint
+				
+				for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
+					metaSpatioCasualSolver.addMetaConstraint(sch);
+				}
+				metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
+				metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
+				metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
+				
+				BufferedWriter initPlot = null;
+				String initLayoutPlot = "";
+				initLayoutPlot = ((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).
+						getConstraintSolvers()[0]).drawAlmostCentreRectangle(130, observation);				
+				try{
+					
+					initPlot = new BufferedWriter(new FileWriter(PATH_INIT_PLOT +ii+ "_init"+".dat", false));
+					initPlot.write(initLayoutPlot);
+					initPlot.newLine();
+					initPlot.flush();
+				}				
+				catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+
+				
+				
+				
+				long timeNow = Calendar.getInstance().getTimeInMillis();
+				metaSpatioCasualSolver.backtrack();
+				long totalTime = (Calendar.getInstance().getTimeInMillis()-timeNow);
+//				System.out.println("TOTAL TIME: " + totalTime);
+				
+				BufferedWriter bw = null;
+				String strfile = "";
+				int culpritNumber = metaSpatialSchedulable.getNumberofMisplaced();
+				strfile += "number_of_arm: " + arm_resources + " number_of_culprit: " + culpritNumber +
+						" SearchTime: " + totalTime + "\n";				
+				try{
+					
+					bw = new BufferedWriter(new FileWriter(PATH +ii+".dat", true));
+					bw.write(strfile);
+					bw.newLine();
+					bw.flush();
+				}				
+				catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+				
+				
+				//#####################################################################################################################
+				//visualization
+//				ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
+//				ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
+				
+		
+				
+				HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>(); 
+				for (String str : ((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
+						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().keySet()) {
+					if(str.endsWith("1")){
+						recs.put( str,((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
+								.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
+					}
+				}		
+				
+				BufferedWriter finalPlot = null;
+				String finalLayoutPlot = "";
+				finalLayoutPlot = ((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).
+						getConstraintSolvers()[0]).drawAlmostCentreRectangle(130, recs);				
+				try{
+					
+					finalPlot = new BufferedWriter(new FileWriter(PATH_FINAL_PLOT +ii+ "_final"+".dat", false));
+					finalPlot.write(finalLayoutPlot);
+					finalPlot.newLine();
+					finalPlot.flush();
+				}				
+				catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+
+				
+				System.out.println();
+				
+				
+//				
+//				ActivityNetworkSolver actSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
+//				TimelinePublisher tp = new TimelinePublisher(actSolver, new Bounds(0,100), "robot1", "atLocation");
+//				TimelineVisualizer viz = new TimelineVisualizer(tp);
+//				tp.publish(false, false);
+//				tp.publish(false, true);
+//				tp.publish(true, false);
+				//#####################################################################################################################
+//				//sort Activity based on the start time for debugging purpose
+//				HashMap<Activity, Long> starttimes = new HashMap<Activity, Long>();
+//				for (int i = 0; i < actSolver.getVariables().length; i++) {
+//					starttimes.put((Activity) actSolver.getVariables()[i], ((Activity)actSolver.getVariables()[i]).getTemporalVariable().getStart().getLowerBound());			
+//				}
+//				
+////				Collections.sort(starttimes.values());
+//				starttimes =  sortHashMapByValuesD(starttimes);
+//				for (Activity act : starttimes.keySet()) {
+//					System.out.println(act + " --> " + starttimes.get(act));
+//				}
+
 			}
-			@Override
-			public void collectData(ConstraintNetwork[] allMetaVariables) { }
-		};
-		// no value ordering
-		ValueOrderingH valOH = new ValueOrderingH() {
-			@Override
-			public int compare(ConstraintNetwork o1, ConstraintNetwork o2) { return 0; }
-		};
-		SpatialSchedulable metaSpatialSchedulable = new SpatialSchedulable(varOH, valOH);
-		SpatialFluentSolver groundSolver = (SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0];
-		
-		MetaCSPLogging.setLevel(MetaSpatialScheduler.class, Level.FINEST);
-		MetaCSPLogging.setLevel(SpatialSchedulable.class, Level.FINEST);
-		//#################################################################################################################
-		//add metaOccupiedConstraint
-		MetaOccupiedConstraint metaOccupiedConstraint = new MetaOccupiedConstraint(null, null);
-		metaOccupiedConstraint.setPad(pad);
-		//#################################################################################################################
-		MetaCausalConstraint metaCausalConstraint = new MetaCausalConstraint(new int[] {arm_resources}, new String[] {"arm"}, "WellSetDeskDomain");
-		Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
-		addOperator(operators);
-		for (int i = 0; i < operators.size(); i++) {
-			metaCausalConstraint.addOperator(operators.get(i));
-		}
-		
-		//#################################################################################################################
-		//this is spatial general and assetional rule
-		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
-		Vector<SpatialAssertionalRelation2> saRelations = new Vector<SpatialAssertionalRelation2>();
-		HashMap<String, Rectangle> observation = new HashMap<String, Rectangle>();
-		
-		getSpatialKnowledge(srules);
-		observation = getAssertionalRule(saRelations);
-		insertCurrentStateCurrentGoal(groundSolver);
-		for (int i = 0; i < operators.size(); i++) {
-			metaSpatialSchedulable.addOperator(operators.get(i));
-		}
-		//#################################################################################################################
-		//add spatial general and assertional rule to MetaSpatialFluentConstraint
-		metaSpatialSchedulable.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
-		metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
-		metaSpatialSchedulable.setInitialGoal(new String[]{"cup1"});
-		
-		
-		//add meta constraint
-		
-		for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
-			metaSpatioCasualSolver.addMetaConstraint(sch);
-		}
-		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
-		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
-		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
 
-//		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).
-//				getConstraintSolvers()[0]).drawAlmostCentreRectangle(130, observation)); 
-		
-		
-		long timeNow = Calendar.getInstance().getTimeInMillis();
-		metaSpatioCasualSolver.backtrack();
-		System.out.println("TOTAL TIME: " + (Calendar.getInstance().getTimeInMillis()-timeNow));
-		
-		//#####################################################################################################################
-		//visualization
-		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
-		ConstraintNetwork.draw(((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
-		
+		}
 
-		
-		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>(); 
-		for (String str : ((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
-				.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().keySet()) {
-			if(str.endsWith("1")){
-//				System.out.println(str + " --> " +((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
-//						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
-				recs.put( str,((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
-						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
-			}
-		}		
-		
-		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).
-				getConstraintSolvers()[0]).drawAlmostCentreRectangle(130, observation));
-		
-		System.out.println(((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).
-				getConstraintSolvers()[0]).drawAlmostCentreRectangle(130, recs));
-		
-		
-		
-		ActivityNetworkSolver actSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
-		TimelinePublisher tp = new TimelinePublisher(actSolver, new Bounds(0,100), "robot1", "atLocation");
-		TimelineVisualizer viz = new TimelineVisualizer(tp);
-		tp.publish(false, false);
-		tp.publish(false, true);
-		tp.publish(true, false);
-		//#####################################################################################################################
-		//sort Activity based on the start time for debugging purpose
-		HashMap<Activity, Long> starttimes = new HashMap<Activity, Long>();
-		for (int i = 0; i < actSolver.getVariables().length; i++) {
-			starttimes.put((Activity) actSolver.getVariables()[i], ((Activity)actSolver.getVariables()[i]).getTemporalVariable().getStart().getLowerBound());			
-		}
-		
-//		Collections.sort(starttimes.values());
-		starttimes =  sortHashMapByValuesD(starttimes);
-		for (Activity act : starttimes.keySet()) {
-			System.out.println(act + " --> " + starttimes.get(act));
-		}
-		//#####################################################################################################################
 	}
 	
 	private static LinkedHashMap sortHashMapByValuesD(HashMap passedMap) {
@@ -412,6 +470,7 @@ public class Test4 {
 		operators.addAll(getObjectPickAndPlaceOperator("notebook1"));
 		
 		
+		
 	}
 
 	private static void getSpatialKnowledge(Vector<SpatialRule2> srules){
@@ -530,95 +589,47 @@ public class Test4 {
 
 	}
 	
-//	//book, keyboard and pen is misplaced
-//	private static HashMap<String, Rectangle> getAssertionalRule(Vector<SpatialAssertionalRelation2> saRelations){
-//		
-//		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
-//
-//		insertAtConstraint(recs, saRelations, "table", 0, 120, 0, 120, false);
-//		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
-//		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
-//		
-////		insertAtConstraint(recs, saRelations, "book", 98, 108, 57, 67, true); //true
-//		insertAtConstraint(recs, saRelations, "book", 45, 55, 20, 30, true); //false
-////		insertAtConstraint(recs, saRelations, "keyboard", 50, 90, 35, 55, true); //false not overlapped with cup
-//		insertAtConstraint(recs, saRelations, "keyboard", 56, 106, 20, 40, true); //false overlapped with cup
-////		insertAtConstraint(recs, saRelations, "keyboard", 27, 67, 45, 65, true); //true
-//
-//		
-//		insertAtConstraint(recs, saRelations, "pen", 6, 7, 20, 38, true); //false
-////		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); ////false 15 20		
-////		insertAtConstraint(recs, saRelations, "penHolder", 9, 19, 74, 79, true); //false //10, 5
-//		
-//		
-////		insertAtConstraint(recs, saRelations, "pen", 28, 29, 22, 40, true); //true
-//		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); //true
-//		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true); //true
-//		
-//		return recs;
-//	}
-
-	
-//	//book, keyboard and penHolder is misplaced
-//	private static HashMap<String, Rectangle> getAssertionalRule(Vector<SpatialAssertionalRelation2> saRelations){
-//		
-//		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
-//
-//		insertAtConstraint(recs, saRelations, "table", 0, 120, 0, 120, false);
-//		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
-//		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
-//		
-////		insertAtConstraint(recs, saRelations, "book", 98, 108, 57, 67, true); //true
-//		insertAtConstraint(recs, saRelations, "book", 45, 55, 20, 30, true); //false
-////		insertAtConstraint(recs, saRelations, "keyboard", 50, 90, 35, 55, true); //false not overlapped with cup
-//		insertAtConstraint(recs, saRelations, "keyboard", 56, 106, 20, 40, true); //false overlapped with cup
-////		insertAtConstraint(recs, saRelations, "keyboard", 27, 67, 45, 65, true); //true
-//
-//		
-////		insertAtConstraint(recs, saRelations, "pen", 6, 7, 20, 38, true); //false
-////		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); ////false 15 20		
-//		insertAtConstraint(recs, saRelations, "penHolder", 9, 19, 74, 79, true); //false //10, 5
-//		
-//		
-//		insertAtConstraint(recs, saRelations, "pen", 28, 29, 22, 40, true); //true
-//		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); //true
-////		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true); //true
-//		
-//		return recs;
-//	}
-
-	
-	//pen, keyboard and penHolder is misplaced
-	private static HashMap<String, Rectangle> getAssertionalRule(Vector<SpatialAssertionalRelation2> saRelations){
+	private static HashMap<String, Rectangle> getAssertionalRule(Vector<SpatialAssertionalRelation2> saRelations, int filename){
 		
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
 
-		
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(PATH + "2" + ".dat"));
+			String line = null;
+			try {
+				while ((line = reader.readLine()) != null) {
+				    
+					if(line.compareTo("++++++") == 0)
+						break;
+					
+					String[] arr = line.split(" ");
+					if(arr[0].compareTo("table") == 0){
+						insertAtConstraint(recs, saRelations, arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[2]), Integer.parseInt(arr[3]), Integer.parseInt(arr[4]), false);
+					}
+					else
+						insertAtConstraint(recs, saRelations, arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[2]), Integer.parseInt(arr[3]), Integer.parseInt(arr[4]), true);
+					
+//					System.out.println(arr[0] + " " +Integer.parseInt(arr[1])+ " " + Integer.parseInt(arr[2]) + " " + Integer.parseInt(arr[3]) + " " + Integer.parseInt(arr[4]));
+					
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		
-		insertAtConstraint(recs, saRelations, "table", 0, 120, 0, 120, false);
-		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
-		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
-		
-//		insertAtConstraint(recs, saRelations, "book", 98, 108, 57, 67, true); //true
-		insertAtConstraint(recs, saRelations, "book", 45, 55, 20, 30, true); //false
-//		insertAtConstraint(recs, saRelations, "keyboard", 50, 90, 35, 55, true); //false not overlapped with cup
-		insertAtConstraint(recs, saRelations, "keyboard", 56, 106, 20, 40, true); //false overlapped with cup
-//		insertAtConstraint(recs, saRelations, "keyboard", 27, 67, 45, 65, true); //true
 
-		
-		insertAtConstraint(recs, saRelations, "pen", 6, 7, 20, 38, true); //false
-//		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); ////false 15 20		
-		insertAtConstraint(recs, saRelations, "penHolder", 9, 19, 74, 79, true); //false //10, 5
-		
-		
-//		insertAtConstraint(recs, saRelations, "pen", 28, 29, 22, 40, true); //true
-		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); //true
-//		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true); //true
-		
 		return recs;
-	}
 
+		
+		
+
+	}
 	
 }
 

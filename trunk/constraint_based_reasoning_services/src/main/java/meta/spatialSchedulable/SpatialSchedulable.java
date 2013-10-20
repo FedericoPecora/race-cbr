@@ -63,7 +63,12 @@ public class SpatialSchedulable extends MetaConstraint {
 //	private HashMap<Activity, SpatialFluent> activityToFluent;
 //	protected Vector<Activity> activities;
 	
-
+	private int numberOfmisplaced = 0;
+	public int getNumberofMisplaced(){
+		
+		return numberOfmisplaced;
+		
+	}
 	
 	public HashMap<String, UnaryRectangleConstraint> getCurrentAssertionalCons(){
 		return currentAssertionalCons;
@@ -427,7 +432,9 @@ public class SpatialSchedulable extends MetaConstraint {
 //		newGoal.add("phone1");
 //		newGoal.add("vase1");
 		//################################################################################
-
+		
+		numberOfmisplaced = newGoal.size();
+		
 		//set new Goal After old activity
 		for (String st :newGoal) {
 			//add new fluent if there is not already a fluent which represent the goal, 

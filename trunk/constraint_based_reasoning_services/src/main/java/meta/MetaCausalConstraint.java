@@ -1,6 +1,7 @@
 package meta;
 
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Vector;
 import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
@@ -40,8 +41,7 @@ public class MetaCausalConstraint extends MetaConstraint {
 		this.name = domainName;
 		currentResourceUtilizers = new HashMap<SimpleReusableResource2,HashMap<Activity,Integer>>();
 		resourcesMap = new HashMap<String, SimpleReusableResource2>();
-		operators = new Vector<SimpleOperator>();
-				
+		operators = new Vector<SimpleOperator>();		
 		for (int i = 0; i < capacities.length; i++) {
 			//Most critical conflict is the one with most activities 
 			VariableOrderingH varOH = new VariableOrderingH() {
