@@ -45,10 +45,10 @@ import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ValueOrderingH;
 import org.metacsp.framework.VariableOrderingH;
 
-public class Test4 {
+public class Test5 {
 	
 	//the Number of Objects are the same= 6 + 1 (including cup)
-	//missplaced: 3
+	//missplaced: 5
 	//variance: 1 , 2, 3 arms
 	//Initial situation: Holding
 	static int arm_resources = 5;
@@ -531,69 +531,11 @@ public class Test4 {
 
 	}
 	
-//	//book, keyboard and pen is misplaced
-//	private static HashMap<String, Rectangle> getAssertionalRule(Vector<SpatialAssertionalRelation2> saRelations){
-//		
-//		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
-//
-//		insertAtConstraint(recs, saRelations, "table", 0, 120, 0, 120, false);
-//		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
-//		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
-//		
-////		insertAtConstraint(recs, saRelations, "book", 98, 108, 57, 67, true); //true
-//		insertAtConstraint(recs, saRelations, "book", 45, 55, 20, 30, true); //false
-////		insertAtConstraint(recs, saRelations, "keyboard", 50, 90, 35, 55, true); //false not overlapped with cup
-//		insertAtConstraint(recs, saRelations, "keyboard", 56, 106, 20, 40, true); //false overlapped with cup
-////		insertAtConstraint(recs, saRelations, "keyboard", 27, 67, 45, 65, true); //true
-//
-//		
-//		insertAtConstraint(recs, saRelations, "pen", 6, 7, 20, 38, true); //false
-////		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); ////false 15 20		
-////		insertAtConstraint(recs, saRelations, "penHolder", 9, 19, 74, 79, true); //false //10, 5
-//		
-//		
-////		insertAtConstraint(recs, saRelations, "pen", 28, 29, 22, 40, true); //true
-//		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); //true
-//		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true); //true
-//		
-//		return recs;
-//	}
-
-	
-//	//book, keyboard and penHolder is misplaced
-//	private static HashMap<String, Rectangle> getAssertionalRule(Vector<SpatialAssertionalRelation2> saRelations){
-//		
-//		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
-//
-//		insertAtConstraint(recs, saRelations, "table", 0, 120, 0, 120, false);
-//		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
-//		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
-//		
-////		insertAtConstraint(recs, saRelations, "book", 98, 108, 57, 67, true); //true
-//		insertAtConstraint(recs, saRelations, "book", 45, 55, 20, 30, true); //false
-////		insertAtConstraint(recs, saRelations, "keyboard", 50, 90, 35, 55, true); //false not overlapped with cup
-//		insertAtConstraint(recs, saRelations, "keyboard", 56, 106, 20, 40, true); //false overlapped with cup
-////		insertAtConstraint(recs, saRelations, "keyboard", 27, 67, 45, 65, true); //true
-//
-//		
-////		insertAtConstraint(recs, saRelations, "pen", 6, 7, 20, 38, true); //false
-////		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); ////false 15 20		
-//		insertAtConstraint(recs, saRelations, "penHolder", 9, 19, 74, 79, true); //false //10, 5
-//		
-//		
-//		insertAtConstraint(recs, saRelations, "pen", 28, 29, 22, 40, true); //true
-//		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); //true
-////		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true); //true
-//		
-//		return recs;
-//	}
-
-	
-	//pen, keyboard and penHolder is misplaced
 	private static HashMap<String, Rectangle> getAssertionalRule(Vector<SpatialAssertionalRelation2> saRelations){
 		
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
 
+		
 		insertAtConstraint(recs, saRelations, "table", 0, 120, 0, 120, false);
 		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
 		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
@@ -606,17 +548,22 @@ public class Test4 {
 
 		
 		insertAtConstraint(recs, saRelations, "pen", 6, 7, 20, 38, true); //false
-//		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); ////false 15 20		
+		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); ////false 15 20		
 		insertAtConstraint(recs, saRelations, "penHolder", 9, 19, 74, 79, true); //false //10, 5
 		
 		
 //		insertAtConstraint(recs, saRelations, "pen", 28, 29, 22, 40, true); //true
-		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); //true
+//		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); //true
 //		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true); //true
 		
-		return recs;
-	}
 
+
+		return recs;
+
+		
+		
+
+	}
 	
 }
 
