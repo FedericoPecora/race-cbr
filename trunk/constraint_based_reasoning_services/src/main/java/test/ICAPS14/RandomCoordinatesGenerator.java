@@ -17,14 +17,12 @@ public class RandomCoordinatesGenerator {
 	 * also the coordinate of table handcoded, and coordinates of cup is manually undefined (0, 0, 0, 0)
 	 */
 	
-	static int totallExperiment = 20;
-	static String PATH = "/home/iran/Desktop/Benchmark/";
+	static int totallExperiment = 1000;
+	static String PATH = "/home/iran/Desktop/Benchmark/TestCase1/";
 	static int Table_size_x = 120;
 	static int Table_size_y = 120;	
 	public static void main(String[] args) {
 
-		
-				
 		HashMap<String, Rectangle> objsizes = new HashMap<String, Rectangle>();
 //		objsizes.put("table", new Rectangle(120, 120));
 //		objsizes.put("cup", new Rectangle(5,5));
