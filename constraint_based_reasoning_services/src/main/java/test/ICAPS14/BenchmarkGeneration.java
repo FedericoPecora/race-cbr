@@ -57,11 +57,11 @@ public class BenchmarkGeneration {
 	//the Number of Objects are the same= 6 + 1 (including cup)
 	//Initial situation: Holding cup
 	
-	static int totalExp  = 1;
-	static int armsCounter = 6;
-	static String PATH = "/home/iran/Desktop/Benchmark/";
-	static String PATH_INIT_PLOT = "/home/iran/Desktop/Benchmark/Plot_INIT/";
-	static String PATH_FINAL_PLOT = "/home/iran/Desktop/Benchmark/Plot_FINAL/";
+	static int totalExp  = 1000;
+	static int armsCounter = 5;
+	static String PATH = "/home/iran/Desktop/Benchmark/TestCase1/";
+	static String PATH_INIT_PLOT = "/home/iran/Desktop/Benchmark/TestCase1/Plot_INIT/";
+	static String PATH_FINAL_PLOT = "/home/iran/Desktop/Benchmark/TestCase1/Plot_FINAL/";
 	
 	
 	static int pad = 0;	
@@ -71,7 +71,7 @@ public class BenchmarkGeneration {
 		
 		
 		for (int ii = 0; ii < totalExp; ii++) {
-			for (int arm_resources = 5; arm_resources < armsCounter; arm_resources++) {
+			for (int arm_resources = 1; arm_resources < armsCounter; arm_resources++) {
 				MetaSpatialScheduler metaSpatioCasualSolver = new MetaSpatialScheduler(0, 1000, 0);
 				
 				//Most critical conflict is the one with most activities 
@@ -155,15 +155,15 @@ public class BenchmarkGeneration {
 				metaSpatioCasualSolver.backtrack();
 				long totalTime = (Calendar.getInstance().getTimeInMillis()-timeNow);
 //				System.out.println("TOTAL TIME: " + totalTime);
-				
+				if(metaSpatioCasualSolver.getTimeOut())
+					totalTime = Long.MAX_VALUE - 1;
 				BufferedWriter bw = null;
 				String strfile = "";
 				int culpritNumber = metaSpatialSchedulable.getNumberofMisplaced();
-				strfile += "number_of_arm: " + arm_resources + " number_of_culprit: " + culpritNumber +
-						" SearchTime: " + totalTime + "\n";				
+				strfile += "number_of_arm: " + arm_resources + ", SearchTime: " + totalTime + "\n";
+				String postfix = "_"+culpritNumber+".dat";
 				try{
-					
-					bw = new BufferedWriter(new FileWriter(PATH +ii+".dat", true));
+					bw = new BufferedWriter(new FileWriter(PATH +ii+ postfix, true));
 					bw.write(strfile);
 					bw.newLine();
 					bw.flush();
@@ -595,7 +595,7 @@ public class BenchmarkGeneration {
 
 		BufferedReader reader;
 		try {
-			reader = new BufferedReader(new FileReader(PATH + "2" + ".dat"));
+			reader = new BufferedReader(new FileReader(PATH + filename + ".dat"));
 			String line = null;
 			try {
 				while ((line = reader.readLine()) != null) {
