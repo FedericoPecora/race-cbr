@@ -57,11 +57,11 @@ public class BenchmarkGeneration {
 	//the Number of Objects are the same= 6 + 1 (including cup)
 	//Initial situation: Holding cup
 	
-	static int totalExp  = 1000;
+	static int totalExp  = 1;
 	static int armsCounter = 5;
-	static String PATH = "/home/iran/Desktop/Benchmark/TestCase1/";
-	static String PATH_INIT_PLOT = "/home/iran/Desktop/Benchmark/TestCase1/Plot_INIT/";
-	static String PATH_FINAL_PLOT = "/home/iran/Desktop/Benchmark/TestCase1/Plot_FINAL/";
+	static String PATH = "/home/iran/Desktop/TestBenchmark/TestCase1/";
+	static String PATH_INIT_PLOT = "/home/iran/Desktop/TestBenchmark/TestCase1/Plot_INIT/";
+	static String PATH_FINAL_PLOT = "/home/iran/Desktop/TestBenchmark/TestCase1/Plot_FINAL/";
 	
 	
 	static int pad = 0;	
