@@ -291,7 +291,7 @@ public class TestTimelineBaseSpatialReasoning2 {
 
 	private static void addOperator(Vector<SimpleOperator> operators) {
 		
-		long duration = 1;
+		long duration = 5;
 		
 //		AllenIntervalConstraint atStartedByPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds());
 //		AllenIntervalConstraint pickFinishesAt = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Finishes, AllenIntervalConstraint.Type.Finishes.getDefaultBounds());
