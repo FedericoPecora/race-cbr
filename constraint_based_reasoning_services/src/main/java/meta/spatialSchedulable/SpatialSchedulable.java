@@ -568,12 +568,12 @@ public class SpatialSchedulable extends MetaConstraint {
 		
 		
 		
-		System.out.println("------------------------------------------------------------");
-		for (int i = 0; i < peak.length; i++) {
-//			System.out.println(peak[i]);
-			System.out.println(aTOsf.get(peak[i]));
-		}
-		System.out.println("------------------------------------------------------------");
+//		System.out.println("------------------------------------------------------------");
+//		for (int i = 0; i < peak.length; i++) {
+////			System.out.println(peak[i]);
+//			System.out.println(aTOsf.get(peak[i]));
+//		}
+//		System.out.println("------------------------------------------------------------");
 		
 		Vector<UnaryRectangleConstraint> atConstraints = new Vector<UnaryRectangleConstraint>();
 		HashMap<String, SpatialFluent> currentFluent = new HashMap<String, SpatialFluent>();
