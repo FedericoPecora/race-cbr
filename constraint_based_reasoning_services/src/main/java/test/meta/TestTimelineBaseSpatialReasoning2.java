@@ -148,6 +148,7 @@ public class TestTimelineBaseSpatialReasoning2 {
 	}
 	
 	private static LinkedHashMap sortHashMapByValuesD(HashMap passedMap) {
+		   
 		   ArrayList mapKeys = new ArrayList(passedMap.keySet());
 		   ArrayList mapValues = new ArrayList(passedMap.values());
 		   Collections.sort(mapValues);
