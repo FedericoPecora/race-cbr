@@ -47,7 +47,7 @@ import org.metacsp.framework.VariableOrderingH;
 
 
 
-public class FullDomain {
+public class TestDomainWithMoveAndSense {
 	
 	//oneCulprit example
 	static int arm_resources = 2;
@@ -167,7 +167,7 @@ public class FullDomain {
 //		Collections.sort(starttimes.values());
 		starttimes =  sortHashMapByValuesD(starttimes);
 		for (Activity act : starttimes.keySet()) {
-			System.out.println(act + " --> " + starttimes.get(act));
+				System.out.println(act + " --> " + starttimes.get(act));
 		}
 		//#####################################################################################################################
 	}
@@ -230,17 +230,35 @@ public class FullDomain {
 		
 		Vector<Constraint> cons = new Vector<Constraint>();
 		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "table1", "at_table1()", markings.JUSTIFIED,  10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "fork1", "at_fork1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "knife1", "at_knife1_table1()", markings.JUSTIFIED,  10);
-//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "vase1", "at_vase1_table1()", markings.JUSTIFIED,  10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, 10);
 		
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "table1", "at_table1()", markings.UNJUSTIFIED,  25);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "fork1", "at_fork1_table1()", markings.JUSTIFIED, 22);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "knife1", "at_knife1_table1()", markings.JUSTIFIED,  22);
+
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, 22);
+		
+		//===================================================================================================================
+		//initial State
+		//===================================================================================================================
+		
+		
+		Activity one = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
+		one.setSymbolicDomain("at_table2()");
+		one.setMarking(markings.JUSTIFIED);
+		AllenIntervalConstraint releaseAtTable2 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
+		releaseAtTable2.setFrom(one);
+		releaseAtTable2.setTo(one);
+		cons.add(releaseAtTable2);
+		
+		AllenIntervalConstraint durationAtTable2 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
+		durationAtTable2.setFrom(one);
+		durationAtTable2.setTo(one);
+		cons.add(durationAtTable2);
 
 		
-		//===================================================================================================================		
-		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("robot1");
-		two.setSymbolicDomain("holding_cup1(arm)");
+		
+		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
+		two.setSymbolicDomain("at_cup1_table2()");
 		two.setMarking(markings.JUSTIFIED);
 		AllenIntervalConstraint releaseHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
 		releaseHolding.setFrom(two);
@@ -251,7 +269,20 @@ public class FullDomain {
 		durationHolding.setFrom(two);
 		durationHolding.setTo(two);
 		cons.add(durationHolding);
-
+		
+		
+//		Activity sense = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("robot1");
+//		sense.setSymbolicDomain("sense_table1()");
+//		sense.setMarking(markings.UNJUSTIFIED);
+////		AllenIntervalConstraint releaseSensing = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
+////		releaseSensing.setFrom(sense);
+////		releaseSensing.setTo(sense);
+////		cons.add(releaseSensing);
+//		
+//		AllenIntervalConstraint durationSensin = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
+//		durationSensin.setFrom(sense);
+//		durationSensin.setTo(sense);
+//		cons.add(durationSensin);
 		
 		grounSpatialFluentSolver.getConstraintSolvers()[1].addConstraints(cons.toArray(new Constraint[cons.size()]));
 		
@@ -262,8 +293,9 @@ public class FullDomain {
 
 		Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
 		
-		
-		
+		AllenIntervalConstraint toLocationFinishesMove = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy);
+		AllenIntervalConstraint moveMetByFromLocation = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());		
+		AllenIntervalConstraint duringManArea = new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds());
 		AllenIntervalConstraint pickFinishesAt = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.Finishes);
 		AllenIntervalConstraint atStartedByPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.StartedBy);
 		AllenIntervalConstraint placeMetByholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
@@ -272,7 +304,7 @@ public class FullDomain {
 		AllenIntervalConstraint pickDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
 		AllenIntervalConstraint atDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
 		AllenIntervalConstraint placeDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
-		
+		AllenIntervalConstraint moveDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
 		
 		SimpleOperator operator4 = new SimpleOperator("atLocation::at_"+ obj +"_table1()",
 				new AllenIntervalConstraint[] {atStartedByPlace},
@@ -282,11 +314,12 @@ public class FullDomain {
 		operators.add(operator4);
 
 		SimpleOperator operator5 = new SimpleOperator("robot1::place_"+ obj +"_table1(arm)",
-				new AllenIntervalConstraint[] {placeMetByholding},
-				new String[] {"robot1::holding_"+ obj +"(arm)"},
-				new int[] {1});
+				new AllenIntervalConstraint[] {placeMetByholding, duringManArea},
+				new String[] {"robot1::holding_"+ obj +"(arm)", "atLocation::at_table1()"},
+				new int[] {1,0});
 		operator5.addConstraint(placeDuration, 0, 0);
 		operators.add(operator5);
+				
 		
 		SimpleOperator operator6 = new SimpleOperator("robot1::holding_"+ obj +"(arm)",
 				new AllenIntervalConstraint[] {holdingMetByPick},
@@ -295,35 +328,105 @@ public class FullDomain {
 		operator6.addConstraint(holdingDuration, 0, 0);
 		operators.add(operator6);
 
+		
+		SimpleOperator operator2res = new SimpleOperator("robot1::pick_"+ obj +"_table1(arm)",
+				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
+				new String[] {"atLocation::at_"+ obj +"_table1()", "atLocation::at_table1()"},
+				new int[] {1, 0});
+		operator2res.addConstraint(pickDuration, 0, 0);
+		operators.add(operator2res);
+
+		
+		//table2	
+		SimpleOperator operator41 = new SimpleOperator("robot1::pick_"+obj+"_table2(arm)",
+				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
+				new String[] {"atLocation::at_"+obj+"_table2()", "atLocation::at_table2()"},
+				new int[] {1, 0});
+		operator41.addConstraint(pickDuration, 0, 0);
+		operators.add(operator41);
+		
+		SimpleOperator operator42 = new SimpleOperator("atLocation::at_"+obj+"_table2()",
+				new AllenIntervalConstraint[] {atStartedByPlace, duringManArea},
+				new String[] {"robot1::place_"+ obj +"_table2(arm)", "atLocation::at_table2()"},
+				new int[] {0, 0});
+		operator42.addConstraint(atDuration, 0, 0);
+		operators.add(operator42);
+		
+		SimpleOperator operator3a = new SimpleOperator("robot1::holding_"+obj+"(arm)",
+				new AllenIntervalConstraint[] {holdingMetByPick},
+				new String[] {"robot1::pick_"+obj+"_table2(arm)"},
+				new int[] {1});
+		operator3a.addConstraint(holdingDuration, 0, 0);
+		operators.add(operator3a);
+
+		
+		
+		
+//		SimpleOperator operator3a = new SimpleOperator("robot1::holding_"+obj+"(arm)",
+//				new AllenIntervalConstraint[] {holdingMetByPick},
+//				new String[] {"robot1::pick_"+obj+"_table2(arm)"},
+//				new int[] {1});
+//		operator3a.addConstraint(holdingDuration, 0, 0);
+//		operators.add(operator3a);
+//
+//		SimpleOperator operator41 = new SimpleOperator("robot1::pick_"+obj+"_table2(arm)",
+//				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
+//				new String[] {"atLocation::at_"+obj+"_table2()", "atLocation::at_table2()"},
+//				new int[] {1, 0});
+//		operator41.addConstraint(pickDuration, 0, 0);
+//		operators.add(operator41);
+//
+//		SimpleOperator operator42 = new SimpleOperator("atLocation::at_"+obj+"_table2()",
+//				new AllenIntervalConstraint[] {atStartedByPlace},
+//				new String[] {"robot1::place_"+ obj +"_table2(arm)"},
+//				new int[] {0});
+//		operator42.addConstraint(atDuration, 0, 0);
+//		operators.add(operator42);
+		
+//		SimpleOperator operator3a = new SimpleOperator("robot1::holding_cup1(arm)",
+//				new AllenIntervalConstraint[] {holdingMetByPick},
+//				new String[] {"robot1::pick_cup1_table2(arm)"},
+//				new int[] {1});
+//		operator3a.addConstraint(holdingDuration, 0, 0);
+//		operators.add(operator3a);
+//
+//		SimpleOperator operator41 = new SimpleOperator("robot1::pick_cup1_table2(arm)",
+//				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
+//				new String[] {"atLocation::at_cup1_table2()", "atLocation::at_table2()"},
+//				new int[] {1, 0});
+//		operator41.addConstraint(pickDuration, 0, 0);
+//		operators.add(operator41);
+//
+//		SimpleOperator operator42 = new SimpleOperator("atLocation::at_cup1_table2()",
+//				new AllenIntervalConstraint[] {atStartedByPlace},
+//				new String[] {"robot1::place_cup1_table2(arm)"},
+//				new int[] {0});
+//		operator42.addConstraint(atDuration, 0, 0);
+//		operators.add(operator42);
+
+		
+		//tray Stuff
 		/*---*/SimpleOperator operator100 = new SimpleOperator("atLocation::at_"+ obj +"_tray1()",
 				new AllenIntervalConstraint[] {atStartedByPlace},
 				new String[] {"robot1::place_"+ obj +"_tray1(arm)"},
 				new int[] {0});
 		operator100.addConstraint(atDuration, 0, 0);
 		operators.add(operator100);		
-
+		
 		/*---*/SimpleOperator operator111 = new SimpleOperator("robot1::place_"+ obj +"_tray1(arm)",
 				new AllenIntervalConstraint[] {placeMetByholding},
 				new String[] {"robot1::holding_"+ obj +"(arm)"},
 				new int[] {1});
 		operator111.addConstraint(placeDuration, 0, 0);
 		operators.add(operator111);
-
+		
 		/*---*/SimpleOperator operator3cc = new SimpleOperator("robot1::holding_"+ obj +"(arm)",
 				new AllenIntervalConstraint[] {holdingMetByPick},
 				new String[] {"robot1::pick_"+ obj +"_tray1(arm)"},
 				new int[] {1});
 		operator3cc.addConstraint(holdingDuration, 0, 0);
 		operators.add(operator3cc);
-
 		
-		SimpleOperator operator2res = new SimpleOperator("robot1::pick_"+ obj +"_table1(arm)",
-				new AllenIntervalConstraint[] {pickFinishesAt},
-				new String[] {"atLocation::at_"+ obj +"_table1()"},
-				new int[] {1});
-		operator2res.addConstraint(pickDuration, 0, 0);
-		operators.add(operator2res);
-
 		/*---*/SimpleOperator operator411a = new SimpleOperator("robot1::pick_"+ obj +"_tray1(arm)",
 				new AllenIntervalConstraint[] {pickFinishesAt},
 				new String[] {"atLocation::at_"+ obj +"_tray1()"},
@@ -331,66 +434,32 @@ public class FullDomain {
 		operator411a.addConstraint(holdingDuration, 0, 0);
 		operators.add(operator411a);
 
-		//##########################################################################
+		//Move
+		SimpleOperator move1 = new SimpleOperator("robot1::move_table2_table1()",
+				new AllenIntervalConstraint[] {moveMetByFromLocation},
+				new String[] {"atLocation::at_table2()"},
+				new int[] {0});
+		move1.addConstraint(moveDuration, 0, 0);
+		operators.add(move1);
 
-//		SimpleOperator operator6 = new SimpleOperator("robot1::holding_"+ obj +"(arm)",
-//				new AllenIntervalConstraint[] {holdingMetByPick},
-//				new String[] {"robot1::pick_"+ obj +"_table1(arm)"},
-//				new int[] {1});
-//		operator6.addConstraint(holdingDuration, 0, 0);
-//		operators.add(operator6);
-//		
-//		SimpleOperator operator3cc = new SimpleOperator("robot1::holding_"+ obj +"(arm)",
-//				new AllenIntervalConstraint[] {holdingMetByPick},
-//				new String[] {"robot1::pick_"+ obj +"_tray1(arm)"},
-//				new int[] {1});
-//		operator3cc.addConstraint(holdingDuration, 0, 0);
-//		operators.add(operator3cc);
-//		
-//		SimpleOperator operator411a = new SimpleOperator("robot1::pick_"+ obj +"_tray1(arm)",
-//				new AllenIntervalConstraint[] {pickFinishesAt},
-//				new String[] {"atLocation::at_"+ obj +"_tray1()"},
-//				new int[] {1});
-//		operator411a.addConstraint(holdingDuration, 0, 0);
-//		operators.add(operator411a);
-//		
-//		SimpleOperator operator100 = new SimpleOperator("atLocation::at_"+ obj +"_tray1()",
-//				new AllenIntervalConstraint[] {atStartedByPlace},
-//				new String[] {"robot1::place_"+ obj +"_tray1(arm)"},
-//				new int[] {0});
-//		operator100.addConstraint(atDuration, 0, 0);
-//		operators.add(operator100);	
-//		
-//		SimpleOperator operator111 = new SimpleOperator("robot1::place_"+ obj +"_tray1(arm)",
-//				new AllenIntervalConstraint[] {placeMetByholding},
-//				new String[] {"robot1::holding_"+ obj +"(arm)"},
-//				new int[] {1});
-//		operator111.addConstraint(placeDuration, 0, 0);
-//		operators.add(operator111);
-//		
-//		
-//		SimpleOperator operator2res = new SimpleOperator("robot1::pick_"+ obj +"_table1(arm)",
-//				new AllenIntervalConstraint[] {pickFinishesAt},
-//				new String[] {"atLocation::at_"+ obj +"_table1()"},
-//				new int[] {1});
-//		operator2res.addConstraint(pickDuration, 0, 0);
-//		operators.add(operator2res);
-//				
-//		
-//		SimpleOperator operator4 = new SimpleOperator("atLocation::at_"+ obj +"_table1()",
-//				new AllenIntervalConstraint[] {atStartedByPlace},
-//				new String[] {"robot1::place_"+ obj +"_table1(arm)"},
-//				new int[] {0});
-//		operator4.addConstraint(atDuration, 0, 0);
-//		operators.add(operator4);
-//
-//		SimpleOperator operator5 = new SimpleOperator("robot1::place_"+ obj +"_table1(arm)",
-//				new AllenIntervalConstraint[] {placeMetByholding},
-//				new String[] {"robot1::holding_"+ obj +"(arm)"},
-//				new int[] {1});
-//		operator5.addConstraint(placeDuration, 0, 0);
-//		operators.add(operator5);
+		SimpleOperator move2 = new SimpleOperator("atLocation::at_table1()",
+				new AllenIntervalConstraint[] {toLocationFinishesMove, new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds())},
+				new String[] {"robot1::move_table2_table1()", "robot1::sense_table1()"},
+				new int[] {0, 0});
+		move2.addConstraint(atDuration, 0, 0);
+		operators.add(move2);
 
+		
+//		//sense
+//		SimpleOperator senseTable1 = new SimpleOperator("robot1::sense_table1()",
+//				new AllenIntervalConstraint[] {new AllenIntervalConstraint(AllenIntervalConstraint.Type.Starts, AllenIntervalConstraint.Type.Starts.getDefaultBounds())},
+//				new String[] {"atLocation::at_table1()"},
+//				new int[] {0});
+//		senseTable1.addConstraint(atDuration, 0, 0);
+//		operators.add(senseTable1);
+		
+		
+		
 		return operators;
 	}
 	
@@ -520,12 +589,24 @@ public class FullDomain {
 		
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
 		
-		insertAtConstraint(recs, saRelations, "table", 0, 100, 0, 99, false);
-		insertAtConstraint(recs, saRelations, "fork", 29, 35, 13, 32, true);
-		insertAtConstraint(recs, saRelations, "knife", 40, 46, 11, 33, true);
-//		insertAtConstraint(recs, saRelations, "vase", 70, 80, 40, 50, true);
-		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
+//		insertAtConstraint(recs, saRelations, "table", 0, 100, 0, 99, false);
+//		insertAtConstraint(recs, saRelations, "fork", 29, 35, 13, 32, true);
+//		insertAtConstraint(recs, saRelations, "knife", 60, 66, 11, 33, true);
+//		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
 
+		
+		
+//		insertAtConstraint(recs, saRelations, "table", 0, 100, 0, 99, false);
+//		insertAtConstraint(recs, saRelations, "fork", 29, 35, 13, 32, true);
+//		insertAtConstraint(recs, saRelations, "knife", 40, 46, 11, 33, true);
+//		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
+
+		
+		insertAtConstraint(recs, saRelations, "table", 0, 50, 0, 99, false);
+		insertAtConstraint(recs, saRelations, "fork", 20, 26, 13, 32, true);
+		insertAtConstraint(recs, saRelations, "knife", 30, 36, 11, 33, true);
+		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
+		
 		return recs;
 
 
