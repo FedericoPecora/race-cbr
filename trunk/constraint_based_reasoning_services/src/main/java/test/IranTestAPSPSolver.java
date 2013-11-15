@@ -1,5 +1,7 @@
 package test;
 
+
+
 import org.metacsp.time.APSPSolver;
 import org.metacsp.time.SimpleDistanceConstraint;
 import org.metacsp.framework.ConstraintNetwork;
