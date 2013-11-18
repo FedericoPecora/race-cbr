@@ -1,0 +1,62 @@
+apply plugin: 'java'
+
+apply plugin: 'eclipse'
+
+// The Maven plugin is only required if your package is used as a library.
+//apply plugin: 'maven'
+
+// The Application plugin and mainClassName attribute are only required if
+// your package is used as a binary.
+apply plugin: 'application'
+mainClassName = 'org.ros.RosRun'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+version = '0.0.0-SNAPSHOT'
+group = 'race_hybrid_reasoner'
+
+repositories {
+  //This looks in .m2 local repo for deps (below)
+  mavenLocal()
+  
+  //This looks at a maven repo for deps
+  maven {
+    url 'http://robotbrains.hideho.org/nexus/content/groups/ros-public'
+  }
+
+}
+
+dependencies {
+    compile fileTree(dir: 'lib', include: '**/*.jar')
+    compile fileTree(dir: '../meta_csp_framework/lib', include: '**/*.jar')
+//    compile 'meta_csp_framework:meta_csp_framework:0.0.0-SNAPSHOT'
+    compile 'org.metacsp:meta-csp-framework:0.0.0-SNAPSHOT'
+    compile 'constraint_based_reasoning_services:constraint_based_reasoning_services:0.0.0-SNAPSHOT'
+    compile 'ros.rosjava_core:rosjava:0.0.0-SNAPSHOT'
+
+	compile 'net.sf.jung:jung-graph-impl:2.0.1'
+	compile 'net.sourceforge.collections:collections-generic:4.01'
+	compile 'colt:colt:1.2.0'
+	compile 'java3d:j3d-core:1.3.1'
+	compile 'jfree:jcommon:1.0.6'
+	compile 'jfreechart:jfreechart:1.0.0'
+	compile 'jline:jline:1.0'
+	compile 'net.sf.jung:jung-3d:2.0.1'
+	compile 'net.sf.jung:jung-3d-demos:2.0.1'
+	compile 'net.sf.jung:jung-algorithms:2.0.1'
+	compile 'net.sf.jung:jung-api:2.0.1'
+	compile 'net.sf.jung:jung-graph-impl:2.0.1'
+	compile 'net.sf.jung:jung-io:2.0.1'
+	compile 'net.sf.jung:jung-jai:2.0.1'
+	compile 'net.sf.jung:jung-jai-samples:2.0.1'
+	compile 'net.sf.jung:jung-samples:2.0.1'
+	compile 'net.sf.jung:jung-visualization:2.0.1'
+	compile 'org.prefuse:prefuse:beta-20071021'
+	compile 'stax:stax-api:1.0.1'
+	compile 'java3d:vecmath:1.3.1'
+	compile 'org.codehaus.woodstox:wstx-asl:3.2.6'
+
+}
+
+defaultTasks 'installApp'

@@ -1,0 +1,14 @@
+<package>
+  <description brief="race_hybrid_reasoner">
+
+     race_hybrid_reasoner
+
+  </description>
+  <author>iran</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/race_hybrid_reasoner</url>
+
+</package>
+
+
