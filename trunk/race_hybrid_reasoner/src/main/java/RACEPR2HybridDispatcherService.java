@@ -39,9 +39,9 @@ import org.metacsp.framework.ValueOrderingH;
 import org.metacsp.framework.VariableOrderingH;
 import geometry_msgs.Point;
 
-import pr2_papm_sim.GetNextCommand;
-import pr2_papm_sim.GetNextCommandRequest;
-import pr2_papm_sim.GetNextCommandResponse;
+//import pr2_papm_sim.GetNextCommand;
+//import pr2_papm_sim.GetNextCommandRequest;
+//import pr2_papm_sim.GetNextCommandResponse;
 
 
 import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
@@ -89,137 +89,137 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 	public void onStart(ConnectedNode connectedNode) {
 		
 		
-		this.node = connectedNode;
-		
-		groundSolver = (SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0];
-		
-		dispatchedActivity = new Vector<Activity>();
-		
-		
-//		MetaCSPLogging.setLevel(MetaSpatialScheduler.class, Level.FINE);
-//		MetaCSPLogging.setLevel(SpatialSchedulable.class, Level.FINE);
-		//#################################################################################################################
-		//add metaCausalConstraint
-		
-		Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
-		CausalKnowledge.getCausalKnowledge(context, operators);
-		for (int i = 0; i < operators.size(); i++) {
-			metaCausalConstraint.addOperator(operators.get(i));
-		}
-		//#################################################################################################################
-		//add metaOccupiedConstraint
-		metaOccupiedConstraint.setPad(pad);
-		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
-		SpatialKnowledge.getSpatialKnowledge(context, srules);		
-		metaSpatialSchedulable.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
-		metaSpatialSchedulable.setInitialGoal(new String[]{"cup1"});
-		//#################################################################################################################
-		//add resource MetaConstraint and occupiedMetaConstraint
-		for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
-			metaSpatioCasualSolver.addMetaConstraint(sch);
-		}				
-		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
-		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
-		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
-
-		//#################################################################################################################
-		//setInitialState (e.g., holding)
-		insertCurrentState("atLocation", "at_table2()", markings.JUSTIFIED, 1);
-		insertCurrentState("atLocation", "at_cup1_table2()", markings.JUSTIFIED, 1);
-		
-
-		//setInitialSpatialFleunt (e.g., cup1)
-		insertSpatialFluent("cup1", "atLocation", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
-//		insertSpatialFluent("table1", "atLocation", "at_table1()", markings.UNJUSTIFIED, -1);
-		//#################################################################################################################
-		
-		node.newServiceServer("get_next_command", GetNextCommand._TYPE, new ServiceResponseBuilder<GetNextCommandRequest, GetNextCommandResponse>() {
-			
-			@Override
-			public void build(GetNextCommandRequest req, GetNextCommandResponse response){
-				
-				long rostime = (long)req.getTime().secs;				
-				long currentTime = rostime % 100000;				
-				System.out.println("currentTime: " + currentTime);				
-
-				
-				
-				Vector<String> currentState = new Vector<String>();
-				for (String cs : req.getCurrentStates()) {
-					currentState.add(cs);
-				}
-
-				
-				System.out.println("Current State: " + currentState);
-
-				//ADD CURRENT TIME - 1 TO THE END TIME OF THE ACTIVITY
-				if(currentState.size() != 0)
-					insertFinishTime(currentState, currentTime - 1);
-				
-								
-
-				
-				if(currentState.size() != 0 && currentState.get(0).contains("sense")){
-					System.out.println("triggerPerception is ON");
-					buildAssertionRules(req.getObservations());
-//					groundSolver.getConstraintSolvers()[1].removeConstraint(deadlineConstraint);
-					
-					//insertFluent
-					for (Marker marker : req.getObservations()) {
-						if(marker.getNs().compareTo("table") == 0)
-							insertSpatialFluent(marker.getNs().concat("1"), "atLocation", "at_table1()", markings.UNJUSTIFIED, -1);						
-						else insertSpatialFluent(marker.getNs().concat("1"), "atLocation", "at_" + marker.getNs().concat("1") + "_table1()", markings.JUSTIFIED, currentTime - 2);
-						if(marker.getNs().compareTo("table") != 0)
-							insertSpatialFluent(marker.getNs().concat("1"), "atLocation", "at_" + marker.getNs().concat("1") + "_table1()", markings.JUSTIFIED, currentTime - 2);
-					}
-					System.out.println("saRelation.size" + saRelations.size());
-					metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
-				}
-				
-				metaSpatioCasualSolver.backtrack();
-				Vector<Activity> toBeDispatchedActions = getNextActions(currentState, currentTime);
-				response.setActionCommand(getActionCommandResponse(toBeDispatchedActions));
-				
-				for (int i = 0; i < toBeDispatchedActions.size(); i++) {
-					//Set the refinement (placement) related to the ToBeDispatched 
-					if(toBeDispatchedActions.get(i).getInternalVariables()[1].toString().contains("place") && 
-							!toBeDispatchedActions.get(i).getInternalVariables()[1].toString().contains("tray"))
-						response.setPlacingBB(getObjectActionRefinement(toBeDispatchedActions));						
-				}
-
-				
-				
-				if(debug){
-					System.out.println("____________________________________________________________-");
-					HashMap<Activity, Long> starttimes = new HashMap<Activity, Long>();
-					for (int i = 0; i < ((ActivityNetworkSolver)groundSolver.getConstraintSolvers()[1]).getVariables().length; i++) {
-						starttimes.put((Activity) ((ActivityNetworkSolver)groundSolver.getConstraintSolvers()[1]).getVariables()[i], ((Activity)((ActivityNetworkSolver)groundSolver.getConstraintSolvers()[1]).getVariables()[i]).getTemporalVariable().getStart().getLowerBound());			
-					}
-
-					//		Collections.sort(starttimes.values());
-					starttimes =  sortHashMapByValuesD(starttimes);
-					for (Activity act : starttimes.keySet()) {
-						System.out.println(act + " --> " + starttimes.get(act));
-					}
-					System.out.println("____________________________________________________________-");
-				}
-				
-
-				
-				System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-				for (int i = 0; i < toBeDispatchedActions.size(); i++) {
-					dispatchedActivity.add(toBeDispatchedActions.get(i));
-					System.out.println(toBeDispatchedActions.get(i));
-				}
-				System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-				
-				
-			}
-
-
-
-
-		}); 			
+//		this.node = connectedNode;
+//		
+//		groundSolver = (SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0];
+//		
+//		dispatchedActivity = new Vector<Activity>();
+//		
+//		
+////		MetaCSPLogging.setLevel(MetaSpatialScheduler.class, Level.FINE);
+////		MetaCSPLogging.setLevel(SpatialSchedulable.class, Level.FINE);
+//		//#################################################################################################################
+//		//add metaCausalConstraint
+//		
+//		Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
+//		CausalKnowledge.getCausalKnowledge(context, operators);
+//		for (int i = 0; i < operators.size(); i++) {
+//			metaCausalConstraint.addOperator(operators.get(i));
+//		}
+//		//#################################################################################################################
+//		//add metaOccupiedConstraint
+//		metaOccupiedConstraint.setPad(pad);
+//		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
+//		SpatialKnowledge.getSpatialKnowledge(context, srules);		
+//		metaSpatialSchedulable.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
+//		metaSpatialSchedulable.setInitialGoal(new String[]{"cup1"});
+//		//#################################################################################################################
+//		//add resource MetaConstraint and occupiedMetaConstraint
+//		for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
+//			metaSpatioCasualSolver.addMetaConstraint(sch);
+//		}				
+//		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
+//		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
+//		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
+//
+//		//#################################################################################################################
+//		//setInitialState (e.g., holding)
+//		insertCurrentState("atLocation", "at_table2()", markings.JUSTIFIED, 1);
+//		insertCurrentState("atLocation", "at_cup1_table2()", markings.JUSTIFIED, 1);
+//		
+//
+//		//setInitialSpatialFleunt (e.g., cup1)
+//		insertSpatialFluent("cup1", "atLocation", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
+////		insertSpatialFluent("table1", "atLocation", "at_table1()", markings.UNJUSTIFIED, -1);
+//		//#################################################################################################################
+//		
+//		node.newServiceServer("get_next_command", GetNextCommand._TYPE, new ServiceResponseBuilder<GetNextCommandRequest, GetNextCommandResponse>() {
+//			
+//			@Override
+//			public void build(GetNextCommandRequest req, GetNextCommandResponse response){
+//				
+//				long rostime = (long)req.getTime().secs;				
+//				long currentTime = rostime % 100000;				
+//				System.out.println("currentTime: " + currentTime);				
+//
+//				
+//				
+//				Vector<String> currentState = new Vector<String>();
+//				for (String cs : req.getCurrentStates()) {
+//					currentState.add(cs);
+//				}
+//
+//				
+//				System.out.println("Current State: " + currentState);
+//
+//				//ADD CURRENT TIME - 1 TO THE END TIME OF THE ACTIVITY
+//				if(currentState.size() != 0)
+//					insertFinishTime(currentState, currentTime - 1);
+//				
+//								
+//
+//				
+//				if(currentState.size() != 0 && currentState.get(0).contains("sense")){
+//					System.out.println("triggerPerception is ON");
+//					buildAssertionRules(req.getObservations());
+////					groundSolver.getConstraintSolvers()[1].removeConstraint(deadlineConstraint);
+//					
+//					//insertFluent
+//					for (Marker marker : req.getObservations()) {
+//						if(marker.getNs().compareTo("table") == 0)
+//							insertSpatialFluent(marker.getNs().concat("1"), "atLocation", "at_table1()", markings.UNJUSTIFIED, -1);						
+//						else insertSpatialFluent(marker.getNs().concat("1"), "atLocation", "at_" + marker.getNs().concat("1") + "_table1()", markings.JUSTIFIED, currentTime - 2);
+//						if(marker.getNs().compareTo("table") != 0)
+//							insertSpatialFluent(marker.getNs().concat("1"), "atLocation", "at_" + marker.getNs().concat("1") + "_table1()", markings.JUSTIFIED, currentTime - 2);
+//					}
+//					System.out.println("saRelation.size" + saRelations.size());
+//					metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
+//				}
+//				
+//				metaSpatioCasualSolver.backtrack();
+//				Vector<Activity> toBeDispatchedActions = getNextActions(currentState, currentTime);
+//				response.setActionCommand(getActionCommandResponse(toBeDispatchedActions));
+//				
+//				for (int i = 0; i < toBeDispatchedActions.size(); i++) {
+//					//Set the refinement (placement) related to the ToBeDispatched 
+//					if(toBeDispatchedActions.get(i).getInternalVariables()[1].toString().contains("place") && 
+//							!toBeDispatchedActions.get(i).getInternalVariables()[1].toString().contains("tray"))
+//						response.setPlacingBB(getObjectActionRefinement(toBeDispatchedActions));						
+//				}
+//
+//				
+//				
+//				if(debug){
+//					System.out.println("____________________________________________________________-");
+//					HashMap<Activity, Long> starttimes = new HashMap<Activity, Long>();
+//					for (int i = 0; i < ((ActivityNetworkSolver)groundSolver.getConstraintSolvers()[1]).getVariables().length; i++) {
+//						starttimes.put((Activity) ((ActivityNetworkSolver)groundSolver.getConstraintSolvers()[1]).getVariables()[i], ((Activity)((ActivityNetworkSolver)groundSolver.getConstraintSolvers()[1]).getVariables()[i]).getTemporalVariable().getStart().getLowerBound());			
+//					}
+//
+//					//		Collections.sort(starttimes.values());
+//					starttimes =  sortHashMapByValuesD(starttimes);
+//					for (Activity act : starttimes.keySet()) {
+//						System.out.println(act + " --> " + starttimes.get(act));
+//					}
+//					System.out.println("____________________________________________________________-");
+//				}
+//				
+//
+//				
+//				System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//				for (int i = 0; i < toBeDispatchedActions.size(); i++) {
+//					dispatchedActivity.add(toBeDispatchedActions.get(i));
+//					System.out.println(toBeDispatchedActions.get(i));
+//				}
+//				System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//				
+//				
+//			}
+//
+//
+//
+//
+//		}); 			
 	}
 	
 	private List<Marker> getObjectActionRefinement(Vector<Activity> toBeDispatchedActions) {
