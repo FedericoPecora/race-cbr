@@ -57,6 +57,11 @@ import org.metacsp.time.Bounds;
 import org.metacsp.utility.logging.MetaCSPLogging;
 import visualization_msgs.Marker;
 
+/**
+ * @author Iran Mansouri
+ * Orebro University 
+ * Under RACE Poject
+ */
 
 public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 	
