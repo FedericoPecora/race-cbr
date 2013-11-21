@@ -38,11 +38,16 @@ import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ValueOrderingH;
 import org.metacsp.framework.VariableOrderingH;
 import geometry_msgs.Point;
+import geometry_msgs.Pose;
+import geometry_msgs.PoseStamped;
 
 //import pr2_papm_sim.GetNextCommand;
 //import pr2_papm_sim.GetNextCommandRequest;
 //import pr2_papm_sim.GetNextCommandResponse;
-
+import race_msgs.GetNextCommand;
+import race_msgs.GetNextCommandRequest;
+import race_msgs.GetNextCommandResponse;
+import race_msgs.ObjectHypothesis;
 
 import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
 import spatial.utility.SpatialAssertionalRelation2;
@@ -89,140 +94,140 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 	public void onStart(ConnectedNode connectedNode) {
 		
 		
-//		this.node = connectedNode;
-//		
-//		groundSolver = (SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0];
-//		
-//		dispatchedActivity = new Vector<Activity>();
-//		
-//		
-////		MetaCSPLogging.setLevel(MetaSpatialScheduler.class, Level.FINE);
-////		MetaCSPLogging.setLevel(SpatialSchedulable.class, Level.FINE);
-//		//#################################################################################################################
-//		//add metaCausalConstraint
-//		
-//		Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
-//		CausalKnowledge.getCausalKnowledge(context, operators);
-//		for (int i = 0; i < operators.size(); i++) {
-//			metaCausalConstraint.addOperator(operators.get(i));
-//		}
-//		//#################################################################################################################
-//		//add metaOccupiedConstraint
-//		metaOccupiedConstraint.setPad(pad);
-//		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
-//		SpatialKnowledge.getSpatialKnowledge(context, srules);		
-//		metaSpatialSchedulable.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
-//		metaSpatialSchedulable.setInitialGoal(new String[]{"cup1"});
-//		//#################################################################################################################
-//		//add resource MetaConstraint and occupiedMetaConstraint
-//		for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
-//			metaSpatioCasualSolver.addMetaConstraint(sch);
-//		}				
-//		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
-//		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
-//		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
-//
-//		//#################################################################################################################
-//		//setInitialState (e.g., holding)
-//		insertCurrentState("atLocation", "at_table2()", markings.JUSTIFIED, 1);
-//		insertCurrentState("atLocation", "at_cup1_table2()", markings.JUSTIFIED, 1);
-//		
-//
-//		//setInitialSpatialFleunt (e.g., cup1)
-//		insertSpatialFluent("cup1", "atLocation", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
-////		insertSpatialFluent("table1", "atLocation", "at_table1()", markings.UNJUSTIFIED, -1);
-//		//#################################################################################################################
-//		
-//		node.newServiceServer("get_next_command", GetNextCommand._TYPE, new ServiceResponseBuilder<GetNextCommandRequest, GetNextCommandResponse>() {
-//			
-//			@Override
-//			public void build(GetNextCommandRequest req, GetNextCommandResponse response){
-//				
-//				long rostime = (long)req.getTime().secs;				
-//				long currentTime = rostime % 100000;				
-//				System.out.println("currentTime: " + currentTime);				
-//
-//				
-//				
-//				Vector<String> currentState = new Vector<String>();
-//				for (String cs : req.getCurrentStates()) {
-//					currentState.add(cs);
-//				}
-//
-//				
-//				System.out.println("Current State: " + currentState);
-//
-//				//ADD CURRENT TIME - 1 TO THE END TIME OF THE ACTIVITY
-//				if(currentState.size() != 0)
-//					insertFinishTime(currentState, currentTime - 1);
-//				
-//								
-//
-//				
-//				if(currentState.size() != 0 && currentState.get(0).contains("sense")){
-//					System.out.println("triggerPerception is ON");
-//					buildAssertionRules(req.getObservations());
-////					groundSolver.getConstraintSolvers()[1].removeConstraint(deadlineConstraint);
-//					
-//					//insertFluent
-//					for (Marker marker : req.getObservations()) {
-//						if(marker.getNs().compareTo("table") == 0)
-//							insertSpatialFluent(marker.getNs().concat("1"), "atLocation", "at_table1()", markings.UNJUSTIFIED, -1);						
-//						else insertSpatialFluent(marker.getNs().concat("1"), "atLocation", "at_" + marker.getNs().concat("1") + "_table1()", markings.JUSTIFIED, currentTime - 2);
-//						if(marker.getNs().compareTo("table") != 0)
-//							insertSpatialFluent(marker.getNs().concat("1"), "atLocation", "at_" + marker.getNs().concat("1") + "_table1()", markings.JUSTIFIED, currentTime - 2);
-//					}
-//					System.out.println("saRelation.size" + saRelations.size());
-//					metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
-//				}
-//				
-//				metaSpatioCasualSolver.backtrack();
-//				Vector<Activity> toBeDispatchedActions = getNextActions(currentState, currentTime);
-//				response.setActionCommand(getActionCommandResponse(toBeDispatchedActions));
-//				
-//				for (int i = 0; i < toBeDispatchedActions.size(); i++) {
-//					//Set the refinement (placement) related to the ToBeDispatched 
-//					if(toBeDispatchedActions.get(i).getInternalVariables()[1].toString().contains("place") && 
-//							!toBeDispatchedActions.get(i).getInternalVariables()[1].toString().contains("tray"))
-//						response.setPlacingBB(getObjectActionRefinement(toBeDispatchedActions));						
-//				}
-//
-//				
-//				
-//				if(debug){
-//					System.out.println("____________________________________________________________-");
-//					HashMap<Activity, Long> starttimes = new HashMap<Activity, Long>();
-//					for (int i = 0; i < ((ActivityNetworkSolver)groundSolver.getConstraintSolvers()[1]).getVariables().length; i++) {
-//						starttimes.put((Activity) ((ActivityNetworkSolver)groundSolver.getConstraintSolvers()[1]).getVariables()[i], ((Activity)((ActivityNetworkSolver)groundSolver.getConstraintSolvers()[1]).getVariables()[i]).getTemporalVariable().getStart().getLowerBound());			
-//					}
-//
-//					//		Collections.sort(starttimes.values());
-//					starttimes =  sortHashMapByValuesD(starttimes);
-//					for (Activity act : starttimes.keySet()) {
-//						System.out.println(act + " --> " + starttimes.get(act));
-//					}
-//					System.out.println("____________________________________________________________-");
-//				}
-//				
-//
-//				
-//				System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-//				for (int i = 0; i < toBeDispatchedActions.size(); i++) {
-//					dispatchedActivity.add(toBeDispatchedActions.get(i));
-//					System.out.println(toBeDispatchedActions.get(i));
-//				}
-//				System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-//				
-//				
-//			}
-//
-//
-//
-//
-//		}); 			
+		this.node = connectedNode;
+		
+		groundSolver = (SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0];
+		
+		dispatchedActivity = new Vector<Activity>();
+		
+		
+//		MetaCSPLogging.setLevel(MetaSpatialScheduler.class, Level.FINE);
+//		MetaCSPLogging.setLevel(SpatialSchedulable.class, Level.FINE);
+		//#################################################################################################################
+		//add metaCausalConstraint
+		
+		Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
+		CausalKnowledge.getCausalKnowledge(context, operators);
+		for (int i = 0; i < operators.size(); i++) {
+			metaCausalConstraint.addOperator(operators.get(i));
+		}
+		//#################################################################################################################
+		//add metaOccupiedConstraint
+		metaOccupiedConstraint.setPad(pad);
+		Vector<SpatialRule2> srules = new Vector<SpatialRule2>();
+		SpatialKnowledge.getSpatialKnowledge(context, srules);		
+		metaSpatialSchedulable.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
+		metaSpatialSchedulable.setInitialGoal(new String[]{"cup1"});
+		//#################################################################################################################
+		//add resource MetaConstraint and occupiedMetaConstraint
+		for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
+			metaSpatioCasualSolver.addMetaConstraint(sch);
+		}				
+		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
+		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
+		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
+
+		//#################################################################################################################
+		//setInitialState (e.g., holding)
+		insertCurrentState("atLocation", "at_table2()", markings.JUSTIFIED, 1);
+		insertCurrentState("atLocation", "at_cup1_table2()", markings.JUSTIFIED, 1);
+		
+
+		//setInitialSpatialFleunt (e.g., cup1)
+		insertSpatialFluent("cup1", "atLocation", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
+//		insertSpatialFluent("table1", "atLocation", "at_table1()", markings.UNJUSTIFIED, -1);
+		//#################################################################################################################
+		
+		node.newServiceServer("get_next_command", GetNextCommand._TYPE, new ServiceResponseBuilder<GetNextCommandRequest, GetNextCommandResponse>() {
+			
+			@Override
+			public void build(GetNextCommandRequest req, GetNextCommandResponse response){
+				
+				long rostime = (long)req.getTime().secs;				
+				long currentTime = rostime % 100000;				
+				System.out.println("currentTime: " + currentTime);				
+
+				
+				
+				Vector<String> currentState = new Vector<String>();
+				for (String cs : req.getCurrentStates()) {
+					currentState.add(cs);
+				}
+
+				
+				System.out.println("Current State: " + currentState);
+
+				//ADD CURRENT TIME - 1 TO THE END TIME OF THE ACTIVITY
+				if(currentState.size() != 0)
+					insertFinishTime(currentState, currentTime - 1);
+				
+								
+
+				
+				if(currentState.size() != 0 && currentState.get(0).contains("sense")){
+					System.out.println("triggerPerception is ON");
+					buildAssertionRules(req.getObservations());
+//					groundSolver.getConstraintSolvers()[1].removeConstraint(deadlineConstraint);
+					
+					//insertFluent
+					for (ObjectHypothesis marker : req.getObservations()) {
+						if(marker.getType().compareTo("table") == 0)
+							insertSpatialFluent(marker.getType().concat("1"), "atLocation", "at_table1()", markings.UNJUSTIFIED, -1);						
+						else insertSpatialFluent(marker.getType().concat("1"), "atLocation", "at_" + marker.getType().concat("1") + "_table1()", markings.JUSTIFIED, currentTime - 2);
+						if(marker.getType().compareTo("table") != 0)
+							insertSpatialFluent(marker.getType().concat("1"), "atLocation", "at_" + marker.getType().concat("1") + "_table1()", markings.JUSTIFIED, currentTime - 2);
+					}
+					System.out.println("saRelation.size" + saRelations.size());
+					metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
+				}
+				
+				metaSpatioCasualSolver.backtrack();
+				Vector<Activity> toBeDispatchedActions = getNextActions(currentState, currentTime);
+				response.setActionCommand(getActionCommandResponse(toBeDispatchedActions));
+				
+				for (int i = 0; i < toBeDispatchedActions.size(); i++) {
+					//Set the refinement (placement) related to the ToBeDispatched 
+					if(toBeDispatchedActions.get(i).getInternalVariables()[1].toString().contains("place") && 
+							!toBeDispatchedActions.get(i).getInternalVariables()[1].toString().contains("tray"))
+						response.setPlacingBB(getObjectActionRefinement(toBeDispatchedActions));						
+				}
+
+				
+				
+				if(debug){
+					System.out.println("____________________________________________________________-");
+					HashMap<Activity, Long> starttimes = new HashMap<Activity, Long>();
+					for (int i = 0; i < ((ActivityNetworkSolver)groundSolver.getConstraintSolvers()[1]).getVariables().length; i++) {
+						starttimes.put((Activity) ((ActivityNetworkSolver)groundSolver.getConstraintSolvers()[1]).getVariables()[i], ((Activity)((ActivityNetworkSolver)groundSolver.getConstraintSolvers()[1]).getVariables()[i]).getTemporalVariable().getStart().getLowerBound());			
+					}
+
+					//		Collections.sort(starttimes.values());
+					starttimes =  sortHashMapByValuesD(starttimes);
+					for (Activity act : starttimes.keySet()) {
+						System.out.println(act + " --> " + starttimes.get(act));
+					}
+					System.out.println("____________________________________________________________-");
+				}
+				
+
+				
+				System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+				for (int i = 0; i < toBeDispatchedActions.size(); i++) {
+					dispatchedActivity.add(toBeDispatchedActions.get(i));
+					System.out.println(toBeDispatchedActions.get(i));
+				}
+				System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+				
+				
+			}
+
+
+
+
+		}); 			
 	}
 	
-	private List<Marker> getObjectActionRefinement(Vector<Activity> toBeDispatchedActions) {
+	private List<ObjectHypothesis> getObjectActionRefinement(Vector<Activity> toBeDispatchedActions) {
 		
 		Vector<String> placements = new Vector<String>();
 		for (Activity act : toBeDispatchedActions) {
@@ -231,35 +236,48 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 			}
 		}
 		
-		ArrayList<Marker> markers = new ArrayList<Marker>();
+		ArrayList<ObjectHypothesis> ohList = new ArrayList<ObjectHypothesis>();
 		
 		for (String str : placements) {
 			System.out.println("str: " + str);
 			Rectangle rec = ((RectangleConstraintSolver)((SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0])
 					.getConstraintSolvers()[0]).extractBoundingBoxesFromSTPsByName(str).lastElement().getAlmostCentreRectangle();
-			Marker mrk = node.getTopicMessageFactory().newFromType(Marker._TYPE);
+			ObjectHypothesis objectypo = node.getTopicMessageFactory().newFromType(ObjectHypothesis._TYPE);
 			String ns = str.replaceAll("\\d*$", "");
-			mrk.setNs(ns);
-						
-			ArrayList<Point> points = new ArrayList<Point>();
+			objectypo.setType(ns);
+			
+			
+			PoseStamped poseS = node.getTopicMessageFactory().newFromType(PoseStamped._TYPE);
+			Pose pose = node.getTopicMessageFactory().newFromType(Pose._TYPE);
 			Point p = node.getTopicMessageFactory().newFromType(Point._TYPE);
-			p.setX((double)rec.getX() /100); //minx
-			p.setY((double)rec.getY() /100); //miny
-			System.out.println("p: " + (double)rec.getX() /100 + " " + (double)rec.getY() /100);
-			points.add(p);
+			p.setX((double)rec.getCenterX() / 100);
+			p.setY((double)rec.getCenterY() / 100);
+			pose.setPosition(p);
+			poseS.setPose(pose);
 			
-			Point p1 = node.getTopicMessageFactory().newFromType(Point._TYPE);
-			p1.setX((double)(rec.getX() + rec.getWidth()) /100); //maxx
-			p1.setY((double)(rec.getY() + rec.getHeight()) /100); //maxy
-			System.out.println("p1: " + (double)(rec.getX() + rec.getWidth()) /100 + " " + (double)(rec.getY() + rec.getHeight()) /100);
-			points.add(p1);
-			
-			mrk.setPoints(points);
-			markers.add(mrk);
+			race_msgs.BoundingBox bb = node.getTopicMessageFactory().newFromType(race_msgs.BoundingBox._TYPE);
+			bb.setPoseStamped(poseS);
+			objectypo.setBbox(bb);
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//			ArrayList<Point> points = new ArrayList<Point>();
+//			Point p = node.getTopicMessageFactory().newFromType(Point._TYPE);
+//			p.setX((double)rec.getX() /100); //minx
+//			p.setY((double)rec.getY() /100); //miny
+//			System.out.println("p: " + (double)rec.getX() /100 + " " + (double)rec.getY() /100);
+//			points.add(p);
+//			
+//			Point p1 = node.getTopicMessageFactory().newFromType(Point._TYPE);
+//			p1.setX((double)(rec.getX() + rec.getWidth()) /100); //maxx
+//			p1.setY((double)(rec.getY() + rec.getHeight()) /100); //maxy
+//			System.out.println("p1: " + (double)(rec.getX() + rec.getWidth()) /100 + " " + (double)(rec.getY() + rec.getHeight()) /100);
+//			points.add(p1);
+//			
+//			mrk.setPoints(points);
+			ohList.add(objectypo);
 		}
 		
 		
-		return markers;
+		return ohList;
 	}
 	
 	private List<String> getActionCommandResponse(Vector<Activity> toBeDispatchedActions) {
@@ -362,13 +380,15 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 		return false;
 	}
 
-	private void buildAssertionRules(List<Marker> markers) {
+	private void buildAssertionRules(List<ObjectHypothesis> hypothses) {
 
 //		saRelations = new Vector<SpatialAssertionalRelation2>();
-		for (Marker marker : markers) {
-			SpatialAssertionalRelation2 sa = new SpatialAssertionalRelation2(marker.getNs() + "1", marker.getNs());
+		
+		
+		for (ObjectHypothesis oh : hypothses) {
+			SpatialAssertionalRelation2 sa = new SpatialAssertionalRelation2(oh.getType() + "1", oh.getType());
 			
-			if(marker.getNs().compareTo("table") == 0){
+			if(oh.getType().compareTo("table") == 0){
 				OntologicalSpatialProperty noneMOvable = new OntologicalSpatialProperty();
 				noneMOvable.setMovable(false);
 				sa.setOntologicalProp(noneMOvable);
@@ -381,25 +401,29 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 
 			
 			
-			if(marker.getPoints().get(0).getX() < 0)
+			if(oh.getBbox().getPoseStamped().getPose().getPosition().getX() < 0)
 				sa.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At,new Bounds(0, APSPSolver.INF), 
 						new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF))) ;
-			else
+			else{
+				
+				long x_size = (long)oh.getBbox().getDimensions().getX() * 100;
+				long y_size = (long)oh.getBbox().getDimensions().getY() * 100;
+				long x_center = (long)oh.getBbox().getPoseStamped().getPose().getPosition().getX() * 100;
+				long y_center = (long)oh.getBbox().getPoseStamped().getPose().getPosition().getY() * 100;
+				
 			    sa.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At,
-			    		new Bounds((long)(marker.getPoints().get(0).getX() * 100), (long)(marker.getPoints().get(0).getX() * 100)), 
-			    		new Bounds((long)(marker.getPoints().get(1).getX() * 100), (long)(marker.getPoints().get(1).getX() * 100)), 
-			    		new Bounds((long)(marker.getPoints().get(0).getY() * 100), (long)(marker.getPoints().get(0).getY() * 100)), 
-			    		new Bounds((long)(marker.getPoints().get(1).getY() * 100), (long)(marker.getPoints().get(1).getY() * 100))));
-			    
+			    		new Bounds((long)(x_center - x_size), (long)(x_center - x_size)), 
+			    		new Bounds((long)(x_center + x_size), (long)(x_center + x_size)), 
+			    		new Bounds((long)(y_center - y_size), (long)(y_center - y_size)), 
+			    		new Bounds((long)(y_center + y_size), (long)(y_center + y_size))));
+						
+				System.out.println(oh.getType());
+				System.out.println((long)(x_center - x_size) + " " + (long)(x_center - x_size));
+				System.out.println((long)(x_center + x_size) + " " + (long)(x_center + x_size));
+				System.out.println((long)(y_center - y_size) + " " + (long)(y_center - y_size));
+				System.out.println((long)(y_center + y_size) + " " + (long)(y_center + y_size));
+			}
 			saRelations.add(sa);
-			
-			
-			
-			System.out.println(marker.getNs());
-			System.out.println((long)(marker.getPoints().get(0).getX() * 100) + " " + (long)(marker.getPoints().get(0).getX() * 100));
-			System.out.println((long)(marker.getPoints().get(1).getX() * 100) + " " + (long)(marker.getPoints().get(1).getX() * 100));
-			System.out.println((long)(marker.getPoints().get(0).getY() * 100) + " " + (long)(marker.getPoints().get(0).getY() * 100));
-			System.out.println((long)(marker.getPoints().get(1).getY() * 100) + " " + (long)(marker.getPoints().get(1).getY() * 100));
 		}
 		
 		for (int i = 0; i < saRelations.size(); i++) {
