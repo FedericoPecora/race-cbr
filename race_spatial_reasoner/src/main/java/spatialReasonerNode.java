@@ -104,9 +104,6 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 		StaticSpatialKnowledge.getSpatialKnowledge(spatialKnowledge);
 
-
-
-
 		Subscriber<Fluent> fluentArrsubscriber = connectedNode.newSubscriber(MYTOPIC, Fluent._TYPE);
 		fluentArrsubscriber.addMessageListener(new MessageListener<Fluent>() {
 			@Override
@@ -567,6 +564,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		for (Fluent f : passiveObjectsFluents) {			
 			for (Property p : f.getProperties()) {
 				if(p.getRoleType().contains("Constraint")){
+					System.out.println(p.getObjectFiller());
 					reifiedCons.put(p.getObjectFiller(), f.getName());
 					paasiveObjCategories.put(f.getName(), f.getType());
 					getConstraintFluent(p.getObjectFiller(),i++);

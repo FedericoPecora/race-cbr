@@ -58,6 +58,10 @@ import race_msgs.FluentArray;
 import race_msgs.GetFluentsByQuery;
 import race_msgs.GetFluentsByQueryRequest;
 import race_msgs.GetFluentsByQueryResponse;
+import race_msgs.Property;
+import race_msgs.RetrieveFluent;
+import race_msgs.RetrieveFluentRequest;
+import race_msgs.RetrieveFluentResponse;
 
 
 import org.metacsp.time.APSPSolver;
@@ -78,12 +82,13 @@ public class ObstacleReasonerNode extends AbstractNodeMain {
 	private ConnectedNode node;
 	private static final String MYTOPIC = "blackboard/passiveObjectTopic"; //to get Occupied coordinates
 
+	private HashMap<String, Rectangle> obstacles = new HashMap<String, Rectangle>();
 
 	@Override
 	public void onStart(ConnectedNode connectedNode) {
 
 		this.node = connectedNode;
-		
+
 		Subscriber<Fluent> fluentArrsubscriber = connectedNode.newSubscriber(MYTOPIC, Fluent._TYPE);
 		fluentArrsubscriber.addMessageListener(new MessageListener<Fluent>() {
 			@Override
@@ -94,30 +99,34 @@ public class ObstacleReasonerNode extends AbstractNodeMain {
 			}
 		});
 
-		//get the fluent from 
-		//get all the area coordinate (look at the Martin code for visualizer)
+		//test
+		obstacles.put("testArea", new Rectangle(100, 100, 50, 100));
+
+		//get all bounding boxes 
+		getAllAreas();
+
 		//iteratively check which area is occupied
 		//add fluent to blackboard of type  (look at deliverable 2.3!4!)
 
 
 
 
-//		Subscriber<Fluent> fluentArrsubscriber = connectedNode.newSubscriber(MYTOPIC, Fluent._TYPE);
-//		fluentArrsubscriber.addMessageListener(new MessageListener<Fluent>() {
-//			@Override
-//			public void onNewMessage(Fluent message) {	
-//				System.out.println("get new furniture");
-//
-//				
-//			}
-//		});
+		//		Subscriber<Fluent> fluentArrsubscriber = connectedNode.newSubscriber(MYTOPIC, Fluent._TYPE);
+		//		fluentArrsubscriber.addMessageListener(new MessageListener<Fluent>() {
+		//			@Override
+		//			public void onNewMessage(Fluent message) {	
+		//				System.out.println("get new furniture");
+		//
+		//				
+		//			}
+		//		});
 
 
 
 
 	}
-	
-		
+
+
 	private void getObstacleAreaFromPerception() {
 
 		ServiceClient<GetFluentsByQueryRequest, GetFluentsByQueryResponse> getPassiveObjsClients = null;
@@ -155,7 +164,7 @@ public class ObstacleReasonerNode extends AbstractNodeMain {
 					System.out.println("waiting for initial knowledge to be loaded");
 				}
 				if(response.getFluents().size() != 0);
-					//call the Process
+				//call the Process
 
 			}
 
@@ -165,6 +174,103 @@ public class ObstacleReasonerNode extends AbstractNodeMain {
 
 			}
 		});
+
+	}
+
+	private void getAllAreas() {
+
+		ServiceClient<GetFluentsByQueryRequest, GetFluentsByQueryResponse> getBBs = null;
+		try {
+			getBBs = node.newServiceClient("blackboard/get_fluents_by_query", GetFluentsByQuery._TYPE);
+		} catch (org.ros.exception.ServiceNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		final GetFluentsByQueryRequest bbRequest = getBBs.newMessage();
+		bbRequest.setQuery("select distinct ?instance where {?instance upper:hasBoundingBox ?any}");
+		
+//		bbRequest.setQuery("select distinct ?instance where {?instance rdf:type ?subclass . ?subclass rdfs:subClassOf+ owl:BoundingBox}");
+//		bbRequest.setQuery("select distinct ?instance where {?instance a ?subclass. ?subclass rdfs:subClassOf+ race:BoundingBox}");
+
+		getBBs.call(bbRequest, new ServiceResponseListener<GetFluentsByQueryResponse>() {
+
+			@Override
+			public void onSuccess(GetFluentsByQueryResponse response) {
+
+				for (Fluent f : response.getFluents()) {
+					System.out.println("-->" + f.getName());
+					for (Property p : f.getProperties()){
+						if(p.getRoleType().compareTo("hasBoundingBox") == 0){
+							System.out.println("******"  + p.getRoleType());
+							System.out.println("=====" + p.getObjectFiller());
+							getAnArea(p.getObjectFiller());
+						}
+
+						//						if(p.getRoleType().compareTo("hasPose") == 0)
+						//							System.out.println(p.getObjectFiller());
+
+
+
+					}
+
+				}
+
+				System.out.println(response.getFluents());
+
+			}
+
+
+
+			@Override
+			public void onFailure(RemoteException arg0) {
+				System.out.println("Get passive Objects is failed");
+
+			}
+		});
+
+	}
+
+	private void getAnArea(String str) {
+		//	
+		//		ServiceClient<RetrieveFluentRequest, RetrieveFluentResponse> getFluentByStringClient = null;
+		//		try {
+		//			getFluentByStringClient = node.newServiceClient("blackboard/retrieve_fluent", RetrieveFluent._TYPE);
+		//		} 
+		//		catch (org.ros.exception.ServiceNotFoundException e) {
+		//			// TODO Auto-generated catch block
+		//			e.printStackTrace();
+		//		}
+		//		final RetrieveFluentRequest req= getFluentByStringClient.newMessage();
+		//
+		//		req.setInstance("pose" + posfluent.toUpperCase().substring(0, 1) + posfluent.substring(1, posfluent.length()));
+		//
+		//
+		//		getFluentByStringClient.call(req, new ServiceResponseListener<RetrieveFluentResponse>() {
+		//
+		//			@Override
+		//			public void onSuccess(RetrieveFluentResponse response) {
+		//
+		//				double x = 0, y = 0;
+		//				for (Property p : response.getFluent().getProperties()) {
+		//					if(p.getRoleType().compareTo("hasX") == 0)
+		//						x = (p.getFloatFiller() * 100);
+		//					else if(p.getRoleType().compareTo("hasY") == 0)
+		//						y = (p.getFloatFiller() * 100);
+		//				}
+		//				passiveObjPose.put(posfluent, new org.metacsp.multi.spatial.rectangleAlgebra.Point(x, y));
+		//				doneSubRoutines1[counter] = true;
+		//			}
+		//
+		//
+		//			@Override
+		//			public void onFailure(RemoteException arg0) {
+		//				System.out.println("retrival failed");
+		//			}
+		//		});
+
+
 
 	}
 
