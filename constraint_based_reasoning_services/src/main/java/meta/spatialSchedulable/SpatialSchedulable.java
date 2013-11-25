@@ -514,9 +514,11 @@ public class SpatialSchedulable extends MetaConstraint {
 
 						assertion.setFrom(((RectangularRegion) metaVaribales.get(j)));
 						assertion.setTo(getVariableByName.get(sAssertionalRels[i].getTo()));
-						assertionList.add(assertion);
-						mvalue.addConstraint(assertion);
-						isAdded = true;
+						if(getVariableByName.get(sAssertionalRels[i].getTo()) !=  null){
+							assertionList.add(assertion);
+						    mvalue.addConstraint(assertion);
+						    isAdded = true;
+						}
 						
 	              }
 				}
@@ -532,8 +534,11 @@ public class SpatialSchedulable extends MetaConstraint {
 
 						assertion.setFrom(activityToFluent.get(originalGoals.get(j)).getRectangularRegion());
 						assertion.setTo(getVariableByName.get(sAssertionalRels[i].getTo()));
-						assertionList.add(assertion);
-						mvalue.addConstraint(assertion);
+						if(getVariableByName.get(sAssertionalRels[i].getTo()) !=  null){
+							assertionList.add(assertion);
+						    mvalue.addConstraint(assertion);
+						}
+						
 
 					}
 				}
@@ -727,15 +732,19 @@ public class SpatialSchedulable extends MetaConstraint {
 									AllenIntervalConstraint.Type.Equals.getDefaultBounds()));
 
 					assertion.setFrom(((RectangularRegion) metaVaribales.get(j)));
-					assertion.setTo(getVariableByName.get(sAssertionalRels[i].getTo()));
-					// System.out.println(assertion);
-					assertionList.add(assertion);
+					assertion.setTo(getVariableByName.get(sAssertionalRels[i].getTo()));					
+					if(getVariableByName.get(sAssertionalRels[i].getTo()) != null){
+						assertionList.add(assertion);
+//						System.out.println(assertion);
+					}
 				}
 			}
 		}
 		
 		boolean isConsistent = true;
-
+		
+		
+		
 		// MetaCSPLogging.setLevel(Level.FINE);
 		if (!iterSolver.addConstraints(assertionList.toArray(new RectangleConstraint[assertionList.size()])))
 			isConsistent = false;
@@ -944,7 +953,8 @@ public class SpatialSchedulable extends MetaConstraint {
 						assertion.setFrom(((RectangularRegion) metaVaribales.get(j)));
 						assertion.setTo(getVariableByName.get(sAssertionalRels[i].getTo()));
 						// System.out.println(assertion);
-						assertionList.add(assertion);
+						if(getVariableByName.get(sAssertionalRels[i].getTo()) != null) //maybe there is nothing assigned to them in spatial general Knowledge
+							assertionList.add(assertion);
 					}
 				}
 			}

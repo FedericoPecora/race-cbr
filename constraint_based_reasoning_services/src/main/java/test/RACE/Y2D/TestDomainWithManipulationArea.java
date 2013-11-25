@@ -19,6 +19,7 @@ import meta.MetaCausalConstraint;
 import meta.MetaCausalConstraint.markings;
 import org.metacsp.meta.simplePlanner.SimpleOperator;
 import meta.spatialSchedulable.MetaOccupiedConstraint;
+import meta.spatialSchedulable.MetaReachabilityChecker;
 import meta.spatialSchedulable.MetaSpatialScheduler;
 import meta.spatialSchedulable.SpatialSchedulable;
 import org.metacsp.meta.symbolsAndTime.Schedulable;
@@ -84,6 +85,8 @@ public class TestDomainWithManipulationArea {
 		//add metaOccupiedConstraint
 		MetaOccupiedConstraint metaOccupiedConstraint = new MetaOccupiedConstraint(null, null);
 		metaOccupiedConstraint.setPad(pad);
+		
+		MetaReachabilityChecker metareachabilityChecker = new MetaReachabilityChecker(null, null);
 		//#################################################################################################################
 		MetaCausalConstraint metaCausalConstraint = new MetaCausalConstraint(new int[] {arm_resources}, new String[] {"arm"}, "WellSetDeskDomain");
 		Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
@@ -112,14 +115,13 @@ public class TestDomainWithManipulationArea {
 		
 		
 		//add meta constraint
-		
 		for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
 			metaSpatioCasualSolver.addMetaConstraint(sch);
 		}
 		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
-		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
-
+		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);		
+		metaSpatioCasualSolver.addMetaConstraint(metareachabilityChecker);
 
 		long timeNow = Calendar.getInstance().getTimeInMillis();
 		metaSpatioCasualSolver.backtrack();
@@ -212,7 +214,7 @@ public class TestDomainWithManipulationArea {
 		((Activity)sf.getInternalVariables()[1]).setSymbolicDomain(symbolicDomain);
 		((Activity)sf.getInternalVariables()[1]).setMarking(mk);
 		
-		if(mk.equals(markings.JUSTIFIED)){
+		if(mk.equals(markings.JUSTIFIED) && release != -1){
 			AllenIntervalConstraint onDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
 			onDuration.setFrom(sf.getActivity());
 			onDuration.setTo(sf.getActivity());
@@ -223,6 +225,7 @@ public class TestDomainWithManipulationArea {
 			releaseOn.setTo(sf.getActivity());
 			cons.add(releaseOn);					
 		}
+		
 
 	}
 	
@@ -237,52 +240,12 @@ public class TestDomainWithManipulationArea {
 
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_eatingArea1()", markings.UNJUSTIFIED, 22);
 		
-		//===================================================================================================================
-		//initial State
-		//===================================================================================================================
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "robot1", "at_robot1_manArea2()", markings.JUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_eatingArea2()", markings.JUSTIFIED, 10);
 		
 		
-		Activity one = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
-		one.setSymbolicDomain("at_robot1_manArea2()");
-		one.setMarking(markings.JUSTIFIED);
-		AllenIntervalConstraint releaseAtTable2 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
-		releaseAtTable2.setFrom(one);
-		releaseAtTable2.setTo(one);
-		cons.add(releaseAtTable2);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "robot1", "at_robot1_manArea1()", markings.JUSTIFIED, -1);
 		
-		AllenIntervalConstraint durationAtTable2 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
-		durationAtTable2.setFrom(one);
-		durationAtTable2.setTo(one);
-		cons.add(durationAtTable2);
-
-		
-		
-		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
-		two.setSymbolicDomain("at_cup1_eatingArea2()");
-		two.setMarking(markings.JUSTIFIED);
-		AllenIntervalConstraint releaseHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
-		releaseHolding.setFrom(two);
-		releaseHolding.setTo(two);
-		cons.add(releaseHolding);
-		
-		AllenIntervalConstraint durationHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
-		durationHolding.setFrom(two);
-		durationHolding.setTo(two);
-		cons.add(durationHolding);
-		
-		
-//		Activity sense = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("robot1");
-//		sense.setSymbolicDomain("sense_table1()");
-//		sense.setMarking(markings.UNJUSTIFIED);
-////		AllenIntervalConstraint releaseSensing = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
-////		releaseSensing.setFrom(sense);
-////		releaseSensing.setTo(sense);
-////		cons.add(releaseSensing);
-//		
-//		AllenIntervalConstraint durationSensin = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
-//		durationSensin.setFrom(sense);
-//		durationSensin.setTo(sense);
-//		cons.add(durationSensin);
 		
 		grounSpatialFluentSolver.getConstraintSolvers()[1].addConstraints(cons.toArray(new Constraint[cons.size()]));
 		
@@ -404,6 +367,13 @@ public class TestDomainWithManipulationArea {
 		move2.addConstraint(atDuration, 0, 0);
 		operators.add(move2);
 		
+		SimpleOperator move3 = new SimpleOperator("atLocation::at_robot1_manArea3()",
+				new AllenIntervalConstraint[] {toLocationFinishesMove, new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds())},
+				new String[] {"robot1::move_manArea2_manArea3()", "robot1::sense_eatingArea1()"},
+				new int[] {0, 0});
+		move3.addConstraint(atDuration, 0, 0);
+		operators.add(move3);
+		
 		return operators;
 	}
 	
@@ -413,9 +383,6 @@ public class TestDomainWithManipulationArea {
 		operators.addAll(getObjectPickAndPlaceOperator("fork1"));
 		operators.addAll(getObjectPickAndPlaceOperator("knife1"));
 //		operators.addAll(getObjectPickAndPlaceOperator("vase1"));
-
-		
-		
 		
 	}
 
@@ -442,11 +409,6 @@ public class TestDomainWithManipulationArea {
 				new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.Size, fork_size_x, fork_size_y));
 		srules.add(r9);
 
-//		SpatialRule2 r10 = new SpatialRule2("vase", "vase", 
-//				new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.Size, vase_size_x, vase_size_y));
-//		srules.add(r10);
-
-		
 
 		//Every thing should be on the table		
 		addOnTableConstraint(srules, "fork");
@@ -545,6 +507,7 @@ public class TestDomainWithManipulationArea {
 		insertAtConstraint(recs, saRelations, "fork", 20, 26, 13, 32, true);
 		insertAtConstraint(recs, saRelations, "knife", 30, 36, 11, 33, true);
 		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
+		insertAtConstraint(recs, saRelations, "robot", 0, 0, 0, 0, true);
 		
 		return recs;
 
