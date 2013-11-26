@@ -282,7 +282,14 @@ public class TestDomainWithManipulationArea {
 				new int[] {1,0});
 		operator5.addConstraint(placeDuration, 0, 0);
 		operators.add(operator5);
-				
+
+		SimpleOperator operator50 = new SimpleOperator("robot1::place_"+ obj +"_eatingArea1(arm)",
+				new AllenIntervalConstraint[] {placeMetByholding, duringManArea},
+				new String[] {"robot1::holding_"+ obj +"(arm)", "atLocation::at_robot1_manArea3()"},
+				new int[] {1,0});
+		operator50.addConstraint(placeDuration, 0, 0);
+		operators.add(operator50);
+
 		
 		SimpleOperator operator6 = new SimpleOperator("robot1::holding_"+ obj +"(arm)",
 				new AllenIntervalConstraint[] {holdingMetByPick},
@@ -299,6 +306,14 @@ public class TestDomainWithManipulationArea {
 		operator2res.addConstraint(pickDuration, 0, 0);
 		operators.add(operator2res);
 
+		SimpleOperator operator2res1 = new SimpleOperator("robot1::pick_"+ obj +"_eatingArea1(arm)",
+				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
+				new String[] {"atLocation::at_"+ obj +"_eatingArea1()", "atLocation::at_robot1_manArea3()"},
+				new int[] {1, 0});
+		operator2res1.addConstraint(pickDuration, 0, 0);
+		operators.add(operator2res1);
+
+		
 		
 		//table2	
 		SimpleOperator operator41 = new SimpleOperator("robot1::pick_"+obj+"_eatingArea2(arm)",
@@ -490,25 +505,13 @@ public class TestDomainWithManipulationArea {
 		
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
 		
-//		insertAtConstraint(recs, saRelations, "table", 0, 100, 0, 99, false);
-//		insertAtConstraint(recs, saRelations, "fork", 29, 35, 13, 32, true);
-//		insertAtConstraint(recs, saRelations, "knife", 60, 66, 11, 33, true);
-//		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
-
 		
-		
-//		insertAtConstraint(recs, saRelations, "table", 0, 100, 0, 99, false);
-//		insertAtConstraint(recs, saRelations, "fork", 29, 35, 13, 32, true);
-//		insertAtConstraint(recs, saRelations, "knife", 40, 46, 11, 33, true);
-//		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
-
-		
-		insertAtConstraint(recs, saRelations, "eatingArea", 0, 50, 0, 99, false);
-		insertAtConstraint(recs, saRelations, "fork", 20, 26, 13, 32, true);
-		insertAtConstraint(recs, saRelations, "knife", 30, 36, 11, 33, true);
+		insertAtConstraint(recs, saRelations, "eatingArea", 0, 100, 0, 50, false);
+		insertAtConstraint(recs, saRelations, "fork", 70, 76, 13, 32, true);
+		insertAtConstraint(recs, saRelations, "knife", 80, 86, 11, 33, true);
 		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
-		insertAtConstraint(recs, saRelations, "robot", 0, 0, 0, 0, true);
-		
+		insertAtConstraint(recs, saRelations, "robot", 5, 49, 25, 75, true);
+//		insertAtConstraint(recs, saRelations, "robot", 0, 0, 0, 0, true);
 		return recs;
 
 
