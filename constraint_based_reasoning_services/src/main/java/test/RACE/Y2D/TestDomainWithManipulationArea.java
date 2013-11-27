@@ -121,7 +121,7 @@ public class TestDomainWithManipulationArea {
 		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);		
-		metaSpatioCasualSolver.addMetaConstraint(metareachabilityChecker);
+		//metaSpatioCasualSolver.addMetaConstraint(metareachabilityChecker);
 
 		long timeNow = Calendar.getInstance().getTimeInMillis();
 		metaSpatioCasualSolver.backtrack();
