@@ -422,6 +422,7 @@ public class SpatialSchedulable extends MetaConstraint {
 		ConstraintNetwork actNetwork = new ConstraintNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1]);
 		
 		//################################################################################
+		//These are hard coded for testing an heuristic!
 		//[pen1, notebook1, book1, penHolder1, phone1, keyboard1]
 //		newGoal.removeAllElements();
 //		newGoal.add("keyboard1");
