@@ -263,7 +263,7 @@ public class MetaReachabilityChecker extends MetaConstraint  {
 						.createVariable(((Activity) conflict.getVariables()[j]).getComponent());
 				newrobotFlunet.setName(activityToFluent.get((Activity) conflict.getVariables()[j]).getName());
 
-				((Activity)newrobotFlunet.getInternalVariables()[1]).setSymbolicDomain("at_robot1_manArea3()");
+				((Activity)newrobotFlunet.getInternalVariables()[1]).setSymbolicDomain("at_robot1_manArea2()");
 
 				((Activity)newrobotFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
 				((RectangularRegion)newrobotFlunet.getInternalVariables()[0]).setName(activityToFluent.get((Activity) conflict.getVariables()[j]).getName());
