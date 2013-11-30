@@ -38,17 +38,17 @@ public class MetaReachabilityChecker extends MetaConstraint  {
 	 * 
 	 */
 	private static final long serialVersionUID = -2602296896261976692L;
-//	private SpatialAssertionalRelation2[] sAssertionalRels;
+	private SpatialAssertionalRelation2[] sAssertionalRels;
 	
 	public MetaReachabilityChecker(VariableOrderingH varOH, ValueOrderingH valOH) {
 		super(varOH, valOH);
 
 	}
 	
-//	public void setSpatialAssertionalRelations(SpatialAssertionalRelation2... sAssertionalRels) {
-//		this.sAssertionalRels = new SpatialAssertionalRelation2[sAssertionalRels.length];
-//		this.sAssertionalRels = sAssertionalRels;
-//	}
+	public void setSpatialAssertionalRelations(SpatialAssertionalRelation2... sAssertionalRels) {
+		this.sAssertionalRels = new SpatialAssertionalRelation2[sAssertionalRels.length];
+		this.sAssertionalRels = sAssertionalRels;
+	}
 
 	private ConstraintNetwork[] binaryPeakCollection(HashMap<Activity, SpatialFluent> aTOsf) {
 
@@ -114,14 +114,14 @@ public class MetaReachabilityChecker extends MetaConstraint  {
 
 		//discard peaks which the robots spatial fluent is not involved
 		boolean hasRobotinRelation = false;
-		if(activityToFluent.get(peak[0]).getName().compareTo("robot1") == 0 || activityToFluent.get(peak[1]).getName().compareTo("robot1") == 0) hasRobotinRelation = true;
+		if(activityToFluent.get(peak[0]).getName().contains("robot1")  || activityToFluent.get(peak[1]).getName().contains("robot1")) hasRobotinRelation = true;
 		if(!hasRobotinRelation) return false;
 
-//		System.out.println("-------------------------------------------------");
-//		for (int i = 0; i < peak.length; i++) {
-//			System.out.println("peak: " + activityToFluent.get(peak[i]));
-//		}
-//		System.out.println("-------------------------------------------------");
+		System.out.println("-------------------------------------------------");
+		for (int i = 0; i < peak.length; i++) {
+			System.out.println("peak: " + activityToFluent.get(peak[i]));
+		}
+		System.out.println("-------------------------------------------------");
 		
 		
 		/*
@@ -133,26 +133,21 @@ public class MetaReachabilityChecker extends MetaConstraint  {
 		Rectangle robotRec = null;
 		Rectangle recObj = null;
 		for (int i = 0; i < peak.length; i++) {
-			if(activityToFluent.get(peak[i]).getName().compareTo("robot1") == 0){
-				
-				if(!isUnboundedBoundingBox(
-						new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getEST(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getLST()),
-						new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getEET(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[0]).getLET()), 
-						new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getEST(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getLST()), 
-						new Bounds(((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getEET(), ((AllenInterval)activityToFluent.get(peak[i]).getRectangularRegion().getInternalVariables()[1]).getLET()))							
-						 //&& (((Activity)activityToFluent.get(peak[i]).getActivity()).getTemporalVariable().getEST() != ((Activity)activityToFluent.get(peak[i]).getActivity()).getTemporalVariable().getLST())
-						){
-					robotRec = ((RectangleConstraintSolver)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[0])
-							.extractAllBoundingBoxesFromSTPs().get("robot1").getAlmostCentreRectangle();						
+			if(activityToFluent.get(peak[i]).getName().compareTo("robot1_manArea1") == 0){				
+				for (int j = 0; j < sAssertionalRels.length; j++) {
+					if(sAssertionalRels[j].getFrom().compareTo("robot1_manArea1") == 0){
+						BoundingBox bb = new BoundingBox(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[0], 
+								sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[1],
+								sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[2],
+								sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[3]);
+						robotRec = bb.getAlmostCentreRectangle();
+					}						
 				}
-				else{					
-					robotRec = ((MetaSpatialScheduler)this.metaCS).getOldRectangularRegion().get("robot1").getAlmostCentreRectangle();
-					System.out.println("getOldRobotRec: " + robotRec);
-				}
-				
+								
 				continue;
 				
 			}
+			
 			/*
 			 *if there is an unbounded rectangle, this object becomes interesting only if it has to be manipulated, 
 			 *meaning that there is a bounded rectangles (bounded rectangle means new replacements) refering to same spatial fluent 
@@ -179,8 +174,8 @@ public class MetaReachabilityChecker extends MetaConstraint  {
 			else {
 				
 				recObj = ((RectangleConstraintSolver)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[0])
-						.extractAllBoundingBoxesFromSTPs().get(activityToFluent.get(peak[i]).getName().replaceAll("[0-9]","")).getAlmostCentreRectangle();
-//							System.out.println("bounded: " + activityToFluent.get(peak[i]));
+						.extractAllBoundingBoxesFromSTPs().get(activityToFluent.get(peak[i]).getName()).getAlmostCentreRectangle();
+							System.out.println("bounded: " + activityToFluent.get(peak[i]));
 			}
 		}
 
@@ -189,7 +184,6 @@ public class MetaReachabilityChecker extends MetaConstraint  {
 			System.out.println("robotRec: " + robotRec);
 			System.out.println("objRec: " + recObj);
 			if(isReachable(robotRec, recObj)){
-				System.out.println("here is the conflict: " + peak.length);
 				for (int i = 0; i < peak.length; i++) {
 					System.out.println("peak: " + activityToFluent.get(peak[i]));
 				}
@@ -208,7 +202,8 @@ public class MetaReachabilityChecker extends MetaConstraint  {
 
 	private boolean isReachable(Rectangle robotRec, Rectangle recObj) {
 
-
+		if(robotRec == null)
+			return false;
 
 		double distance = Math.sqrt((robotRec.getCenterX()-recObj.getCenterX())*(robotRec.getCenterX()-recObj.getCenterX()) + (robotRec.getCenterY()-recObj.getCenterY())*(robotRec.getCenterY()-recObj.getCenterY()));
 		if(distance > 80) return true;
@@ -226,12 +221,13 @@ public class MetaReachabilityChecker extends MetaConstraint  {
 				activities.add(((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[i]).getActivity());
 				activityToFluent.put(((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[i]).getActivity(), 
 						((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[i]));
+				System.out.println(((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[i]));
 			}
 		}
 
-//				System.out.println("===================================================");
-//				System.out.println("activities: " + activityToFluent);
-//				System.out.println("===================================================");
+//		System.out.println("===================================================");
+//		System.out.println("activities: " + activityToFluent);
+//		System.out.println("===================================================");
 
 		return binaryPeakCollection(activityToFluent);
 
@@ -240,75 +236,88 @@ public class MetaReachabilityChecker extends MetaConstraint  {
 	@Override
 	public ConstraintNetwork[] getMetaValues(MetaVariable metaVariable) {
 
-		ConstraintNetwork conflict = metaVariable.getConstraintNetwork();
-
-		Vector<ConstraintNetwork> ret = new Vector<ConstraintNetwork>();
-		HashMap<Activity, SpatialFluent> activityToFluent = new HashMap<Activity, SpatialFluent>();
-		ConstraintNetwork actNetwork = new ConstraintNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1]);
-
-		for (int i = 0; i < ((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables().length; i++) {
-			activityToFluent.put(((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[i]).getActivity(), 
-					((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[i]));
-
-		}
-
-		SpatialFluent newrobotFlunet = null;
-		SpatialFluent oldrobotFlunet = null;
-		SpatialFluent objPlacementFlunet = null;
-		for (int j = 0; j < conflict.getVariables().length; j++) {
-			if(activityToFluent.get((Activity) conflict.getVariables()[j]).getName().compareTo("robot1") == 0){
-
-				oldrobotFlunet = activityToFluent.get((Activity) conflict.getVariables()[j]);
-				newrobotFlunet = (SpatialFluent)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0]))
-						.createVariable(((Activity) conflict.getVariables()[j]).getComponent());
-				newrobotFlunet.setName(activityToFluent.get((Activity) conflict.getVariables()[j]).getName());
-
-				((Activity)newrobotFlunet.getInternalVariables()[1]).setSymbolicDomain("at_robot1_manArea2()");
-
-				((Activity)newrobotFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
-				((RectangularRegion)newrobotFlunet.getInternalVariables()[0]).setName(activityToFluent.get((Activity) conflict.getVariables()[j]).getName());
-
-				activityToFluent.put(((Activity)newrobotFlunet.getInternalVariables()[1]), newrobotFlunet);
-				
-			}
-			else{
-				objPlacementFlunet = activityToFluent.get((Activity) conflict.getVariables()[j]);
-			}
-
-		}
-
-		System.out.println("new fluent: " + newrobotFlunet);
-		
-		
-		AllenIntervalConstraint newrobotPoseAfteroldRobotPose = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After,
-				AllenIntervalConstraint.Type.After.getDefaultBounds());
-		newrobotPoseAfteroldRobotPose.setFrom(((Activity)newrobotFlunet.getInternalVariables()[1]));
-		newrobotPoseAfteroldRobotPose.setTo(((Activity)oldrobotFlunet.getInternalVariables()[1]));
-
-		System.out.println("new relation " + newrobotPoseAfteroldRobotPose);
-
-		AllenIntervalConstraint objplacementOverlappedByRobotPosition = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy,
-				AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
-		objplacementOverlappedByRobotPosition.setFrom(((Activity)objPlacementFlunet.getInternalVariables()[1]));
-		objplacementOverlappedByRobotPosition.setTo(((Activity)newrobotFlunet.getInternalVariables()[1]));
-		
-		System.out.println("new overlap " + objplacementOverlappedByRobotPosition);
-		
-//		//update the new placement of the robot
-//		for (int j = 0; j < sAssertionalRels.length; j++) {
-//			if(sAssertionalRels[j].getFrom().compareTo(st) == 0)
-//			sAssertionalRels[j].setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
-//					new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
+//		ConstraintNetwork conflict = metaVariable.getConstraintNetwork();
+//		ConstraintNetwork mvalue = new ConstraintNetwork(this.metaCS.getConstraintSolvers()[0]);
+//		
+//		Vector<ConstraintNetwork> ret = new Vector<ConstraintNetwork>();
+//		HashMap<Activity, SpatialFluent> activityToFluent = new HashMap<Activity, SpatialFluent>();
+//		ConstraintNetwork actNetwork = new ConstraintNetwork(((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0])).getConstraintSolvers()[1]);
+//
+//		for (int i = 0; i < ((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables().length; i++) {
+//			activityToFluent.put(((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[i]).getActivity(), 
+//					((SpatialFluent)((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getVariables()[i]));
+//
 //		}
+//
+//		SpatialFluent newrobotFlunet = null;
+//		SpatialFluent oldrobotFlunet = null;
+//		SpatialFluent objPlacementFlunet = null;
+//		for (int j = 0; j < conflict.getVariables().length; j++) {
+//			if(activityToFluent.get((Activity) conflict.getVariables()[j]).getName().compareTo("robot1_manArea1") == 0){
+//
+//				oldrobotFlunet = activityToFluent.get((Activity) conflict.getVariables()[j]);
+//				newrobotFlunet = (SpatialFluent)((SpatialFluentSolver)(this.metaCS.getConstraintSolvers()[0]))
+//						.createVariable(((Activity) conflict.getVariables()[j]).getComponent());
+//				
+//				newrobotFlunet.setName("robot1_manArea2");
+//
+//				((Activity)newrobotFlunet.getInternalVariables()[1]).setSymbolicDomain("at_robot1_manArea2()");
+//
+//				((Activity)newrobotFlunet.getInternalVariables()[1]).setMarking(markings.UNJUSTIFIED);
+//				((RectangularRegion)newrobotFlunet.getInternalVariables()[0]).setName("robot1_manArea2");
+//
+//				activityToFluent.put(((Activity)newrobotFlunet.getInternalVariables()[1]), newrobotFlunet);
+//				
+//			}
+//			else{
+//				objPlacementFlunet = activityToFluent.get((Activity) conflict.getVariables()[j]);
+//			}
+//
+//		}
+//		
+//		mvalue.addVariable(newrobotFlunet);
+////		System.out.println("new fluent: " + newrobotFlunet);
+//		
+//		
+//		AllenIntervalConstraint newrobotPoseAfteroldRobotPose = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After,
+//				AllenIntervalConstraint.Type.After.getDefaultBounds());
+//		newrobotPoseAfteroldRobotPose.setFrom(((Activity)newrobotFlunet.getInternalVariables()[1]));
+//		newrobotPoseAfteroldRobotPose.setTo(((Activity)oldrobotFlunet.getInternalVariables()[1]));
+//
+////		System.out.println("new relation " + newrobotPoseAfteroldRobotPose);
+//
+//		AllenIntervalConstraint objplacementOverlappedByRobotPosition = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy,
+//				AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
+////		AllenIntervalConstraint objplacementOverlappedByRobotPosition = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Overlaps,
+////				AllenIntervalConstraint.Type.Overlaps.getDefaultBounds());
+//
+//		
+//		objplacementOverlappedByRobotPosition.setFrom(((Activity)objPlacementFlunet.getInternalVariables()[1]));
+//		objplacementOverlappedByRobotPosition.setTo(((Activity)newrobotFlunet.getInternalVariables()[1]));
+//		
+////		System.out.println("new overlap " + objplacementOverlappedByRobotPosition);
+//		
+////		//update the new placement of the robot
+////		for (int j = 0; j < sAssertionalRels.length; j++) {
+////			if(sAssertionalRels[j].getFrom().compareTo(st) == 0)
+////			sAssertionalRels[j].setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
+////					new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
+////		}
+//		
+//		mvalue.addConstraint(newrobotPoseAfteroldRobotPose);			
+//		mvalue.addConstraint(objplacementOverlappedByRobotPosition);
+//
+//
+//
+//		
+//		actNetwork.join(mvalue);
+//		ret.add(actNetwork);
+////		System.out.println("ret: " + ret);
+////		return ret.toArray(new ConstraintNetwork[ret.size()]);
 		
-		actNetwork.addConstraint(newrobotPoseAfteroldRobotPose);			
-		actNetwork.addConstraint(objplacementOverlappedByRobotPosition);
 
 
-
-
-		ret.add(actNetwork);
-		return ret.toArray(new ConstraintNetwork[ret.size()]);
+		return null;
 
 
 	}
