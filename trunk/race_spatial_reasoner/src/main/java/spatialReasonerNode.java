@@ -550,7 +550,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 		int counter = 0;
 		for (Fluent f : passiveObjectsFluents) {
-			System.out.println(f.getName());
+//			System.out.println(f.getName());
 			for (Property p : f.getProperties()){
 				if(p.getRoleType().contains("Constraint"))counter++;
 			}
@@ -564,7 +564,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		for (Fluent f : passiveObjectsFluents) {			
 			for (Property p : f.getProperties()) {
 				if(p.getRoleType().contains("Constraint")){
-					System.out.println(p.getObjectFiller());
+//					System.out.println(p.getObjectFiller());
 					reifiedCons.put(p.getObjectFiller(), f.getName());
 					paasiveObjCategories.put(f.getName(), f.getType());
 					getConstraintFluent(p.getObjectFiller(),i++);
