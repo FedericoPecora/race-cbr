@@ -549,8 +549,7 @@ public class SpatialSchedulable extends MetaConstraint {
 		actNetwork.join(mvalue);
 		ret.add(actNetwork);
 		actNetwork.annotation = this.currentAssertionalCons;
-		
-		
+				
 		return ret.toArray(new ConstraintNetwork[ret.size()]);
 
 	}

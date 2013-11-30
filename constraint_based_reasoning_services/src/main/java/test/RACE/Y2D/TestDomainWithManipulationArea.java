@@ -112,16 +112,18 @@ public class TestDomainWithManipulationArea {
 		metaSpatialSchedulable.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
 		metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
 		metaSpatialSchedulable.setInitialGoal(new String[]{"cup1"});
-		
+		metareachabilityChecker.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
 		
 		//add meta constraint
 		for (Schedulable sch : metaCausalConstraint.getSchedulingMetaConstraints()) {
 			metaSpatioCasualSolver.addMetaConstraint(sch);
 		}
+		
 		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
-		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);		
-		//metaSpatioCasualSolver.addMetaConstraint(metareachabilityChecker);
+		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
+		metaSpatioCasualSolver.addMetaConstraint(metareachabilityChecker);
+		
 
 		long timeNow = Calendar.getInstance().getTimeInMillis();
 		metaSpatioCasualSolver.backtrack();
@@ -235,16 +237,16 @@ public class TestDomainWithManipulationArea {
 		
 		
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "eatingArea1", "at_eatingArea1()", markings.UNJUSTIFIED,  25);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "fork1", "at_fork1_eatingArea1()", markings.JUSTIFIED, 22);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "knife1", "at_knife1_eatingArea1()", markings.JUSTIFIED,  22);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_eatingArea1()", markings.UNJUSTIFIED, 22);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "fork1_eatingArea1", "at_fork1_eatingArea1()", markings.JUSTIFIED, 22);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "knife1_eatingArea1", "at_knife1_eatingArea1()", markings.JUSTIFIED,  22);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1_eatingArea1", "at_cup1_eatingArea1()", markings.UNJUSTIFIED, 22);
 		
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "robot1_counter1", "at_robot1_manAreaCounter()", markings.JUSTIFIED, 10);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1_counter1", "at_cup1_counter()", markings.JUSTIFIED, 10);
 		
 		
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "robot1_manArea1", "at_robot1_manArea1()", markings.JUSTIFIED, -1);
-		
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "robot1_manArea2", "at_robot1_manArea2()", markings.JUSTIFIED, -1);
 		
 		grounSpatialFluentSolver.getConstraintSolvers()[1].addConstraints(cons.toArray(new Constraint[cons.size()]));
 		
@@ -301,16 +303,19 @@ public class TestDomainWithManipulationArea {
 		SimpleOperator operator2res = new SimpleOperator("robot1::pick_"+ obj +"_eatingArea1(arm)",
 				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
 				new String[] {"atLocation::at_"+ obj +"_eatingArea1()", "atLocation::at_robot1_manArea1()"},
-				new int[] {1, 0});
+				new int[] {1, 1});
 		operator2res.addConstraint(pickDuration, 0, 0);
 		operators.add(operator2res);
 
 		SimpleOperator operator2res1 = new SimpleOperator("robot1::pick_"+ obj +"_eatingArea1(arm)",
 				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
 				new String[] {"atLocation::at_"+ obj +"_eatingArea1()", "atLocation::at_robot1_manArea2()"},
-				new int[] {1, 0});
+				new int[] {1, 1});
 		operator2res1.addConstraint(pickDuration, 0, 0);
 		operators.add(operator2res1);
+
+		
+
 
 		
 		
@@ -318,7 +323,7 @@ public class TestDomainWithManipulationArea {
 		SimpleOperator operator41 = new SimpleOperator("robot1::pick_"+obj+"_counter(arm)",
 				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
 				new String[] {"atLocation::at_"+obj+"_counter()", "atLocation::at_robot1_manAreaCounter()"},
-				new int[] {1, 0});
+				new int[] {1, 1});
 		operator41.addConstraint(pickDuration, 0, 0);
 		operators.add(operator41);
 		
@@ -381,12 +386,29 @@ public class TestDomainWithManipulationArea {
 		move2.addConstraint(atDuration, 0, 0);
 		operators.add(move2);
 		
+		SimpleOperator move21 = new SimpleOperator("atLocation::at_robot1_manArea1()",
+				new AllenIntervalConstraint[] {toLocationFinishesMove, new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds())},
+				new String[] {"robot1::move_manArea2_manArea1()", "robot1::sense_eatingArea1()"},
+				new int[] {0, 0});
+		move21.addConstraint(atDuration, 0, 0);
+		operators.add(move21);
+
+		
+		
 		SimpleOperator move3 = new SimpleOperator("atLocation::at_robot1_manArea2()",
 				new AllenIntervalConstraint[] {toLocationFinishesMove, new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds())},
 				new String[] {"robot1::move_manArea1_manArea2()", "robot1::sense_eatingArea1()"},
 				new int[] {0, 0});
 		move3.addConstraint(atDuration, 0, 0);
 		operators.add(move3);
+
+		SimpleOperator move31 = new SimpleOperator("atLocation::at_robot1_manArea2()",
+				new AllenIntervalConstraint[] {toLocationFinishesMove, new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds())},
+				new String[] {"robot1::move_manAreaCounter_manArea2()", "robot1::sense_eatingArea1()"},
+				new int[] {0, 0});
+		move31.addConstraint(atDuration, 0, 0);
+		operators.add(move31);
+
 		
 		return operators;
 	}
@@ -506,14 +528,15 @@ public class TestDomainWithManipulationArea {
 		
 		
 		insertAtConstraint(recs, saRelations, "eatingArea1","eatingArea", 0, 100, 0, 50, false);
-		insertAtConstraint(recs, saRelations, "fork1","fork", 70, 76, 13, 32, true);
-		insertAtConstraint(recs, saRelations, "knife1" ,"knife", 80, 86, 11, 33, true);
-		insertAtConstraint(recs, saRelations, "cup1", "cup", 0, 0, 0, 0, true);
+		insertAtConstraint(recs, saRelations, "fork1_eatingArea1","fork", 70, 76, 13, 32, true);
+		insertAtConstraint(recs, saRelations, "knife1_eatingArea1" ,"knife", 80, 86, 11, 33, true);
+		insertAtConstraint(recs, saRelations, "cup1_eatingArea1", "cup", 0, 0, 0, 0, true);
 		
 		
 		insertAtConstraint(recs, saRelations, "cup1_counter1", "cup_counter", 10, 20, 30, 35, true);
 		insertAtConstraint(recs, saRelations, "robot1_counter1", "robot_counter", 5, 49, 25, 75, true);
 		insertAtConstraint(recs, saRelations, "robot1_manArea1", "robot_manArea", 5, 49, 25, 75, true);
+		insertAtConstraint(recs, saRelations, "robot1_manArea2", "robot_manArea", 101, 145, 25, 75, true);
 //		insertAtConstraint(recs, saRelations, "robot", 0, 0, 0, 0, true);
 		return recs;
 
