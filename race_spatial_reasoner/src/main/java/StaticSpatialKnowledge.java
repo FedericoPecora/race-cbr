@@ -32,39 +32,39 @@ public class StaticSpatialKnowledge {
 		
 		
 		
-//		SpatialRule r01 = new SpatialRule("EatingAreaEast", "HorizontalTable", 
-//				new AugmentedRectangleConstraint(
-//						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Starts, AllenIntervalConstraint.Type.Starts.getDefaultBounds()),
-//						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals, AllenIntervalConstraint.Type.Equals.getDefaultBounds())
-//						)
-//		);
-//		spatialRelations.add(r01);
-//		
-//		SpatialRule r02 = new SpatialRule("EatingAreaWest", "HorizontalTable", 
-//				new AugmentedRectangleConstraint(
-//						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Finishes, AllenIntervalConstraint.Type.Finishes.getDefaultBounds()),
-//						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals, AllenIntervalConstraint.Type.Equals.getDefaultBounds())
-//						)
-//		);
-//		spatialRelations.add(r02);
-//
-//		
-//		SpatialRule r03 = new SpatialRule("EatingAreaNorth", "VerticalTable", 
-//				new AugmentedRectangleConstraint(
-//						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals, AllenIntervalConstraint.Type.Equals.getDefaultBounds()),
-//						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Finishes, AllenIntervalConstraint.Type.Finishes.getDefaultBounds())
-//						)
-//		);
-//		
-//		spatialRelations.add(r03);
-//		
-//		SpatialRule r04 = new SpatialRule("EatingAreaSouth", "VerticalTable", 
-//				new AugmentedRectangleConstraint(
-//						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals, AllenIntervalConstraint.Type.Equals.getDefaultBounds()),
-//						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Starts, AllenIntervalConstraint.Type.Starts.getDefaultBounds())
-//						)
-//		);
-//		spatialRelations.add(r04);
+		SpatialRule r01 = new SpatialRule("EatingAreaEast", "HorizontalTable", 
+				new AugmentedRectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Starts, AllenIntervalConstraint.Type.Starts.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals, AllenIntervalConstraint.Type.Equals.getDefaultBounds())
+						)
+		);
+		spatialRelations.add(r01);
+		
+		SpatialRule r02 = new SpatialRule("EatingAreaWest", "HorizontalTable", 
+				new AugmentedRectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Finishes, AllenIntervalConstraint.Type.Finishes.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals, AllenIntervalConstraint.Type.Equals.getDefaultBounds())
+						)
+		);
+		spatialRelations.add(r02);
+
+		
+		SpatialRule r03 = new SpatialRule("EatingAreaNorth", "VerticalTable", 
+				new AugmentedRectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals, AllenIntervalConstraint.Type.Equals.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Finishes, AllenIntervalConstraint.Type.Finishes.getDefaultBounds())
+						)
+		);
+		
+		spatialRelations.add(r03);
+		
+		SpatialRule r04 = new SpatialRule("EatingAreaSouth", "VerticalTable", 
+				new AugmentedRectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals, AllenIntervalConstraint.Type.Equals.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Starts, AllenIntervalConstraint.Type.Starts.getDefaultBounds())
+						)
+		);
+		spatialRelations.add(r04);
 
 		SpatialRule r1 = new SpatialRule("ManipulationAreaSouth", "HorizontalTable", 
 				new AugmentedRectangleConstraint(
@@ -695,26 +695,26 @@ public class StaticSpatialKnowledge {
 		long table_half_size = 35;
 		long table_ful_size = 70;
 		
-//		SpatialRule2 r40 = new SpatialRule2("EatingAreaWest", "EatingAreaWest", 
-//				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
-//						new Bounds(table_half_size,table_half_size)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(table_ful_size,table_ful_size))));
-//		spatialRelations.add(r40);
-//		
-//		SpatialRule2 r41 = new SpatialRule2("EatingAreaEast", "EatingAreaEast", 
-//				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
-//						new Bounds(table_half_size,table_half_size)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(table_ful_size,table_ful_size))));
-//		spatialRelations.add(r41);
-//		
-//		
-//		SpatialRule2 r42 = new SpatialRule2("EatingAreaNorth", "EatingAreaNorth", 
-//				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
-//						new Bounds(table_ful_size,table_ful_size)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(table_half_size,table_half_size))));
-//		spatialRelations.add(r42);
-//		
-//		SpatialRule2 r43 = new SpatialRule2("EatingAreaSouth", "EatingAreaSouth", 
-//				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
-//						new Bounds(table_ful_size,table_ful_size)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(table_half_size,table_half_size))));
-//		spatialRelations.add(r43);
+		SpatialRule2 r40 = new SpatialRule2("EatingAreaWest", "EatingAreaWest", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(table_half_size,table_half_size)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(table_ful_size,table_ful_size))));
+		spatialRelations.add(r40);
+		
+		SpatialRule2 r41 = new SpatialRule2("EatingAreaEast", "EatingAreaEast", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(table_half_size,table_half_size)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(table_ful_size,table_ful_size))));
+		spatialRelations.add(r41);
+		
+		
+		SpatialRule2 r42 = new SpatialRule2("EatingAreaNorth", "EatingAreaNorth", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(table_ful_size,table_ful_size)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(table_half_size,table_half_size))));
+		spatialRelations.add(r42);
+		
+		SpatialRule2 r43 = new SpatialRule2("EatingAreaSouth", "EatingAreaSouth", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(table_ful_size,table_ful_size)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(table_half_size,table_half_size))));
+		spatialRelations.add(r43);
 		
 		return spatialRelations;
 		
