@@ -25,6 +25,9 @@ public class StaticSpatialKnowledge {
 		int pmaSlack = 20; //before and after bounds for premanipulation Area
 		int maSlack = 10; //before and after bounds for manipulation Area
 		
+		long observationAreaSlack = 65;
+		long obserAreaSize = 40;
+		
 		long saw_x = 50; //sitting Area west and east x
 		long saw_y = 60; //sitting Area west and east y
 		long san_x = 60; //sitting Area north and east x
@@ -319,7 +322,8 @@ public class StaticSpatialKnowledge {
 		spatialRelations.add(r33);
 
 
-	//		ManipulationAreaWest Meets, Equals VerticalTable
+		//////////////////////////////////////////////////////////////////////////////////
+		
 		SpatialRule r34 = new SpatialRule("PreManipulationAreaWest", "VerticalTable", 
 				new AugmentedRectangleConstraint(
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(manipulationAreaSize + pmaSlack,manipulationAreaSize + pmaSlack)),
@@ -336,7 +340,68 @@ public class StaticSpatialKnowledge {
 						)
 		);
 		spatialRelations.add(r35);
+		
+		
+		
+		//_______________________________________________________________________________________________________________________________________
+		
+		SpatialRule r24a = new SpatialRule("ObservationAreaWest", "ObservationAreaWest", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(obserAreaSize,obserAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(obserAreaSize,obserAreaSize))));
+		spatialRelations.add(r24a);
+		
+		SpatialRule r25a = new SpatialRule("ObservationAreaEast", "ObservationAreaEast", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(obserAreaSize,obserAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(obserAreaSize,obserAreaSize))));
+		spatialRelations.add(r25a);
+		
+		
+		SpatialRule r26a = new SpatialRule("ObservationAreaNorth", "ObservationAreaNorth", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(obserAreaSize,obserAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(obserAreaSize,obserAreaSize))));
+		spatialRelations.add(r26a);
+		
+		SpatialRule r27a = new SpatialRule("ObservationAreaSouth", "ObservationAreaSouth", 
+				new AugmentedRectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, 
+						new Bounds(obserAreaSize,obserAreaSize)), new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(obserAreaSize,obserAreaSize))));
+		spatialRelations.add(r27a);
+		
+		
+		SpatialRule r32a = new SpatialRule("ObservationAreaWest", "HorizontalTable", 
+				new AugmentedRectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(observationAreaSlack ,observationAreaSlack)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds())						
+						)
+		);
+		spatialRelations.add(r32a);
+		
+		SpatialRule r33a = new SpatialRule("ObservationAreaEast", "HorizontalTable", 
+				new AugmentedRectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(observationAreaSlack , observationAreaSlack)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds())						
+						)
+		);
+		spatialRelations.add(r33a);
 
+
+		
+		SpatialRule r34a = new SpatialRule("ObservationAreaNorth", "VerticalTable", 
+				new AugmentedRectangleConstraint(
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(observationAreaSlack , observationAreaSlack))
+						)
+		);
+		spatialRelations.add(r34a);
+		
+		SpatialRule r35a = new SpatialRule("ObservationAreaSouth", "VerticalTable", 
+				new AugmentedRectangleConstraint(						
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(observationAreaSlack ,observationAreaSlack))
+						)
+		);
+		spatialRelations.add(r35a);
+		
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //		ManipulationAreaEast Meets , During[35, 35][35, 35] Counter
 		SpatialRule r36 = new SpatialRule("PreManipulationAreaEast", "Counter", 
 				new AugmentedRectangleConstraint(
