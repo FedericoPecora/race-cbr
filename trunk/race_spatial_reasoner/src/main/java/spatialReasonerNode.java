@@ -16,6 +16,8 @@ import org.metacsp.meta.TCSP.TCSPSolver;
 import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
 import org.metacsp.multi.spatial.rectangleAlgebra.BoundingBox;
 import org.metacsp.spatial.cardinal.CardinalConstraint;
+import org.metacsp.spatial.cardinal.CardinalConstraint.Type;
+
 import spatial.rectangleAlgebra_OLD.RectangleConstraint;
 import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
 import spatial.rectangleAlgebra_OLD.SpatialRule;
@@ -513,7 +515,8 @@ public class spatialReasonerNode extends AbstractNodeMain {
 			return (float)0.0; 
 		if(regionsOrientation.get(str).compareTo(org.metacsp.spatial.cardinal.CardinalConstraint.Type.NO) == 0)
 			return (float)(getPassiveObjSize(paasiveObjCategories.get(reifiedCons.get(areaInsToConsIns.get(str)))).z ) / 100;
-
+		if(str.contains("eating"))
+			return (float)(getPassiveObjSize(paasiveObjCategories.get(reifiedCons.get(areaInsToConsIns.get(str)))).z ) / 100;
 		return (float)0.0;
 
 	}
@@ -644,12 +647,20 @@ public class spatialReasonerNode extends AbstractNodeMain {
 						if(spatialKnowledge.get(i).getFrom().compareTo(p.getFillerType()) == 0 && 
 								spatialKnowledge.get(i).getTo().compareTo(paasiveObjCategories.get(reifiedCons.get(response.getFluent().getName()))) == 0){
 							sr.add(spatialKnowledge.get(i));
-
-							regionsOrientation.put(p.getObjectFiller(), RectangleConstraint.getCardinalConstraint(
-									QualitativeAllenIntervalConstraint.lookupTypeByInt(spatialKnowledge.get(i).getRaCons().getBoundedConstraintX().getType().ordinal()),
-									QualitativeAllenIntervalConstraint.lookupTypeByInt(spatialKnowledge.get(i).getRaCons().getBoundedConstraintY().getType().ordinal())
-									));
+							
+							//this is hack! becuase RA plus does not take into accont orientation
+							if(p.getObjectFiller().contains("eating")){								
+								regionsOrientation.put(p.getObjectFiller(), getEatingAreaCardinalRealtion(p.getObjectFiller()));
+							}
+								
+							else{
+								regionsOrientation.put(p.getObjectFiller(), RectangleConstraint.getCardinalConstraint(
+										QualitativeAllenIntervalConstraint.lookupTypeByInt(spatialKnowledge.get(i).getRaCons().getBoundedConstraintX().getType().ordinal()),
+										QualitativeAllenIntervalConstraint.lookupTypeByInt(spatialKnowledge.get(i).getRaCons().getBoundedConstraintY().getType().ordinal())
+										));
+							}
 							fluentCategories.put(p.getObjectFiller(), p.getFillerType());
+//							System.out.println(fluentCategories);
 						}
 						if(spatialKnowledge.get(i).getFrom().compareTo(p.getFillerType()) == 0 && 
 								spatialKnowledge.get(i).getTo().compareTo(p.getFillerType()) == 0)
@@ -662,6 +673,9 @@ public class spatialReasonerNode extends AbstractNodeMain {
 			}
 
 
+
+
+
 			@Override
 			public void onFailure(RemoteException arg0) {
 				System.out.println("retrival failed");
@@ -669,6 +683,20 @@ public class spatialReasonerNode extends AbstractNodeMain {
 		});
 	}
 
+	private CardinalConstraint.Type getEatingAreaCardinalRealtion(String objectFiller) {
+		// TODO Auto-generated method stub
+		if(objectFiller.contains("East"))
+			return CardinalConstraint.Type.East;
+		if(objectFiller.contains("West"))
+			return CardinalConstraint.Type.West;
+		if(objectFiller.contains("North"))
+			return CardinalConstraint.Type.North;
+		if(objectFiller.contains("South"))
+			return CardinalConstraint.Type.South;
+		
+		
+		return null;
+	}
 
 	@Override
 	public GraphName getDefaultNodeName() {

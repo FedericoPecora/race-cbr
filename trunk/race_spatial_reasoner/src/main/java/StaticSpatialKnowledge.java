@@ -32,7 +32,7 @@ public class StaticSpatialKnowledge {
 		
 		
 		
-		SpatialRule r01 = new SpatialRule("EatingAreaEast", "HorizontalTable", 
+		SpatialRule r01 = new SpatialRule("EatingAreaWest", "HorizontalTable", 
 				new AugmentedRectangleConstraint(
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Starts, AllenIntervalConstraint.Type.Starts.getDefaultBounds()),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals, AllenIntervalConstraint.Type.Equals.getDefaultBounds())
@@ -40,7 +40,7 @@ public class StaticSpatialKnowledge {
 		);
 		spatialRelations.add(r01);
 		
-		SpatialRule r02 = new SpatialRule("EatingAreaWest", "HorizontalTable", 
+		SpatialRule r02 = new SpatialRule("EatingAreaEast", "HorizontalTable", 
 				new AugmentedRectangleConstraint(
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Finishes, AllenIntervalConstraint.Type.Finishes.getDefaultBounds()),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals, AllenIntervalConstraint.Type.Equals.getDefaultBounds())
