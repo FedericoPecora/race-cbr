@@ -22,7 +22,7 @@ public class StaticSpatialKnowledge {
 		
 		int manipulationAreaSize = 40;
 		int premanipulationAreaSize = 40;
-		int pmaSlack = 20; //before and after bounds for premanipulation Area
+		int pmaSlack = 60; //before and after bounds for premanipulation Area
 		int maSlack = 10; //before and after bounds for manipulation Area
 		
 		long observationAreaSlack = 65;
