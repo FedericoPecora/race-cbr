@@ -24,41 +24,38 @@ public class SpatialKnowledge {
 	private static void getSpatialKnowledge(Vector<SpatialRule2> srules){
 		
 		
-		//DORO experiment
-//		Bounds knife_size_x = new Bounds(4, 5);
-//		Bounds knife_size_y = new Bounds(17, 18);
-//		Bounds cup_size_x = new Bounds(7, 7);
-//		Bounds cup_size_y = new Bounds(7, 7);
-//		Bounds fork_size_x = new Bounds(4, 5);
-//		Bounds fork_size_y = new Bounds(17, 18);
-//		Bounds withinReach_y_lower = new Bounds(5, 20);
-//		Bounds withinReach_y_upper = new Bounds(5, APSPSolver.INF);
-//		Bounds withinReach_x_lower = new Bounds(5, APSPSolver.INF);
-//		Bounds withinReach_x_upper = new Bounds(5, APSPSolver.INF);
-
-		
-		//Pr2 experiment
-		Bounds knife_size_x = new Bounds(4, 8);
-		Bounds knife_size_y = new Bounds(18, 24);
-		Bounds cup_size_x = new Bounds(4, 7);
-		Bounds cup_size_y = new Bounds(4, 7);
-		Bounds fork_size_x = new Bounds(4, 8);
-		Bounds fork_size_y = new Bounds(18, 24);
-		Bounds withinReach_y_lower = new Bounds(5, 20);
+		Bounds knife_size_x = new Bounds(4, 5);
+		Bounds knife_size_y = new Bounds(11, 12);
+		Bounds cup_size_x = new Bounds(10, 10);
+		Bounds cup_size_y = new Bounds(10, 10);
+		Bounds fork_size_x = new Bounds(4, 5);
+		Bounds fork_size_y = new Bounds(11, 12);
+		Bounds withinReach_y_lower = new Bounds(5, APSPSolver.INF);
 		Bounds withinReach_y_upper = new Bounds(5, APSPSolver.INF);
 		Bounds withinReach_x_lower = new Bounds(5, APSPSolver.INF);
 		Bounds withinReach_x_upper = new Bounds(5, APSPSolver.INF);
 		
+//		Bounds knife_size_x = new Bounds(4, 8);
+//		Bounds knife_size_y = new Bounds(18, 24);
+//		Bounds cup_size_x = new Bounds(4, 7);
+//		Bounds cup_size_y = new Bounds(4, 7);
+//		Bounds fork_size_x = new Bounds(4, 8);
+//		Bounds fork_size_y = new Bounds(18, 24);
+//		Bounds withinReach_y_lower = new Bounds(5, 20);
+//		Bounds withinReach_y_upper = new Bounds(5, APSPSolver.INF);
+//		Bounds withinReach_x_lower = new Bounds(5, APSPSolver.INF);
+//		Bounds withinReach_x_upper = new Bounds(1, APSPSolver.INF);
+		
 
 
 		SpatialRule2 r2 = new SpatialRule2("cup", "knife", 
-				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(15,20)),
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(10,15)),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds() ))
 				);
 		srules.add(r2);
 
 		SpatialRule2 r3 = new SpatialRule2("cup", "fork", 
-				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(15,20)),
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(10,15)),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During , AllenIntervalConstraint.Type.During.getDefaultBounds()))
 
 				);

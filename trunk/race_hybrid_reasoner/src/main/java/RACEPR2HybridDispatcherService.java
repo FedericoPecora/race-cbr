@@ -27,11 +27,15 @@ import org.metacsp.multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatial
 import org.metacsp.multi.spatioTemporal.SpatialFluent;
 import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
 
+import org.ros.concurrent.CancellableLoop;
+import org.ros.message.MessageListener;
 import org.ros.message.Time;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
 import org.ros.node.ConnectedNode;
+import org.ros.node.Node;
 import org.ros.node.service.ServiceResponseBuilder;
+import org.ros.node.topic.Subscriber;
 
 import org.metacsp.framework.Constraint;
 import org.metacsp.framework.ConstraintNetwork;
@@ -40,6 +44,8 @@ import org.metacsp.framework.VariableOrderingH;
 import geometry_msgs.Point;
 import geometry_msgs.Pose;
 import geometry_msgs.PoseStamped;
+import geometry_msgs.Quaternion;
+import geometry_msgs.TransformStamped;
 
 //import pr2_papm_sim.GetNextCommand;
 //import pr2_papm_sim.GetNextCommandRequest;
@@ -52,10 +58,15 @@ import race_msgs.ObjectHypothesis;
 import spatial.rectangleAlgebra_OLD.SpatialAssertionalRelation;
 import spatial.utility.SpatialAssertionalRelation2;
 import spatial.utility.SpatialRule2;
+import std_msgs.Header;
+import tf.tfMessage;
+
 import org.metacsp.time.APSPSolver;
 import org.metacsp.time.Bounds;
 import org.metacsp.utility.logging.MetaCSPLogging;
-import visualization_msgs.Marker;
+
+
+
 
 /**
  * @author Iran Mansouri
@@ -65,13 +76,20 @@ import visualization_msgs.Marker;
 
 public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 	
-	private int arm_resources = 1;
-	private int pad = 0;
+	private int arm_resources = 2;
+	private int pad = 2;
 	private String context = "TestRACE";
 	private Vector<SpatialAssertionalRelation2> saRelations = new Vector<SpatialAssertionalRelation2>();
 	private HashMap<String, SpatialFluent> nameToSpatialFluent = new HashMap<String, SpatialFluent>();
 	private boolean debug = true;
 	private boolean triggerPerception = true;
+	private Transformer transformer = new Transformer();
+	private Subscriber<tfMessage> tfSubscriber;
+	  
+	private double table_x_map = 7.68 - 0.35; 
+	private double table_y_map = 11.50 + 0.35;
+	private double table_size = 0.70; 
+	
 	private VariableOrderingH varOH = new VariableOrderingH() {//Most critical conflict is the one with most activities
 		@Override
 		public int compare(ConstraintNetwork arg0, ConstraintNetwork arg1) {
@@ -98,13 +116,24 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 	@Override
 	public void onStart(ConnectedNode connectedNode) {
 		
-		
+		System.out.println("hello world");
 		this.node = connectedNode;
 		
+	    transformer.setPrefix(GraphName.of(node.getParameterTree().getString("~tf_prefix", "")));
+	    tfSubscriber = node.newSubscriber(GraphName.of("tf"), tf.tfMessage._TYPE); 
+	    tfSubscriber.addMessageListener(new MessageListener<tfMessage>() {
+	      @Override
+	      public void onNewMessage(tfMessage message) {
+	        for (TransformStamped transform : message.getTransforms()) {
+	          transformer.updateTransform(transform);
+	        }
+	      }
+	    });
+	    
 		groundSolver = (SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0];
 		
 		dispatchedActivity = new Vector<Activity>();
-		
+//		saRelations = new Vector<SpatialAssertionalRelation2>();
 		
 //		MetaCSPLogging.setLevel(MetaSpatialScheduler.class, Level.FINE);
 //		MetaCSPLogging.setLevel(SpatialSchedulable.class, Level.FINE);
@@ -140,7 +169,23 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 
 		//setInitialSpatialFleunt (e.g., cup1)
 		insertSpatialFluent("cup1", "atLocation", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
-//		insertSpatialFluent("table1", "atLocation", "at_table1()", markings.UNJUSTIFIED, -1);
+		
+		
+//		insertSpatialFluent("eatingArea1", "atLocation", "at_eatingArea1()", markings.UNJUSTIFIED,  -1);
+//		insertSpatialFluent("robot1_manArea1", "atLocation", "at_robot1_manArea1()", markings.UNJUSTIFIED, -1);		
+//		insertSpatialFluent("cup1_eatingArea1","atLocation",  "at_cup1_eatingArea1()", markings.UNJUSTIFIED, -1);
+//		
+//		//counter
+//		insertSpatialFluent("robot1_counter1", "atLocation", "at_robot1_manAreaCounter()", markings.JUSTIFIED, 1);
+//		insertSpatialFluent("cup1_counter1", "atLocation" , "at_cup1_counter()", markings.JUSTIFIED, 1);
+//		
+//		
+//		insertAtConstraint("cup1_counter1", "cup_counter", 10, 20, 30, 35, true);
+//		insertAtConstraint("robot1_counter1", "robot_counter", 5, 49, 25, 75, true);
+//		insertAtConstraint("robot1_manArea1", "robot_manArea", 5, 49, 25, 75, false);
+//		metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
+		
+
 		//#################################################################################################################
 		
 		node.newServiceServer("get_next_command", GetNextCommand._TYPE, new ServiceResponseBuilder<GetNextCommandRequest, GetNextCommandResponse>() {
@@ -166,9 +211,6 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 				if(currentState.size() != 0)
 					insertFinishTime(currentState, currentTime - 1);
 				
-								
-
-				
 				if(currentState.size() != 0 && currentState.get(0).contains("sense")){
 					System.out.println("triggerPerception is ON");
 					buildAssertionRules(req.getObservations());
@@ -176,13 +218,15 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 					
 					//insertFluent
 					for (ObjectHypothesis marker : req.getObservations()) {
+						
 						if(marker.getType().compareTo("table") == 0)
 							insertSpatialFluent(marker.getType().concat("1"), "atLocation", "at_table1()", markings.UNJUSTIFIED, -1);						
-						else insertSpatialFluent(marker.getType().concat("1"), "atLocation", "at_" + marker.getType().concat("1") + "_table1()", markings.JUSTIFIED, currentTime - 2);
-						if(marker.getType().compareTo("table") != 0)
-							insertSpatialFluent(marker.getType().concat("1"), "atLocation", "at_" + marker.getType().concat("1") + "_table1()", markings.JUSTIFIED, currentTime - 2);
+						else insertSpatialFluent(marker.getType().concat("1"), "atLocation", "at_" + marker.getType().concat("1") + "_table1()", markings.JUSTIFIED, currentTime - 12);
+						
+//						insertSpatialFluent(marker.getType().concat("1") + "_eatingArea1()", "atLocation", "at_" + marker.getType().concat("1") + "_eatingArea1()", markings.JUSTIFIED, currentTime - 2);
+						
 					}
-					System.out.println("saRelation.size" + saRelations.size());
+					System.out.println("saRelation.size: " + saRelations.size());
 					metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
 				}
 				
@@ -222,16 +266,28 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 					System.out.println(toBeDispatchedActions.get(i));
 				}
 				System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-				
-				
 			}
-
-
 
 
 		}); 			
 	}
 	
+
+
+	
+    @Override
+    public void onShutdown(Node node) {
+      tfSubscriber.shutdown();
+    }
+
+    public Transformer getTransformer() {
+      return transformer;
+    }
+
+    public void setTransformer(Transformer transformer) {
+      this.transformer = transformer;
+    }
+    
 	private List<ObjectHypothesis> getObjectActionRefinement(Vector<Activity> toBeDispatchedActions) {
 		
 		Vector<String> placements = new Vector<String>();
@@ -255,14 +311,36 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 			PoseStamped poseS = node.getTopicMessageFactory().newFromType(PoseStamped._TYPE);
 			Pose pose = node.getTopicMessageFactory().newFromType(Pose._TYPE);
 			Point p = node.getTopicMessageFactory().newFromType(Point._TYPE);
-			p.setX((double)rec.getCenterX() / 100);
-			p.setY((double)rec.getCenterY() / 100);
+			p.setX(((double)rec.getCenterY() / 100) + table_x_map);
+			p.setY(-((double)rec.getCenterX() / 100) + table_y_map);
+//			p.setX(7.68);
+//			p.setY(11.50);
+			
+			
+			p.setZ(0.0);
+			Quaternion q = node.getTopicMessageFactory().newFromType(Quaternion._TYPE);
+			
+			q.setW(1.0);
+			pose.setOrientation(q);
+			p.setZ(0.72);
+			
 			pose.setPosition(p);
 			poseS.setPose(pose);
+			
+			
+			Header header = node.getTopicMessageFactory().newFromType(Header._TYPE);
+			header.setFrameId("/map");
+			poseS.setHeader(header);			
+			
+			
+			System.out.println("p1: " + (double)(rec.getX() + rec.getWidth()) /100 + " " + (double)(rec.getY() + rec.getHeight()) /100);
+			System.out.println("x in map" + ((double)rec.getCenterY() / 100) + table_y_map);
+			System.out.println("y in map" + -((double)rec.getCenterX() / 100) + table_x_map);
 			
 			race_msgs.BoundingBox bb = node.getTopicMessageFactory().newFromType(race_msgs.BoundingBox._TYPE);
 			bb.setPoseStamped(poseS);
 			objectypo.setBbox(bb);
+			objectypo.setPose(poseS);
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //			ArrayList<Point> points = new ArrayList<Point>();
 //			Point p = node.getTopicMessageFactory().newFromType(Point._TYPE);
@@ -274,7 +352,7 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 //			Point p1 = node.getTopicMessageFactory().newFromType(Point._TYPE);
 //			p1.setX((double)(rec.getX() + rec.getWidth()) /100); //maxx
 //			p1.setY((double)(rec.getY() + rec.getHeight()) /100); //maxy
-//			System.out.println("p1: " + (double)(rec.getX() + rec.getWidth()) /100 + " " + (double)(rec.getY() + rec.getHeight()) /100);
+//			System.out.println("p1: " + (double)(rec.getX() + rec.getWidth()) /100 + " " + (double)(rec.getY() + rec.getHeight()) /100);so
 //			points.add(p1);
 //			
 //			mrk.setPoints(points);
@@ -385,14 +463,53 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 		return false;
 	}
 
+	
+	private  void insertAtConstraint(String assertion, String concept, long xl, long xu, long yl, long yu, boolean movable){
+		
+		if(xl == 0 && xu == 0 && yl == 0 && yu == 0){
+			SpatialAssertionalRelation2 table_assertion = new SpatialAssertionalRelation2(assertion, concept);
+			table_assertion.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
+					new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
+			OntologicalSpatialProperty tableOnto = new OntologicalSpatialProperty();
+			tableOnto.setMovable(movable);
+			table_assertion.setOntologicalProp(tableOnto);
+			saRelations.add(table_assertion);			
+			
+		}
+		else{
+			SpatialAssertionalRelation2 table_assertion = new SpatialAssertionalRelation2(assertion, concept);
+			table_assertion.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
+					new Bounds(xl, xl), new Bounds(xu, xu), new Bounds(yl, yl), new Bounds(yu, yu)));
+			OntologicalSpatialProperty tableOnto = new OntologicalSpatialProperty();
+			tableOnto.setMovable(movable);
+			table_assertion.setOntologicalProp(tableOnto);
+			saRelations.add(table_assertion);			
+		}
+		
+
+	}
+	
 	private void buildAssertionRules(List<ObjectHypothesis> hypothses) {
 
 //		saRelations = new Vector<SpatialAssertionalRelation2>();
 		
+//		SpatialAssertionalRelation2 table_assertion = new SpatialAssertionalRelation2("eatingArea1", "eatingArea");
+//		table_assertion.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
+//				new Bounds(0, 0), new Bounds(70, 70), new Bounds(0, 0), new Bounds(35, 35)));
+//		OntologicalSpatialProperty tableOnto = new OntologicalSpatialProperty();
+//		tableOnto.setMovable(false);
+//		table_assertion.setOntologicalProp(tableOnto);
+//		saRelations.add(table_assertion);			
+		
+
+
 		
 		for (ObjectHypothesis oh : hypothses) {
+//			SpatialAssertionalRelation2 sa = new SpatialAssertionalRelation2(oh.getType() + "1" + "_eatingArea1", oh.getType());
 			SpatialAssertionalRelation2 sa = new SpatialAssertionalRelation2(oh.getType() + "1", oh.getType());
 			
+
+			//filter immovable object from ontology
 			if(oh.getType().compareTo("table") == 0){
 				OntologicalSpatialProperty noneMOvable = new OntologicalSpatialProperty();
 				noneMOvable.setMovable(false);
@@ -405,16 +522,66 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 			}
 
 			
-			
-			if(oh.getBbox().getPoseStamped().getPose().getPosition().getX() < 0)
+			//unbounded object
+			if(oh.getType().compareTo("table") == 0)
+				sa.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At,new Bounds(0, 0), 
+						new Bounds(70, 70), new Bounds(0, 0), new Bounds(70, 70))) ;
+
+			else if(oh.getBbox().getPoseStamped().getPose().getPosition().getX() < 0)
 				sa.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At,new Bounds(0, APSPSolver.INF), 
 						new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF))) ;
-			else{
+			else{//bounded object as observed
+
+
+//				geometry_msgs.PoseStamped p = node.getTopicMessageFactory().newFromType(geometry_msgs.PoseStamped._TYPE);
+//				p.getHeader().setFrameId("/base_link");
+//				p.getPose().getOrientation().setW(1.0);   // make valid quaternion
 				
-				long x_size = (long)oh.getBbox().getDimensions().getX() * 100;
-				long y_size = (long)oh.getBbox().getDimensions().getY() * 100;
-				long x_center = (long)oh.getBbox().getPoseStamped().getPose().getPosition().getX() * 100;
-				long y_center = (long)oh.getBbox().getPoseStamped().getPose().getPosition().getY() * 100;
+				System.out.println("Beforerrrr");
+				geometry_msgs.PoseStamped p = oh.getBbox().getPoseStamped();
+				System.out.println(
+						"  frame_id> " + p.getHeader().getFrameId() +
+						"  x: " + p.getPose().getPosition().getX() +
+						", y: " + p.getPose().getPosition().getY() +
+						", z: " + p.getPose().getPosition().getZ() +
+						" ||| Orientation --- " +
+						"  x: " + p.getPose().getOrientation().getX() +
+						"  y: " + p.getPose().getOrientation().getY() +
+						"  z: " + p.getPose().getOrientation().getZ() +
+						"  w: " + p.getPose().getOrientation().getW()
+						);
+				System.out.println("AFTERRRER");
+				try {
+					getTransformer().transformPose(GraphName.of("/map"), p);
+					System.out.println(
+							"  frame_id> " + p.getHeader().getFrameId() +
+							"  x: " + p.getPose().getPosition().getX() +
+							", y: " + p.getPose().getPosition().getY() +
+							", z: " + p.getPose().getPosition().getZ() +
+							" ||| Orientation --- " +
+							"  x: " + p.getPose().getOrientation().getX() +
+							"  y: " + p.getPose().getOrientation().getY() +
+							"  z: " + p.getPose().getOrientation().getZ() +
+							"  w: " + p.getPose().getOrientation().getW()
+							);
+				} catch (java.lang.IllegalStateException e) {
+					System.err.println(e);
+				}
+					
+				long x_size = (long)((double)(oh.getBbox().getDimensions().getX() * 100) / 2);
+				long y_size = (long)((double)(oh.getBbox().getDimensions().getY() * 100)/ 2);
+//				long x_center = (long)(oh.getBbox().getPoseStamped().getPose().getPosition().getX() * 100);
+//				long y_center = (long)(oh.getBbox().getPoseStamped().getPose().getPosition().getY() * 100);
+				
+//		        des[0] = -source[1] + sppe.table_y_positon_in_base_link_frame
+//		        des[1] = source[0] - sppe.table_x_positon_in_base_link_frame
+				
+				
+				long x_center = (long)((-p.getPose().getPosition().getY() + table_y_map) * 100);
+				long y_center = (long)((p.getPose().getPosition().getX() - table_x_map) * 100);
+				
+				System.out.println("x_center: " + x_center);
+				System.out.println("y_center: " + y_center);
 				
 			    sa.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At,
 			    		new Bounds((long)(x_center - x_size), (long)(x_center - x_size)), 
@@ -431,9 +598,7 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 			saRelations.add(sa);
 		}
 		
-		for (int i = 0; i < saRelations.size(); i++) {
-			System.out.println("To: " + saRelations.get(i).getTo());
-		}
+
 	}
 	
 	private void insertSpatialFluent(String fluentName, String componnetName, String symbolicDomainName, markings mark, long releaseTime){
@@ -466,9 +631,12 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 			}
 			
 			nameToSpatialFluent.put(fluentName, sf);
-			System.out.println("spatial fluents");
-			System.out.println(nameToSpatialFluent);
+			
+			
 		}
+//		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//		System.out.println(nameToSpatialFluent);
+//		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 	}
 	
 	private void insertCurrentState(String componnetName, String symbolicDomainName, markings mark, long releaseTime){
