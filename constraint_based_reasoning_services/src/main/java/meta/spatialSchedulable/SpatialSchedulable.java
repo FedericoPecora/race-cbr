@@ -292,6 +292,7 @@ public class SpatialSchedulable extends MetaConstraint {
 
 		if (metaVariable == null)
 			return null;
+		
 		//#######################################################################################################
 		HashMap<Activity, SpatialFluent> activityToFluent = new HashMap<Activity, SpatialFluent>();
 		Vector<Activity> activities = new Vector<Activity>();
@@ -567,11 +568,7 @@ public class SpatialSchedulable extends MetaConstraint {
 
 	public boolean isConflicting(Activity[] peak, HashMap<Activity, SpatialFluent> aTOsf) {
 		
-
-		
 		if(peak.length == 1) return false;
-		
-		
 		
 //		System.out.println("------------------------------------------------------------");
 //		for (int i = 0; i < peak.length; i++) {
@@ -595,7 +592,6 @@ public class SpatialSchedulable extends MetaConstraint {
 
 		Vector<MultiBinaryConstraint> addedGeneralKn = new Vector<MultiBinaryConstraint>();
 		for (int i = 0; i < this.rules.length; i++) {
-
 			if (this.rules[i].getFrom().compareTo(this.rules[i].getTo()) == 0) {
 				Bounds[] sizeBounds = new Bounds[this.rules[i].getUnaryRAConstraint().getBounds().length];
 				for (int j = 0; j < sizeBounds.length; j++) {
@@ -685,7 +681,6 @@ public class SpatialSchedulable extends MetaConstraint {
 		// Add at constraint
 		Vector<RectangularRegion> metaVaribales = new Vector<RectangularRegion>();
 		for (int i = 0; i < sAssertionalRels.length; i++) {
-
 			SpatialFluent sf = currentFluent.get(sAssertionalRels[i].getFrom());
 			if (sf == null)
 				continue;
@@ -693,7 +688,6 @@ public class SpatialSchedulable extends MetaConstraint {
 			if (sAssertionalRels[i].getUnaryAtRectangleConstraint() != null) {
 				RectangularRegion var = (RectangularRegion) iterSolver.createVariable();
 				var.setName(sAssertionalRels[i].getFrom());
-
 				Bounds[] atBounds = new Bounds[sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds().length];
 				for (int j = 0; j < atBounds.length; j++) {
 					Bounds b = new Bounds(
@@ -717,12 +711,15 @@ public class SpatialSchedulable extends MetaConstraint {
 			// targetRecs.add(sf);
 		}
 
-		
+
+		//ConstraintNetwork.draw(((SpatialFluentSolver)this.metaCS.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
+
 		// ######################################################################################################
 		Vector<RectangleConstraint> assertionList = new Vector<RectangleConstraint>();
 		for (int i = 0; i < sAssertionalRels.length; i++) {
 			for (int j = 0; j < metaVaribales.size(); j++) {
 				if (sAssertionalRels[i].getFrom().compareTo(((RectangularRegion) (metaVaribales.get(j))).getName()) == 0) {
+					
 					RectangleConstraint assertion = new RectangleConstraint(
 							new AllenIntervalConstraint(
 									AllenIntervalConstraint.Type.Equals,
@@ -742,7 +739,6 @@ public class SpatialSchedulable extends MetaConstraint {
 		}
 		
 		boolean isConsistent = true;
-		
 		
 		
 		// MetaCSPLogging.setLevel(Level.FINE);
