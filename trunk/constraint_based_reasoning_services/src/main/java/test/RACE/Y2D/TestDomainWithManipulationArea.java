@@ -122,7 +122,7 @@ public class TestDomainWithManipulationArea {
 		metaSpatioCasualSolver.addMetaConstraint(metaOccupiedConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(metaCausalConstraint);
 		metaSpatioCasualSolver.addMetaConstraint(metaSpatialSchedulable);
-		metaSpatioCasualSolver.addMetaConstraint(metareachabilityChecker);
+//		metaSpatioCasualSolver.addMetaConstraint(metareachabilityChecker);
 		
 
 		long timeNow = Calendar.getInstance().getTimeInMillis();
@@ -386,28 +386,28 @@ public class TestDomainWithManipulationArea {
 		move2.addConstraint(atDuration, 0, 0);
 		operators.add(move2);
 		
-		SimpleOperator move21 = new SimpleOperator("atLocation::at_robot1_manArea1()",
-				new AllenIntervalConstraint[] {toLocationFinishesMove, new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds())},
-				new String[] {"robot1::move_manArea2_manArea1()", "robot1::sense_eatingArea1()"},
-				new int[] {0, 0});
-		move21.addConstraint(atDuration, 0, 0);
-		operators.add(move21);
-
-		
-		
-		SimpleOperator move3 = new SimpleOperator("atLocation::at_robot1_manArea2()",
-				new AllenIntervalConstraint[] {toLocationFinishesMove, new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds())},
-				new String[] {"robot1::move_manArea1_manArea2()", "robot1::sense_eatingArea1()"},
-				new int[] {0, 0});
-		move3.addConstraint(atDuration, 0, 0);
-		operators.add(move3);
-
-		SimpleOperator move31 = new SimpleOperator("atLocation::at_robot1_manArea2()",
-				new AllenIntervalConstraint[] {toLocationFinishesMove, new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds())},
-				new String[] {"robot1::move_manAreaCounter_manArea2()", "robot1::sense_eatingArea1()"},
-				new int[] {0, 0});
-		move31.addConstraint(atDuration, 0, 0);
-		operators.add(move31);
+//		SimpleOperator move21 = new SimpleOperator("atLocation::at_robot1_manArea1()",
+//				new AllenIntervalConstraint[] {toLocationFinishesMove, new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds())},
+//				new String[] {"robot1::move_manArea2_manArea1()", "robot1::sense_eatingArea1()"},
+//				new int[] {0, 0});
+//		move21.addConstraint(atDuration, 0, 0);
+//		operators.add(move21);
+//
+//		
+//		
+//		SimpleOperator move3 = new SimpleOperator("atLocation::at_robot1_manArea2()",
+//				new AllenIntervalConstraint[] {toLocationFinishesMove, new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds())},
+//				new String[] {"robot1::move_manArea1_manArea2()", "robot1::sense_eatingArea1()"},
+//				new int[] {0, 0});
+//		move3.addConstraint(atDuration, 0, 0);
+//		operators.add(move3);
+//
+//		SimpleOperator move31 = new SimpleOperator("atLocation::at_robot1_manArea2()",
+//				new AllenIntervalConstraint[] {toLocationFinishesMove, new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds())},
+//				new String[] {"robot1::move_manAreaCounter_manArea2()", "robot1::sense_eatingArea1()"},
+//				new int[] {0, 0});
+//		move31.addConstraint(atDuration, 0, 0);
+//		operators.add(move31);
 
 		
 		return operators;
@@ -536,8 +536,8 @@ public class TestDomainWithManipulationArea {
 		insertAtConstraint(recs, saRelations, "cup1_counter1", "cup_counter", 10, 20, 30, 35, true);
 		insertAtConstraint(recs, saRelations, "robot1_counter1", "robot_counter", 5, 49, 25, 75, true);
 		insertAtConstraint(recs, saRelations, "robot1_manArea1", "robot_manArea", 5, 49, 25, 75, true);
-		insertAtConstraint(recs, saRelations, "robot1_manArea2", "robot_manArea", 101, 145, 25, 75, true);
-//		insertAtConstraint(recs, saRelations, "robot", 0, 0, 0, 0, true);
+//		insertAtConstraint(recs, saRelations, "robot1_manArea2", "robot_manArea", 101, 145, 25, 75, true);
+
 		return recs;
 
 
