@@ -48,7 +48,7 @@ import org.metacsp.framework.VariableOrderingH;
 public class TestTimelineBaseSpatialReasoning2 {
 	//two culprit examples
 	static int arm_resources = 1;
-	static int pad = 0;
+	static int pad = 2;
 	
 	public static void main(String[] args) {
 		

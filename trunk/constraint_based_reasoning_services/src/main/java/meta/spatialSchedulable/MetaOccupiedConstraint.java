@@ -229,7 +229,7 @@ public class MetaOccupiedConstraint extends MetaConstraint {
 	public ConstraintNetwork[] getMetaValues(MetaVariable metaVariable,
 			int initial_time) {
 		
-		return null;
+		return getMetaValues(metaVariable);
 	}
 
 	@Override
