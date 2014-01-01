@@ -142,10 +142,10 @@ public class MetaSpatialScheduler  extends MetaConstraintSolver {
 			
 			for (int i = 0; i < this.metaConstraints.size(); i++){
 				if(this.metaConstraints.get(i) instanceof SpatialSchedulable ){	
-					for (int j = 0; j < ((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels().length; j++) {
-							((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].setUnaryAtRectangleConstraint
+					for (int j = 0; j < ((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels().size(); j++) {
+							((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels().get(j).setUnaryAtRectangleConstraint
 							(((SpatialSchedulable)this.metaConstraints.get(i)).getCurrentAssertionalCons().
-									get(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom()));
+									get(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels().get(j).getFrom()));
 //							System.out.println("Assertional Realtion: " + (((SpatialSchedulable)this.metaConstraints.get(i)).getCurrentAssertionalCons().
 //									get(((SpatialSchedulable)this.metaConstraints.get(i)).getsAssertionalRels()[j].getFrom())));
 					}			
