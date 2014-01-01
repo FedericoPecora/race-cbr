@@ -108,7 +108,7 @@ public class TestDomainSensingBeforePickandPlace {
                 //#################################################################################################################
                 //add spatial general and assertional rule to MetaSpatialFluentConstraint
                 metaSpatialSchedulable.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
-                metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
+                metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations);
                 metaSpatialSchedulable.setInitialGoal(new String[]{"cup1"});
                 
                 
@@ -125,6 +125,8 @@ public class TestDomainSensingBeforePickandPlace {
                 long timeNow = Calendar.getInstance().getTimeInMillis();
                 metaSpatioCasualSolver.backtrack();
                 System.out.println("TOTAL TIME: " + (Calendar.getInstance().getTimeInMillis()-timeNow));
+                
+                
                 
                 //#####################################################################################################################
                 //visualization
@@ -171,6 +173,8 @@ public class TestDomainSensingBeforePickandPlace {
                                 System.out.println(act + " --> " + starttimes.get(act));
                 }
                 //#####################################################################################################################
+                
+                
         }
         
         private static LinkedHashMap sortHashMapByValuesD(HashMap passedMap) {
@@ -565,13 +569,6 @@ public class TestDomainSensingBeforePickandPlace {
 //                insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
                 
                 return recs;
-
-
-                
-
-
-
-
         }
         
 }

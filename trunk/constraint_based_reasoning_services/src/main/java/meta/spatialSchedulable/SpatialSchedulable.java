@@ -50,7 +50,8 @@ public class SpatialSchedulable extends MetaConstraint {
 	 */
 	private static final long serialVersionUID = 1583183627952907595L;
 	private long origin = 0, horizon = 1000;
-	private SpatialAssertionalRelation2[] sAssertionalRels;
+	private Vector<SpatialAssertionalRelation2> sAssertionalRels = new Vector<SpatialAssertionalRelation2>();
+	
 	private SpatialRule2[] rules;
 	private HashMap<HashMap<String, Bounds[]>, Integer> permutation;
 	private Vector<String> initialUnboundedObjName = new Vector<String>();
@@ -93,12 +94,18 @@ public class SpatialSchedulable extends MetaConstraint {
 		this.rules = rules;
 	}
 
-	public void setSpatialAssertionalRelations(SpatialAssertionalRelation2... sAssertionalRels) {
-		this.sAssertionalRels = new SpatialAssertionalRelation2[sAssertionalRels.length];
+//	public void setSpatialAssertionalRelations(SpatialAssertionalRelation2... sAssertionalRels) {
+//		this.sAssertionalRels = new SpatialAssertionalRelation2[sAssertionalRels.length];
+//		this.sAssertionalRels = sAssertionalRels;
+//	}
+
+	public void setSpatialAssertionalRelations(Vector<SpatialAssertionalRelation2> sAssertionalRels) {
+		
 		this.sAssertionalRels = sAssertionalRels;
 	}
+
 	
-	public SpatialAssertionalRelation2[] getsAssertionalRels() {
+	public Vector<SpatialAssertionalRelation2> getsAssertionalRels() {
 		return sAssertionalRels;
 	}
 	
@@ -399,23 +406,23 @@ public class SpatialSchedulable extends MetaConstraint {
 		//maintain the the current At unary constraint for retraction case
 		currentAssertionalCons = new HashMap<String, UnaryRectangleConstraint>();
 		Vector<String> nonMovableObj = new Vector<String>();
-		for (int j = 0; j < sAssertionalRels.length; j++) {
-			if(!sAssertionalRels[j].getOntologicalProp().isMovable()) {
-				nonMovableObj.add(sAssertionalRels[j].getFrom());
-				nonMovableObj.add(sAssertionalRels[j].getTo());
+		for (int j = 0; j < sAssertionalRels.size(); j++) {
+			if(!sAssertionalRels.get(j).getOntologicalProp().isMovable()) {
+				nonMovableObj.add(sAssertionalRels.get(j).getFrom());
+				nonMovableObj.add(sAssertionalRels.get(j).getTo());
 			}
 			
-			currentAssertionalCons.put(sAssertionalRels[j].getFrom(), new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At,
-					new Bounds(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[0].min, sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[0].max), 
-					new Bounds(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[1].min, sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[1].max),
-					new Bounds(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[2].min, sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[2].max),
-					new Bounds(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[3].min, sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[3].max)));
+			currentAssertionalCons.put(sAssertionalRels.get(j).getFrom(), new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At,
+					new Bounds(sAssertionalRels.get(j).getUnaryAtRectangleConstraint().getBounds()[0].min, sAssertionalRels.get(j).getUnaryAtRectangleConstraint().getBounds()[0].max), 
+					new Bounds(sAssertionalRels.get(j).getUnaryAtRectangleConstraint().getBounds()[1].min, sAssertionalRels.get(j).getUnaryAtRectangleConstraint().getBounds()[1].max),
+					new Bounds(sAssertionalRels.get(j).getUnaryAtRectangleConstraint().getBounds()[2].min, sAssertionalRels.get(j).getUnaryAtRectangleConstraint().getBounds()[2].max),
+					new Bounds(sAssertionalRels.get(j).getUnaryAtRectangleConstraint().getBounds()[3].min, sAssertionalRels.get(j).getUnaryAtRectangleConstraint().getBounds()[3].max)));
 			
-			BoundingBox bb = new BoundingBox(sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[0], 
-					sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[1],
-					sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[2],
-					sAssertionalRels[j].getUnaryAtRectangleConstraint().getBounds()[3]);
-			oldRectangularRegion.put(sAssertionalRels[j].getFrom(), bb);
+			BoundingBox bb = new BoundingBox(sAssertionalRels.get(j).getUnaryAtRectangleConstraint().getBounds()[0], 
+					sAssertionalRels.get(j).getUnaryAtRectangleConstraint().getBounds()[1],
+					sAssertionalRels.get(j).getUnaryAtRectangleConstraint().getBounds()[2],
+					sAssertionalRels.get(j).getUnaryAtRectangleConstraint().getBounds()[3]);
+			oldRectangularRegion.put(sAssertionalRels.get(j).getFrom(), bb);
 
 		}
 		
@@ -460,9 +467,9 @@ public class SpatialSchedulable extends MetaConstraint {
 			newGoalFluentsVector.add(newgoalFlunet);
 			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 			//update assertional rule
-			for (int j = 0; j < sAssertionalRels.length; j++) {
-				if(sAssertionalRels[j].getFrom().compareTo(st) == 0)
-				sAssertionalRels[j].setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
+			for (int j = 0; j < sAssertionalRels.size(); j++) {
+				if(sAssertionalRels.get(j).getFrom().compareTo(st) == 0)
+				sAssertionalRels.get(j).setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
 						new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 			}			
 			//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -484,11 +491,11 @@ public class SpatialSchedulable extends MetaConstraint {
 		
 		Vector<RectangleConstraint> assertionList = new Vector<RectangleConstraint>();
 //		newGoal
-		for(int i = 0; i < sAssertionalRels.length; i++) {
+		for(int i = 0; i < sAssertionalRels.size(); i++) {
 			boolean isAdded = false;
-			if(newGoal.contains(sAssertionalRels[i].getFrom())){
+			if(newGoal.contains(sAssertionalRels.get(i).getFrom())){
 				for (int j = 0; j < newGoalFluentsVector.size(); j++) { //this is rectangle represents new places!
-					if (sAssertionalRels[i].getFrom().compareTo(
+					if (sAssertionalRels.get(i).getFrom().compareTo(
 							((newGoalFluentsVector.get(j))).getName()) == 0) {
 						RectangleConstraint assertion = new RectangleConstraint(
 								new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals,
@@ -497,7 +504,7 @@ public class SpatialSchedulable extends MetaConstraint {
 										AllenIntervalConstraint.Type.Equals.getDefaultBounds()));
 
 						assertion.setFrom(((RectangularRegion) newGoalFluentsVector.get(j).getRectangularRegion()));
-						assertion.setTo(getVariableByName.get(sAssertionalRels[i].getTo()));
+						assertion.setTo(getVariableByName.get(sAssertionalRels.get(i).getTo()));
 						assertionList.add(assertion);
 						mvalue.addConstraint(assertion);
 					}				
@@ -506,7 +513,7 @@ public class SpatialSchedulable extends MetaConstraint {
 			}
 			else{
 				for (int j = 0; j < metaVaribales.size(); j++) { //this is rectangle represents new places!
-					if (sAssertionalRels[i].getFrom().compareTo(((metaVaribales.get(j))).getName()) == 0) {
+					if (sAssertionalRels.get(i).getFrom().compareTo(((metaVaribales.get(j))).getName()) == 0) {
 
 						RectangleConstraint assertion = new RectangleConstraint(
 								new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals,
@@ -515,8 +522,8 @@ public class SpatialSchedulable extends MetaConstraint {
 										AllenIntervalConstraint.Type.Equals.getDefaultBounds()));
 
 						assertion.setFrom(((RectangularRegion) metaVaribales.get(j)));
-						assertion.setTo(getVariableByName.get(sAssertionalRels[i].getTo()));
-						if(getVariableByName.get(sAssertionalRels[i].getTo()) !=  null){
+						assertion.setTo(getVariableByName.get(sAssertionalRels.get(i).getTo()));
+						if(getVariableByName.get(sAssertionalRels.get(i).getTo()) !=  null){
 							assertionList.add(assertion);
 						    mvalue.addConstraint(assertion);
 						    isAdded = true;
@@ -527,7 +534,7 @@ public class SpatialSchedulable extends MetaConstraint {
 			}
 			if(!isAdded){ //goals and we do not care about the rest of the objects which is in the well set table and can not be observed and does not exist in the set of original goal!
 				for (int j = 0; j < originalGoals.size(); j++) {
-					if(activityToFluent.get(originalGoals.get(j)).getRectangularRegion().getName().compareTo(sAssertionalRels[i].getFrom()) == 0){
+					if(activityToFluent.get(originalGoals.get(j)).getRectangularRegion().getName().compareTo(sAssertionalRels.get(i).getFrom()) == 0){
 						RectangleConstraint assertion = new RectangleConstraint(
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals,
 								AllenIntervalConstraint.Type.Equals.getDefaultBounds()),
@@ -535,8 +542,8 @@ public class SpatialSchedulable extends MetaConstraint {
 								AllenIntervalConstraint.Type.Equals.getDefaultBounds()));
 
 						assertion.setFrom(activityToFluent.get(originalGoals.get(j)).getRectangularRegion());
-						assertion.setTo(getVariableByName.get(sAssertionalRels[i].getTo()));
-						if(getVariableByName.get(sAssertionalRels[i].getTo()) !=  null){
+						assertion.setTo(getVariableByName.get(sAssertionalRels.get(i).getTo()));
+						if(getVariableByName.get(sAssertionalRels.get(i).getTo()) !=  null){
 							assertionList.add(assertion);
 						    mvalue.addConstraint(assertion);
 						}
@@ -680,18 +687,18 @@ public class SpatialSchedulable extends MetaConstraint {
 		// ####################################################################################
 		// Add at constraint
 		Vector<RectangularRegion> metaVaribales = new Vector<RectangularRegion>();
-		for (int i = 0; i < sAssertionalRels.length; i++) {
-			SpatialFluent sf = currentFluent.get(sAssertionalRels[i].getFrom());
+		for (int i = 0; i < sAssertionalRels.size(); i++) {
+			SpatialFluent sf = currentFluent.get(sAssertionalRels.get(i).getFrom());
 			if (sf == null)
 				continue;
 			// Add at constraint of indivisuals
-			if (sAssertionalRels[i].getUnaryAtRectangleConstraint() != null) {
+			if (sAssertionalRels.get(i).getUnaryAtRectangleConstraint() != null) {
 				RectangularRegion var = (RectangularRegion) iterSolver.createVariable();
-				var.setName(sAssertionalRels[i].getFrom());
-				Bounds[] atBounds = new Bounds[sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds().length];
+				var.setName(sAssertionalRels.get(i).getFrom());
+				Bounds[] atBounds = new Bounds[sAssertionalRels.get(i).getUnaryAtRectangleConstraint().getBounds().length];
 				for (int j = 0; j < atBounds.length; j++) {
 					Bounds b = new Bounds(
-							sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds()[j].min, sAssertionalRels[i]
+							sAssertionalRels.get(i).getUnaryAtRectangleConstraint().getBounds()[j].min, sAssertionalRels.get(i)
 									.getUnaryAtRectangleConstraint().getBounds()[j].max);
 					atBounds[j] = b;
 				}
@@ -706,8 +713,8 @@ public class SpatialSchedulable extends MetaConstraint {
 
 			}
 
-			if (sAssertionalRels[i].getOntologicalProp() != null)
-				sf.getRectangularRegion().setOntologicalProp(sAssertionalRels[i].getOntologicalProp());
+			if (sAssertionalRels.get(i).getOntologicalProp() != null)
+				sf.getRectangularRegion().setOntologicalProp(sAssertionalRels.get(i).getOntologicalProp());
 			// targetRecs.add(sf);
 		}
 
@@ -716,9 +723,9 @@ public class SpatialSchedulable extends MetaConstraint {
 
 		// ######################################################################################################
 		Vector<RectangleConstraint> assertionList = new Vector<RectangleConstraint>();
-		for (int i = 0; i < sAssertionalRels.length; i++) {
+		for (int i = 0; i < sAssertionalRels.size(); i++) {
 			for (int j = 0; j < metaVaribales.size(); j++) {
-				if (sAssertionalRels[i].getFrom().compareTo(((RectangularRegion) (metaVaribales.get(j))).getName()) == 0) {
+				if (sAssertionalRels.get(i).getFrom().compareTo(((RectangularRegion) (metaVaribales.get(j))).getName()) == 0) {
 					
 					RectangleConstraint assertion = new RectangleConstraint(
 							new AllenIntervalConstraint(
@@ -729,8 +736,8 @@ public class SpatialSchedulable extends MetaConstraint {
 									AllenIntervalConstraint.Type.Equals.getDefaultBounds()));
 
 					assertion.setFrom(((RectangularRegion) metaVaribales.get(j)));
-					assertion.setTo(getVariableByName.get(sAssertionalRels[i].getTo()));					
-					if(getVariableByName.get(sAssertionalRels[i].getTo()) != null){
+					assertion.setTo(getVariableByName.get(sAssertionalRels.get(i).getTo()));					
+					if(getVariableByName.get(sAssertionalRels.get(i).getTo()) != null){
 						assertionList.add(assertion);
 //						System.out.println(assertion);
 					}
@@ -933,9 +940,9 @@ public class SpatialSchedulable extends MetaConstraint {
 			}
 
 			Vector<RectangleConstraint> assertionList = new Vector<RectangleConstraint>();
-			for (int i = 0; i < sAssertionalRels.length; i++) {
+			for (int i = 0; i < sAssertionalRels.size(); i++) {
 				for (int j = 0; j < metaVaribales.size(); j++) {
-					if (sAssertionalRels[i].getFrom().compareTo(((RectangularRegion) (metaVaribales.get(j))).getName()) == 0) {
+					if (sAssertionalRels.get(i).getFrom().compareTo(((RectangularRegion) (metaVaribales.get(j))).getName()) == 0) {
 						RectangleConstraint assertion = new RectangleConstraint(
 								new AllenIntervalConstraint(
 										AllenIntervalConstraint.Type.Equals,
@@ -947,9 +954,9 @@ public class SpatialSchedulable extends MetaConstraint {
 												.getDefaultBounds()));
 
 						assertion.setFrom(((RectangularRegion) metaVaribales.get(j)));
-						assertion.setTo(getVariableByName.get(sAssertionalRels[i].getTo()));
+						assertion.setTo(getVariableByName.get(sAssertionalRels.get(i).getTo()));
 						// System.out.println(assertion);
-						if(getVariableByName.get(sAssertionalRels[i].getTo()) != null) //maybe there is nothing assigned to them in spatial general Knowledge
+						if(getVariableByName.get(sAssertionalRels.get(i).getTo()) != null) //maybe there is nothing assigned to them in spatial general Knowledge
 							assertionList.add(assertion);
 					}
 				}
@@ -1332,20 +1339,20 @@ public class SpatialSchedulable extends MetaConstraint {
 		// Add at constraint
 		RectangleConstraintSolver iterSolver = new RectangleConstraintSolver(origin, horizon);
 		Vector<RectangularRegion> metaVaribales = new Vector<RectangularRegion>();
-		for (int i = 0; i < sAssertionalRels.length; i++) {
+		for (int i = 0; i < sAssertionalRels.size(); i++) {
 
-			SpatialFluent sf = currentFluent.get(sAssertionalRels[i].getFrom());
+			SpatialFluent sf = currentFluent.get(sAssertionalRels.get(i).getFrom());
 			if (sf == null)
 				continue;
 			// Add at constraint of indivisuals
 			RectangularRegion var = (RectangularRegion) iterSolver.createVariable();
-			if (sAssertionalRels[i].getUnaryAtRectangleConstraint() != null) {				
-				var.setName(sAssertionalRels[i].getFrom());				
-				Bounds[] atBounds = new Bounds[sAssertionalRels[i].getUnaryAtRectangleConstraint().getBounds().length];
+			if (sAssertionalRels.get(i).getUnaryAtRectangleConstraint() != null) {				
+				var.setName(sAssertionalRels.get(i).getFrom());				
+				Bounds[] atBounds = new Bounds[sAssertionalRels.get(i).getUnaryAtRectangleConstraint().getBounds().length];
 				for (int j = 0; j < atBounds.length; j++) {
 					Bounds b = new Bounds(
-							sAssertionalRels[i].getUnaryAtRectangleConstraint()
-									.getBounds()[j].min, sAssertionalRels[i]
+							sAssertionalRels.get(i).getUnaryAtRectangleConstraint()
+									.getBounds()[j].min, sAssertionalRels.get(i)
 									.getUnaryAtRectangleConstraint()
 									.getBounds()[j].max);
 					atBounds[j] = b;
@@ -1361,9 +1368,9 @@ public class SpatialSchedulable extends MetaConstraint {
 
 			}
 
-			if (sAssertionalRels[i].getOntologicalProp() != null){
+			if (sAssertionalRels.get(i).getOntologicalProp() != null){
 //				sf.getRectangularRegion().setOntologicalProp(sAssertionalRels[i].getOntologicalProp());
-				var.setOntologicalProp(sAssertionalRels[i].getOntologicalProp());
+				var.setOntologicalProp(sAssertionalRels.get(i).getOntologicalProp());
 			// targetRecs.add(sf);
 			}
 		}

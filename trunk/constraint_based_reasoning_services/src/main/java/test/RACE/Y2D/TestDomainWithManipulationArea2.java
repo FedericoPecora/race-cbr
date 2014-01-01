@@ -110,7 +110,7 @@ public class TestDomainWithManipulationArea2 {
 		//#################################################################################################################
 		//add spatial general and assertional rule to MetaSpatialFluentConstraint
 		metaSpatialSchedulable.setSpatialRules(srules.toArray(new SpatialRule2[srules.size()]));
-		metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
+		metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations);
 		metaSpatialSchedulable.setInitialGoal(new String[]{"cup1"});
 		metareachabilityChecker.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
 		
