@@ -6,33 +6,33 @@ import org.metacsp.time.Bounds;
 
 
 public class CausalKnowledge {
-	
+
 	public static void getCausalKnowledge(String context, Vector<SimpleOperator> operators){
-		
-		
+
+
 		if(context.compareTo("TestRACE") == 0){
-			
-//			operators.addAll(getObjectPickAndPlaceOperator("cup1"));
-//			operators.addAll(getObjectPickAndPlaceOperator("fork1"));
-//			operators.addAll(getObjectPickAndPlaceOperator("knife1"));
-			
+
+			//			operators.addAll(getObjectPickAndPlaceOperator("cup1"));
+			//			operators.addAll(getObjectPickAndPlaceOperator("fork1"));
+			//			operators.addAll(getObjectPickAndPlaceOperator("knife1"));
+
 			operators.addAll(getObjectPickAndPlaceOperatorSIMPLE("cup1"));
 			operators.addAll(getObjectPickAndPlaceOperatorSIMPLE("fork1"));
 			operators.addAll(getObjectPickAndPlaceOperatorSIMPLE("knife1"));
 
 		}
-		
+
 		if(context.compareTo("WellSetTable") == 0)
 			addOperator(operators);
 
 	}
-	
-	
+
+
 	private static Vector<SimpleOperator> getObjectPickAndPlaceOperator(String obj){
-		
+
 		Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
 		long duration = 5;
-		
+
 		AllenIntervalConstraint toLocationFinishesMove = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy);
 		AllenIntervalConstraint moveMetByFromLocation = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());		
 		AllenIntervalConstraint duringManArea = new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds());
@@ -45,7 +45,7 @@ public class CausalKnowledge {
 		AllenIntervalConstraint atDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
 		AllenIntervalConstraint placeDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
 		AllenIntervalConstraint moveDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
-		
+
 		SimpleOperator operator4 = new SimpleOperator("atLocation::at_"+ obj +"_eatingArea1()",
 				new AllenIntervalConstraint[] {atStartedByPlace},
 				new String[] {"robot1::place_"+ obj +"_eatingArea1(arm)"},
@@ -61,7 +61,7 @@ public class CausalKnowledge {
 		operators.add(operator5);
 
 
-		
+
 		SimpleOperator operator6 = new SimpleOperator("robot1::holding_"+ obj +"(arm)",
 				new AllenIntervalConstraint[] {holdingMetByPick},
 				new String[] {"robot1::pick_"+ obj +"_eatingArea1(arm)"},
@@ -69,7 +69,7 @@ public class CausalKnowledge {
 		operator6.addConstraint(holdingDuration, 0, 0);
 		operators.add(operator6);
 
-		
+
 		SimpleOperator operator2res = new SimpleOperator("robot1::pick_"+ obj +"_eatingArea1(arm)",
 				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
 				new String[] {"atLocation::at_"+ obj +"_eatingArea1()", "atLocation::at_robot1_manArea1()"},
@@ -78,7 +78,7 @@ public class CausalKnowledge {
 		operators.add(operator2res);
 
 
-		
+
 		//ccounter	
 		SimpleOperator operator41 = new SimpleOperator("robot1::pick_"+obj+"_counter(arm)",
 				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
@@ -86,14 +86,14 @@ public class CausalKnowledge {
 				new int[] {1, 1});
 		operator41.addConstraint(pickDuration, 0, 0);
 		operators.add(operator41);
-		
+
 		SimpleOperator operator42 = new SimpleOperator("atLocation::at_"+obj+"_counter()",
 				new AllenIntervalConstraint[] {atStartedByPlace, duringManArea},
 				new String[] {"robot1::place_"+ obj +"_counter(arm)", "atLocation::at_robot1_manAreaCounter()"},
 				new int[] {0, 0});
 		operator42.addConstraint(atDuration, 0, 0);
 		operators.add(operator42);
-		
+
 		SimpleOperator operator3a = new SimpleOperator("robot1::holding_"+obj+"(arm)",
 				new AllenIntervalConstraint[] {holdingMetByPick},
 				new String[] {"robot1::pick_"+obj+"_counter(arm)"},
@@ -101,7 +101,7 @@ public class CausalKnowledge {
 		operator3a.addConstraint(holdingDuration, 0, 0);
 		operators.add(operator3a);
 
-		
+
 		//tray Stuff
 		/*---*/SimpleOperator operator100 = new SimpleOperator("atLocation::at_"+ obj +"_tray1()",
 				new AllenIntervalConstraint[] {atStartedByPlace},
@@ -109,21 +109,21 @@ public class CausalKnowledge {
 				new int[] {0});
 		operator100.addConstraint(atDuration, 0, 0);
 		operators.add(operator100);		
-		
+
 		/*---*/SimpleOperator operator111 = new SimpleOperator("robot1::place_"+ obj +"_tray1(arm)",
 				new AllenIntervalConstraint[] {placeMetByholding},
 				new String[] {"robot1::holding_"+ obj +"(arm)"},
 				new int[] {1});
 		operator111.addConstraint(placeDuration, 0, 0);
 		operators.add(operator111);
-		
+
 		/*---*/SimpleOperator operator3cc = new SimpleOperator("robot1::holding_"+ obj +"(arm)",
 				new AllenIntervalConstraint[] {holdingMetByPick},
 				new String[] {"robot1::pick_"+ obj +"_tray1(arm)"},
 				new int[] {1});
 		operator3cc.addConstraint(holdingDuration, 0, 0);
 		operators.add(operator3cc);
-		
+
 		/*---*/SimpleOperator operator411a = new SimpleOperator("robot1::pick_"+ obj +"_tray1(arm)",
 				new AllenIntervalConstraint[] {pickFinishesAt},
 				new String[] {"atLocation::at_"+ obj +"_tray1()"},
@@ -145,31 +145,151 @@ public class CausalKnowledge {
 				new int[] {0, 0});
 		move2.addConstraint(atDuration, 0, 0);
 		operators.add(move2);
-		
-		
+
+
 		return operators;
 
-		
+
 	}
-	
+
 	private static Vector<SimpleOperator> getObjectPickAndPlaceOperatorSIMPLE(String obj){
-		
+
 		long duration = 5;
 		Vector<SimpleOperator> operators = new Vector<SimpleOperator>();
-		
+
+		//		AllenIntervalConstraint toLocationFinishesMove = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy);
+		//		AllenIntervalConstraint moveMetByFromLocation = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());		
+		//		AllenIntervalConstraint duringManArea = new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds());
+		//		AllenIntervalConstraint pickFinishesAt = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.Finishes);
+		//		AllenIntervalConstraint atStartedByPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.StartedBy);
+		//		AllenIntervalConstraint placeMetByholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
+		//		AllenIntervalConstraint holdingMetByPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());		
+		//		AllenIntervalConstraint holdingDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
+		//		AllenIntervalConstraint pickDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
+		//		AllenIntervalConstraint atDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
+		//		AllenIntervalConstraint placeDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
+		//		AllenIntervalConstraint moveDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
+		//		
+		//		SimpleOperator operator4 = new SimpleOperator("atLocation::at_"+ obj +"_table1()",
+		//				new AllenIntervalConstraint[] {atStartedByPlace},
+		//				new String[] {"robot1::place_"+ obj +"_table1(arm)"},
+		//				new int[] {0});
+		//		operator4.addConstraint(atDuration, 0, 0);
+		//		operators.add(operator4);
+		//
+		//		SimpleOperator operator5 = new SimpleOperator("robot1::place_"+ obj +"_table1(arm)",
+		//				new AllenIntervalConstraint[] {placeMetByholding, duringManArea},
+		//				new String[] {"robot1::holding_"+ obj +"(arm)", "atLocation::at_table1()"},
+		//				new int[] {1,0});
+		//		operator5.addConstraint(placeDuration, 0, 0);
+		//		operators.add(operator5);
+		//				
+		//		
+		//		SimpleOperator operator6 = new SimpleOperator("robot1::holding_"+ obj +"(arm)",
+		//				new AllenIntervalConstraint[] {holdingMetByPick},
+		//				new String[] {"robot1::pick_"+ obj +"_table1(arm)"},
+		//				new int[] {1});
+		//		operator6.addConstraint(holdingDuration, 0, 0);
+		//		operators.add(operator6);
+		//
+		//		
+		//		SimpleOperator operator2res = new SimpleOperator("robot1::pick_"+ obj +"_table1(arm)",
+		//				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
+		//				new String[] {"atLocation::at_"+ obj +"_table1()", "atLocation::at_table1()"},
+		//				new int[] {1, 0});
+		//		operator2res.addConstraint(pickDuration, 0, 0);
+		//		operators.add(operator2res);
+		//
+		//		
+		//		//table2	
+		//		SimpleOperator operator41 = new SimpleOperator("robot1::pick_"+obj+"_table2(arm)",
+		//				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
+		//				new String[] {"atLocation::at_"+obj+"_table2()", "atLocation::at_table2()"},
+		//				new int[] {1, 0});
+		//		operator41.addConstraint(pickDuration, 0, 0);
+		//		operators.add(operator41);
+		//		
+		//		SimpleOperator operator42 = new SimpleOperator("atLocation::at_"+obj+"_table2()",
+		//				new AllenIntervalConstraint[] {atStartedByPlace, duringManArea},
+		//				new String[] {"robot1::place_"+ obj +"_table2(arm)", "atLocation::at_table2()"},
+		//				new int[] {0, 0});
+		//		operator42.addConstraint(atDuration, 0, 0);
+		//		operators.add(operator42);
+		//		
+		//		SimpleOperator operator3a = new SimpleOperator("robot1::holding_"+obj+"(arm)",
+		//				new AllenIntervalConstraint[] {holdingMetByPick},
+		//				new String[] {"robot1::pick_"+obj+"_table2(arm)"},
+		//				new int[] {1});
+		//		operator3a.addConstraint(holdingDuration, 0, 0);
+		//		operators.add(operator3a);
+		//
+		//
+		//		
+		//		//tray Stuff
+		//		/*---*/SimpleOperator operator100 = new SimpleOperator("atLocation::at_"+ obj +"_tray1()",
+		//				new AllenIntervalConstraint[] {atStartedByPlace},
+		//				new String[] {"robot1::place_"+ obj +"_tray1(arm)"},
+		//				new int[] {0});
+		//		operator100.addConstraint(atDuration, 0, 0);
+		//		operators.add(operator100);		
+		//		
+		//		/*---*/SimpleOperator operator111 = new SimpleOperator("robot1::place_"+ obj +"_tray1(arm)",
+		//				new AllenIntervalConstraint[] {placeMetByholding},
+		//				new String[] {"robot1::holding_"+ obj +"(arm)"},
+		//				new int[] {1});
+		//		operator111.addConstraint(placeDuration, 0, 0);
+		//		operators.add(operator111);
+		//		
+		//		/*---*/SimpleOperator operator3cc = new SimpleOperator("robot1::holding_"+ obj +"(arm)",
+		//				new AllenIntervalConstraint[] {holdingMetByPick},
+		//				new String[] {"robot1::pick_"+ obj +"_tray1(arm)"},
+		//				new int[] {1});
+		//		operator3cc.addConstraint(holdingDuration, 0, 0);
+		//		operators.add(operator3cc);
+		//		
+		//		/*---*/SimpleOperator operator411a = new SimpleOperator("robot1::pick_"+ obj +"_tray1(arm)",
+		//				new AllenIntervalConstraint[] {pickFinishesAt},
+		//				new String[] {"atLocation::at_"+ obj +"_tray1()"},
+		//				new int[] {1});
+		//		operator411a.addConstraint(holdingDuration, 0, 0);
+		//		operators.add(operator411a);
+		//
+		//		//Move
+		//		SimpleOperator move1 = new SimpleOperator("robot1::move_table2_table1()",
+		//				new AllenIntervalConstraint[] {moveMetByFromLocation},
+		//				new String[] {"atLocation::at_table2()"},
+		//				new int[] {0});
+		//		move1.addConstraint(moveDuration, 0, 0);
+		//		operators.add(move1);
+		//
+		//		SimpleOperator move2 = new SimpleOperator("atLocation::at_table1()",
+		//				new AllenIntervalConstraint[] {toLocationFinishesMove, new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds())},
+		//				new String[] {"robot1::move_table2_table1()", "robot1::sense_table1()"},
+		//				new int[] {0, 0});
+		//		move2.addConstraint(atDuration, 0, 0);
+		//		operators.add(move2);
+		//
+		//
+		//
+		//		
+		//		
+		//		return operators;
+
 		AllenIntervalConstraint toLocationFinishesMove = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy);
-		AllenIntervalConstraint moveMetByFromLocation = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());		
+		AllenIntervalConstraint moveMetByFromLocation = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());         
 		AllenIntervalConstraint duringManArea = new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds());
 		AllenIntervalConstraint pickFinishesAt = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.Finishes);
-		AllenIntervalConstraint atStartedByPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.StartedBy);
+		AllenIntervalConstraint atStartedByPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds());
 		AllenIntervalConstraint placeMetByholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
-		AllenIntervalConstraint holdingMetByPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());		
+		AllenIntervalConstraint holdingMetByPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());              
 		AllenIntervalConstraint holdingDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
 		AllenIntervalConstraint pickDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
 		AllenIntervalConstraint atDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
 		AllenIntervalConstraint placeDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
 		AllenIntervalConstraint moveDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
-		
+		AllenIntervalConstraint senseDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
+		AllenIntervalConstraint AfterSensing = new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds());
+
 		SimpleOperator operator4 = new SimpleOperator("atLocation::at_"+ obj +"_table1()",
 				new AllenIntervalConstraint[] {atStartedByPlace},
 				new String[] {"robot1::place_"+ obj +"_table1(arm)"},
@@ -178,13 +298,13 @@ public class CausalKnowledge {
 		operators.add(operator4);
 
 		SimpleOperator operator5 = new SimpleOperator("robot1::place_"+ obj +"_table1(arm)",
-				new AllenIntervalConstraint[] {placeMetByholding, duringManArea},
-				new String[] {"robot1::holding_"+ obj +"(arm)", "atLocation::at_table1()"},
-				new int[] {1,0});
+				new AllenIntervalConstraint[] {placeMetByholding, duringManArea, AfterSensing},
+				new String[] {"robot1::holding_"+ obj +"(arm)", "atLocation::at_table1()", "robot1::sense_table1()"},
+				new int[] {1,0, 0});
 		operator5.addConstraint(placeDuration, 0, 0);
 		operators.add(operator5);
-				
-		
+
+
 		SimpleOperator operator6 = new SimpleOperator("robot1::holding_"+ obj +"(arm)",
 				new AllenIntervalConstraint[] {holdingMetByPick},
 				new String[] {"robot1::pick_"+ obj +"_table1(arm)"},
@@ -192,30 +312,30 @@ public class CausalKnowledge {
 		operator6.addConstraint(holdingDuration, 0, 0);
 		operators.add(operator6);
 
-		
+
 		SimpleOperator operator2res = new SimpleOperator("robot1::pick_"+ obj +"_table1(arm)",
-				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
-				new String[] {"atLocation::at_"+ obj +"_table1()", "atLocation::at_table1()"},
-				new int[] {1, 0});
+				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea, AfterSensing},
+				new String[] {"atLocation::at_"+ obj +"_table1()", "atLocation::at_table1()", "robot1::sense_table1()"},
+				new int[] {1, 0, 0});
 		operator2res.addConstraint(pickDuration, 0, 0);
 		operators.add(operator2res);
 
-		
-		//table2	
+
+		//table2        
 		SimpleOperator operator41 = new SimpleOperator("robot1::pick_"+obj+"_table2(arm)",
 				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
 				new String[] {"atLocation::at_"+obj+"_table2()", "atLocation::at_table2()"},
 				new int[] {1, 0});
 		operator41.addConstraint(pickDuration, 0, 0);
 		operators.add(operator41);
-		
+
 		SimpleOperator operator42 = new SimpleOperator("atLocation::at_"+obj+"_table2()",
 				new AllenIntervalConstraint[] {atStartedByPlace, duringManArea},
 				new String[] {"robot1::place_"+ obj +"_table2(arm)", "atLocation::at_table2()"},
 				new int[] {0, 0});
 		operator42.addConstraint(atDuration, 0, 0);
 		operators.add(operator42);
-		
+
 		SimpleOperator operator3a = new SimpleOperator("robot1::holding_"+obj+"(arm)",
 				new AllenIntervalConstraint[] {holdingMetByPick},
 				new String[] {"robot1::pick_"+obj+"_table2(arm)"},
@@ -224,29 +344,50 @@ public class CausalKnowledge {
 		operators.add(operator3a);
 
 
-		
+
+		//		SimpleOperator operator41 = new SimpleOperator("robot1::pick_cup1_table2(arm)",
+		//				new AllenIntervalConstraint[] {pickFinishesAt, duringManArea},
+		//				new String[] {"atLocation::at_cup1_table2()", "atLocation::at_table2()"},
+		//				new int[] {1, 0});
+		//		operator41.addConstraint(pickDuration, 0, 0);
+		//		operators.add(operator41);
+		//
+		//		SimpleOperator operator42 = new SimpleOperator("atLocation::at_cup1_table2()",
+		//				new AllenIntervalConstraint[] {atStartedByPlace, duringManArea},
+		//				new String[] {"robot1::place_cup1_table2(arm)", "atLocation::at_table2()"},
+		//				new int[] {0, 0});
+		//		operator42.addConstraint(atDuration, 0, 0);
+		//		operators.add(operator42);
+		//
+		//		SimpleOperator operator3a = new SimpleOperator("robot1::holding_"+obj+"(arm)",
+		//				new AllenIntervalConstraint[] {holdingMetByPick},
+		//				new String[] {"robot1::pick_cup1_table2(arm)"},
+		//				new int[] {1});
+		//		operator3a.addConstraint(holdingDuration, 0, 0);
+		//		operators.add(operator3a);
+
 		//tray Stuff
 		/*---*/SimpleOperator operator100 = new SimpleOperator("atLocation::at_"+ obj +"_tray1()",
 				new AllenIntervalConstraint[] {atStartedByPlace},
 				new String[] {"robot1::place_"+ obj +"_tray1(arm)"},
 				new int[] {0});
 		operator100.addConstraint(atDuration, 0, 0);
-		operators.add(operator100);		
-		
+		operators.add(operator100);             
+
 		/*---*/SimpleOperator operator111 = new SimpleOperator("robot1::place_"+ obj +"_tray1(arm)",
 				new AllenIntervalConstraint[] {placeMetByholding},
 				new String[] {"robot1::holding_"+ obj +"(arm)"},
 				new int[] {1});
 		operator111.addConstraint(placeDuration, 0, 0);
 		operators.add(operator111);
-		
+
 		/*---*/SimpleOperator operator3cc = new SimpleOperator("robot1::holding_"+ obj +"(arm)",
 				new AllenIntervalConstraint[] {holdingMetByPick},
 				new String[] {"robot1::pick_"+ obj +"_tray1(arm)"},
 				new int[] {1});
 		operator3cc.addConstraint(holdingDuration, 0, 0);
 		operators.add(operator3cc);
-		
+
 		/*---*/SimpleOperator operator411a = new SimpleOperator("robot1::pick_"+ obj +"_tray1(arm)",
 				new AllenIntervalConstraint[] {pickFinishesAt},
 				new String[] {"atLocation::at_"+ obj +"_tray1()"},
@@ -263,28 +404,34 @@ public class CausalKnowledge {
 		operators.add(move1);
 
 		SimpleOperator move2 = new SimpleOperator("atLocation::at_table1()",
-				new AllenIntervalConstraint[] {toLocationFinishesMove, new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds())},
-				new String[] {"robot1::move_table2_table1()", "robot1::sense_table1()"},
-				new int[] {0, 0});
+				new AllenIntervalConstraint[] {toLocationFinishesMove},
+				new String[] {"robot1::move_table2_table1()"},
+				new int[] {0});
 		move2.addConstraint(atDuration, 0, 0);
 		operators.add(move2);
 
+		//Sensing
+		SimpleOperator sensingTable1 = new SimpleOperator("robot1::sense_table1()",
+				new AllenIntervalConstraint[] {duringManArea},
+				new String[] {"atLocation::at_table1()"},
+				new int[] {0});
+		sensingTable1.addConstraint(senseDuration, 0, 0);
+		operators.add(sensingTable1);
 
-
-		
-		
 		return operators;
+
+
 	}
 
-	
+
 	private static void addOperator(Vector<SimpleOperator> operators) {
-		
+
 		long duration = 1;
-		
+
 		AllenIntervalConstraint atStartedByPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.StartedBy, AllenIntervalConstraint.Type.StartedBy.getDefaultBounds());
 		AllenIntervalConstraint pickFinishesAt = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Finishes, AllenIntervalConstraint.Type.Finishes.getDefaultBounds());
-		
-		
+
+
 		AllenIntervalConstraint atCupAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
 		AllenIntervalConstraint atCup1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
 		AllenIntervalConstraint placeCupAfterholding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
@@ -301,7 +448,7 @@ public class CausalKnowledge {
 		AllenIntervalConstraint holdingKnifeAfterPick = new AllenIntervalConstraint(AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.MetBy.getDefaultBounds());
 		AllenIntervalConstraint holdingKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
 		AllenIntervalConstraint pickKnife1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
-		
+
 
 		AllenIntervalConstraint atForkAfterPlace = new AllenIntervalConstraint(AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.OverlappedBy.getDefaultBounds());
 		AllenIntervalConstraint atFork1Duration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
@@ -396,7 +543,7 @@ public class CausalKnowledge {
 				new int[] {1});
 		operator5.addConstraint(placeKnife1Duration, 0, 0);
 		operators.add(operator5);
-		
+
 		SimpleOperator operator6 = new SimpleOperator("robot1::holding_knife1(arm)",
 				new AllenIntervalConstraint[] {holdingKnifeAfterPick},
 				new String[] {"robot1::pick_knife1_table1(arm)"},
@@ -425,7 +572,7 @@ public class CausalKnowledge {
 		operator3cc.addConstraint(holdingCup1Duration, 0, 0);
 		operators.add(operator3cc);
 
-		
+
 		SimpleOperator operator2res = new SimpleOperator("robot1::pick_knife1_table1(arm)",
 				new AllenIntervalConstraint[] {pickFinishesAt},
 				new String[] {"atLocation::at_knife1_table1()"},
@@ -440,7 +587,7 @@ public class CausalKnowledge {
 		operator411a.addConstraint(holdingCup1Duration, 0, 0);
 		operators.add(operator411a);
 
-		
+
 		//........................
 
 		SimpleOperator operator7 = new SimpleOperator("atLocation::at_fork1_table1()",
@@ -457,7 +604,7 @@ public class CausalKnowledge {
 				new int[] {1});
 		operator8.addConstraint(placeFork1Duration, 0, 0);
 		operators.add(operator8);
-		
+
 		SimpleOperator operator9 = new SimpleOperator("robot1::holding_fork1(arm)",
 				new AllenIntervalConstraint[] {holdingForkAfterPick},
 				new String[] {"robot1::pick_fork1_table1(arm)"},
@@ -465,7 +612,7 @@ public class CausalKnowledge {
 		operator9.addConstraint(holdingFork1Duration, 0, 0);
 		operators.add(operator9);
 
-		
+
 		SimpleOperator operator4res = new SimpleOperator("robot1::pick_fork1_table1(arm)",
 				new AllenIntervalConstraint[] {pickFinishesAt},
 				new String[] {"atLocation::at_fork1_table1()"},
@@ -479,7 +626,7 @@ public class CausalKnowledge {
 				new int[] {1});
 		operator411b.addConstraint(holdingCup1Duration, 0, 0);
 		operators.add(operator411b);
-		
+
 		/*---*/SimpleOperator operator101 = new SimpleOperator("atLocation::at_fork1_tray1()",
 				new AllenIntervalConstraint[] {atStartedByPlace},
 				new String[] {"robot1::place_fork1_tray1(arm)"},
@@ -487,7 +634,7 @@ public class CausalKnowledge {
 		operator101.addConstraint(atCup1Duration, 0, 0);
 		operators.add(operator101);		
 
-		
+
 		/*---*/SimpleOperator operator11a = new SimpleOperator("robot1::place_fork1_tray1(arm)",
 				new AllenIntervalConstraint[] {placeCupAfterholding},
 				new String[] {"robot1::holding_fork1(arm)"},
