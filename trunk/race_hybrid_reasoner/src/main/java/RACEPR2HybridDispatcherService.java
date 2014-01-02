@@ -221,13 +221,14 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 						
 						if(marker.getType().compareTo("table") == 0)
 							insertSpatialFluent(marker.getType().concat("1"), "atLocation", "at_table1()", markings.UNJUSTIFIED, -1);						
-						else insertSpatialFluent(marker.getType().concat("1"), "atLocation", "at_" + marker.getType().concat("1") + "_table1()", markings.JUSTIFIED, currentTime - 12);
+						else insertSpatialFluent(marker.getType().concat("1"), "atLocation", "at_" + marker.getType().concat("1") + "_table1()", markings.JUSTIFIED, currentTime);
 						
 //						insertSpatialFluent(marker.getType().concat("1") + "_eatingArea1()", "atLocation", "at_" + marker.getType().concat("1") + "_eatingArea1()", markings.JUSTIFIED, currentTime - 2);
 						
 					}
 					System.out.println("saRelation.size: " + saRelations.size());
-					metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations.toArray(new SpatialAssertionalRelation2[saRelations.size()]));
+					metaSpatialSchedulable.setSpatialAssertionalRelations(saRelations);
+					
 				}
 				
 				metaSpatioCasualSolver.backtrack();
@@ -311,10 +312,8 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 			PoseStamped poseS = node.getTopicMessageFactory().newFromType(PoseStamped._TYPE);
 			Pose pose = node.getTopicMessageFactory().newFromType(Pose._TYPE);
 			Point p = node.getTopicMessageFactory().newFromType(Point._TYPE);
-			p.setX(((double)rec.getCenterY() / 100) + table_x_map);
-			p.setY(-((double)rec.getCenterX() / 100) + table_y_map);
-//			p.setX(7.68);
-//			p.setY(11.50);
+			p.setX((((double)rec.getCenterY() / 100) + table_x_map));
+			p.setY(((((double)rec.getCenterX() / 100) * -1) + table_y_map));
 			
 			
 			p.setZ(0.0);
@@ -334,8 +333,10 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 			
 			
 			System.out.println("p1: " + (double)(rec.getX() + rec.getWidth()) /100 + " " + (double)(rec.getY() + rec.getHeight()) /100);
-			System.out.println("x in map" + ((double)rec.getCenterY() / 100) + table_y_map);
-			System.out.println("y in map" + -((double)rec.getCenterX() / 100) + table_x_map);
+			System.out.println("x in map" + (((double)rec.getCenterY() / 100) + table_x_map));
+			System.out.println("y in map" + ((((double)rec.getCenterX() / 100) * -1) + table_y_map));
+
+
 			
 			race_msgs.BoundingBox bb = node.getTopicMessageFactory().newFromType(race_msgs.BoundingBox._TYPE);
 			bb.setPoseStamped(poseS);
@@ -394,7 +395,7 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 //							System.out.println("deadline: " + deadline);
 							
 							groundSolver.getConstraintSolvers()[1].addConstraint(deadline);
-
+							
 						}
 					}
 				}			
