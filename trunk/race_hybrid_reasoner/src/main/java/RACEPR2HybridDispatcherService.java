@@ -116,7 +116,6 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 	@Override
 	public void onStart(ConnectedNode connectedNode) {
 		
-		System.out.println("hello world");
 		this.node = connectedNode;
 		
 	    transformer.setPrefix(GraphName.of(node.getParameterTree().getString("~tf_prefix", "")));
@@ -163,8 +162,8 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 
 		//#################################################################################################################
 		//setInitialState (e.g., holding)
-		insertCurrentState("atLocation", "at_table2()", markings.JUSTIFIED, 1);
-		insertCurrentState("atLocation", "at_cup1_table2()", markings.JUSTIFIED, 1);
+		insertCurrentState("atLocation", "at_counter()", markings.JUSTIFIED, 1);
+		insertCurrentState("atLocation", "at_cup1_counter()", markings.JUSTIFIED, 1);
 		
 
 		//setInitialSpatialFleunt (e.g., cup1)
@@ -316,19 +315,6 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 			p.setY(((((double)rec.getCenterX() / 100) * -1) + table_y_map));
 			
 			
-//			if(str.compareTo("cup1") == 0){
-//				p.setX(7.46);
-//				p.setY(11.45);
-//
-//			}
-//				
-//			else{
-//				p.setX((((double)rec.getCenterY() / 100) + table_x_map));
-//				p.setY(((((double)rec.getCenterX() / 100) * -1) + table_y_map));
-//
-//			}
-			
-			
 			p.setZ(0.0);
 			Quaternion q = node.getTopicMessageFactory().newFromType(Quaternion._TYPE);
 			
@@ -355,21 +341,6 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 			bb.setPoseStamped(poseS);
 			objectypo.setBbox(bb);
 			objectypo.setPose(poseS);
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//			ArrayList<Point> points = new ArrayList<Point>();
-//			Point p = node.getTopicMessageFactory().newFromType(Point._TYPE);
-//			p.setX((double)rec.getX() /100); //minx
-//			p.setY((double)rec.getY() /100); //miny
-//			System.out.println("p: " + (double)rec.getX() /100 + " " + (double)rec.getY() /100);
-//			points.add(p);
-//			
-//			Point p1 = node.getTopicMessageFactory().newFromType(Point._TYPE);
-//			p1.setX((double)(rec.getX() + rec.getWidth()) /100); //maxx
-//			p1.setY((double)(rec.getY() + rec.getHeight()) /100); //maxy
-//			System.out.println("p1: " + (double)(rec.getX() + rec.getWidth()) /100 + " " + (double)(rec.getY() + rec.getHeight()) /100);so
-//			points.add(p1);
-//			
-//			mrk.setPoints(points);
 			ohList.add(objectypo);
 		}
 		
@@ -536,12 +507,8 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 			}
 
 			
-			//unbounded object
-			if(oh.getType().compareTo("table") == 0)
-				sa.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At,new Bounds(0, 0), 
-						new Bounds(70, 70), new Bounds(0, 0), new Bounds(70, 70))) ;
 
-			else if(oh.getBbox().getPoseStamped().getPose().getPosition().getX() < 0)
+			if(oh.getBbox().getPoseStamped().getPose().getPosition().getX() < 0)
 				sa.setUnaryAtRectangleConstraint(new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At,new Bounds(0, APSPSolver.INF), 
 						new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF))) ;
 			else{//bounded object as observed
@@ -582,17 +549,13 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 					System.err.println(e);
 				}
 					
-				long x_size = (long)((double)(oh.getBbox().getDimensions().getX() * 100) / 2);
-				long y_size = (long)((double)(oh.getBbox().getDimensions().getY() * 100)/ 2);
-//				long x_center = (long)(oh.getBbox().getPoseStamped().getPose().getPosition().getX() * 100);
-//				long y_center = (long)(oh.getBbox().getPoseStamped().getPose().getPosition().getY() * 100);
-				
-//		        des[0] = -source[1] + sppe.table_y_positon_in_base_link_frame
-//		        des[1] = source[0] - sppe.table_x_positon_in_base_link_frame
+				long x_size = (long)((float)(oh.getBbox().getDimensions().getX() * 100) / 2);
+				long y_size = (long)((float)(oh.getBbox().getDimensions().getY() * 100)/ 2);
 				
 				
-				long x_center = (long)((-p.getPose().getPosition().getY() + table_y_map) * 100);
-				long y_center = (long)((p.getPose().getPosition().getX() - table_x_map) * 100);
+				
+				long x_center = (long)((-p.getPose().getPosition().getY() + table_y_map) * 100) + 1;
+				long y_center = (long)((p.getPose().getPosition().getX() - table_x_map) * 100) + 1;
 				
 				System.out.println("x_center: " + x_center);
 				System.out.println("y_center: " + y_center);
