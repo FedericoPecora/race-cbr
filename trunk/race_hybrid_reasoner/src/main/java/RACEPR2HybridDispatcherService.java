@@ -316,6 +316,19 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 			p.setY(((((double)rec.getCenterX() / 100) * -1) + table_y_map));
 			
 			
+//			if(str.compareTo("cup1") == 0){
+//				p.setX(7.46);
+//				p.setY(11.45);
+//
+//			}
+//				
+//			else{
+//				p.setX((((double)rec.getCenterY() / 100) + table_x_map));
+//				p.setY(((((double)rec.getCenterX() / 100) * -1) + table_y_map));
+//
+//			}
+			
+			
 			p.setZ(0.0);
 			Quaternion q = node.getTopicMessageFactory().newFromType(Quaternion._TYPE);
 			
