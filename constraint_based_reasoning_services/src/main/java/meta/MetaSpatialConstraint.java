@@ -134,7 +134,7 @@ public class MetaSpatialConstraint extends MetaConstraint{
 	public ConstraintNetwork[] getMetaValues(MetaVariable metaVariable,
 			int initial_time) {
 		// TODO Auto-generated method stub
-		return null;
+		return getMetaValues(metaVariable);
 	}
 
 	@Override
