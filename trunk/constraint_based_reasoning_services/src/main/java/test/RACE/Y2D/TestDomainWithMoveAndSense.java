@@ -51,7 +51,7 @@ public class TestDomainWithMoveAndSense {
         
         //oneCulprit example
         static int arm_resources = 2;
-        static int pad = 2;
+        static int pad = 1;
         
         static long duration = 5;
         
@@ -423,12 +423,12 @@ public class TestDomainWithMoveAndSense {
 
         private static void getSpatialKnowledge(Vector<SpatialRule2> srules){
                 
-                Bounds knife_size_x = new Bounds(4, 5);
-                Bounds knife_size_y = new Bounds(10, 10);
-                Bounds cup_size_x = new Bounds(7, 7);
-                Bounds cup_size_y = new Bounds(7, 7);
-                Bounds fork_size_x = new Bounds(4, 5);
-                Bounds fork_size_y = new Bounds(10, 10);
+    		Bounds knife_size_x = new Bounds(4, 5);
+    		Bounds knife_size_y = new Bounds(11, 12);
+    		Bounds cup_size_x = new Bounds(10, 10);
+    		Bounds cup_size_y = new Bounds(10, 10);
+    		Bounds fork_size_x = new Bounds(4, 5);
+    		Bounds fork_size_y = new Bounds(11, 12);
                                 
                 SpatialRule2 r7 = new SpatialRule2("knife", "knife", 
                                 new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.Size, knife_size_x, knife_size_y));
@@ -541,10 +541,11 @@ public class TestDomainWithMoveAndSense {
 //              insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
 
                 //one culprit for Y2D
-                insertAtConstraint(recs, saRelations, "table", 0, 70, 0, 35, false);
-                insertAtConstraint(recs, saRelations, "fork", 22, 26, 8, 18, true);
-                insertAtConstraint(recs, saRelations, "knife", 35, 39, 8, 18, true);
-                insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
+        		insertAtConstraint(recs, saRelations, "table", 0, 70, 0, 70, false);
+        		insertAtConstraint(recs, saRelations, "fork", 22, 26, 11, 23, true);
+        		insertAtConstraint(recs, saRelations, "knife", 32, 36, 13, 25, true);
+        		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
+                
         
                 
 
