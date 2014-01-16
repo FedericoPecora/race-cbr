@@ -77,7 +77,7 @@ import org.metacsp.utility.logging.MetaCSPLogging;
 public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 	
 	private int arm_resources = 2;
-	private int pad = 3;
+	private int pad = 2;
 	private String context = "TestRACE";
 	private Vector<SpatialAssertionalRelation2> saRelations = new Vector<SpatialAssertionalRelation2>();
 	private HashMap<String, SpatialFluent> nameToSpatialFluent = new HashMap<String, SpatialFluent>();
