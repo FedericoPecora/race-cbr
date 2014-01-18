@@ -86,8 +86,12 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 	private Transformer transformer = new Transformer();
 	private Subscriber<tfMessage> tfSubscriber;
 	  
-	private double cup_pad_x_map_reference = 0.0;
+	private double cup_pad_x_map_reference = 0.0; //it is a shame!
 	private double cup_pad_y_map_reference = 0.0;
+
+	private double knife_pad_x_map_reference = 0.0; //it is a shame!
+	private double knife_pad_y_map_reference = 0.0;
+
 	
 	private double table_x_map = 7.68 - 0.35; 
 	private double table_y_map = 11.50 + 0.35;
