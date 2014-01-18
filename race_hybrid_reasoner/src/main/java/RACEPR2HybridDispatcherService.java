@@ -86,6 +86,9 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 	private Transformer transformer = new Transformer();
 	private Subscriber<tfMessage> tfSubscriber;
 	  
+	private double cup_pad_x_map_reference = 0.0;
+	private double cup_pad_y_map_reference = 0.0;
+	
 	private double table_x_map = 7.68 - 0.35; 
 	private double table_y_map = 11.50 + 0.35;
 	private double table_size = 0.70; 
@@ -311,8 +314,15 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 			PoseStamped poseS = node.getTopicMessageFactory().newFromType(PoseStamped._TYPE);
 			Pose pose = node.getTopicMessageFactory().newFromType(Pose._TYPE);
 			Point p = node.getTopicMessageFactory().newFromType(Point._TYPE);
-			p.setX((((double)rec.getCenterY() / 100) + table_x_map));
-			p.setY(((((double)rec.getCenterX() / 100) * -1) + table_y_map));
+			
+			if(ns.compareTo("cup") == 0){
+				p.setX((((double)rec.getCenterY() / 100) + table_x_map) + cup_pad_x_map_reference);
+				p.setY(((((double)rec.getCenterX() / 100) * -1) + table_y_map) + cup_pad_y_map_reference);				
+			}
+			else{
+				p.setX((((double)rec.getCenterY() / 100) + table_x_map));
+				p.setY(((((double)rec.getCenterX() / 100) * -1) + table_y_map));				
+			}
 			
 			
 			p.setZ(0.0);
