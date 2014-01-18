@@ -441,6 +441,11 @@ public class SpatialSchedulable extends MetaConstraint {
 //		newGoal.add("phone1");
 //		newGoal.add("vase1");
 		//################################################################################
+		//This is a hard code for testing RACE YEAR2 Demo
+//		newGoal.removeAllElements();
+//		newGoal.add("knife1");		
+		//################################################################################
+
 		
 		numberOfmisplaced = newGoal.size();
 		
