@@ -92,7 +92,8 @@ public class RACEPR2HybridDispatcherService extends AbstractNodeMain{
 	private double knife_pad_x_map_reference = 0.0; //it is a shame!
 	private double knife_pad_y_map_reference = 0.0;
 
-	
+	//7.68
+	//11.50
 	private double table_x_map = 7.68 - 0.35; 
 	private double table_y_map = 11.50 + 0.35;
 	private double table_size = 0.70; 
