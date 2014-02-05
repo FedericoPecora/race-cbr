@@ -18,6 +18,7 @@ import spatial.utility.SpatialAssertionalRelation2;
 import spatial.utility.SpatialRule2;
 import org.metacsp.time.APSPSolver;
 import org.metacsp.time.Bounds;
+import org.metacsp.utility.PermutationsWithRepetition;
 import org.metacsp.framework.Constraint;
 import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ConstraintSolver;
@@ -1135,7 +1136,34 @@ public class SpatialSchedulable extends MetaConstraint {
 				unboundedUnaryCons.add((UnaryRectangleConstraint) atConstraints.get(i));
 			}
 		}
+		
+		
+//		PermutationsWithRepetition gen = new PermutationsWithRepetition(2, boundedUnaryCons.size());
+//		int[][] v = gen.getVariations();
+//		for (int i = 0; i < v.length; i++) {
+//			Vector<UnaryRectangleConstraint> tmpboundedUnaryCons = new Vector<UnaryRectangleConstraint>();
+//			int culpritNumber = 0;
+//			for (int j = 0; j < v[i].length; j++) {
+//				if(v[i][j] == 1){
+//					UnaryRectangleConstraint utmp = new UnaryRectangleConstraint(
+//							UnaryRectangleConstraint.Type.At, new Bounds(0,
+//									APSPSolver.INF), new Bounds(0,
+//									APSPSolver.INF), new Bounds(0,
+//									APSPSolver.INF), new Bounds(0,
+//									APSPSolver.INF));
+//					utmp.setFrom(boundedUnaryCons.get(j).getFrom());
+//					utmp.setTo(boundedUnaryCons.get(j).getTo());
+//					tmpboundedUnaryCons.add(utmp);
+//					culpritNumber++;					
+//				}
+//				else{
+//					tmpboundedUnaryCons.add(boundedUnaryCons.get(j));
+//				}
+//			}
+//			rank.put(tmpboundedUnaryCons, culpritNumber);
+//		}
 
+		
 		Combinatorical c = Combinatorical.getPermutations(boundedUnaryCons.size(), 2, true);
 //		System.out.println("c.count: " + c.count());
 		while (c.hasNext()) {
@@ -1383,6 +1411,12 @@ public class SpatialSchedulable extends MetaConstraint {
 		generateCombinantion(atConstraints);
 
 		
+	}
+
+	@Override
+	public ConstraintSolver getGroundSolver() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 
