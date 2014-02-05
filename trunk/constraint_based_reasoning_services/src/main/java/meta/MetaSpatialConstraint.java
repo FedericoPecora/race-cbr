@@ -14,6 +14,7 @@ import spatial.rectangleAlgebra_OLD.SpatialRule;
 import spatial.rectangleAlgebra_OLD.TwoDimensionsAllenConstraint;
 import org.metacsp.framework.Constraint;
 import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.ConstraintSolver;
 import org.metacsp.framework.meta.MetaConstraint;
 import org.metacsp.framework.meta.MetaVariable;
 
@@ -194,6 +195,12 @@ public class MetaSpatialConstraint extends MetaConstraint{
 	//this method return consistency, because the metaSpatial constraint always return true,(because we do not want the relations retracted)
 	public boolean isConsistent(){
 		return solver.inConsistent();
+	}
+
+	@Override
+	public ConstraintSolver getGroundSolver() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

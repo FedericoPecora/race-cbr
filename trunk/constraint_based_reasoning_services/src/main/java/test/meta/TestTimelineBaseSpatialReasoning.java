@@ -46,8 +46,8 @@ import org.metacsp.framework.VariableOrderingH;
 public class TestTimelineBaseSpatialReasoning {
 	
 	//oneCulprit example
-	static int arm_resources = 2;
-	static int pad = 0;
+	static int arm_resources = 1;
+	static int pad = 1;
 	
 	public static void main(String[] args) {
 

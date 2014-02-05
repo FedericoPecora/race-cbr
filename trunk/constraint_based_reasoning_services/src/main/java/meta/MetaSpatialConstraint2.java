@@ -652,6 +652,12 @@ public class MetaSpatialConstraint2 extends MetaConstraint{
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public ConstraintSolver getGroundSolver() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 		
 //	public RectangleConstraintSolver getGroundSolver(){
 //		return this.metaCS.getConstraintSolvers()[0];

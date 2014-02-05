@@ -1359,6 +1359,12 @@ public class SpatialSchedulable2 extends MetaConstraint {
 		generateCombinantion(atConstraints);
 		
 	}
+
+	@Override
+	public ConstraintSolver getGroundSolver() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 }

@@ -15,6 +15,7 @@ import org.metacsp.multi.spatioTemporal.SpatialFluent2;
 import org.metacsp.multi.spatioTemporal.SpatialFluentSolver2;
 import org.metacsp.framework.Constraint;
 import org.metacsp.framework.ConstraintNetwork;
+import org.metacsp.framework.ConstraintSolver;
 import org.metacsp.framework.ValueOrderingH;
 import org.metacsp.framework.VariableOrderingH;
 import org.metacsp.framework.meta.MetaConstraint;
@@ -271,6 +272,12 @@ public class MetaOccupiedConstraint2 extends MetaConstraint {
 	public boolean isEquivalent(Constraint c) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public ConstraintSolver getGroundSolver() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
