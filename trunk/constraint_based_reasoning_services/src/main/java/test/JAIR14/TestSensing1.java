@@ -214,6 +214,19 @@ public class TestSensing1 {
 		//initial State
 		//===================================================================================================================
 
+		Activity one = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
+		one.setSymbolicDomain("at_cup1_counter1");
+		one.setMarking(markings.JUSTIFIED);
+		AllenIntervalConstraint releaseHolding0 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
+		releaseHolding0.setFrom(one);
+		releaseHolding0.setTo(one);
+		cons.add(releaseHolding0);
+
+		AllenIntervalConstraint durationHolding0 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(5,APSPSolver.INF));
+		durationHolding0.setFrom(one);
+		durationHolding0.setTo(one);
+		cons.add(durationHolding0);
+		
 		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
 		two.setSymbolicDomain("at_robot1_counter1");
 		two.setMarking(markings.JUSTIFIED);
