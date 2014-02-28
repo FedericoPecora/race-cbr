@@ -35,7 +35,7 @@ public class CausalDomainGenerator {
 			String operator = "";
 			operator = simpleDomain + "\n" +controllable1 + "\n" +controllable2 + "\n" + resource1; 
 			
-			generateOperator(objVar)
+			//generateOperator(objVar)
 			
 			try{
 				
