@@ -59,7 +59,7 @@ public class BenchmarkGeneration {
 	
 	static int totalExp  = 1;
 	static int armsCounter = 5;
-	static String PATH = "/home/iran/Desktop/TestBenchmark/TestCase1/";
+	static String PATH = "/home/iran/Desktop/benchmark/testCase1/coordinateGenerator/";
 	static String PATH_INIT_PLOT = "/home/iran/Desktop/TestBenchmark/TestCase1/Plot_INIT/";
 	static String PATH_FINAL_PLOT = "/home/iran/Desktop/TestBenchmark/TestCase1/Plot_FINAL/";
 	

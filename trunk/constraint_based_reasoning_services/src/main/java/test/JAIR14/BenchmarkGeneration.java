@@ -66,10 +66,11 @@ public class BenchmarkGeneration {
 	
 	
 	static int totalExp  = 1;
-	static int armsCounter = 5;
+	static int armsCounter = 1;
 	static String PATH = "/home/iran/Desktop/benchmark/testCase1/coordinateGenerator/";
 	static String PATH_INIT_PLOT = "/home/iran/Desktop/benchmark/testCase1/PLOT_INIT/";
 	static String PATH_FINAL_PLOT = "/home/iran/Desktop/benchmark/testCase1/PLOT_FINAL/";
+	static String DOMAINPATH = "/home/iran/Desktop/benchmark/testCase1/domain/deskDomain"; 
 	
 	
 	static int pad = 0;	
@@ -79,11 +80,11 @@ public class BenchmarkGeneration {
 		
 		
 		for (int ii = 0; ii < totalExp; ii++) {
-			for (int arm_resources = 1; arm_resources < armsCounter; arm_resources++) {
+			for (int arm_resources = 1; arm_resources <= armsCounter; arm_resources++) {
 				
 				SimpleHybridPlanner simpleHybridPlanner = new SimpleHybridPlanner(0, 100000, 0);
 
-				FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/testDeskBenchmarkDomain.ddl", FluentBasedSimpleDomain.class);//parseHybridDomain(simpleHybridPlanner, "domains/testSimpleHybridPlanningDomain.ddl", FluentBasedSimpleDomain.class);
+				FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, DOMAINPATH + "_"+ arm_resources +".ddl", FluentBasedSimpleDomain.class);
 				
 				
 				//Most critical conflict is the one with most activities 
@@ -117,6 +118,7 @@ public class BenchmarkGeneration {
 
 				getSpatialKnowledge(srules);
 				observation = getAssertionalRule(saRelations, ii);
+//				observation = getAssertionalRule(saRelations);
 				insertCurrentStateCurrentGoal(groundSolver);
 				//#################################################################################################################
 				//add spatial general and assertional rule to MetaSpatialFluentConstraint
@@ -259,20 +261,20 @@ public class BenchmarkGeneration {
 		
 		Vector<Constraint> cons = new Vector<Constraint>();
 		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "table1", "at_table1()", markings.JUSTIFIED,  10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "book1", "at_book1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "table1", "at_robot1_table1()", markings.JUSTIFIED,  1);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "book1", "at_book1_table1()", markings.JUSTIFIED, 8);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, 8);
 		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "monitor1", "at_monitor1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "keyboard1", "at_keyboard1_table1()", markings.JUSTIFIED,  10);		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "pen1", "at_pen1_table1()", markings.JUSTIFIED,  10);		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "notebook1", "at_notebook1_table1()", markings.JUSTIFIED, 10);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "penHolder1", "at_penHolder1_table1()", markings.JUSTIFIED, 10);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "monitor1", "at_monitor1_table1()", markings.JUSTIFIED, 8);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "keyboard1", "at_keyboard1_table1()", markings.JUSTIFIED,  8);		
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "pen1", "at_pen1_table1()", markings.JUSTIFIED,  8);		
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "notebook1", "at_notebook1_table1()", markings.JUSTIFIED, 8);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "penHolder1", "at_penHolder1_table1()", markings.JUSTIFIED, 8);
 		//===================================================================================================================		
-		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("robot1");
-		two.setSymbolicDomain("holding_cup1(arm)");
+		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("RobotProprioception");
+		two.setSymbolicDomain("holding_cup1()");
 		two.setMarking(markings.JUSTIFIED);
-		AllenIntervalConstraint releaseHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(10,10));
+		AllenIntervalConstraint releaseHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
 		releaseHolding.setFrom(two);
 		releaseHolding.setTo(two);
 		cons.add(releaseHolding);
@@ -405,6 +407,9 @@ public class BenchmarkGeneration {
 
 	}
 	
+
+
+	
 	private static HashMap<String, Rectangle> getAssertionalRule(Vector<SpatialAssertionalRelation> saRelations, int filename){
 		
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
@@ -441,9 +446,36 @@ public class BenchmarkGeneration {
 
 
 		return recs;
+	}
+	
+	private static HashMap<String, Rectangle> getAssertionalRule(Vector<SpatialAssertionalRelation> saRelations){
+		
+		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
+		
+		
+		
+		insertAtConstraint(recs, saRelations, "table", 0, 120, 0, 120, false);
+		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
+		insertAtConstraint(recs, saRelations, "monitor", 25, 70, 80, 95, false);
+		
+		insertAtConstraint(recs, saRelations, "book", 98, 108, 57, 67, true); //true
+//		insertAtConstraint(recs, saRelations, "book", 45, 55, 20, 30, true); //false
+//		insertAtConstraint(recs, saRelations, "keyboard", 50, 90, 35, 55, true); //false not overlapped with cup
+		insertAtConstraint(recs, saRelations, "keyboard", 56, 106, 20, 40, true); //false overlapped with cup
+//		insertAtConstraint(recs, saRelations, "keyboard", 27, 67, 45, 65, true); //true
 
 		
+		insertAtConstraint(recs, saRelations, "pen", 6, 7, 20, 38, true); //false
+//		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); ////false 15 20		
+		insertAtConstraint(recs, saRelations, "penHolder", 9, 19, 74, 79, true); //false //10, 5
 		
+		
+//		insertAtConstraint(recs, saRelations, "pen", 28, 29, 22, 40, true); //true
+		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); //true
+//		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true); //true
+		
+
+		return recs;
 
 	}
 	
