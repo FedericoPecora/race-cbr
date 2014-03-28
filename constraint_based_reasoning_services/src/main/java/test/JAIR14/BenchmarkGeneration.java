@@ -74,7 +74,7 @@ public class BenchmarkGeneration {
 	
 	
 	static int pad = 0;	
-	static long duration = 5;
+	static long duration = 2000;
 
 	public static void main(String[] args) {
 		
@@ -261,7 +261,7 @@ public class BenchmarkGeneration {
 		
 		Vector<Constraint> cons = new Vector<Constraint>();
 		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "table1", "at_robot1_table1()", markings.JUSTIFIED,  1);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "table1", "at_table1()", markings.JUSTIFIED,  8);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "book1", "at_book1_table1()", markings.JUSTIFIED, 8);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, 8);
 		
@@ -274,6 +274,7 @@ public class BenchmarkGeneration {
 		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("RobotProprioception");
 		two.setSymbolicDomain("holding_cup1()");
 		two.setMarking(markings.JUSTIFIED);
+
 		AllenIntervalConstraint releaseHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
 		releaseHolding.setFrom(two);
 		releaseHolding.setTo(two);
@@ -284,6 +285,21 @@ public class BenchmarkGeneration {
 		durationHolding.setTo(two);
 		cons.add(durationHolding);
 
+		
+		Activity two2 = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
+		two2.setSymbolicDomain("at_robot1_table1()");
+		two2.setMarking(markings.JUSTIFIED);
+
+		AllenIntervalConstraint releaseHolding2 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
+		releaseHolding2.setFrom(two2);
+		releaseHolding2.setTo(two2);
+		cons.add(releaseHolding2);
+		
+		AllenIntervalConstraint durationHolding2 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
+		durationHolding2.setFrom(two2);
+		durationHolding2.setTo(two2);
+		cons.add(durationHolding2);
+		
 		
 		grounSpatialFluentSolver.getConstraintSolvers()[1].addConstraints(cons.toArray(new Constraint[cons.size()]));
 		
