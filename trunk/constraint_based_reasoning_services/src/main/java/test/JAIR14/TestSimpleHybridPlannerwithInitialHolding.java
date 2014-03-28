@@ -78,16 +78,6 @@ public class TestSimpleHybridPlannerwithInitialHolding {
 //		contrallableAtLocation.registerSymbolsFromControllableSensor("atLocation::at_fork1_table1()--(31,37,13,32)++true");
 //		contrallableAtLocation.registerSymbolsFromControllableSensor("atLocation::at_knife1_table1()--(40,46,10,33)++true");
 
-
-
-		
-//		contrallableAtLocation.registerSymbolsFromControllableSensor("atLocation::at_table1_table1()--(0,100,0,99)++false");
-//		contrallableAtLocation.registerSymbolsFromControllableSensor("atLocation::at_fork1_table1()--(31,37,13,32)++true");
-//		contrallableAtLocation.registerSymbolsFromControllableSensor("atLocation::at_knife1_table1()--(40,46,10,33)++true");
-//		contrallableAtLocation.registerSymbolsFromControllableSensor("atLocation::at_fork1_table1()--(6,12,13,32)++true");
-
-		
-
 		//#######################################################################
 
 		
@@ -167,11 +157,6 @@ public class TestSimpleHybridPlannerwithInitialHolding {
 		addDurationToActivity(groundSolver, duration, two2);
 
 		
-//		releaseActivity(groundSolver, releaseTime, getCreatedActivty(groundSolver, ctrls.get(0)));
-//		//insert assertions 
-//		Vector<SpatialAssertionalRelation> saRelations = new Vector<SpatialAssertionalRelation>(); 
-//		for (String st : currentObservation.keySet()) saRelations.add(currentObservation.get(st));
-//		metaSpatialAdherence.setSpatialAssertionalRelations(saRelations);
 		
 		//##############################################################################################################
 		//add meta constraint to hybrid planner
@@ -186,22 +171,7 @@ public class TestSimpleHybridPlannerwithInitialHolding {
 		DispatchingFunction df = new DispatchingFunction("RobotAction") {
 			@Override
 			public void dispatch(Activity act) {
-				System.out.println(">>>>>>>>>>>>>> Dispatched " + act);
-//				//#####################################################################################################################
-//				ActivityNetworkSolver actSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
-//				//sort Activity based on the start time for debugging purpose
-//				HashMap<Activity, Long> starttimes = new HashMap<Activity, Long>();
-//				for (int i = 0; i < actSolver.getVariables().length; i++) {
-//					starttimes.put((Activity) actSolver.getVariables()[i], ((Activity)actSolver.getVariables()[i]).getTemporalVariable().getStart().getLowerBound());                       
-//				}
-//
-//				//          Collections.sort(starttimes.values());
-//				starttimes =  sortHashMapByValuesD(starttimes);
-//				for (Activity act0 : starttimes.keySet()) {
-//					System.out.println(act0 + " --> " + starttimes.get(act0));
-//				}
-//				//#####################################################################################################################
-				
+				System.out.println(">>>>>>>>>>>>>> Dispatched " + act);				
 				executingActs.add(act);
 
 			}
@@ -232,26 +202,7 @@ public class TestSimpleHybridPlannerwithInitialHolding {
 					metaSpatialAdherence.setSpatialAssertionalRelations(saRelations);	
 					counter++;
 				}
-//				else if(counter == 1){
-//
-////					ActivityNetworkSolver actSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
-////					//sort Activity based on the start time for debugging purpose
-////					HashMap<Activity, Long> starttimes = new HashMap<Activity, Long>();					
-////					for (int i = 0; i < actSolver.getVariables().length; i++) {
-////						if(((Activity) actSolver.getVariables()[i]).getSymbolicVariable().getSymbols()[0].compareTo("at_cup1_table1()") ==0){
-////							System.out.println("IRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAn");
-////							((Activity) actSolver.getVariables()[i]).setMarking(markings.UNJUSTIFIED);
-////						}
-////					}
-//
-//					
-//
-//				}
-//				
-//				if(act.getSymbolicVariable().getSymbols()[0].compareTo("sensing_before_placing_knife1_table1()") ==0){
-//					System.out.println("THE PLACE OF FORK CHANGED");
-//					releaseActivity(groundSolver, act.getTemporalVariable().getLST() , getCreatedActivty(groundSolver, ctrls.get(4)));
-//				}
+
 			}
 		}; 
 		dispatches.add(dfSense);
@@ -320,19 +271,6 @@ public class TestSimpleHybridPlannerwithInitialHolding {
 		((RectangularRegion)sf.getInternalVariables()[0]).setName(fluentId);
 		((Activity)sf.getInternalVariables()[1]).setSymbolicDomain(actSymbol);
 		((Activity)sf.getInternalVariables()[1]).setMarking(markings.JUSTIFIED);
-		
-
-		//if this is already planned so it has to unified with the real observation i.e., spatial fluents
-//		if(act != null){
-//			AllenIntervalConstraint unify = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Equals, AllenIntervalConstraint.Type.Equals);
-//			unify.setFrom(sf.getActivity());
-//			unify.setTo(act);
-//			System.out.println("***********************************************************");
-//			System.out.println(unify);
-//			System.out.println("***********************************************************");
-//			groundSolver.getConstraintSolvers()[1].addConstraint(unify);
-//		}
-
 		
 		addDurationToActivity(groundSolver, duration, sf.getActivity());
 

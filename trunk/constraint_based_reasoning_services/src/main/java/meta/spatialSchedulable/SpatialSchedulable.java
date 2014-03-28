@@ -281,9 +281,9 @@ public class SpatialSchedulable extends MetaConstraint {
 			
 		}
 		
-//		System.out.println("==========================================================================");
-//		System.out.println("activityToFluent: " + activityToFluent);
-//		System.out.println("==========================================================================");
+		System.out.println("==========================================================================");
+		System.out.println("activityToFluent: " + activityToFluent);
+		System.out.println("==========================================================================");
 		
 		return samplingPeakCollection(activityToFluent);
 //		return completePeakCollection(activityToFluent);
