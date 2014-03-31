@@ -18,7 +18,7 @@ public class RandomCoordinatesGenerator {
 	 */
 	
 	static int totallExperiment = 1000;
-	static String PATH = "/home/iran/Desktop/benchmark/CoordinateGenerator/";
+	static String PATH = "/home/iran/Desktop/benchmark/testCase1/coordinateGenerator/";
 	static int Table_size_x = 120;
 	static int Table_size_y = 120;	
 	public static void main(String[] args) {

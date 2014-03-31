@@ -20,21 +20,15 @@ import java.util.Vector;
 import java.util.logging.Level;
 
 
-import meta.MetaCausalConstraint;
-
-
-import meta.MetaCausalConstraint.markings;
-
 import org.metacsp.meta.hybridPlanner.FluentBasedSimpleDomain;
+import org.metacsp.meta.hybridPlanner.MetaOccupiedConstraint;
 import org.metacsp.meta.hybridPlanner.MetaSpatialAdherenceConstraint;
 import org.metacsp.meta.hybridPlanner.SimpleHybridPlanner;
+import org.metacsp.meta.simplePlanner.SimpleDomain.markings;
 import org.metacsp.meta.simplePlanner.SimpleOperator;
-import meta.spatialSchedulable.MetaOccupiedConstraint;
-import meta.spatialSchedulable.MetaSpatialScheduler;
-import meta.spatialSchedulable.SpatialSchedulable;
-import org.metacsp.meta.symbolsAndTime.Schedulable;
+
+
 import org.metacsp.multi.activity.Activity;
-import org.metacsp.multi.activity.ActivityNetworkSolver;
 import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
 import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraint;
 import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
@@ -44,8 +38,6 @@ import org.metacsp.multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatial
 import org.metacsp.multi.spatioTemporal.SpatialFluent;
 import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
 
-import spatial.utility.SpatialAssertionalRelation2;
-import spatial.utility.SpatialRule2;
 
 import org.metacsp.spatial.utility.SpatialAssertionalRelation;
 import org.metacsp.spatial.utility.SpatialRule;
@@ -66,7 +58,7 @@ public class BenchmarkGeneration {
 	
 	
 	static int totalExp  = 1;
-	static int armsCounter = 1;
+	static int armsCounter = 4;
 	static String PATH = "/home/iran/Desktop/benchmark/testCase1/coordinateGenerator/";
 	static String PATH_INIT_PLOT = "/home/iran/Desktop/benchmark/testCase1/PLOT_INIT/";
 	static String PATH_FINAL_PLOT = "/home/iran/Desktop/benchmark/testCase1/PLOT_FINAL/";
@@ -74,7 +66,7 @@ public class BenchmarkGeneration {
 	
 	
 	static int pad = 0;	
-	static long duration = 2000;
+	static long duration = 1000;
 
 	public static void main(String[] args) {
 		
@@ -212,10 +204,10 @@ public class BenchmarkGeneration {
 		   LinkedHashMap sortedMap = 
 		       new LinkedHashMap();
 
-		   Iterator valueIt = ((java.util.List<SpatialRule2>) mapValues).iterator();
+		   Iterator valueIt = ((java.util.List<SpatialRule>) mapValues).iterator();
 		   while (valueIt.hasNext()) {
 		       long val = (Long) valueIt.next();
-		    Iterator keyIt = ((java.util.List<SpatialRule2>) mapKeys).iterator();
+		    Iterator keyIt = ((java.util.List<SpatialRule>) mapKeys).iterator();
 
 		    while (keyIt.hasNext()) {
 		        Activity key = (Activity) keyIt.next();
@@ -261,7 +253,7 @@ public class BenchmarkGeneration {
 		
 		Vector<Constraint> cons = new Vector<Constraint>();
 		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "table1", "at_table1()", markings.JUSTIFIED,  8);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "table1", "at_table1_table1()", markings.JUSTIFIED,  8);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "book1", "at_book1_table1()", markings.JUSTIFIED, 8);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, 8);
 		
