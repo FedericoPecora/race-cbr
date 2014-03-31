@@ -13,7 +13,7 @@ public class CausalDomainGenerator {
 
 	static String PATH = "/home/iran/Desktop/benchmark/testCase1/domain/deskDomain";   
 	static int armResources = 1;
-	static String duration = "5";
+	static String duration = "2000";
 	
 	
 	public static void main(String[] args) {
@@ -176,8 +176,6 @@ public class CausalDomainGenerator {
 					" (Head RobotAction::pick_"+ objVar[i] +"_tray1())" +  " \n"+
 					" (RequiredState req1 atLocation::at_"+ objVar[i] +"_tray1())" +  " \n"+
 					" (RequiredState req2 RobotSense::sensing_before_picking_"+ objVar[i] +"_tray1())" +  " \n"+
-					" (RequiredState req3 atLocation::at_robot1_table1())" +  " \n"+
-					" (Constraint During(Head,req3))" +  " \n"+
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
