@@ -57,7 +57,7 @@ public class BenchmarkGeneration {
 	//Initial situation: Holding cup
 	
 	
-	static int totalExp  = 1;
+	static int totalExp  = 1000;
 	static int armsCounter = 4;
 	static String PATH = "/home/iran/Desktop/benchmark/testCase1/coordinateGenerator/";
 	static String PATH_INIT_PLOT = "/home/iran/Desktop/benchmark/testCase1/PLOT_INIT/";
@@ -96,8 +96,8 @@ public class BenchmarkGeneration {
 				MetaSpatialAdherenceConstraint metaSpatialAdherence = new MetaSpatialAdherenceConstraint(varOH, valOH);
 				SpatialFluentSolver groundSolver = (SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0];
 
-				MetaCSPLogging.setLevel(SimpleHybridPlanner.class, Level.FINEST);
-				MetaCSPLogging.setLevel(MetaSpatialAdherenceConstraint.class, Level.FINEST);
+//				MetaCSPLogging.setLevel(SimpleHybridPlanner.class, Level.FINEST);
+//				MetaCSPLogging.setLevel(MetaSpatialAdherenceConstraint.class, Level.FINEST);
 				//#################################################################################################################
 				//add metaOccupiedConstraint
 				MetaOccupiedConstraint metaOccupiedConstraint = new MetaOccupiedConstraint(null, null);
@@ -141,7 +141,8 @@ public class BenchmarkGeneration {
 				}
 
 				long timeNow = Calendar.getInstance().getTimeInMillis();
-				simpleHybridPlanner.backtrack();
+				if(simpleHybridPlanner.backtrack())
+					System.out.println("success");;
 				long totalTime = (Calendar.getInstance().getTimeInMillis()-timeNow);
 //				System.out.println("TOTAL TIME: " + totalTime);
 				if(simpleHybridPlanner.getTimeOut())
