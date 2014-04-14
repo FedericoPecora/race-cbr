@@ -97,7 +97,7 @@ public class BenchmarkGeneration {
 				MetaSpatialAdherenceConstraint metaSpatialAdherence = new MetaSpatialAdherenceConstraint(varOH, valOH);
 				SpatialFluentSolver groundSolver = (SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0];
 
-				MetaCSPLogging.setLevel(SimpleHybridPlanner.class, Level.FINEST);
+//				MetaCSPLogging.setLevel(SimpleHybridPlanner.class, Level.FINEST);
 //				MetaCSPLogging.setLevel(MetaSpatialAdherenceConstraint.class, Level.FINEST);
 				//#################################################################################################################
 				//add metaOccupiedConstraint
@@ -164,7 +164,7 @@ public class BenchmarkGeneration {
 				}
 				
 				
-				printOutActivityNetwork(((ActivityNetworkSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[1]));
+//				printOutActivityNetwork(((ActivityNetworkSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[1]));
 
 				
 				
@@ -193,14 +193,9 @@ public class BenchmarkGeneration {
 				}
 
 				
-				System.out.println(observation);
-				System.out.println(recs);
+//				System.out.println(observation);
+//				System.out.println(recs);
 				
-				for (String finalSt : recs.keySet()) {
-					for (String init : observation.keySet()) {
-						
-					}
-				}
 
 			}
 
