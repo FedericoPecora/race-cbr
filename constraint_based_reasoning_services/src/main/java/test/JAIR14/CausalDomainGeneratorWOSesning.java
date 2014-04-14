@@ -12,7 +12,7 @@ import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
 
 public class CausalDomainGeneratorWOSesning {
 
-	static String PATH = "/home/iran/Desktop/benchmark/testCase1/domain/deskDomain";   
+	static String PATH = "/home/iran/Desktop/benchmark/testCase6/domain/deskDomain";   
 	static int armResources = 5;
 	static String duration = "2000";
 	
@@ -120,6 +120,45 @@ public class CausalDomainGeneratorWOSesning {
 			//tray
 			ret += "#######################################################" + "\n" ;
 
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head atLocation::at_"+ objVar[i] +"_tray1())" +  " \n"+
+					" (RequiredState req1 RobotAction::place_"+ objVar[i] +"_tray1())" +  " \n"+
+					" (Constraint StartedBy(Head,req1))" +  " \n"+
+					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					")" + "\n" ;
+			
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head RobotAction::pick_"+ objVar[i] +"_tray1())" +  " \n"+
+					" (RequiredState req1 atLocation::at_"+ objVar[i] +"_tray1())" +  " \n"+
+					//" (RequiredState req2 RobotSense::sensing_before_picking_"+ objVar[i] +"_tray1())" +  " \n"+
+					//" (Constraint MetBy(Head,req2))" +  " \n"+
+					" (Constraint MetBy(Head,req1))" +  " \n"+
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					" (RequiredResource arm(1))" +  " \n"+
+					")" + "\n" ;
+
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head RobotProprioception::holding_"+ objVar[i] +"())" +  " \n"+
+					" (RequiredState req1 RobotAction::pick_"+ objVar[i] +"_tray1())" +  " \n"+
+					" (Constraint MetBy(Head,req1))" +  " \n"+
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					" (RequiredResource arm(1))" +  " \n"+
+					")" + "\n" ;
+
+			
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head RobotAction::place_"+ objVar[i] +"_tray1())" +  " \n"+
+					" (RequiredState req1 RobotProprioception::holding_"+ objVar[i] +"())" +  " \n"+
+					//" (RequiredState req2 RobotSense::sensing_before_placing_"+ objVar[i] +"_tray1())" +  " \n"+
+					" (RequiredState req3 atLocation::at_robot1_table1())" +  " \n"+
+					" (Constraint During(Head,req3))" +  " \n"+
+					//" (Constraint MetBy(Head,req2))" +  " \n"+
+					" (Constraint MetBy(Head,req1))" +  " \n"+
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					" (RequiredResource arm(1))" +  " \n"+
+					")" + "\n" ;
+			//////////////////////////////////////////////////////////////////////////
 			
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head atLocation::at_"+ objVar[i] +"_table1())" +  " \n"+
@@ -165,44 +204,7 @@ public class CausalDomainGeneratorWOSesning {
 					")" + "\n" ;
 				
 			///////////////////////////////////////////////////////////////////////////////////////////
-			ret +=  "(SimpleOperator " + " \n"+
-					" (Head atLocation::at_"+ objVar[i] +"_tray1())" +  " \n"+
-					" (RequiredState req1 RobotAction::place_"+ objVar[i] +"_tray1())" +  " \n"+
-					" (Constraint StartedBy(Head,req1))" +  " \n"+
-					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
-					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					")" + "\n" ;
-			
-			ret +=  "(SimpleOperator " + " \n"+
-					" (Head RobotAction::pick_"+ objVar[i] +"_tray1())" +  " \n"+
-					" (RequiredState req1 atLocation::at_"+ objVar[i] +"_tray1())" +  " \n"+
-					//" (RequiredState req2 RobotSense::sensing_before_picking_"+ objVar[i] +"_tray1())" +  " \n"+
-					//" (Constraint MetBy(Head,req2))" +  " \n"+
-					" (Constraint MetBy(Head,req1))" +  " \n"+
-					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
-					")" + "\n" ;
 
-			ret +=  "(SimpleOperator " + " \n"+
-					" (Head RobotProprioception::holding_"+ objVar[i] +"())" +  " \n"+
-					" (RequiredState req1 RobotAction::pick_"+ objVar[i] +"_tray1())" +  " \n"+
-					" (Constraint MetBy(Head,req1))" +  " \n"+
-					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
-					")" + "\n" ;
-
-			
-			ret +=  "(SimpleOperator " + " \n"+
-					" (Head RobotAction::place_"+ objVar[i] +"_tray1())" +  " \n"+
-					" (RequiredState req1 RobotProprioception::holding_"+ objVar[i] +"())" +  " \n"+
-					//" (RequiredState req2 RobotSense::sensing_before_placing_"+ objVar[i] +"_tray1())" +  " \n"+
-					" (RequiredState req3 atLocation::at_robot1_table1())" +  " \n"+
-					" (Constraint During(Head,req3))" +  " \n"+
-					//" (Constraint MetBy(Head,req2))" +  " \n"+
-					" (Constraint MetBy(Head,req1))" +  " \n"+
-					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
-					")" + "\n" ;
 			
 
 		}
