@@ -29,7 +29,6 @@ import org.metacsp.meta.simplePlanner.SimpleOperator;
 
 
 import org.metacsp.multi.activity.Activity;
-import org.metacsp.multi.activity.ActivityNetworkSolver;
 import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
 import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraint;
 import org.metacsp.multi.spatial.rectangleAlgebra.RectangleConstraintSolver;
@@ -52,18 +51,18 @@ import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ValueOrderingH;
 import org.metacsp.framework.VariableOrderingH;
 
-public class BenchmarkGeneration {
+public class BenchmarkGeneration5 {
 	
 	//the Number of Objects are the same= 6 + 1 (including cup)
 	//Initial situation: Holding cup
 	
 	
-	static int totalExp  = 2;
-	static int armsCounter = 2;
-	static String PATH = "/home/iran/Desktop/benchmark/testCase1/coordinateGenerator/";
-	static String PATH_INIT_PLOT = "/home/iran/Desktop/benchmark/testCase1/PLOT_INIT/";
-	static String PATH_FINAL_PLOT = "/home/iran/Desktop/benchmark/testCase1/PLOT_FINAL/";
-	static String DOMAINPATH = "/home/iran/Desktop/benchmark/testCase1/domain/deskDomain"; 
+	static int totalExp  = 500;
+	static int armsCounter = 4;
+	static String PATH = "/home/iran/Desktop/benchmark/testCase5/coordinateGenerator/";
+	static String PATH_INIT_PLOT = "/home/iran/Desktop/benchmark/testCase5/PLOT_INIT/";
+	static String PATH_FINAL_PLOT = "/home/iran/Desktop/benchmark/testCase5/PLOT_FINAL/";
+	static String DOMAINPATH = "/home/iran/Desktop/benchmark/testCase5/domain/deskDomain"; 
 	
 	
 	static int pad = 0;	
@@ -72,7 +71,7 @@ public class BenchmarkGeneration {
 	public static void main(String[] args) {
 		
 		
-		for (int ii = 1; ii < totalExp; ii++) {
+		for (int ii = 455; ii < totalExp; ii++) {
 			for (int arm_resources = 1; arm_resources <= armsCounter; arm_resources++) {
 				
 				SimpleHybridPlanner simpleHybridPlanner = new SimpleHybridPlanner(0, 100000, 0);
@@ -97,7 +96,7 @@ public class BenchmarkGeneration {
 				MetaSpatialAdherenceConstraint metaSpatialAdherence = new MetaSpatialAdherenceConstraint(varOH, valOH);
 				SpatialFluentSolver groundSolver = (SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0];
 
-				MetaCSPLogging.setLevel(SimpleHybridPlanner.class, Level.FINEST);
+//				MetaCSPLogging.setLevel(SimpleHybridPlanner.class, Level.FINEST);
 //				MetaCSPLogging.setLevel(MetaSpatialAdherenceConstraint.class, Level.FINEST);
 				//#################################################################################################################
 				//add metaOccupiedConstraint
@@ -164,10 +163,6 @@ public class BenchmarkGeneration {
 				}
 				
 				
-				printOutActivityNetwork(((ActivityNetworkSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[1]));
-
-				
-				
 				HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>(); 
 				for (String str : ((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
 						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().keySet()) {
@@ -193,14 +188,7 @@ public class BenchmarkGeneration {
 				}
 
 				
-				System.out.println(observation);
-				System.out.println(recs);
-				
-				for (String finalSt : recs.keySet()) {
-					for (String init : observation.keySet()) {
-						
-					}
-				}
+				System.out.println();
 
 			}
 
@@ -272,8 +260,8 @@ public class BenchmarkGeneration {
 		
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "monitor1", "at_monitor1_table1()", markings.JUSTIFIED, 8);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "keyboard1", "at_keyboard1_table1()", markings.JUSTIFIED,  8);		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "pen1", "at_pen1_table1()", markings.JUSTIFIED,  8);		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "notebook1", "at_notebook1_table1()", markings.JUSTIFIED, 8);
+//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "pen1", "at_pen1_table1()", markings.JUSTIFIED,  8);		
+//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "notebook1", "at_notebook1_table1()", markings.JUSTIFIED, 8);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "penHolder1", "at_penHolder1_table1()", markings.JUSTIFIED, 8);
 		//===================================================================================================================		
 		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("RobotProprioception");
@@ -331,24 +319,24 @@ public class BenchmarkGeneration {
 		//Every thing should be on the table		
 		addOnTableConstraint(srules, "monitor");
 		addOnTableConstraint(srules, "keyboard");
-		addOnTableConstraint(srules, "notebook");
-		addOnTableConstraint(srules, "pen");
+//		addOnTableConstraint(srules, "notebook");
+//		addOnTableConstraint(srules, "pen");
 		addOnTableConstraint(srules, "book");
 		addOnTableConstraint(srules, "cup");
 		addOnTableConstraint(srules, "penHolder");
 		
 		
-		SpatialRule pen_notebook = new SpatialRule("pen", "notebook", 
-				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(3,5)),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds() ))
-				);
-		srules.add(pen_notebook);
-
-		SpatialRule notebook_keyboard = new SpatialRule("notebook", "keyboard", 
-				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds()),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
-				);
-		srules.add(notebook_keyboard);
+//		SpatialRule pen_notebook = new SpatialRule("pen", "notebook", 
+//				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(3,5)),
+//						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds() ))
+//				);
+//		srules.add(pen_notebook);
+//
+//		SpatialRule notebook_keyboard = new SpatialRule("notebook", "keyboard", 
+//				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds()),
+//						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
+//				);
+//		srules.add(notebook_keyboard);
 		
 		SpatialRule keyboard_monitor = new SpatialRule("keyboard", "monitor", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
@@ -467,22 +455,6 @@ public class BenchmarkGeneration {
 
 
 		return recs;
-	}
-	
-	private static void printOutActivityNetwork(ActivityNetworkSolver actSolver) {
-
-		//sort Activity based on the start time for debugging purpose
-		HashMap<Activity, Long> starttimes = new HashMap<Activity, Long>();
-		for (int i = 0; i < actSolver.getVariables().length; i++) {
-			starttimes.put((Activity) actSolver.getVariables()[i], ((Activity)actSolver.getVariables()[i]).getTemporalVariable().getStart().getLowerBound());                       
-		}
-
-		//Collections.sort(starttimes.values());
-		starttimes =  sortHashMapByValuesD(starttimes);
-		for (Activity act0 : starttimes.keySet()) {
-			System.out.println(act0 + " --> " + starttimes.get(act0));
-		}
-		
 	}
 	
 	private static HashMap<String, Rectangle> getAssertionalRule(Vector<SpatialAssertionalRelation> saRelations){

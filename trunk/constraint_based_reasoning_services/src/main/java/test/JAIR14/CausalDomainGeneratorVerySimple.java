@@ -11,7 +11,7 @@ import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
 
 public class CausalDomainGeneratorVerySimple {
 
-	static String PATH = "/home/iran/Desktop/benchmark/testCase1/domain/deskDomain";   
+	static String PATH = "/home/iran/Desktop/benchmark/testCase2/domain/deskDomain";   
 	static int armResources = 5;
 	static String duration = "2000";
 	

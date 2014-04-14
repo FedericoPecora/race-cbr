@@ -11,14 +11,15 @@ import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
 
 public class CausalDomainGenerator {
 
-	static String PATH = "/home/iran/Desktop/benchmark/testCase1/domain/deskDomain";   
+	static String PATH = "/home/iran/Desktop/benchmark/testCase5/domain/deskDomain";   
 	static int armResources = 5;
 	static String duration = "2000";
 	
 	
 	public static void main(String[] args) {
 		
-		String[] objVar = new String[]{"cup1", "book1", "monitor1", "keyboard1", "pen1", "notebook1", "penHolder1"};
+		//String[] objVar = new String[]{"cup1", "book1", "monitor1", "keyboard1", "pen1", "notebook1", "penHolder1"};
+		String[] objVar = new String[]{"cup1", "book1", "monitor1", "keyboard1", "penHolder1"};
 		
 //		String[] objVar = new String[]{"cup1", "knife1", "fork1"};
 		

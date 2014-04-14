@@ -13,7 +13,7 @@ public class BenckmarkParser {
 	/**
 	 * @param args
 	 */
-	static String misplacedNumber = "6";
+	static String misplacedNumber = "4";
 	static String PATH = "/home/iran/Desktop/benchmark/testCase1/result/" + misplacedNumber +"/";
 	static Vector<String> fileNameList = new Vector<String>();
 	static int totalProblem = 0;
@@ -29,6 +29,8 @@ public class BenckmarkParser {
 		Vector<Long> twoArmSearchTime = new Vector<Long>();
 		Vector<Long> threeArmSearchTime = new Vector<Long>();
 		Vector<Long> fourArmSearchTime = new Vector<Long>();
+		
+		Vector<Long> cts = new Vector<Long>();
 		
 		
 		
@@ -47,7 +49,13 @@ public class BenckmarkParser {
 					while ((line = reader.readLine()) != null) {
 									
 						if(line.contains("_")){
-						long searchTime = Long.valueOf(line.substring(30, line.length()));
+							
+							
+							long culpritTime = Long.valueOf(line.substring(31, line.indexOf("+")));
+							cts.add(culpritTime);
+							
+							
+							long searchTime = Long.valueOf(line.substring(line.indexOf("+") +14, line.length()));
 							
 							
 							if(line.substring(15, 16).compareTo("1") == 0){
@@ -119,10 +127,14 @@ public class BenckmarkParser {
 			timeoutpercentage.put(arm, ((double)timeoutNumber.get(arm)/totalProblem) * 100);
 		}
 		
-		
+		long sumCul = 0; 
+		for (int i = 0; i < cts.size(); i++) {
+			sumCul += cts.get(i);
+		}
 		
 		
 		System.out.println("totalProblem for "+ misplacedNumber + " misplaced objects: "+ totalProblem);
+		System.out.println("avarage Culprit Time: " + ((double)sumCul/cts.size()));
 		System.out.println("timeout Number: " + timeoutNumber);
 		System.out.println("timeout percentage: " + timeoutpercentage);
 		System.out.println("searchAvg : " + searchAvg);

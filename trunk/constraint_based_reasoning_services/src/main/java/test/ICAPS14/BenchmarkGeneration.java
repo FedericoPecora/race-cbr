@@ -70,7 +70,7 @@ public class BenchmarkGeneration {
 	public static void main(String[] args) {
 		
 		
-		for (int ii = 0; ii < totalExp; ii++) {
+		for (int ii = 2; ii < totalExp; ii++) {
 			for (int arm_resources = 1; arm_resources < armsCounter; arm_resources++) {
 				MetaSpatialScheduler metaSpatioCasualSolver = new MetaSpatialScheduler(0, 1000, 0);
 				
