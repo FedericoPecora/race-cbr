@@ -13,8 +13,8 @@ public class BenckmarkParser {
 	/**
 	 * @param args
 	 */
-	static String misplacedNumber = "4";
-	static String PATH = "/home/iran/Desktop/benchmark/testCase1/result/" + misplacedNumber +"/";
+	static String misplacedNumber = "6";
+	static String PATH = "/home/iran/Desktop/benchmark/testCase7/result/" + misplacedNumber +"/";
 	static Vector<String> fileNameList = new Vector<String>();
 	static int totalProblem = 0;
 	static HashMap<Integer, Integer> timeoutNumber = new HashMap<Integer, Integer>();

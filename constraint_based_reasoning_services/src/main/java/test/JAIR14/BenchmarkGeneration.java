@@ -58,7 +58,7 @@ public class BenchmarkGeneration {
 	//Initial situation: Holding cup
 	
 	
-	static int totalExp  = 2;
+	static int totalExp  = 4;
 	static int armsCounter = 2;
 	static String PATH = "/home/iran/Desktop/benchmark/testCase1/coordinateGenerator/";
 	static String PATH_INIT_PLOT = "/home/iran/Desktop/benchmark/testCase1/PLOT_INIT/";
@@ -72,7 +72,7 @@ public class BenchmarkGeneration {
 	public static void main(String[] args) {
 		
 		
-		for (int ii = 1; ii < totalExp; ii++) {
+		for (int ii = 0; ii < totalExp; ii++) {
 			for (int arm_resources = 1; arm_resources <= armsCounter; arm_resources++) {
 				
 				SimpleHybridPlanner simpleHybridPlanner = new SimpleHybridPlanner(0, 100000, 0);
@@ -111,6 +111,7 @@ public class BenchmarkGeneration {
 
 				getSpatialKnowledge(srules);
 				observation = getAssertionalRule(saRelations, ii);
+				simpleHybridPlanner.addObservation(observation);
 //				observation = getAssertionalRule(saRelations);
 				insertCurrentStateCurrentGoal(groundSolver);
 				//#################################################################################################################

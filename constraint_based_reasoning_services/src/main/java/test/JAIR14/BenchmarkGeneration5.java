@@ -110,6 +110,7 @@ public class BenchmarkGeneration5 {
 
 				getSpatialKnowledge(srules);
 				observation = getAssertionalRule(saRelations, ii);
+				simpleHybridPlanner.addObservation(observation);
 //				observation = getAssertionalRule(saRelations);
 				insertCurrentStateCurrentGoal(groundSolver);
 				//#################################################################################################################
