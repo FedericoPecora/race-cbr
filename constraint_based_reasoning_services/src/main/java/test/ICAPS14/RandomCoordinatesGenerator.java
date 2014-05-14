@@ -18,7 +18,7 @@ public class RandomCoordinatesGenerator {
 	 */
 	
 	static int totallExperiment = 1000;
-	static String PATH = "/home/iran/Desktop/benchmark/testCase5/coordinateGenerator/";
+	static String PATH = "/home/iran/Desktop/benchmark/testCase14/coordinateGenerator/";
 	static int Table_size_x = 120;
 	static int Table_size_y = 120;	
 	public static void main(String[] args) {
@@ -30,8 +30,8 @@ public class RandomCoordinatesGenerator {
 		objsizes.put("book", new Rectangle(10, 10));
 		objsizes.put("monitor", new Rectangle(45, 15));
 		objsizes.put("keyboard", new Rectangle(40, 20));
-		objsizes.put("notebook", new Rectangle(15, 20));
-		objsizes.put("pen", new Rectangle(1,18));
+//		objsizes.put("notebook", new Rectangle(15, 20));
+//		objsizes.put("pen", new Rectangle(1,18));
 		objsizes.put("penHolder", new Rectangle(10,5));
 
 		int n = 1, accepted = 0;

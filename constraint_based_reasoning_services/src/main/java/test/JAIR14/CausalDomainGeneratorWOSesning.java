@@ -12,7 +12,7 @@ import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
 
 public class CausalDomainGeneratorWOSesning {
 
-	static String PATH = "/home/iran/Desktop/benchmark/testCase6/domain/deskDomain";   
+	static String PATH = "/home/iran/Desktop/benchmark/testCase10/domain/deskDomain";   
 	static int armResources = 5;
 	static String duration = "2000";
 	
