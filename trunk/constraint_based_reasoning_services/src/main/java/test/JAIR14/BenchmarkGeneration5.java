@@ -71,7 +71,7 @@ public class BenchmarkGeneration5 {
 	public static void main(String[] args) {
 		
 		
-		for (int ii = 455; ii < totalExp; ii++) {
+		for (int ii = 0; ii < totalExp; ii++) {
 			for (int arm_resources = 1; arm_resources <= armsCounter; arm_resources++) {
 				
 				SimpleHybridPlanner simpleHybridPlanner = new SimpleHybridPlanner(0, 100000, 0);

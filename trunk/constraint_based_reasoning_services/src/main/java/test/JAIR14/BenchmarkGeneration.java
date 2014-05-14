@@ -58,12 +58,12 @@ public class BenchmarkGeneration {
 	//Initial situation: Holding cup
 	
 	
-	static int totalExp  = 4;
-	static int armsCounter = 2;
-	static String PATH = "/home/iran/Desktop/benchmark/testCase1/coordinateGenerator/";
-	static String PATH_INIT_PLOT = "/home/iran/Desktop/benchmark/testCase1/PLOT_INIT/";
-	static String PATH_FINAL_PLOT = "/home/iran/Desktop/benchmark/testCase1/PLOT_FINAL/";
-	static String DOMAINPATH = "/home/iran/Desktop/benchmark/testCase1/domain/deskDomain"; 
+	static int totalExp  = 1000;
+	static int armsCounter = 4;
+	static String PATH = "/home/iran/Desktop/benchmark/testCase12/coordinateGenerator/";
+	static String PATH_INIT_PLOT = "/home/iran/Desktop/benchmark/testCase12/PLOT_INIT/";
+	static String PATH_FINAL_PLOT = "/home/iran/Desktop/benchmark/testCase12/PLOT_FINAL/";
+	static String DOMAINPATH = "/home/iran/Desktop/benchmark/testCase12/domain/deskDomain"; 
 	
 	
 	static int pad = 0;	
