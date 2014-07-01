@@ -40,11 +40,11 @@ import org.metacsp.utility.timelinePlotting.TimelinePublisher;
 import org.metacsp.utility.timelinePlotting.TimelineVisualizer;
 
 
-public class TestReachabilityOffline1 {
+public class TestReachabilityOffline2 {
+	
+	//there is a reachability meta constraints calculate the real reachable situation
 
-	//purely symbolic without metaConstraint
-
-	static int pad = 0;    
+	static int pad = 3;    
 	static long duration = 1000;
 
 	public static void main(String[] args) {
@@ -53,7 +53,7 @@ public class TestReachabilityOffline1 {
 		SimpleHybridPlanner simpleHybridPlanner = new SimpleHybridPlanner(0, 100000, 0);
 
 
-		FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/reachability_test_fixed.ddl", FluentBasedSimpleDomain.class); //did not terminate
+		FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/reachability_test.ddl", FluentBasedSimpleDomain.class); //did not terminate
 		
 		//Most critical conflict is the one with most activities 
 		VariableOrderingH varOH = new VariableOrderingH() {
@@ -362,19 +362,17 @@ public class TestReachabilityOffline1 {
 
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
 		
-//		//just knife should be replaced due to spatial heuristic
-//		insertAtConstraint(recs, saRelations, "table", 0, 100, 0, 99, false);
-//		insertAtConstraint(recs, saRelations, "fork", 31, 37, 13, 32, true);
-//		insertAtConstraint(recs, saRelations, "knife", 40, 46, 10, 33, true);
-//		insertAtConstraint(recs, saRelations, "cup", 0, 0, 0, 0, true);
-		
-		
-		
-		//both fork and knife should be replaced
-		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 60, 0, 99, false);
-		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 20, 26, 13, 32, true);
-		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",30, 36, 10, 33, true);
+		//just knife should be replaced due to spatial heuristic
+		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 100, 0, 50, false);
+		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 60, 66, 13, 32, true);
+		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",80, 86, 11, 33, true);
 		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
+		
+//		//both fork and knife should be replaced
+//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 60, 0, 99, false);
+//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 20, 26, 13, 32, true);
+//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",30, 36, 10, 33, true);
+//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
 
 		return recs;
 	}
