@@ -4,24 +4,28 @@
 (Resource arm 2)
 (Resource fieldOfView 200)
 (Resource robot1 1)
+(Resource manArea 1)
 
 (SimpleOperator  
  (Head atLocation::at_robot1_manipulationArea_cup1_table1()) 
  (RequiredState req1 RobotAction::moveTo_manipulationArea_cup1()) 
  (Constraint MetBy(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
+ (RequiredResource manArea(1))  
 )
 (SimpleOperator  
  (Head atLocation::at_robot1_manipulationArea_knife1_table1()) 
  (RequiredState req1 RobotAction::moveTo_manipulationArea_knife1()) 
  (Constraint MetBy(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
+ (RequiredResource manArea(1))  
 )
 (SimpleOperator  
  (Head atLocation::at_robot1_manipulationArea_fork1_table1()) 
  (RequiredState req1 RobotAction::moveTo_manipulationArea_fork1()) 
  (Constraint MetBy(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
+ (RequiredResource manArea(1))  
 )
 (SimpleOperator  
  (Head RobotAction::moveTo_manipulationArea_cup1()) 
@@ -44,6 +48,7 @@
  (Constraint During(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
  (RequiredResource fieldOfView(200))  
+ (RequiredResource robot1(1))  
 )
 (SimpleOperator  
  (Head RobotSense::sensing_before_picking_cup1_table1()) 
@@ -51,6 +56,7 @@
  (Constraint During(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
  (RequiredResource fieldOfView(200))  
+ (RequiredResource robot1(1))  
 )
 (SimpleOperator  
  (Head RobotSense::sensing_before_picking_cup1_tray1()) 
@@ -58,6 +64,7 @@
  (Constraint During(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
  (RequiredResource fieldOfView(200))  
+ (RequiredResource robot1(1))  
 )
 (SimpleOperator  
  (Head RobotSense::sensing_before_placing_cup1_tray1()) 
@@ -65,6 +72,7 @@
  (Constraint During(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
  (RequiredResource fieldOfView(200))  
+ (RequiredResource robot1(1))  
 )
 (SimpleOperator  
  (Head RobotSense::sensing_before_placing_knife1_table1()) 
@@ -72,6 +80,7 @@
  (Constraint During(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
  (RequiredResource fieldOfView(200))  
+ (RequiredResource robot1(1))  
 )
 (SimpleOperator  
  (Head RobotSense::sensing_before_picking_knife1_table1()) 
@@ -79,6 +88,7 @@
  (Constraint During(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
  (RequiredResource fieldOfView(200))  
+ (RequiredResource robot1(1))  
 )
 (SimpleOperator  
  (Head RobotSense::sensing_before_picking_knife1_tray1()) 
@@ -86,6 +96,7 @@
  (Constraint During(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
  (RequiredResource fieldOfView(200))  
+ (RequiredResource robot1(1))  
 )
 (SimpleOperator  
  (Head RobotSense::sensing_before_placing_knife1_tray1()) 
@@ -93,6 +104,7 @@
  (Constraint During(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
  (RequiredResource fieldOfView(200))  
+ (RequiredResource robot1(1))  
 )
 (SimpleOperator  
  (Head RobotSense::sensing_before_placing_fork1_table1()) 
@@ -100,6 +112,7 @@
  (Constraint During(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
  (RequiredResource fieldOfView(200))  
+ (RequiredResource robot1(1))  
 )
 (SimpleOperator  
  (Head RobotSense::sensing_before_picking_fork1_table1()) 
@@ -107,6 +120,7 @@
  (Constraint During(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
  (RequiredResource fieldOfView(200))  
+ (RequiredResource robot1(1))  
 )
 (SimpleOperator  
  (Head RobotSense::sensing_before_picking_fork1_tray1()) 
@@ -114,6 +128,7 @@
  (Constraint During(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
  (RequiredResource fieldOfView(200))  
+ (RequiredResource robot1(1))  
 )
 (SimpleOperator  
  (Head RobotSense::sensing_before_placing_fork1_tray1()) 
@@ -121,8 +136,8 @@
  (Constraint During(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
  (RequiredResource fieldOfView(200))  
+ (RequiredResource robot1(1))  
 )
-#######################################################
 #######################################################
 (SimpleOperator  
  (Head atLocation::at_cup1_table1()) 
@@ -172,7 +187,6 @@
  (RequiredResource robot1(1)) 
 )
 #######################################################
-#######################################################
 (SimpleOperator  
  (Head atLocation::at_knife1_table1()) 
  (RequiredState req1 RobotAction::place_knife1_table1()) 
@@ -220,7 +234,6 @@
  (RequiredResource fieldOfView(1)) 
  (RequiredResource robot1(1)) 
 )
-#######################################################
 #######################################################
 (SimpleOperator  
  (Head atLocation::at_fork1_table1()) 

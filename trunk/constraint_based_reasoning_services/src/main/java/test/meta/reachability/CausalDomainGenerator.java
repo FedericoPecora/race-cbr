@@ -30,17 +30,19 @@ public class CausalDomainGenerator {
 		String resource1 = "(Resource arm " + armResources + ")"; 
 		String resource2 = "(Resource fieldOfView 200)"; 
 		String resource3 = "(Resource robot1 1)"; 
+		String resource4 = "(Resource manArea 1)"; 
 
 		//writ in PATH + armReources +ddl
 
 		BufferedWriter causalDomain = null;
 		String operator = "";
-		operator += simpleDomain + "\n" +controllable1 + "\n" +controllable2 + "\n" + resource1 + "\n" + resource2 + "\n" + resource3 + "\n" + "\n"; 
+		operator += simpleDomain + "\n" +controllable1 + "\n" +controllable2 + "\n" + resource1 + "\n" + 
+				resource2 + "\n" + resource3 + "\n" + resource4 +"\n" + "\n"; 
 
 		operator += getAtManipulationAreaOperator(objVar);
-		
+
 		operator += getMoveToOperator(objVar);
-		
+
 		operator += getSensingOperator(objVar);
 
 		operator += getPickAndPlaceOperator(objVar);
@@ -67,7 +69,7 @@ public class CausalDomainGenerator {
 
 	private static String getMoveToOperator(String[] objVar) {
 		String ret = "";
-		
+
 		for (int i = 0; i < objVar.length; i++) {
 
 			ret +=  "(SimpleOperator " + " \n"+
@@ -85,7 +87,7 @@ public class CausalDomainGenerator {
 	private static String getAtManipulationAreaOperator(String[] objVar) {
 
 		String ret = "";
-		
+
 		for (int i = 0; i < objVar.length; i++) {
 
 			ret +=  "(SimpleOperator " + " \n"+
@@ -93,6 +95,7 @@ public class CausalDomainGenerator {
 					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i] +"())" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					" (RequiredResource manArea(1)) " +  " \n"+
 					")" + "\n" ;
 
 		}
@@ -111,17 +114,23 @@ public class CausalDomainGenerator {
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head RobotSense::sensing_before_placing_"+ objVar[i] +"_table1())" +  " \n"+
 					" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
+					//" (RequiredState req2 atLocation::at_robot1_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+
+					//" (Constraint During(Head,req2))" +  " \n"+
 					" (Constraint During(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					" (RequiredResource fieldOfView(200)) " +  " \n"+
+					" (RequiredResource robot1(1)) " +  " \n"+					
 					")" + "\n" ;
 
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head RobotSense::sensing_before_picking_"+ objVar[i] +"_table1())" +  " \n"+
 					" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
+					//" (RequiredState req2 atLocation::at_robot1_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+
+					//" (Constraint During(Head,req2))" +  " \n"+
 					" (Constraint During(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					" (RequiredResource fieldOfView(200)) " +  " \n"+
+					" (RequiredResource robot1(1)) " +  " \n"+
 					")" + "\n" ;
 
 
@@ -131,6 +140,7 @@ public class CausalDomainGenerator {
 					" (Constraint During(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					" (RequiredResource fieldOfView(200)) " +  " \n"+
+					" (RequiredResource robot1(1)) " +  " \n"+
 					")" + "\n" ;
 
 
@@ -140,6 +150,7 @@ public class CausalDomainGenerator {
 					" (Constraint During(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					" (RequiredResource fieldOfView(200)) " +  " \n"+
+					" (RequiredResource robot1(1)) " +  " \n"+
 					")" + "\n" ;
 
 
@@ -156,47 +167,47 @@ public class CausalDomainGenerator {
 		for (int i = 0; i < objVar.length; i++) {
 
 			///////////////////////////////////////////////////////////////////////////////////////////
-			ret += "#######################################################" + "\n" ;
-//			ret +=  "(SimpleOperator " + " \n"+
-//					" (Head atLocation::at_"+ objVar[i] +"_tray1())" +  " \n"+
-//					" (RequiredState req1 RobotAction::place_"+ objVar[i] +"_tray1())" +  " \n"+
-//					" (Constraint StartedBy(Head,req1))" +  " \n"+
-//					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
-//					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-//					")" + "\n" ;
-//
-//			ret +=  "(SimpleOperator " + " \n"+
-//					" (Head RobotAction::pick_"+ objVar[i] +"_tray1())" +  " \n"+
-//					" (RequiredState req1 atLocation::at_"+ objVar[i] +"_tray1())" +  " \n"+
-//					" (RequiredState req2 RobotSense::sensing_before_picking_"+ objVar[i] +"_tray1())" +  " \n"+
-//					" (Constraint MetBy(Head,req2))" +  " \n"+
-//					" (Constraint MetBy(Head,req1))" +  " \n"+
-//					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-//					" (RequiredResource arm(1))" +  " \n"+
-//					" (RequiredResource fieldOfView(1))" +  " \n"+
-//					")" + "\n" ;
-//
-//			ret +=  "(SimpleOperator " + " \n"+
-//					" (Head RobotProprioception::holding_"+ objVar[i] +"())" +  " \n"+
-//					" (RequiredState req1 RobotAction::pick_"+ objVar[i] +"_tray1())" +  " \n"+
-//					" (Constraint MetBy(Head,req1))" +  " \n"+
-//					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-//					" (RequiredResource arm(1))" +  " \n"+
-//					")" + "\n" ;
-//
-//
-//			ret +=  "(SimpleOperator " + " \n"+
-//					" (Head RobotAction::place_"+ objVar[i] +"_tray1())" +  " \n"+
-//					" (RequiredState req1 RobotProprioception::holding_"+ objVar[i] +"())" +  " \n"+
-//					" (RequiredState req2 RobotSense::sensing_before_placing_"+ objVar[i] +"_tray1())" +  " \n"+
-//					" (RequiredState req3 atLocation::at_robot1_table1())" +  " \n"+
-//					" (Constraint During(Head,req3))" +  " \n"+
-//					" (Constraint MetBy(Head,req2))" +  " \n"+
-//					" (Constraint MetBy(Head,req1))" +  " \n"+
-//					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-//					" (RequiredResource arm(1))" +  " \n"+
-//					" (RequiredResource fieldOfView(1))" +  " \n"+
-//					")" + "\n" ;
+//			ret += "#######################################################" + "\n" ;
+//						ret +=  "(SimpleOperator " + " \n"+
+//								" (Head atLocation::at_"+ objVar[i] +"_tray1())" +  " \n"+
+//								" (RequiredState req1 RobotAction::place_"+ objVar[i] +"_tray1())" +  " \n"+
+//								" (Constraint StartedBy(Head,req1))" +  " \n"+
+//								" (Constraint OverlappedBy(Head,req1))" +  " \n"+
+//								" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+//								")" + "\n" ;
+//			
+//						ret +=  "(SimpleOperator " + " \n"+
+//								" (Head RobotAction::pick_"+ objVar[i] +"_tray1())" +  " \n"+
+//								" (RequiredState req1 atLocation::at_"+ objVar[i] +"_tray1())" +  " \n"+
+//								" (RequiredState req2 RobotSense::sensing_before_picking_"+ objVar[i] +"_tray1())" +  " \n"+
+//								" (Constraint MetBy(Head,req2))" +  " \n"+
+//								" (Constraint MetBy(Head,req1))" +  " \n"+
+//								" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+//								" (RequiredResource arm(1))" +  " \n"+
+//								" (RequiredResource fieldOfView(1))" +  " \n"+
+//								")" + "\n" ;
+//			
+//						ret +=  "(SimpleOperator " + " \n"+
+//								" (Head RobotProprioception::holding_"+ objVar[i] +"())" +  " \n"+
+//								" (RequiredState req1 RobotAction::pick_"+ objVar[i] +"_tray1())" +  " \n"+
+//								" (Constraint MetBy(Head,req1))" +  " \n"+
+//								" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+//								" (RequiredResource arm(1))" +  " \n"+
+//								")" + "\n" ;
+//			
+//			
+//						ret +=  "(SimpleOperator " + " \n"+
+//								" (Head RobotAction::place_"+ objVar[i] +"_tray1())" +  " \n"+
+//								" (RequiredState req1 RobotProprioception::holding_"+ objVar[i] +"())" +  " \n"+
+//								" (RequiredState req2 RobotSense::sensing_before_placing_"+ objVar[i] +"_tray1())" +  " \n"+
+//								" (RequiredState req3 atLocation::at_robot1_table1())" +  " \n"+
+//								" (Constraint During(Head,req3))" +  " \n"+
+//								" (Constraint MetBy(Head,req2))" +  " \n"+
+//								" (Constraint MetBy(Head,req1))" +  " \n"+
+//								" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+//								" (RequiredResource arm(1))" +  " \n"+
+//								" (RequiredResource fieldOfView(1))" +  " \n"+
+//								")" + "\n" ;
 
 			ret += "#######################################################" + "\n" ;
 
@@ -209,7 +220,7 @@ public class CausalDomainGenerator {
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					")" + "\n" ;
 
-			
+
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head RobotAction::place_"+ objVar[i] +"_table1())" +  " \n"+
 					" (RequiredState req1 RobotProprioception::holding_"+ objVar[i] +"())" +  " \n"+
@@ -225,33 +236,33 @@ public class CausalDomainGenerator {
 					" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
-					")" + "\n" ;;
+					")" + "\n" ;
 
-					ret +=  "(SimpleOperator " + " \n"+
-							" (Head RobotProprioception::holding_"+ objVar[i] +"())" +  " \n"+
-							" (RequiredState req1 RobotAction::pick_"+ objVar[i] +"_table1())" +  " \n"+
-							" (Constraint MetBy(Head,req1))" +  " \n"+
-							" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-							" (RequiredResource arm(1))" +  " \n"+
-							")" + "\n" ;
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head RobotProprioception::holding_"+ objVar[i] +"())" +  " \n"+
+					" (RequiredState req1 RobotAction::pick_"+ objVar[i] +"_table1())" +  " \n"+
+					" (Constraint MetBy(Head,req1))" +  " \n"+
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					" (RequiredResource arm(1))" +  " \n"+
+					")" + "\n" ;
 
-					ret +=  "(SimpleOperator " + " \n"+
-							" (Head RobotAction::pick_"+ objVar[i] +"_table1())" +  " \n"+
-							" (RequiredState req1 atLocation::at_"+ objVar[i] +"_table1())" +  " \n"+
-							" (RequiredState req2 RobotSense::sensing_before_picking_"+ objVar[i] +"_table1())" +  " \n"+
-							" (RequiredState req3 atLocation::at_robot1_table1())" +  " \n"+
-							" (RequiredState req4 atLocation::at_robot1_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+
-							" (Constraint During(Head,req4))" +  " \n"+
-							" (Constraint During(req2,req3))" +  " \n"+
-							" (Constraint During(Head,req3))" +  " \n"+
-							" (Constraint MetBy(Head,req2))" +  " \n"+
-							" (Constraint OverlappedBy(Head,req1))" +  " \n"+
-							" (Constraint Finishes(Head,req1))" +  " \n"+
-							" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-							" (RequiredResource arm(1))" +  " \n"+
-							" (RequiredResource fieldOfView(1))" +  " \n"+
-							" (RequiredResource robot1(1))" +  " \n"+
-							")" + "\n" ;
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head RobotAction::pick_"+ objVar[i] +"_table1())" +  " \n"+
+					" (RequiredState req1 atLocation::at_"+ objVar[i] +"_table1())" +  " \n"+
+					" (RequiredState req2 RobotSense::sensing_before_picking_"+ objVar[i] +"_table1())" +  " \n"+
+					" (RequiredState req3 atLocation::at_robot1_table1())" +  " \n"+
+					" (RequiredState req4 atLocation::at_robot1_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+
+					" (Constraint During(Head,req4))" +  " \n"+
+					" (Constraint During(req2,req3))" +  " \n"+
+					" (Constraint During(Head,req3))" +  " \n"+
+					" (Constraint MetBy(Head,req2))" +  " \n"+
+					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
+					" (Constraint Finishes(Head,req1))" +  " \n"+
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					" (RequiredResource arm(1))" +  " \n"+
+					" (RequiredResource fieldOfView(1))" +  " \n"+
+					" (RequiredResource robot1(1))" +  " \n"+
+					")" + "\n" ;
 
 
 		}

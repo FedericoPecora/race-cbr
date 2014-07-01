@@ -188,7 +188,7 @@ public class TestReachabilityOffline1 {
 		((Activity)sf.getInternalVariables()[1]).setSymbolicDomain(symbolicDomain);
 		((Activity)sf.getInternalVariables()[1]).setMarking(mk);
 
-		if(mk.equals(markings.JUSTIFIED)){
+		if(mk.equals(markings.JUSTIFIED) && release != -1){
 			AllenIntervalConstraint onDuration = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(duration,APSPSolver.INF));
 			onDuration.setFrom(sf.getActivity());
 			onDuration.setTo(sf.getActivity());
@@ -213,7 +213,7 @@ public class TestReachabilityOffline1 {
 //		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
 
 		
-//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "table1", "at_robot1_table1()", markings.JUSTIFIED,  8);
+//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_robot1_table1", "at_robot1_table1()", markings.JUSTIFIED,  1);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_table1_table1", "at_table1_table1()", markings.JUSTIFIED,  8);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_fork1_table1", "at_fork1_table1()", markings.JUSTIFIED, 8);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_knife1_table1", "at_knife1_table1()", markings.JUSTIFIED,8);
@@ -249,6 +249,19 @@ public class TestReachabilityOffline1 {
 		durationHolding1.setTo(two1);
 		cons.add(durationHolding1);
 		
+		
+//		Activity two11 = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
+//		two11.setSymbolicDomain("at_robot1_manipulationArea_cup1_table1()");
+//		two11.setMarking(markings.JUSTIFIED);
+//		AllenIntervalConstraint releaseatRobot1 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
+//		releaseatRobot1.setFrom(two11);
+//		releaseatRobot1.setTo(two11);
+//		cons.add(releaseatRobot1);
+//
+//		AllenIntervalConstraint durationHolding11 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+//		durationHolding11.setFrom(two11);
+//		durationHolding11.setTo(two11);
+//		cons.add(durationHolding11);
 
 		grounSpatialFluentSolver.getConstraintSolvers()[1].addConstraints(cons.toArray(new Constraint[cons.size()]));
 
