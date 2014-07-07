@@ -220,7 +220,7 @@ public class TestReachabilityOffline2 {
 		//===================================================================================================================
 
 		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("RobotProprioception");
-		two.setSymbolicDomain("holding_cup1()");
+		two.setSymbolicDomain("holding__arm1_cup1()");
 		two.setMarking(markings.JUSTIFIED);
 		AllenIntervalConstraint releaseHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
 		releaseHolding.setFrom(two);
