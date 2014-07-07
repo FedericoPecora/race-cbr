@@ -43,6 +43,7 @@ import org.metacsp.utility.timelinePlotting.TimelineVisualizer;
 public class TestReachabilityOffline1 {
 
 	//purely symbolic without metaConstraint
+	//without explicitly separate arms (this is the characteristic of the domain)
 
 	static int pad = 0;    
 	static long duration = 1000;
