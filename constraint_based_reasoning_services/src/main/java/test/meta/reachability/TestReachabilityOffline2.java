@@ -17,6 +17,8 @@ import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ValueOrderingH;
 import org.metacsp.framework.VariableOrderingH;
 import org.metacsp.meta.hybridPlanner.FluentBasedSimpleDomain;
+import org.metacsp.meta.hybridPlanner.MetaInverseReachabilityConstraint;
+import org.metacsp.meta.hybridPlanner.MetaMoveBaseManagerConstraint;
 import org.metacsp.meta.hybridPlanner.MetaOccupiedConstraint;
 import org.metacsp.meta.hybridPlanner.MetaSpatialAdherenceConstraint;
 import org.metacsp.meta.hybridPlanner.SimpleHybridPlanner;
@@ -79,6 +81,12 @@ public class TestReachabilityOffline2 {
 		MetaOccupiedConstraint metaOccupiedConstraint = new MetaOccupiedConstraint(null, null);
 		metaOccupiedConstraint.setPad(pad);
 		//#################################################################################################################
+		//add metaMovebaseManagerConstraint
+		MetaMoveBaseManagerConstraint metaMoveBaseMangerConstraint = new MetaMoveBaseManagerConstraint(null, null);
+		//#################################################################################################################
+		//add metaMovebaseManagerConstraint
+		MetaInverseReachabilityConstraint metaInverseReachabilityConstraint = new MetaInverseReachabilityConstraint(null, null);		
+		//#################################################################################################################
 		//this is spatial general and assetional rule
 		Vector<SpatialRule> srules = new Vector<SpatialRule>();
 		Vector<SpatialAssertionalRelation> saRelations = new Vector<SpatialAssertionalRelation>();
@@ -98,7 +106,9 @@ public class TestReachabilityOffline2 {
 
 		simpleHybridPlanner.addMetaConstraint(metaOccupiedConstraint);
 		simpleHybridPlanner.addMetaConstraint(metaSpatialAdherence);
-
+//		simpleHybridPlanner.addMetaConstraint(metaMoveBaseMangerConstraint);
+//		simpleHybridPlanner.addMetaConstraint(metaInverseReachabilityConstraint);
+		
 
 		long timeNow = Calendar.getInstance().getTimeInMillis();
 		simpleHybridPlanner.backtrack();
@@ -143,6 +153,11 @@ public class TestReachabilityOffline2 {
 			System.out.println(act + " --> " + starttimes.get(act));
 		}
 		//#####################################################################################################################
+		
+		System.out.println("fluenttttttttttttttttttttttttttttttts");
+		for (int i = 0; i < ((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getVariables().length; i++) {
+			System.out.println(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getVariables()[i]);
+		}
 	}
 
 	private static LinkedHashMap sortHashMapByValuesD(HashMap passedMap) {
@@ -209,7 +224,7 @@ public class TestReachabilityOffline2 {
 //		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
 
 		
-//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_robot1_table1", "at_robot1_table1()", markings.JUSTIFIED,  1);
+        setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_robot1_manipulationArea_cup1_table1", "at_robot1_manipulationArea_cup1_table1()", markings.JUSTIFIED,  -1);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_table1_table1", "at_table1_table1()", markings.JUSTIFIED,  8);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_fork1_table1", "at_fork1_table1()", markings.JUSTIFIED, 8);
 		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_knife1_table1", "at_knife1_table1()", markings.JUSTIFIED,8);
@@ -351,7 +366,7 @@ public class TestReachabilityOffline2 {
 			OntologicalSpatialProperty tableOnto = new OntologicalSpatialProperty();
 			tableOnto.setMovable(movable);
 			table_assertion.setOntologicalProp(tableOnto);
-			saRelations.add(table_assertion);                       
+			saRelations.add(table_assertion);
 			recs.put(fluentId, new Rectangle((int)(xl), (int)(yl), (int)(xu - xl), (int)(yu - yl)));
 		}
 
@@ -361,6 +376,11 @@ public class TestReachabilityOffline2 {
 	private static HashMap<String, Rectangle> getAssertionalRule(Vector<SpatialAssertionalRelation> saRelations){
 
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
+//		//consistent
+//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 100, 0, 50, false);
+//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 40, 46, 13, 32, true);
+//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",80, 86, 11, 33, true);
+//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
 		
 		//just knife should be replaced due to spatial heuristic
 		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 100, 0, 50, false);
