@@ -33,6 +33,8 @@ import org.metacsp.multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
 import org.metacsp.multi.spatial.rectangleAlgebraNew.toRemove.OntologicalSpatialProperty;
 import org.metacsp.multi.spatioTemporal.SpatialFluent;
 import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
+import org.metacsp.spatial.reachability.ConfigurationVariable;
+import org.metacsp.spatial.reachability.ReachabilityConstraint;
 import org.metacsp.spatial.utility.SpatialAssertionalRelation;
 import org.metacsp.spatial.utility.SpatialRule;
 import org.metacsp.time.APSPSolver;
@@ -107,7 +109,7 @@ public class TestReachabilityOffline2 {
 		simpleHybridPlanner.addMetaConstraint(metaOccupiedConstraint);
 		simpleHybridPlanner.addMetaConstraint(metaSpatialAdherence);
 //		simpleHybridPlanner.addMetaConstraint(metaMoveBaseMangerConstraint);
-//		simpleHybridPlanner.addMetaConstraint(metaInverseReachabilityConstraint);
+		simpleHybridPlanner.addMetaConstraint(metaInverseReachabilityConstraint);
 		
 
 		long timeNow = Calendar.getInstance().getTimeInMillis();
@@ -119,8 +121,6 @@ public class TestReachabilityOffline2 {
 		//visualization
 		ConstraintNetwork.draw(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
 		ConstraintNetwork.draw(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
-
-
 
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>(); 
 		for (String str : ((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
@@ -189,7 +189,7 @@ public class TestReachabilityOffline2 {
 		return sortedMap;
 	}
 
-	private static void setFluentintoNetwork(Vector<Constraint> cons, SpatialFluentSolver grounSpatialFluentSolver, String component, 
+	private static SpatialFluent setFluentintoNetwork(Vector<Constraint> cons, SpatialFluentSolver grounSpatialFluentSolver, String component, 
 			String name, String symbolicDomain, markings mk, long release){
 
 		SpatialFluent sf = (SpatialFluent)grounSpatialFluentSolver.createVariable(component);
@@ -210,6 +210,8 @@ public class TestReachabilityOffline2 {
 			releaseOn.setTo(sf.getActivity());
 			cons.add(releaseOn);                                    
 		}
+		
+		return sf;
 
 	}
 
@@ -224,11 +226,11 @@ public class TestReachabilityOffline2 {
 //		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
 
 		
-        setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_robot1_manipulationArea_cup1_table1", "at_robot1_manipulationArea_cup1_table1()", markings.JUSTIFIED,  -1);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_table1_table1", "at_table1_table1()", markings.JUSTIFIED,  8);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_fork1_table1", "at_fork1_table1()", markings.JUSTIFIED, 8);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_knife1_table1", "at_knife1_table1()", markings.JUSTIFIED,8);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_cup1_table1", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
+        SpatialFluent sf1 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_robot1_manipulationArea_cup1_table1", "at_robot1_manipulationArea_cup1_table1()", markings.JUSTIFIED,  -1);
+        SpatialFluent sf2 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_table1_table1", "at_table1_table1()", markings.JUSTIFIED,  8);
+        SpatialFluent sf3 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_fork1_table1", "at_fork1_table1()", markings.JUSTIFIED, 8);
+        SpatialFluent sf4 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_knife1_table1", "at_knife1_table1()", markings.JUSTIFIED,8);
+        SpatialFluent sf5 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_cup1_table1", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
 
 		//===================================================================================================================
 		//initial State
@@ -260,6 +262,13 @@ public class TestReachabilityOffline2 {
 		durationHolding1.setTo(two1);
 		cons.add(durationHolding1);
 		
+		//add reachability constraint
+		ReachabilityConstraint rc2 = new ReachabilityConstraint(ReachabilityConstraint.Type.baseplacingReachable);
+		rc2.setFrom((ConfigurationVariable)sf5.getConfigurationVariable());
+		rc2.setTo((ConfigurationVariable)sf1.getConfigurationVariable());
+
+		
+
 		
 //		Activity two11 = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
 //		two11.setSymbolicDomain("at_robot1_manipulationArea_cup1_table1()");
@@ -273,7 +282,8 @@ public class TestReachabilityOffline2 {
 //		durationHolding11.setFrom(two11);
 //		durationHolding11.setTo(two11);
 //		cons.add(durationHolding11);
-
+		
+		grounSpatialFluentSolver.getConstraintSolvers()[2].addConstraint(rc2);
 		grounSpatialFluentSolver.getConstraintSolvers()[1].addConstraints(cons.toArray(new Constraint[cons.size()]));
 
 	}
@@ -312,16 +322,16 @@ public class TestReachabilityOffline2 {
 
 
 		SpatialRule r2 = new SpatialRule("cup_table", "knife_table", 
-				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(15, 20)),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds() ))
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(15, 20)) )
 				);
 		srules.add(r2);
 
 
 
 		SpatialRule r3 = new SpatialRule("cup_table", "fork_table", 
-				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(15, 20)),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During , AllenIntervalConstraint.Type.During.getDefaultBounds()))
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During , AllenIntervalConstraint.Type.During.getDefaultBounds()),
+				new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(15, 20)))
 
 				);
 		srules.add(r3);
@@ -333,7 +343,7 @@ public class TestReachabilityOffline2 {
 
 	private static void addOnTableConstraint(Vector<SpatialRule> srules, String str){
 
-		Bounds withinReach_y_lower = new Bounds(5, 20);
+		Bounds withinReach_y_lower = new Bounds(5, APSPSolver.INF);
 		Bounds withinReach_y_upper = new Bounds(5, APSPSolver.INF);
 		Bounds withinReach_x_lower = new Bounds(5, APSPSolver.INF);
 		Bounds withinReach_x_upper = new Bounds(5, APSPSolver.INF);
@@ -382,11 +392,11 @@ public class TestReachabilityOffline2 {
 //		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",80, 86, 11, 33, true);
 //		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
 		
-		//just knife should be replaced due to spatial heuristic
-		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 100, 0, 50, false);
-		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 60, 66, 13, 32, true);
-		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",80, 86, 11, 33, true);
-		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
+//		//just knife should be replaced due to spatial heuristic
+//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 100, 0, 50, false);
+//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 60, 66, 13, 32, true);
+//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",80, 86, 11, 33, true);
+//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
 		
 //		//both fork and knife should be replaced
 //		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 60, 0, 99, false);
@@ -394,6 +404,15 @@ public class TestReachabilityOffline2 {
 //		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",30, 36, 10, 33, true);
 //		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
 
+		
+		//chaneg in referance frame
+		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 250, 200, 300, false);
+		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 233, 234, 240, true);
+		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 233, 214, 220, true);
+		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
+		
+		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 300, false);
+		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 252, 300, 200, 300, false);
 		return recs;
 	}
 
