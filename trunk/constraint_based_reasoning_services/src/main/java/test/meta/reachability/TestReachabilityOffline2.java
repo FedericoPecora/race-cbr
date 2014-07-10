@@ -48,7 +48,7 @@ public class TestReachabilityOffline2 {
 	
 	//there is a reachability meta constraints calculate the real reachable situation
 
-	static int pad = 3;    
+	static int pad = 0;    
 	static long duration = 1000;
 
 	public static void main(String[] args) {
@@ -85,10 +85,7 @@ public class TestReachabilityOffline2 {
 		//#################################################################################################################
 		//add metaMovebaseManagerConstraint
 		MetaMoveBaseManagerConstraint metaMoveBaseMangerConstraint = new MetaMoveBaseManagerConstraint(null, null);
-		//#################################################################################################################
-		//add metaMovebaseManagerConstraint
-		MetaInverseReachabilityConstraint metaInverseReachabilityConstraint = new MetaInverseReachabilityConstraint(null, null);		
-		//#################################################################################################################
+		//#################################################################################################################		
 		//this is spatial general and assetional rule
 		Vector<SpatialRule> srules = new Vector<SpatialRule>();
 		Vector<SpatialAssertionalRelation> saRelations = new Vector<SpatialAssertionalRelation>();
@@ -98,6 +95,10 @@ public class TestReachabilityOffline2 {
 		observation = getAssertionalRule(saRelations);
 		insertCurrentStateCurrentGoal(groundSolver);
 		//#################################################################################################################
+		//add metaMovebaseManagerConstraint
+		MetaInverseReachabilityConstraint metaInverseReachabilityConstraint = new MetaInverseReachabilityConstraint(null, null);
+		metaInverseReachabilityConstraint.setSpatialAssertionalRelations(saRelations);
+		//#################################################################################################################		
 		//add spatial general and assertional rule to MetaSpatialFluentConstraint
 		metaSpatialAdherence.setSpatialRules(srules.toArray(new SpatialRule[srules.size()]));
 		metaSpatialAdherence.setSpatialAssertionalRelations(saRelations);
@@ -108,7 +109,7 @@ public class TestReachabilityOffline2 {
 
 		simpleHybridPlanner.addMetaConstraint(metaOccupiedConstraint);
 		simpleHybridPlanner.addMetaConstraint(metaSpatialAdherence);
-//		simpleHybridPlanner.addMetaConstraint(metaMoveBaseMangerConstraint);
+		simpleHybridPlanner.addMetaConstraint(metaMoveBaseMangerConstraint);
 		simpleHybridPlanner.addMetaConstraint(metaInverseReachabilityConstraint);
 		
 
@@ -292,12 +293,13 @@ public class TestReachabilityOffline2 {
 
 	private static void getSpatialKnowledge(Vector<SpatialRule> srules){
 
-		Bounds knife_size_x = new Bounds(4, 8);
-		Bounds knife_size_y = new Bounds(18, 24);
-		Bounds cup_size_x = new Bounds(4, 7);
-		Bounds cup_size_y = new Bounds(4, 7);
-		Bounds fork_size_x = new Bounds(4, 8);
-		Bounds fork_size_y = new Bounds(18, 24);
+		Bounds knife_size_y = new Bounds(4, 5);
+		Bounds knife_size_x = new Bounds(11, 12);
+		Bounds cup_size_x = new Bounds(10, 10);
+		Bounds cup_size_y = new Bounds(10, 10);
+		Bounds fork_size_y = new Bounds(4, 5);
+		Bounds fork_size_x = new Bounds(11, 12);
+		
 
 
 
@@ -321,17 +323,16 @@ public class TestReachabilityOffline2 {
 
 
 
-		SpatialRule r2 = new SpatialRule("cup_table", "knife_table", 
+		SpatialRule r2 = new SpatialRule("cup_table", "fork_table", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(15, 20)) )
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(10, 15)) )
 				);
 		srules.add(r2);
 
 
-
-		SpatialRule r3 = new SpatialRule("cup_table", "fork_table", 
+		SpatialRule r3 = new SpatialRule("cup_table", "knife_table", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During , AllenIntervalConstraint.Type.During.getDefaultBounds()),
-				new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(15, 20)))
+				new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(10, 15)))
 
 				);
 		srules.add(r3);
@@ -386,33 +387,25 @@ public class TestReachabilityOffline2 {
 	private static HashMap<String, Rectangle> getAssertionalRule(Vector<SpatialAssertionalRelation> saRelations){
 
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
-//		//consistent
-//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 100, 0, 50, false);
-//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 40, 46, 13, 32, true);
-//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",80, 86, 11, 33, true);
-//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
-		
-//		//just knife should be replaced due to spatial heuristic
-//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 100, 0, 50, false);
-//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 60, 66, 13, 32, true);
-//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",80, 86, 11, 33, true);
-//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
-		
-//		//both fork and knife should be replaced
+
+		//		//both fork and knife should be replaced
 //		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 60, 0, 99, false);
 //		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 20, 26, 13, 32, true);
 //		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",30, 36, 10, 33, true);
 //		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
 
-		
-		//chaneg in referance frame
-		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 250, 200, 300, false);
-		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 233, 234, 240, true);
-		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 233, 214, 220, true);
+
+
+		//change in referance frame
+		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false);
+		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 230, 234, true);
+		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 210, 214, true);
 		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
 		
-		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 300, false);
-		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 252, 300, 200, 300, false);
+		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false);
+		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false);
+		
+
 		return recs;
 	}
 
