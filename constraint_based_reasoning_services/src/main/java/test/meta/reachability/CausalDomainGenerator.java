@@ -26,7 +26,7 @@ public class CausalDomainGenerator {
 		String controllable1 = "(Controllable RobotProprioception) #proprioception";
 		String controllable2 = "(Controllable atLocation) #tabletop perception";
 
-		String resource1 = "(Resource arm " + 2 + ")"; 
+		String resource1 = "(Resource arm  2)"; 
 		String resource2 = "(Resource fieldOfView 200)"; 
 		String resource3 = "(Resource robot1 1)"; 
 		String resource4 = "(Resource manArea 1)"; 
@@ -45,7 +45,7 @@ public class CausalDomainGenerator {
 		
 		operator += getAtManipulationAreaOperator(objVar);
 
-//		operator += getMoveToOperator(objVar);
+		operator += getMoveToOperator(objVar);
 
 		operator += getSensingOperator(objVar);
 
@@ -123,10 +123,9 @@ public class CausalDomainGenerator {
 	private static String getMoveToOperator(String[] objVar) {
 		String ret = "";
 
-		for (int i = 0; i < objVar.length; i++) {
-
+		for (int i = 0; i < objVar.length; i++) {			
 			ret +=  "(SimpleOperator " + " \n"+
-					" (Head RobotAction::moveTo_manipulationArea_"+ objVar[i] +"())" +  " \n"+
+					" (Head RobotAction::moveTo_manipulationArea_"+ objVar[i] +"_table1())" + " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					" (RequiredResource robot1(1)) " +  " \n"+
 					")" + "\n" ;
@@ -146,7 +145,7 @@ public class CausalDomainGenerator {
 
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head atLocation::at_robot1_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+
-//					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i] +"())" +  " \n"+
+//					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+
 //					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					" (RequiredResource manArea(1)) " +  " \n"+

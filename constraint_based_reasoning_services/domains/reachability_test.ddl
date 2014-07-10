@@ -1,7 +1,7 @@
 (SimpleDomain TestSimpleHybridPlanningDomain)
 (Controllable RobotProprioception) #proprioception
 (Controllable atLocation) #tabletop perception
-(Resource arm 2)
+(Resource arm  2)
 (Resource fieldOfView 200)
 (Resource robot1 1)
 (Resource manArea 1)
@@ -22,6 +22,21 @@
  (Head atLocation::at_robot1_manipulationArea_fork1_table1()) 
  (Constraint Duration[2000,INF](Head)) 
  (RequiredResource manArea(1))  
+)
+(SimpleOperator  
+ (Head RobotAction::moveTo_manipulationArea_cup1_table1()) 
+ (Constraint Duration[2000,INF](Head)) 
+ (RequiredResource robot1(1))  
+)
+(SimpleOperator  
+ (Head RobotAction::moveTo_manipulationArea_knife1_table1()) 
+ (Constraint Duration[2000,INF](Head)) 
+ (RequiredResource robot1(1))  
+)
+(SimpleOperator  
+ (Head RobotAction::moveTo_manipulationArea_fork1_table1()) 
+ (Constraint Duration[2000,INF](Head)) 
+ (RequiredResource robot1(1))  
 )
 (SimpleOperator  
  (Head RobotSense::sensing_before_placing_cup1_table1()) 
