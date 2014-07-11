@@ -120,8 +120,8 @@ public class TestReachabilityOffline2 {
 
 		//#####################################################################################################################
 		//visualization
-		ConstraintNetwork.draw(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
-		ConstraintNetwork.draw(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
+//		ConstraintNetwork.draw(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
+//		ConstraintNetwork.draw(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
 
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>(); 
 		for (String str : ((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
@@ -136,11 +136,11 @@ public class TestReachabilityOffline2 {
 
 
 		ActivityNetworkSolver actSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
-		TimelinePublisher tp = new TimelinePublisher(actSolver, new Bounds(0,100), "RobotAction","RobotProprioception", "atLocation");
-		TimelineVisualizer viz = new TimelineVisualizer(tp);
-		tp.publish(false, false);
-		tp.publish(false, true);
-		tp.publish(true, false);
+//		TimelinePublisher tp = new TimelinePublisher(actSolver, new Bounds(0,100), "RobotAction","RobotProprioception", "atLocation");
+//		TimelineVisualizer viz = new TimelineVisualizer(tp);
+//		tp.publish(false, false);
+//		tp.publish(false, true);
+//		tp.publish(true, false);
 		//#####################################################################################################################
 		//sort Activity based on the start time for debugging purpose
 		HashMap<Activity, Long> starttimes = new HashMap<Activity, Long>();
