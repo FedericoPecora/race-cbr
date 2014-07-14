@@ -43,6 +43,8 @@ public class CausalDomainGenerator {
 
 //		operator += getSwapArms(objVar);
 		
+		operator += getAskHumanOperator(objVar);
+		
 		operator += getAtManipulationAreaOperator(objVar);
 
 		operator += getMoveToOperator(objVar);
@@ -68,6 +70,26 @@ public class CausalDomainGenerator {
 		}
 
 
+	}
+
+
+
+	private static String getAskHumanOperator(String[] objVar) {
+		
+		String ret = "";
+
+		for (int i = 0; i < objVar.length; i++) {
+
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head RobotAction::ask_human_to_reachable_"+ objVar[i] +"_table1())" +  " \n"+
+//					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+//					" (RequiredResource robot1(1)) " +  " \n"+
+//					" (RequiredResource fieldOfView(200))" +  " \n"+
+					")" + "\n" ;
+
+		}
+		return ret;
+				
 	}
 
 

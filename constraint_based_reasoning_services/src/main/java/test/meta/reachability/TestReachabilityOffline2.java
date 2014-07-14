@@ -52,8 +52,7 @@ public class TestReachabilityOffline2 {
 	static long duration = 1000;
 
 	public static void main(String[] args) {
-
-
+	
 		SimpleHybridPlanner simpleHybridPlanner = new SimpleHybridPlanner(0, 100000, 0);
 
 
@@ -106,11 +105,12 @@ public class TestReachabilityOffline2 {
 
 
 		//add meta constraint
-
 		simpleHybridPlanner.addMetaConstraint(metaOccupiedConstraint);
 		simpleHybridPlanner.addMetaConstraint(metaSpatialAdherence);
 		simpleHybridPlanner.addMetaConstraint(metaMoveBaseMangerConstraint);
 		simpleHybridPlanner.addMetaConstraint(metaInverseReachabilityConstraint);
+		
+		
 		
 
 		long timeNow = Calendar.getInstance().getTimeInMillis();
@@ -123,16 +123,16 @@ public class TestReachabilityOffline2 {
 //		ConstraintNetwork.draw(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
 //		ConstraintNetwork.draw(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
 
-		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>(); 
-		for (String str : ((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
-				.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().keySet()) {
-			if(str.endsWith("1")){
-				System.out.println(str + " --> " +((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
-						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
-				recs.put( str,((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
-						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
-			}
-		}               
+//		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>(); 
+//		for (String str : ((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
+//				.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().keySet()) {
+//			if(str.endsWith("1")){
+//				System.out.println(str + " --> " +((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
+//						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
+//				recs.put( str,((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
+//						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
+//			}
+//		}               
 
 
 		ActivityNetworkSolver actSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
@@ -159,6 +159,7 @@ public class TestReachabilityOffline2 {
 		for (int i = 0; i < ((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getVariables().length; i++) {
 			System.out.println(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getVariables()[i]);
 		}
+
 	}
 
 	private static LinkedHashMap sortHashMapByValuesD(HashMap passedMap) {
@@ -396,16 +397,36 @@ public class TestReachabilityOffline2 {
 
 
 
-		//change in referance frame
+//		//change in referance frame
+//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false);
+//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 230, 234, true);
+//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 210, 214, true);
+//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
+//		
+//		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false);
+//		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false);
+		
+
+//		//Ask for pick up fork with min and max 25-30
+//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false);
+//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 234, 240, true);
+//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 222, 226, true);
+//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
+//		
+//		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false);
+//		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false);
+
+		
+		//Ask for pick up fork with min and max 25-30
 		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false);
-		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 230, 234, true);
-		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 210, 214, true);
+		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 238, 242, true);
+		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 214, 218, true);
 		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
 		
 		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false);
 		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false);
 		
-
+		
 		return recs;
 	}
 

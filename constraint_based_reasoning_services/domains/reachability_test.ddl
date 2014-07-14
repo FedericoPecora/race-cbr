@@ -9,6 +9,15 @@
 (Resource arm2 1)
 
 (SimpleOperator  
+ (Head RobotAction::ask_human_to_reachable_cup1_table1()) 
+)
+(SimpleOperator  
+ (Head RobotAction::ask_human_to_reachable_knife1_table1()) 
+)
+(SimpleOperator  
+ (Head RobotAction::ask_human_to_reachable_fork1_table1()) 
+)
+(SimpleOperator  
  (Head atLocation::at_robot1_manipulationArea_cup1_table1()) 
  (Constraint Duration[2000,INF](Head)) 
  (RequiredResource manArea(1))  
