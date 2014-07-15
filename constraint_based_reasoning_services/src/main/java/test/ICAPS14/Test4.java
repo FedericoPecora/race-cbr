@@ -51,7 +51,7 @@ public class Test4 {
 	//missplaced: 3
 	//variance: 1 , 2, 3 arms
 	//Initial situation: Holding
-	static int arm_resources = 5;
+	static int arm_resources = 2;
 	static int pad = 0;
 	
 	static long duration = 5;
@@ -79,8 +79,8 @@ public class Test4 {
 		SpatialSchedulable metaSpatialSchedulable = new SpatialSchedulable(varOH, valOH);
 		SpatialFluentSolver groundSolver = (SpatialFluentSolver)metaSpatioCasualSolver.getConstraintSolvers()[0];
 		
-		MetaCSPLogging.setLevel(MetaSpatialScheduler.class, Level.FINEST);
-		MetaCSPLogging.setLevel(SpatialSchedulable.class, Level.FINEST);
+//		MetaCSPLogging.setLevel(MetaSpatialScheduler.class, Level.FINEST);
+//		MetaCSPLogging.setLevel(SpatialSchedulable.class, Level.FINEST);
 		//#################################################################################################################
 		//add metaOccupiedConstraint
 		MetaOccupiedConstraint metaOccupiedConstraint = new MetaOccupiedConstraint(null, null);
@@ -603,17 +603,17 @@ public class Test4 {
 //		insertAtConstraint(recs, saRelations, "book", 98, 108, 57, 67, true); //true
 		insertAtConstraint(recs, saRelations, "book", 45, 55, 20, 30, true); //false
 //		insertAtConstraint(recs, saRelations, "keyboard", 50, 90, 35, 55, true); //false not overlapped with cup
-		insertAtConstraint(recs, saRelations, "keyboard", 56, 106, 20, 40, true); //false overlapped with cup
-//		insertAtConstraint(recs, saRelations, "keyboard", 27, 67, 45, 65, true); //true
+//		insertAtConstraint(recs, saRelations, "keyboard", 56, 106, 20, 40, true); //false overlapped with cup
+		insertAtConstraint(recs, saRelations, "keyboard", 27, 67, 45, 65, true); //true
 
 		
 		insertAtConstraint(recs, saRelations, "pen", 6, 7, 20, 38, true); //false
-//		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); ////false 15 20		
+		insertAtConstraint(recs, saRelations, "notebook", 100, 115, 60, 80, true); ////false 15 20		
 		insertAtConstraint(recs, saRelations, "penHolder", 9, 19, 74, 79, true); //false //10, 5
 		
 		
 //		insertAtConstraint(recs, saRelations, "pen", 28, 29, 22, 40, true); //true
-		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); //true
+//		insertAtConstraint(recs, saRelations, "notebook", 9, 24, 21, 41, true); //true
 //		insertAtConstraint(recs, saRelations, "penHolder", 93, 103, 68, 73, true); //true
 		
 		return recs;
