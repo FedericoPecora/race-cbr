@@ -359,7 +359,7 @@ public class TestReachabilityOffline2 {
 	}
 
 	private static void insertAtConstraint(HashMap<String, Rectangle> recs, Vector<SpatialAssertionalRelation> saRelations, 
-			String fluentId, String catg,long xl, long xu, long yl, long yu, boolean movable){
+			String fluentId, String catg,long xl, long xu, long yl, long yu, boolean movable, boolean obstacle){
 
 		if(xl == 0 && xu == 0 && yl == 0 && yu == 0){
 			SpatialAssertionalRelation table_assertion = new SpatialAssertionalRelation(fluentId, catg);
@@ -367,6 +367,7 @@ public class TestReachabilityOffline2 {
 					new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF), new Bounds(0, APSPSolver.INF)));
 			OntologicalSpatialProperty tableOnto = new OntologicalSpatialProperty();
 			tableOnto.setMovable(movable);
+			tableOnto.setObstacle(obstacle);
 			table_assertion.setOntologicalProp(tableOnto);
 			saRelations.add(table_assertion);                       
 
@@ -377,6 +378,7 @@ public class TestReachabilityOffline2 {
 					new Bounds(xl, xl), new Bounds(xu, xu), new Bounds(yl, yl), new Bounds(yu, yu)));
 			OntologicalSpatialProperty tableOnto = new OntologicalSpatialProperty();
 			tableOnto.setMovable(movable);
+			tableOnto.setObstacle(obstacle);
 			table_assertion.setOntologicalProp(tableOnto);
 			saRelations.add(table_assertion);
 			recs.put(fluentId, new Rectangle((int)(xl), (int)(yl), (int)(xu - xl), (int)(yu - yl)));
@@ -389,42 +391,39 @@ public class TestReachabilityOffline2 {
 
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
 
-		//		//both fork and knife should be replaced
-//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 60, 0, 99, false);
-//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 20, 26, 13, 32, true);
-//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",30, 36, 10, 33, true);
-//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
 
-
-
-//		//change in referance frame
-//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false);
-//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 230, 234, true);
-//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 210, 214, true);
-//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
+		//change in referance frame min and max 30-35
+		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false, false);
+		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 230, 234, true, false);
+		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 210, 214, true, false);
+		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true, false);
+		
+		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false, true);
+		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false, true);
+		
+		
+//		//both fork and knife has to re-placed - min and max 30-35
+//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false, false);
+//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 210, 214, true, false);
+//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 230, 234, true, false);
+//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true, false);
 //		
-//		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false);
-//		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false);
+//		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false, true);
+//		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false, true);
+		
+		
+//		//Ask for pick up fork with min and max 25-30 , 30 and 30
+//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false, false);
+//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 234, 240, true, false);
+//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 222, 226, true, false);
+//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true, false);
+//
+//		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 220, 250, false, true);
+//		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 220, 250, false, true);
+
+
 		
 
-//		//Ask for pick up fork with min and max 25-30
-//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false);
-//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 234, 240, true);
-//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 222, 226, true);
-//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
-//		
-//		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false);
-//		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false);
-
-		
-		//Ask for pick up fork with min and max 25-30
-		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false);
-		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 238, 242, true);
-		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 214, 218, true);
-		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true);
-		
-		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false);
-		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false);
 		
 		
 		return recs;

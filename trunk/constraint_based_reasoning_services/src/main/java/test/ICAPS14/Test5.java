@@ -51,7 +51,7 @@ public class Test5 {
 	//missplaced: 5
 	//variance: 1 , 2, 3 arms
 	//Initial situation: Holding
-	static int arm_resources = 5;
+	static int arm_resources = 2;
 	static int pad = 0;
 	
 	static long duration = 5;

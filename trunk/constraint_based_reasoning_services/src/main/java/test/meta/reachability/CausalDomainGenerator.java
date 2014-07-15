@@ -82,9 +82,9 @@ public class CausalDomainGenerator {
 
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head RobotAction::ask_human_to_reachable_"+ objVar[i] +"_table1())" +  " \n"+
-//					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-//					" (RequiredResource robot1(1)) " +  " \n"+
-//					" (RequiredResource fieldOfView(200))" +  " \n"+
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					" (RequiredResource robot1(1)) " +  " \n"+
+					" (RequiredResource fieldOfView(200))" +  " \n"+
 					")" + "\n" ;
 
 		}
@@ -162,9 +162,7 @@ public class CausalDomainGenerator {
 	private static String getAtManipulationAreaOperator(String[] objVar) {
 
 		String ret = "";
-
 		for (int i = 0; i < objVar.length; i++) {
-
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head atLocation::at_robot1_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+
 //					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+
@@ -174,7 +172,6 @@ public class CausalDomainGenerator {
 					")" + "\n" ;
 
 		}
-
 		return ret;
 	}
 
@@ -183,9 +180,7 @@ public class CausalDomainGenerator {
 	private static String getSensingOperator(String[] objVar) {
 
 		String ret = "";
-
 		for (int i = 0; i < objVar.length; i++) {
-
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head RobotSense::sensing_before_placing_"+ objVar[i] +"_table1())" +  " \n"+
 					" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+

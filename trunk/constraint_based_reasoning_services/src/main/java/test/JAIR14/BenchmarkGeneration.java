@@ -59,7 +59,7 @@ public class BenchmarkGeneration {
 	
 	
 	static int totalExp  = 1000;
-	static int armsCounter = 4;
+	static int armsCounter = 2;
 	static String PATH = "/home/iran/Desktop/benchmark/testCase12/coordinateGenerator/";
 	static String PATH_INIT_PLOT = "/home/iran/Desktop/benchmark/testCase12/PLOT_INIT/";
 	static String PATH_FINAL_PLOT = "/home/iran/Desktop/benchmark/testCase12/PLOT_FINAL/";
@@ -72,8 +72,8 @@ public class BenchmarkGeneration {
 	public static void main(String[] args) {
 		
 		
-		for (int ii = 0; ii < totalExp; ii++) {
-			for (int arm_resources = 1; arm_resources <= armsCounter; arm_resources++) {
+		for (int ii = 96; ii < totalExp; ii++) {
+			for (int arm_resources = 2; arm_resources <= armsCounter; arm_resources++) {
 				
 				SimpleHybridPlanner simpleHybridPlanner = new SimpleHybridPlanner(0, 100000, 0);
 
