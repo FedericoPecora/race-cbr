@@ -43,10 +43,13 @@ import org.metacsp.utility.logging.MetaCSPLogging;
 import org.metacsp.utility.timelinePlotting.TimelinePublisher;
 import org.metacsp.utility.timelinePlotting.TimelineVisualizer;
 
+import spatial.utility.SpatialRule2;
 
-public class TestReachabilityOffline2 {
+
+public class TestReachabilityOffline3 {
 	
-	//there is a reachability meta constraints calculate the real reachable situation
+	//here is an example of both fork and knife has to moved
+
 
 	static int pad = 0;    
 	static long duration = 1000;
@@ -56,7 +59,7 @@ public class TestReachabilityOffline2 {
 		SimpleHybridPlanner simpleHybridPlanner = new SimpleHybridPlanner(0, 100000, 0);
 
 
-		FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/reachability_test_cutlary.ddl", FluentBasedSimpleDomain.class); //did not terminate
+		FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/reachability_test_desk.ddl", FluentBasedSimpleDomain.class); //did not terminate
 		
 		//Most critical conflict is the one with most activities 
 		VariableOrderingH varOH = new VariableOrderingH() {
@@ -221,19 +224,26 @@ public class TestReachabilityOffline2 {
 
 		Vector<Constraint> cons = new Vector<Constraint>();
 
+//        SpatialFluent sf1 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_robot1_manipulationArea_cup1_table1", "at_robot1_manipulationArea_cup1_table1()", markings.JUSTIFIED,  -1);
+//        SpatialFluent sf2 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_table1_table1", "at_table1_table1()", markings.JUSTIFIED,  8);
+//        SpatialFluent sf3 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_fork1_table1", "at_fork1_table1()", markings.JUSTIFIED, 8);
+//        SpatialFluent sf4 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_knife1_table1", "at_knife1_table1()", markings.JUSTIFIED,8);
+//        SpatialFluent sf5 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_cup1_table1", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
 
-//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "table1", "at_robot1_table1()", markings.JUSTIFIED,  8);
-//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "fork1", "at_fork1_table1()", markings.JUSTIFIED, 8);
-//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "knife1", "at_knife1_table1()", markings.JUSTIFIED,8);
-//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "cup1", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
-
-		
         SpatialFluent sf1 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_robot1_manipulationArea_cup1_table1", "at_robot1_manipulationArea_cup1_table1()", markings.JUSTIFIED,  -1);
-        SpatialFluent sf2 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_table1_table1", "at_table1_table1()", markings.JUSTIFIED,  8);
-        SpatialFluent sf3 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_fork1_table1", "at_fork1_table1()", markings.JUSTIFIED, 8);
-        SpatialFluent sf4 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_knife1_table1", "at_knife1_table1()", markings.JUSTIFIED,8);
-        SpatialFluent sf5 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_cup1_table1", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
-
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_table1_table1", "at_table1_table1()", markings.JUSTIFIED,  8);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_book1_table1", "at_book1_table1()", markings.JUSTIFIED, 8);
+		SpatialFluent sf5 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_cup1_table1", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
+		
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_monitor1_table1", "at_monitor1_table1()", markings.JUSTIFIED, 8);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_keyboard1_table1", "at_keyboard1_table1()", markings.JUSTIFIED,  8);		
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_pen1_table1", "at_pen1_table1()", markings.JUSTIFIED,  8);		
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_notebook1_table1", "at_notebook1_table1()", markings.JUSTIFIED, 8);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_penHolder1_table1", "at_penHolder1_table1()", markings.JUSTIFIED, 8);
+        
+        
+        
+        
 		//===================================================================================================================
 		//initial State
 		//===================================================================================================================
@@ -294,53 +304,74 @@ public class TestReachabilityOffline2 {
 
 	private static void getSpatialKnowledge(Vector<SpatialRule> srules){
 
-		Bounds knife_size_y = new Bounds(4, 5);
-		Bounds knife_size_x = new Bounds(11, 12);
-		Bounds cup_size_x = new Bounds(10, 10);
-		Bounds cup_size_y = new Bounds(10, 10);
-		Bounds fork_size_y = new Bounds(4, 5);
-		Bounds fork_size_x = new Bounds(11, 12);
+		//Size part
+		//addSizeConstraint(srules, "table_table", 120, 120);
+		addSizeConstraint(srules, "book_table", 10, 10);		
+		addSizeConstraint(srules, "monitor_table", 45, 15);
+		addSizeConstraint(srules, "keyboard_table", 40, 20);
+		addSizeConstraint(srules, "notebook_table",15, 20);
+		addSizeConstraint(srules, "cup_table", 5, 5);
+		addSizeConstraint(srules, "pen_table", 1, 18);		
+		addSizeConstraint(srules, "penHolder_table", 10, 5);
+
+
 		
 
+		//Every thing should be on the table		
+		addOnTableConstraint(srules, "monitor1_table1");
+		addOnTableConstraint(srules, "keyboard1_table1");
+		addOnTableConstraint(srules, "notebook1_table1");
+		addOnTableConstraint(srules, "pen1_table1");
+		addOnTableConstraint(srules, "book1_table1");
+		addOnTableConstraint(srules, "cup1_table1");
+		addOnTableConstraint(srules, "penHolder1_table1");
 
+		SpatialRule pen_notebook = new SpatialRule("pen_table", "notebook_table", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(3,5)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds() ))
+				);
+		srules.add(pen_notebook);
 
-		SpatialRule r7 = new SpatialRule("knife_table", "knife_table", 
-				new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.Size, knife_size_x, knife_size_y));
-		srules.add(r7);
-
-		SpatialRule r8 = new SpatialRule("cup_table", "cup_table", 
-				new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.Size, cup_size_x, cup_size_y));
-		srules.add(r8);
-
-		SpatialRule r9 = new SpatialRule("fork_table", "fork_table", 
-				new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.Size, fork_size_x, fork_size_y));
-		srules.add(r9);
-
-
-		//Every thing should be on the table            
-		addOnTableConstraint(srules, "fork_table");
-		addOnTableConstraint(srules, "knife_table");
-		addOnTableConstraint(srules, "cup_table");
-
-
-
-		SpatialRule r2 = new SpatialRule("cup_table", "fork_table", 
+		SpatialRule notebook_keyboard = new SpatialRule("notebook_table", "keyboard_table", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
+				);
+		srules.add(notebook_keyboard);
+		
+		SpatialRule keyboard_monitor = new SpatialRule("keyboard_table", "monitor_table", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds()),
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, new Bounds(10, 15)) )
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
 				);
-		srules.add(r2);
+		srules.add(keyboard_monitor);
 
-
-		SpatialRule r3 = new SpatialRule("cup_table", "knife_table", 
-				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.During , AllenIntervalConstraint.Type.During.getDefaultBounds()),
-				new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(10, 15)))
-
+		SpatialRule cup_keyboard= new SpatialRule("cup_table", "keyboard_table", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
 				);
-		srules.add(r3);
+		srules.add(cup_keyboard);
+		
+		SpatialRule cup_book= new SpatialRule("cup_table", "book_table", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Before.getDefaultBounds() ))
+				);
+		srules.add(cup_book);
+		
 
+		SpatialRule penHolder_book= new SpatialRule("penHolder_table", "book_table", 
+				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Overlaps, AllenIntervalConstraint.Type.Overlaps.getDefaultBounds()),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, AllenIntervalConstraint.Type.After.getDefaultBounds() ))
+				);
+		srules.add(penHolder_book);
 
 	}
 
+	private static void addSizeConstraint(Vector<SpatialRule> srules, String str, long size_x, long size_y){
+		
+		SpatialRule sizeCon = new SpatialRule(str, str, 
+				new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.Size, new Bounds(size_x, size_x), new Bounds(size_y, size_y)));
+		srules.add(sizeCon);
+		
+	}
 
 
 	private static void addOnTableConstraint(Vector<SpatialRule> srules, String str){
@@ -393,36 +424,26 @@ public class TestReachabilityOffline2 {
 
 
 		//change in referance frame min and max 30-35
-		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false, false);
-		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 230, 234, true, false);
-		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 210, 214, true, false);
+		
+		
+//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 120, 0, 120, false, false);
+//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true, false);
+//		insertAtConstraint(recs, saRelations, "at_monitor1_table1","monitor_table" , 25, 70, 80, 95, false,false);
+//		insertAtConstraint(recs, saRelations, "at_book1_table1", "book_table", 45, 55, 20, 30, true, false); //false
+//		insertAtConstraint(recs, saRelations, "at_keyboard1_table1", "keyboard_table", 27, 67, 45, 65, true, false); //true
+//		insertAtConstraint(recs, saRelations, "at_pen1_table1", "pen_table",6, 7, 20, 38, true, false); //false
+//		insertAtConstraint(recs, saRelations, "at_notebook1_table1", "notebook_table", 100, 115, 60, 80, true, false); ////false 15 20		
+//		insertAtConstraint(recs, saRelations, "at_penHolder1_table1", "penHolder_table",9, 19, 74, 79, true, false); //false //10, 5
+		
+		
+		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 220, 0, 220, false, false);
 		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true, false);
-		
-		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false, true);
-		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false, true);
-		
-		
-//		//both fork and knife has to re-placed - min and max 30-35
-//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false, false);
-//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 210, 214, true, false);
-//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 230, 234, true, false);
-//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true, false);
-//		
-//		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false, true);
-//		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false, true);
-		
-		
-//		//Ask for pick up fork with min and max 25-30 , 30 and 30
-//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false, false);
-//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 234, 240, true, false);
-//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 222, 226, true, false);
-//		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true, false);
-//
-//		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 220, 250, false, true);
-//		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 220, 250, false, true);
-
-
-		
+		insertAtConstraint(recs, saRelations, "at_monitor1_table1","monitor_table" , 125, 170, 180, 195, false,false);
+		insertAtConstraint(recs, saRelations, "at_book1_table1", "book_table", 145, 155, 120, 130, true, false); //false
+		insertAtConstraint(recs, saRelations, "at_keyboard1_table1", "keyboard_table", 127, 167, 145, 165, true, false); //true
+		insertAtConstraint(recs, saRelations, "at_pen1_table1", "pen_table",16, 17, 120, 138, true, false); //false
+		insertAtConstraint(recs, saRelations, "at_notebook1_table1", "notebook_table", 200, 215, 160,180, true, false); ////false 15 20		
+		insertAtConstraint(recs, saRelations, "at_penHolder1_table1", "penHolder_table",19, 119, 174, 179, true, false); //false //10, 5
 
 		
 		
