@@ -17,8 +17,8 @@ public class CausalDomainGenerator {
 
 	public static void main(String[] args) {
 
-		String[] objVar = new String[]{"cup1", "knife1", "fork1"};
-
+//		String[] objVar = new String[]{"cup1", "knife1", "fork1"};
+		String[] objVar = new String[]{"cup1", "book1", "monitor1", "keyboard1", "pen1", "notebook1", "penHolder1"};
 
 		//		String[] objVar = new String[]{"cup1", "knife1", "fork1"};
 
@@ -34,6 +34,7 @@ public class CausalDomainGenerator {
 		String resource5 = "(Resource arm1 1)"; 
 		String resource6 = "(Resource arm2 1)"; 
 
+		
 		//writ in PATH + armReources +ddl
 
 		BufferedWriter causalDomain = null;
@@ -45,22 +46,19 @@ public class CausalDomainGenerator {
 		
 		operator += getAskHumanOperator(objVar);
 		
-		operator += getAtManipulationAreaOperator(objVar);
-
 		operator += getMoveToOperator(objVar);
 
 		operator += getSensingOperator(objVar);
 
 		operator += getPickAndPlaceOperator(objVar);
-		//operator += getPickAndPlaceOperatorWithUnifiedArms(objVar);
-		
-
+		//operator += getPickAndPlaceOperatorWithUnifiedArms(objVar);		
+		operator += getAtManipulationAreaOperator(objVar);
 
 		System.out.println(operator);
 
 		try{
 
-			causalDomain = new BufferedWriter(new FileWriter(PATH +"_test"+".ddl", false));
+			causalDomain = new BufferedWriter(new FileWriter(PATH +"_test_desk"+".ddl", false));
 			causalDomain.write(operator);
 			causalDomain.newLine();
 			causalDomain.flush();
@@ -100,7 +98,7 @@ public class CausalDomainGenerator {
 		for (int i = 0; i < objVar.length; i++) {
 
 			ret +=  "(SimpleOperator " + " \n"+
-					" (Head RobotProprioception::holding_"+ "_arm1_"+ objVar[i] +"())" +  " \n"+
+					" (Head RobotProprioception::holding"+ "_arm1_"+ objVar[i] +"())" +  " \n"+
 					" (RequiredState req1 RobotAction::swap_"+ objVar[i]+ "_arm2_"+ "between" +"_arm1"+"())" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
@@ -109,7 +107,7 @@ public class CausalDomainGenerator {
 					")" + "\n" ;
 
 			ret +=  "(SimpleOperator " + " \n"+
-					" (Head RobotProprioception::holding_"+ "_arm2_"+ objVar[i] +"())" +  " \n"+
+					" (Head RobotProprioception::holding"+ "_arm2_"+ objVar[i] +"())" +  " \n"+
 					" (RequiredState req1 RobotAction::swap_"+ objVar[i]+ "_arm1_"+ "between" +"_arm2" +"())"+  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
@@ -120,7 +118,7 @@ public class CausalDomainGenerator {
 			
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head RobotAction::swap_"+ objVar[i]+ "_arm2_"+ "between" +"_arm1" +"())"+  " \n"+
-					" (RequiredState req1 RobotProprioception::holding_"+ "_arm2_"+ objVar[i] +"())" +   " \n"+
+					" (RequiredState req1 RobotProprioception::holding"+ "_arm2_"+ objVar[i] +"())" +   " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					" (RequiredResource arm(2))" +  " \n"+
@@ -128,7 +126,7 @@ public class CausalDomainGenerator {
 
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head RobotAction::swap_"+ objVar[i]+ "_arm1_"+ "between" +"_arm2" +"())"+  " \n"+
-					" (RequiredState req1 RobotProprioception::holding_"+ "_arm1_"+ objVar[i] +"())" +   " \n"+
+					" (RequiredState req1 RobotProprioception::holding"+ "_arm1_"+ objVar[i] +"())" +   " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					" (RequiredResource arm(2))" +  " \n"+
@@ -184,8 +182,6 @@ public class CausalDomainGenerator {
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head RobotSense::sensing_before_placing_"+ objVar[i] +"_table1())" +  " \n"+
 					" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
-					//" (RequiredState req2 atLocation::at_robot1_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+
-					//" (Constraint During(Head,req2))" +  " \n"+
 					" (Constraint During(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					" (RequiredResource fieldOfView(200)) " +  " \n"+
@@ -195,8 +191,6 @@ public class CausalDomainGenerator {
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head RobotSense::sensing_before_picking_"+ objVar[i] +"_table1())" +  " \n"+
 					" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
-					//" (RequiredState req2 atLocation::at_robot1_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+
-					//" (Constraint During(Head,req2))" +  " \n"+
 					" (Constraint During(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					" (RequiredResource fieldOfView(200)) " +  " \n"+
@@ -261,7 +255,7 @@ public class CausalDomainGenerator {
 
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head RobotAction::place_"+ objVar[i]+ "_arm1_" +"_table1())" +  " \n"+
-					" (RequiredState req1 RobotProprioception::holding_"+ "_arm1_"+ objVar[i] +"())" +  " \n"+
+					" (RequiredState req1 RobotProprioception::holding"+ "_arm1_"+ objVar[i] +"())" +  " \n"+
 					" (RequiredState req2 RobotSense::sensing_before_placing_"+ objVar[i] +"_table1())" +  " \n"+
 					" (RequiredState req3 atLocation::at_robot1_table1())" +  " \n"+
 					" (RequiredState req4 atLocation::at_robot1_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+
@@ -280,7 +274,7 @@ public class CausalDomainGenerator {
 
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head RobotAction::place_"+ objVar[i]+ "_arm2_" +"_table1())" +  " \n"+
-					" (RequiredState req1 RobotProprioception::holding_"+ "_arm2_"+ objVar[i] +"())" +  " \n"+
+					" (RequiredState req1 RobotProprioception::holding"+ "_arm2_"+ objVar[i] +"())" +  " \n"+
 					" (RequiredState req2 RobotSense::sensing_before_placing_"+ objVar[i] +"_table1())" +  " \n"+
 					" (RequiredState req3 atLocation::at_robot1_table1())" +  " \n"+
 					" (RequiredState req4 atLocation::at_robot1_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+
@@ -297,7 +291,7 @@ public class CausalDomainGenerator {
 					")" + "\n" ;
 
 			ret +=  "(SimpleOperator " + " \n"+
-					" (Head RobotProprioception::holding_"+ "_arm1_"+ objVar[i] +"())" +  " \n"+
+					" (Head RobotProprioception::holding"+ "_arm1_"+ objVar[i] +"())" +  " \n"+
 					" (RequiredState req1 RobotAction::pick_"+ objVar[i]+ "_arm1_" +"_table1())" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
@@ -306,7 +300,7 @@ public class CausalDomainGenerator {
 					")" + "\n" ;
 
 			ret +=  "(SimpleOperator " + " \n"+
-					" (Head RobotProprioception::holding_"+ "_arm2_" + objVar[i] +"())" +  " \n"+
+					" (Head RobotProprioception::holding"+ "_arm2_" + objVar[i] +"())" +  " \n"+
 					" (RequiredState req1 RobotAction::pick_"+ objVar[i]+ "_arm2_" +"_table1())" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
@@ -394,7 +388,7 @@ public class CausalDomainGenerator {
 //					")" + "\n" ;
 //
 //			ret +=  "(SimpleOperator " + " \n"+
-//					" (Head RobotProprioception::holding_"+ "_arm1_"+ objVar[i] +"())" +  " \n"+
+//					" (Head RobotProprioception::holding"+ "_arm1_"+ objVar[i] +"())" +  " \n"+
 //					" (RequiredState req1 RobotAction::pick_"+ objVar[i]+ "_arm1_" +"_tray1())" +  " \n"+
 //					" (Constraint MetBy(Head,req1))" +  " \n"+
 //					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
@@ -403,7 +397,7 @@ public class CausalDomainGenerator {
 //					")" + "\n" ;
 //
 //			ret +=  "(SimpleOperator " + " \n"+
-//					" (Head RobotProprioception::holding_"+ "_arm2_" + objVar[i] +"())" +  " \n"+
+//					" (Head RobotProprioception::holding"+ "_arm2_" + objVar[i] +"())" +  " \n"+
 //					" (RequiredState req1 RobotAction::pick_"+ objVar[i]+ "_arm2_" +"_tray1())" +  " \n"+
 //					" (Constraint MetBy(Head,req1))" +  " \n"+
 //					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
@@ -413,7 +407,7 @@ public class CausalDomainGenerator {
 //
 //			ret +=  "(SimpleOperator " + " \n"+
 //					" (Head RobotAction::place_"+ objVar[i]+ "_arm1_" +"_tray1())" +  " \n"+
-//					" (RequiredState req1 RobotProprioception::holding_"+ "_arm1_"+ objVar[i] +"())" +  " \n"+
+//					" (RequiredState req1 RobotProprioception::holding"+ "_arm1_"+ objVar[i] +"())" +  " \n"+
 //					" (RequiredState req2 RobotSense::sensing_before_placing_"+ objVar[i] +"_tray1())" +  " \n"+
 //					" (RequiredState req3 atLocation::at_robot1_table1())" +  " \n"+
 //					" (Constraint During(Head,req3))" +  " \n"+
@@ -427,7 +421,7 @@ public class CausalDomainGenerator {
 //
 //			ret +=  "(SimpleOperator " + " \n"+
 //					" (Head RobotAction::place_"+ objVar[i]+ "_arm2_" +"_tray1())" +  " \n"+
-//					" (RequiredState req1 RobotProprioception::holding_"+ "_arm2_" + objVar[i] +"())" +  " \n"+
+//					" (RequiredState req1 RobotProprioception::holding"+ "_arm2_" + objVar[i] +"())" +  " \n"+
 //					" (RequiredState req2 RobotSense::sensing_before_placing_"+ objVar[i] +"_tray1())" +  " \n"+
 //					" (RequiredState req3 atLocation::at_robot1_table1())" +  " \n"+
 //					" (Constraint During(Head,req3))" +  " \n"+
