@@ -163,8 +163,8 @@ public class CausalDomainGenerator {
 		for (int i = 0; i < objVar.length; i++) {
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head atLocation::at_robot1_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+
-//					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+
-//					" (Constraint MetBy(Head,req1))" +  " \n"+
+//					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+ //HAS TO BE COMNTED 
+//					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					" (RequiredResource manArea(1)) " +  " \n"+
 					")" + "\n" ;

@@ -95,6 +95,7 @@ public class TestReachabilityOffline3 {
 
 		getSpatialKnowledge(srules);
 		observation = getAssertionalRule(saRelations);
+		simpleHybridPlanner.addObservation(observation);
 		insertCurrentStateCurrentGoal(groundSolver);
 		//#################################################################################################################
 		//add metaMovebaseManagerConstraint
@@ -110,8 +111,8 @@ public class TestReachabilityOffline3 {
 		//add meta constraint
 		simpleHybridPlanner.addMetaConstraint(metaOccupiedConstraint);
 		simpleHybridPlanner.addMetaConstraint(metaSpatialAdherence);
-		simpleHybridPlanner.addMetaConstraint(metaMoveBaseMangerConstraint);
 		simpleHybridPlanner.addMetaConstraint(metaInverseReachabilityConstraint);
+		simpleHybridPlanner.addMetaConstraint(metaMoveBaseMangerConstraint);
 		
 		
 		
@@ -126,16 +127,16 @@ public class TestReachabilityOffline3 {
 //		ConstraintNetwork.draw(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[0].getConstraintNetwork(), "RA Constraint Network");
 //		ConstraintNetwork.draw(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[1].getConstraintNetwork(), "Activity Constraint Network");
 
-//		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>(); 
-//		for (String str : ((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
-//				.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().keySet()) {
-//			if(str.endsWith("1")){
-//				System.out.println(str + " --> " +((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
-//						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
-//				recs.put( str,((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
-//						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
-//			}
-//		}               
+		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>(); 
+		for (String str : ((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
+				.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().keySet()) {
+			if(str.endsWith("1")){
+				System.out.println(str + " --> " +((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
+						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
+				recs.put( str,((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0])
+						.getConstraintSolvers()[0]).extractAllBoundingBoxesFromSTPs().get(str).getAlmostCentreRectangle());
+			}
+		}               
 
 
 		ActivityNetworkSolver actSolver = ((ActivityNetworkSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[1]);
@@ -318,13 +319,13 @@ public class TestReachabilityOffline3 {
 		
 
 		//Every thing should be on the table		
-		addOnTableConstraint(srules, "monitor1_table1");
-		addOnTableConstraint(srules, "keyboard1_table1");
-		addOnTableConstraint(srules, "notebook1_table1");
-		addOnTableConstraint(srules, "pen1_table1");
-		addOnTableConstraint(srules, "book1_table1");
-		addOnTableConstraint(srules, "cup1_table1");
-		addOnTableConstraint(srules, "penHolder1_table1");
+		addOnTableConstraint(srules, "monitor_table");
+		addOnTableConstraint(srules, "keyboard_table");
+		addOnTableConstraint(srules, "notebook_table");
+		addOnTableConstraint(srules, "pen_table");
+		addOnTableConstraint(srules, "book_table");
+		addOnTableConstraint(srules, "cup_table");
+		addOnTableConstraint(srules, "penHolder_table");
 
 		SpatialRule pen_notebook = new SpatialRule("pen_table", "notebook_table", 
 				new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(3,5)),
@@ -425,26 +426,27 @@ public class TestReachabilityOffline3 {
 
 		//change in referance frame min and max 30-35
 		
+
 		
-//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 120, 0, 120, false, false);
+		//4 culprit
+//		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 100, 220, 100, 220, false, false);
 //		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true, false);
-//		insertAtConstraint(recs, saRelations, "at_monitor1_table1","monitor_table" , 25, 70, 80, 95, false,false);
-//		insertAtConstraint(recs, saRelations, "at_book1_table1", "book_table", 45, 55, 20, 30, true, false); //false
-//		insertAtConstraint(recs, saRelations, "at_keyboard1_table1", "keyboard_table", 27, 67, 45, 65, true, false); //true
-//		insertAtConstraint(recs, saRelations, "at_pen1_table1", "pen_table",6, 7, 20, 38, true, false); //false
-//		insertAtConstraint(recs, saRelations, "at_notebook1_table1", "notebook_table", 100, 115, 60, 80, true, false); ////false 15 20		
-//		insertAtConstraint(recs, saRelations, "at_penHolder1_table1", "penHolder_table",9, 19, 74, 79, true, false); //false //10, 5
-		
-		
-		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 0, 220, 0, 220, false, false);
+//		insertAtConstraint(recs, saRelations, "at_monitor1_table1","monitor_table" , 125, 170, 180, 195, false,false);
+//		insertAtConstraint(recs, saRelations, "at_book1_table1", "book_table", 145, 155, 120, 130, true, false); //false
+//		insertAtConstraint(recs, saRelations, "at_keyboard1_table1", "keyboard_table", 127, 167, 145, 165, true, false); //true
+//		insertAtConstraint(recs, saRelations, "at_pen1_table1", "pen_table",106, 107, 120, 138, true, false); //false
+//		insertAtConstraint(recs, saRelations, "at_notebook1_table1", "notebook_table", 200, 215, 160,180, true, false); ////false 15 20		
+//		insertAtConstraint(recs, saRelations, "at_penHolder1_table1", "penHolder_table",109, 119, 174, 179, true, false); //false //10, 5
+
+		//2 culprit
+		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 100, 220, 100, 220, false, false);
 		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true, false);
 		insertAtConstraint(recs, saRelations, "at_monitor1_table1","monitor_table" , 125, 170, 180, 195, false,false);
 		insertAtConstraint(recs, saRelations, "at_book1_table1", "book_table", 145, 155, 120, 130, true, false); //false
 		insertAtConstraint(recs, saRelations, "at_keyboard1_table1", "keyboard_table", 127, 167, 145, 165, true, false); //true
-		insertAtConstraint(recs, saRelations, "at_pen1_table1", "pen_table",16, 17, 120, 138, true, false); //false
+        insertAtConstraint(recs, saRelations, "at_pen1_table1", "pen_table",126, 127, 112, 130, true, false); //true
 		insertAtConstraint(recs, saRelations, "at_notebook1_table1", "notebook_table", 200, 215, 160,180, true, false); ////false 15 20		
-		insertAtConstraint(recs, saRelations, "at_penHolder1_table1", "penHolder_table",19, 119, 174, 179, true, false); //false //10, 5
-
+		insertAtConstraint(recs, saRelations, "at_penHolder1_table1", "penHolder_table",184, 194, 166, 171, true, false); //true //10, 5
 		
 		
 		return recs;

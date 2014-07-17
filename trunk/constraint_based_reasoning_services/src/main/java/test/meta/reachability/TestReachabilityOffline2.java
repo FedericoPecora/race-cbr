@@ -92,6 +92,7 @@ public class TestReachabilityOffline2 {
 
 		getSpatialKnowledge(srules);
 		observation = getAssertionalRule(saRelations);
+		simpleHybridPlanner.addObservation(observation);
 		insertCurrentStateCurrentGoal(groundSolver);
 		//#################################################################################################################
 		//add metaMovebaseManagerConstraint
