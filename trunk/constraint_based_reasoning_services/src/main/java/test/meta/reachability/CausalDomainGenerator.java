@@ -52,13 +52,15 @@ public class CausalDomainGenerator {
 
 		operator += getPickAndPlaceOperator(objVar);
 		//operator += getPickAndPlaceOperatorWithUnifiedArms(objVar);		
-		operator += getAtManipulationAreaOperator(objVar);
+		//operator += getAtManipulationAreaOperator(objVar);
 
 		System.out.println(operator);
 
 		try{
 
-			causalDomain = new BufferedWriter(new FileWriter(PATH +"_test_desk"+".ddl", false));
+//			causalDomain = new BufferedWriter(new FileWriter(PATH +"_test_desk"+".ddl", false));
+			causalDomain = new BufferedWriter(new FileWriter(PATH +"_test_cutlary"+".ddl", false));
+
 			causalDomain.write(operator);
 			causalDomain.newLine();
 			causalDomain.flush();
