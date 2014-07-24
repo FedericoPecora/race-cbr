@@ -17,8 +17,8 @@ public class CausalDomainGenerator {
 
 	public static void main(String[] args) {
 
-//		String[] objVar = new String[]{"cup1", "knife1", "fork1"};
-		String[] objVar = new String[]{"cup1", "book1", "monitor1", "keyboard1", "pen1", "notebook1", "penHolder1"};
+		String[] objVar = new String[]{"cup1", "knife1", "fork1"};
+//		String[] objVar = new String[]{"cup1", "book1", "monitor1", "keyboard1", "pen1", "notebook1", "penHolder1"};
 
 		//		String[] objVar = new String[]{"cup1", "knife1", "fork1"};
 
@@ -52,7 +52,7 @@ public class CausalDomainGenerator {
 
 		operator += getPickAndPlaceOperator(objVar);
 		//operator += getPickAndPlaceOperatorWithUnifiedArms(objVar);		
-		//operator += getAtManipulationAreaOperator(objVar);
+//		operator += getAtManipulationAreaOperator(objVar);
 
 		System.out.println(operator);
 
