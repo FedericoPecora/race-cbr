@@ -15,14 +15,18 @@ import java.util.logging.Level;
 import org.metacsp.framework.Constraint;
 import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ValueOrderingH;
+import org.metacsp.framework.Variable;
 import org.metacsp.framework.VariableOrderingH;
+import org.metacsp.framework.meta.MetaConstraint;
 import org.metacsp.meta.hybridPlanner.FluentBasedSimpleDomain;
 import org.metacsp.meta.hybridPlanner.MetaInverseReachabilityConstraint;
 import org.metacsp.meta.hybridPlanner.MetaMoveBaseManagerConstraint;
 import org.metacsp.meta.hybridPlanner.MetaOccupiedConstraint;
 import org.metacsp.meta.hybridPlanner.MetaSpatialAdherenceConstraint;
 import org.metacsp.meta.hybridPlanner.SimpleHybridPlanner;
+import org.metacsp.meta.simplePlanner.SimpleReusableResource;
 import org.metacsp.meta.simplePlanner.SimpleDomain.markings;
+import org.metacsp.meta.symbolsAndTime.Schedulable;
 import org.metacsp.multi.activity.Activity;
 import org.metacsp.multi.activity.ActivityNetworkSolver;
 import org.metacsp.multi.allenInterval.AllenIntervalConstraint;
@@ -50,7 +54,7 @@ public class TestReachabilityOffline2 {
 
 	static int pad = 0;    
 	static long duration = 1000;
-
+	
 	public static void main(String[] args) {
 	
 		SimpleHybridPlanner simpleHybridPlanner = new SimpleHybridPlanner(0, 100000, 0);
@@ -58,7 +62,8 @@ public class TestReachabilityOffline2 {
 
 		FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/reachability_test_cutlary.ddl", FluentBasedSimpleDomain.class); //did not terminate
 		
-		//Most critical conflict is the one with most activities 
+		
+		//Most critical conflict is the one with most activities
 		VariableOrderingH varOH = new VariableOrderingH() {
 			@Override
 			public int compare(ConstraintNetwork arg0, ConstraintNetwork arg1) {
@@ -72,6 +77,22 @@ public class TestReachabilityOffline2 {
 			@Override
 			public int compare(ConstraintNetwork o1, ConstraintNetwork o2) { return 0; }
 		};
+		
+
+		//#################################################################################################################
+		//add manAreaResource
+		FluentBasedSimpleDomain fbsd = null;
+		for (MetaConstraint mc : simpleHybridPlanner.getMetaConstraints()) {
+			if (mc instanceof FluentBasedSimpleDomain) fbsd = (FluentBasedSimpleDomain)mc;
+		}
+		SimpleReusableResource	manAreaResource = new SimpleReusableResource(varOH, valOH, 1, fbsd, "manAreaResource");
+		fbsd.addResrouceUtilizers(manAreaResource, new HashMap<Variable, Integer>());		
+		//fbsd.addResrouceUtilizer(manAreaResource, sf1.getActivity(), 1);
+		fbsd.addReourceMap("manAreaResource", manAreaResource);
+		for (Schedulable sch : fbsd.getSchedulingMetaConstraints()) simpleHybridPlanner.addMetaConstraint(sch);
+		
+		//#################################################################################################################
+		//add metaAdehrenceConstraint
 		MetaSpatialAdherenceConstraint metaSpatialAdherence = new MetaSpatialAdherenceConstraint(varOH, valOH);
 		SpatialFluentSolver groundSolver = (SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0];
 
@@ -108,8 +129,8 @@ public class TestReachabilityOffline2 {
 		//add meta constraint
 		simpleHybridPlanner.addMetaConstraint(metaOccupiedConstraint);
 		simpleHybridPlanner.addMetaConstraint(metaSpatialAdherence);
-		simpleHybridPlanner.addMetaConstraint(metaMoveBaseMangerConstraint);
 		simpleHybridPlanner.addMetaConstraint(metaInverseReachabilityConstraint);
+		simpleHybridPlanner.addMetaConstraint(metaMoveBaseMangerConstraint);
 		
 		
 		
@@ -271,21 +292,6 @@ public class TestReachabilityOffline2 {
 		rc2.setTo((ConfigurationVariable)sf1.getConfigurationVariable());
 
 		
-
-		
-//		Activity two11 = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
-//		two11.setSymbolicDomain("at_robot1_manipulationArea_cup1_table1()");
-//		two11.setMarking(markings.JUSTIFIED);
-//		AllenIntervalConstraint releaseatRobot1 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
-//		releaseatRobot1.setFrom(two11);
-//		releaseatRobot1.setTo(two11);
-//		cons.add(releaseatRobot1);
-//
-//		AllenIntervalConstraint durationHolding11 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
-//		durationHolding11.setFrom(two11);
-//		durationHolding11.setTo(two11);
-//		cons.add(durationHolding11);
-		
 		grounSpatialFluentSolver.getConstraintSolvers()[2].addConstraint(rc2);
 		grounSpatialFluentSolver.getConstraintSolvers()[1].addConstraints(cons.toArray(new Constraint[cons.size()]));
 
@@ -393,24 +399,24 @@ public class TestReachabilityOffline2 {
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
 
 
-		//change in referance frame min and max 30-35
-		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false, false);
-		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 230, 234, true, false);
-		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 210, 214, true, false);
-		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true, false);
-		
-		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false, true);
-		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false, true);
-		
-		
-//		//both fork and knife has to re-placed - min and max 30-35
+//		//change in referance frame min and max 30-35
 //		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false, false);
-//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 210, 214, true, false);
-//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 230, 234, true, false);
+//		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 230, 234, true, false);
+//		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 210, 214, true, false);
 //		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true, false);
 //		
 //		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false, true);
 //		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false, true);
+		
+		
+		//both fork and knife has to re-placed - min and max 30-35
+		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false, false);
+		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 210, 214, true, false);
+		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 230, 234, true, false);
+		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true, false);
+		
+		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false, true);
+		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false, true);
 		
 		
 //		//Ask for pick up fork with min and max 25-30 , 30 and 30

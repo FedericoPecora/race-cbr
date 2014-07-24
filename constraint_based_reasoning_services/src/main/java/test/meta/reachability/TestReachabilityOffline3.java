@@ -15,14 +15,18 @@ import java.util.logging.Level;
 import org.metacsp.framework.Constraint;
 import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ValueOrderingH;
+import org.metacsp.framework.Variable;
 import org.metacsp.framework.VariableOrderingH;
+import org.metacsp.framework.meta.MetaConstraint;
 import org.metacsp.meta.hybridPlanner.FluentBasedSimpleDomain;
 import org.metacsp.meta.hybridPlanner.MetaInverseReachabilityConstraint;
 import org.metacsp.meta.hybridPlanner.MetaMoveBaseManagerConstraint;
 import org.metacsp.meta.hybridPlanner.MetaOccupiedConstraint;
 import org.metacsp.meta.hybridPlanner.MetaSpatialAdherenceConstraint;
 import org.metacsp.meta.hybridPlanner.SimpleHybridPlanner;
+import org.metacsp.meta.simplePlanner.SimpleReusableResource;
 import org.metacsp.meta.simplePlanner.SimpleDomain.markings;
+import org.metacsp.meta.symbolsAndTime.Schedulable;
 import org.metacsp.multi.activity.Activity;
 import org.metacsp.multi.activity.ActivityNetworkSolver;
 import org.metacsp.multi.allenInterval.AllenInterval;
@@ -77,6 +81,21 @@ public class TestReachabilityOffline3 {
 			@Override
 			public int compare(ConstraintNetwork o1, ConstraintNetwork o2) { return 0; }
 		};
+		
+		//#################################################################################################################
+		//add manAreaResource
+		FluentBasedSimpleDomain fbsd = null;
+		for (MetaConstraint mc : simpleHybridPlanner.getMetaConstraints()) {
+			if (mc instanceof FluentBasedSimpleDomain) fbsd = (FluentBasedSimpleDomain)mc;
+		}
+		SimpleReusableResource	manAreaResource = new SimpleReusableResource(varOH, valOH, 1, fbsd, "manAreaResource");
+		fbsd.addResrouceUtilizers(manAreaResource, new HashMap<Variable, Integer>());		
+		//fbsd.addResrouceUtilizer(manAreaResource, sf1.getActivity(), 1);
+		fbsd.addReourceMap("manAreaResource", manAreaResource);
+		for (Schedulable sch : fbsd.getSchedulingMetaConstraints()) simpleHybridPlanner.addMetaConstraint(sch);
+
+		//#################################################################################################################
+		
 		MetaSpatialAdherenceConstraint metaSpatialAdherence = new MetaSpatialAdherenceConstraint(varOH, valOH);
 		SpatialFluentSolver groundSolver = (SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0];
 
