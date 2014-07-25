@@ -51,12 +51,12 @@ import org.metacsp.utility.timelinePlotting.TimelineVisualizer;
 public class TestReachabilityOffline2 {
 	
 	//there is a reachability meta constraints calculate the real reachable situation
-
+	
 	static int pad = 0;    
 	static long duration = 1000;
 	
 	public static void main(String[] args) {
-	
+		
 		SimpleHybridPlanner simpleHybridPlanner = new SimpleHybridPlanner(0, 100000, 0);
 
 
@@ -181,7 +181,7 @@ public class TestReachabilityOffline2 {
 		for (int i = 0; i < ((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getVariables().length; i++) {
 			System.out.println(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getVariables()[i]);
 		}
-
+	
 	}
 
 	private static LinkedHashMap sortHashMapByValuesD(HashMap passedMap) {

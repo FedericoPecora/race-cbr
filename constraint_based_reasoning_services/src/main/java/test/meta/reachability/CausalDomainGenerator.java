@@ -29,7 +29,7 @@ public class CausalDomainGenerator {
 		String resource1 = "(Resource arm  2)"; 
 		String resource2 = "(Resource fieldOfView 200)"; 
 		String resource3 = "(Resource robot1 1)"; 
-		String resource4 = "(Resource manArea 1)"; 
+//		String resource4 = "(Resource manArea 1)"; 
 
 		String resource5 = "(Resource arm1 1)"; 
 		String resource6 = "(Resource arm2 1)"; 
@@ -40,7 +40,9 @@ public class CausalDomainGenerator {
 		BufferedWriter causalDomain = null;
 		String operator = "";
 		operator += simpleDomain + "\n" +controllable1 + "\n" +controllable2 + "\n" + resource1 + "\n" + 
-				resource2 + "\n" + resource3 + "\n" + resource4 + "\n" + resource5 + "\n" + resource6 +"\n" + "\n"; 
+				resource2 + "\n" + resource3  + "\n" + 
+				//resource4  + "\n" +
+				resource5 + "\n" + resource6 +"\n" + "\n"; 
 
 //		operator += getSwapArms(objVar);
 		
