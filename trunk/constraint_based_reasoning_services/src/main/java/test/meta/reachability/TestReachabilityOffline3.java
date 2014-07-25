@@ -58,11 +58,11 @@ public class TestReachabilityOffline3 {
 
 
 	static int pad = 0;    
-	static long duration = 1000;
+	static long duration = 2000;
 
 	public static void main(String[] args) {
 	
-		SimpleHybridPlanner simpleHybridPlanner = new SimpleHybridPlanner(0, 100000, 0);
+		SimpleHybridPlanner simpleHybridPlanner = new SimpleHybridPlanner(0, 10000000, 0);
 
 
 		FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/reachability_test_desk.ddl", FluentBasedSimpleDomain.class); //did not terminate
@@ -373,22 +373,76 @@ public class TestReachabilityOffline3 {
 	
 	private static void insertCurrentStateCurrentGoal(SpatialFluentSolver grounSpatialFluentSolver) {
 
+//		Vector<Constraint> cons = new Vector<Constraint>();
+//
+//
+//        SpatialFluent sf1 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_robot1_manipulationArea_cup1_table1", "at_robot1_manipulationArea_cup1_table1()", markings.JUSTIFIED,  -1);
+//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_table1_table1", "at_table1_table1()", markings.JUSTIFIED,  20000);
+//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_book1_table1", "at_book1_table1()", markings.JUSTIFIED, 20000);
+//		SpatialFluent sf5 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_cup1_table1", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
+//		
+//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_monitor1_table1", "at_monitor1_table1()", markings.JUSTIFIED, 20000);
+//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_keyboard1_table1", "at_keyboard1_table1()", markings.JUSTIFIED,  20000);		
+//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_pen1_table1", "at_pen1_table1()", markings.JUSTIFIED,  20000);		
+//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_notebook1_table1", "at_notebook1_table1()", markings.JUSTIFIED, 20000);
+//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_penHolder1_table1", "at_penHolder1_table1()", markings.JUSTIFIED, 20000);
+//        
+//        
+//        
+//        
+//		//===================================================================================================================
+//		//initial State
+//		//===================================================================================================================
+//
+//		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("RobotProprioception");
+//		two.setSymbolicDomain("holding_arm1_cup1()");
+//		two.setMarking(markings.JUSTIFIED);
+//		AllenIntervalConstraint releaseHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
+//		releaseHolding.setFrom(two);
+//		releaseHolding.setTo(two);
+//		cons.add(releaseHolding);
+//
+//		AllenIntervalConstraint durationHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(2000,APSPSolver.INF));
+//		durationHolding.setFrom(two);
+//		durationHolding.setTo(two);
+//		cons.add(durationHolding);
+//		
+//		Activity two1 = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
+//		two1.setSymbolicDomain("at_robot1_table1()");
+//		two1.setMarking(markings.JUSTIFIED);
+//		AllenIntervalConstraint releaseatRobot = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(20000,20000));
+//		releaseatRobot.setFrom(two1);
+//		releaseatRobot.setTo(two1);
+//		cons.add(releaseatRobot);
+//
+//		AllenIntervalConstraint durationHolding1 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(2000,APSPSolver.INF));
+//		durationHolding1.setFrom(two1);
+//		durationHolding1.setTo(two1);
+//		cons.add(durationHolding1);
+//		
+//		//add reachability constraint
+//		ReachabilityConstraint rc2 = new ReachabilityConstraint(ReachabilityConstraint.Type.baseplacingReachable);
+//		rc2.setFrom((ConfigurationVariable)sf5.getConfigurationVariable());
+//		rc2.setTo((ConfigurationVariable)sf1.getConfigurationVariable());
+//		
+//		grounSpatialFluentSolver.getConstraintSolvers()[2].addConstraint(rc2);
+//		grounSpatialFluentSolver.getConstraintSolvers()[1].addConstraints(cons.toArray(new Constraint[cons.size()]));
+
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		
 		Vector<Constraint> cons = new Vector<Constraint>();
 
 
         SpatialFluent sf1 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_robot1_manipulationArea_cup1_table1", "at_robot1_manipulationArea_cup1_table1()", markings.JUSTIFIED,  -1);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_table1_table1", "at_table1_table1()", markings.JUSTIFIED,  20000);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_book1_table1", "at_book1_table1()", markings.JUSTIFIED, 20000);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_table1_table1", "at_table1_table1()", markings.JUSTIFIED,  1000);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_book1_table1", "at_book1_table1()", markings.JUSTIFIED, 1000);
 		SpatialFluent sf5 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_cup1_table1", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
 		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_monitor1_table1", "at_monitor1_table1()", markings.JUSTIFIED, 20000);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_keyboard1_table1", "at_keyboard1_table1()", markings.JUSTIFIED,  20000);		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_pen1_table1", "at_pen1_table1()", markings.JUSTIFIED,  20000);		
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_notebook1_table1", "at_notebook1_table1()", markings.JUSTIFIED, 20000);
-		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_penHolder1_table1", "at_penHolder1_table1()", markings.JUSTIFIED, 20000);
-        
-        
-        
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_monitor1_table1", "at_monitor1_table1()", markings.JUSTIFIED, 1000);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_keyboard1_table1", "at_keyboard1_table1()", markings.JUSTIFIED,  1000);		
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_pen1_table1", "at_pen1_table1()", markings.JUSTIFIED,  1000);		
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_notebook1_table1", "at_notebook1_table1()", markings.JUSTIFIED, 1000);
+		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_penHolder1_table1", "at_penHolder1_table1()", markings.JUSTIFIED, 1000);
         
 		//===================================================================================================================
 		//initial State
@@ -410,7 +464,7 @@ public class TestReachabilityOffline3 {
 		Activity two1 = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
 		two1.setSymbolicDomain("at_robot1_table1()");
 		two1.setMarking(markings.JUSTIFIED);
-		AllenIntervalConstraint releaseatRobot = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(20000,20000));
+		AllenIntervalConstraint releaseatRobot = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1000,1000));
 		releaseatRobot.setFrom(two1);
 		releaseatRobot.setTo(two1);
 		cons.add(releaseatRobot);
@@ -427,60 +481,6 @@ public class TestReachabilityOffline3 {
 		
 		grounSpatialFluentSolver.getConstraintSolvers()[2].addConstraint(rc2);
 		grounSpatialFluentSolver.getConstraintSolvers()[1].addConstraints(cons.toArray(new Constraint[cons.size()]));
-
-		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		
-//		Vector<Constraint> cons = new Vector<Constraint>();
-//
-//
-//        SpatialFluent sf1 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_robot1_manipulationArea_cup1_table1", "at_robot1_manipulationArea_cup1_table1()", markings.JUSTIFIED,  -1);
-//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_table1_table1", "at_table1_table1()", markings.JUSTIFIED,  1000);
-//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_book1_table1", "at_book1_table1()", markings.JUSTIFIED, 1000);
-//		SpatialFluent sf5 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_cup1_table1", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
-//		
-//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_monitor1_table1", "at_monitor1_table1()", markings.JUSTIFIED, 1000);
-//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_keyboard1_table1", "at_keyboard1_table1()", markings.JUSTIFIED,  1000);		
-//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_pen1_table1", "at_pen1_table1()", markings.JUSTIFIED,  1000);		
-//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_notebook1_table1", "at_notebook1_table1()", markings.JUSTIFIED, 1000);
-//		setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_penHolder1_table1", "at_penHolder1_table1()", markings.JUSTIFIED, 1000);
-//        
-//		//===================================================================================================================
-//		//initial State
-//		//===================================================================================================================
-//
-//		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("RobotProprioception");
-//		two.setSymbolicDomain("holding_arm1_cup1()");
-//		two.setMarking(markings.JUSTIFIED);
-//		AllenIntervalConstraint releaseHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
-//		releaseHolding.setFrom(two);
-//		releaseHolding.setTo(two);
-//		cons.add(releaseHolding);
-//
-//		AllenIntervalConstraint durationHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
-//		durationHolding.setFrom(two);
-//		durationHolding.setTo(two);
-//		cons.add(durationHolding);
-//		
-//		Activity two1 = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
-//		two1.setSymbolicDomain("at_robot1_table1()");
-//		two1.setMarking(markings.JUSTIFIED);
-//		AllenIntervalConstraint releaseatRobot = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1000,1000));
-//		releaseatRobot.setFrom(two1);
-//		releaseatRobot.setTo(two1);
-//		cons.add(releaseatRobot);
-//
-//		AllenIntervalConstraint durationHolding1 = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
-//		durationHolding1.setFrom(two1);
-//		durationHolding1.setTo(two1);
-//		cons.add(durationHolding1);
-//		
-//		//add reachability constraint
-//		ReachabilityConstraint rc2 = new ReachabilityConstraint(ReachabilityConstraint.Type.baseplacingReachable);
-//		rc2.setFrom((ConfigurationVariable)sf5.getConfigurationVariable());
-//		rc2.setTo((ConfigurationVariable)sf1.getConfigurationVariable());
-//		
-//		grounSpatialFluentSolver.getConstraintSolvers()[2].addConstraint(rc2);
-//		grounSpatialFluentSolver.getConstraintSolvers()[1].addConstraints(cons.toArray(new Constraint[cons.size()]));
 	}
 
 	

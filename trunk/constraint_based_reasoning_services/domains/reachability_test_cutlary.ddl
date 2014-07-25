@@ -4,7 +4,6 @@
 (Resource arm  2)
 (Resource fieldOfView 200)
 (Resource robot1 1)
-(Resource manArea 1)
 (Resource arm1 1)
 (Resource arm2 1)
 
