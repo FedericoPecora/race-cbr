@@ -26,7 +26,7 @@ public class CausalDomainGenerator {
 		String controllable1 = "(Controllable RobotProprioception) #proprioception";
 		String controllable2 = "(Controllable atLocation) #tabletop perception";
 
-		String resource1 = "(Resource arm  2)"; 
+		//String resource1 = "(Resource arm  2)"; 
 		String resource2 = "(Resource fieldOfView 200)"; 
 		String resource3 = "(Resource robot1 1)"; 
 		String resource4 = "(Resource manArea 1)"; 
@@ -39,7 +39,8 @@ public class CausalDomainGenerator {
 
 		BufferedWriter causalDomain = null;
 		String operator = "";
-		operator += simpleDomain + "\n" +controllable1 + "\n" +controllable2 + "\n" + resource1 + "\n" + 
+		operator += simpleDomain + "\n" +controllable1 + "\n" +controllable2 + "\n" + 
+				//resource1 + "\n" + 
 				resource2 + "\n" + resource3  + "\n" + 
 				resource4  + "\n" +
 				resource5 + "\n" + resource6 +"\n" + "\n"; 
@@ -262,24 +263,24 @@ public class CausalDomainGenerator {
 					")" + "\n" ;
 
 
-			ret +=  "(SimpleOperator " + " \n"+
-					" (Head RobotSense::sensing_before_picking_"+ objVar[i] +"_tray1())" +  " \n"+
-					" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
-					" (Constraint During(Head,req1))" +  " \n"+
-					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource fieldOfView(200)) " +  " \n"+
-					" (RequiredResource robot1(1)) " +  " \n"+
-					")" + "\n" ;
-
-
-			ret +=  "(SimpleOperator " + " \n"+
-					" (Head RobotSense::sensing_before_placing_"+ objVar[i] +"_tray1())" +  " \n"+
-					" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
-					" (Constraint During(Head,req1))" +  " \n"+
-					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource fieldOfView(200)) " +  " \n"+
-					" (RequiredResource robot1(1)) " +  " \n"+
-					")" + "\n" ;
+//			ret +=  "(SimpleOperator " + " \n"+
+//					" (Head RobotSense::sensing_before_picking_"+ objVar[i] +"_tray1())" +  " \n"+
+//					" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
+//					" (Constraint During(Head,req1))" +  " \n"+
+//					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+//					" (RequiredResource fieldOfView(200)) " +  " \n"+
+//					" (RequiredResource robot1(1)) " +  " \n"+
+//					")" + "\n" ;
+//
+//
+//			ret +=  "(SimpleOperator " + " \n"+
+//					" (Head RobotSense::sensing_before_placing_"+ objVar[i] +"_tray1())" +  " \n"+
+//					" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
+//					" (Constraint During(Head,req1))" +  " \n"+
+//					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+//					" (RequiredResource fieldOfView(200)) " +  " \n"+
+//					" (RequiredResource robot1(1)) " +  " \n"+
+//					")" + "\n" ;
 
 
 		}
@@ -298,41 +299,6 @@ public class CausalDomainGenerator {
 
 			ret += "#######################################################" + "\n" ;
 
-
-			ret +=  "(SimpleOperator " + " \n"+
-					" (Head atLocation::at_"+ objVar[i] +"_table1())" +  " \n"+
-					" (RequiredState req1 RobotAction::place_"+ objVar[i] + "_RA_" + "north" +"_table1())" +  " \n"+
-					" (Constraint StartedBy(Head,req1))" +  " \n"+
-					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
-					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					")" + "\n" ;
-
-			
-			ret +=  "(SimpleOperator " + " \n"+
-					" (Head atLocation::at_"+ objVar[i] +"_table1())" +  " \n"+
-					" (RequiredState req1 RobotAction::place_"+ objVar[i] + "_RA_" + "east" +"_table1())" +  " \n"+
-					" (Constraint StartedBy(Head,req1))" +  " \n"+
-					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
-					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					")" + "\n" ;
-
-			ret +=  "(SimpleOperator " + " \n"+
-					" (Head atLocation::at_"+ objVar[i] +"_table1())" +  " \n"+
-					" (RequiredState req1 RobotAction::place_"+ objVar[i] + "_RA_" + "south" +"_table1())" +  " \n"+
-					" (Constraint StartedBy(Head,req1))" +  " \n"+
-					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
-					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					")" + "\n" ;
-
-			ret +=  "(SimpleOperator " + " \n"+
-					" (Head atLocation::at_"+ objVar[i] +"_table1())" +  " \n"+
-					" (RequiredState req1 RobotAction::place_"+ objVar[i] + "_RA_" + "west" +"_table1())" +  " \n"+
-					" (Constraint StartedBy(Head,req1))" +  " \n"+
-					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
-					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					")" + "\n" ;
-			
-			//
 			
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head atLocation::at_"+ objVar[i] +"_table1())" +  " \n"+
@@ -365,6 +331,41 @@ public class CausalDomainGenerator {
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					")" + "\n" ;
+			
+			//
+			
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head atLocation::at_"+ objVar[i] +"_table1())" +  " \n"+
+					" (RequiredState req1 RobotAction::place_"+ objVar[i] + "_RA_" + "north" +"_table1())" +  " \n"+
+					" (Constraint StartedBy(Head,req1))" +  " \n"+
+					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					")" + "\n" ;
+
+			
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head atLocation::at_"+ objVar[i] +"_table1())" +  " \n"+
+					" (RequiredState req1 RobotAction::place_"+ objVar[i] + "_RA_" + "east" +"_table1())" +  " \n"+
+					" (Constraint StartedBy(Head,req1))" +  " \n"+
+					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					")" + "\n" ;
+
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head atLocation::at_"+ objVar[i] +"_table1())" +  " \n"+
+					" (RequiredState req1 RobotAction::place_"+ objVar[i] + "_RA_" + "south" +"_table1())" +  " \n"+
+					" (Constraint StartedBy(Head,req1))" +  " \n"+
+					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					")" + "\n" ;
+
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head atLocation::at_"+ objVar[i] +"_table1())" +  " \n"+
+					" (RequiredState req1 RobotAction::place_"+ objVar[i] + "_RA_" + "west" +"_table1())" +  " \n"+
+					" (Constraint StartedBy(Head,req1))" +  " \n"+
+					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					")" + "\n" ;
 
 			//================================================================================================
 
@@ -380,7 +381,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource RA(1))" +  " \n"+
@@ -398,7 +399,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource RA(1))" +  " \n"+
@@ -416,7 +417,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource RA(1))" +  " \n"+
@@ -434,7 +435,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource RA(1))" +  " \n"+
@@ -454,7 +455,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource LA(1))" +  " \n"+
@@ -472,7 +473,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource LA(1))" +  " \n"+
@@ -490,7 +491,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource LA(1))" +  " \n"+
@@ -508,7 +509,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource LA(1))" +  " \n"+
@@ -521,7 +522,7 @@ public class CausalDomainGenerator {
 					" (RequiredState req1 RobotAction::pick_"+ objVar[i]+ "_RA_"+"north" +"_table1())" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource RA(1))" +  " \n"+
 					")" + "\n" ;
 
@@ -530,7 +531,7 @@ public class CausalDomainGenerator {
 					" (RequiredState req1 RobotAction::pick_"+ objVar[i]+ "_RA_"+"east" +"_table1())" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource RA(1))" +  " \n"+
 					")" + "\n" ;
 
@@ -539,7 +540,7 @@ public class CausalDomainGenerator {
 					" (RequiredState req1 RobotAction::pick_"+ objVar[i]+ "_RA_"+"south" +"_table1())" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource RA(1))" +  " \n"+
 					")" + "\n" ;
 
@@ -548,7 +549,7 @@ public class CausalDomainGenerator {
 					" (RequiredState req1 RobotAction::pick_"+ objVar[i]+ "_RA_"+"west" +"_table1())" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource RA(1))" +  " \n"+
 					")" + "\n" ;
 			
@@ -559,7 +560,7 @@ public class CausalDomainGenerator {
 					" (RequiredState req1 RobotAction::pick_"+ objVar[i]+ "_LA_"+"north" +"_table1())" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource LA(1))" +  " \n"+
 					")" + "\n" ;
 
@@ -568,7 +569,7 @@ public class CausalDomainGenerator {
 					" (RequiredState req1 RobotAction::pick_"+ objVar[i]+ "_LA_"+"east" +"_table1())" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource LA(1))" +  " \n"+
 					")" + "\n" ;
 
@@ -577,7 +578,7 @@ public class CausalDomainGenerator {
 					" (RequiredState req1 RobotAction::pick_"+ objVar[i]+ "_LA_"+"south" +"_table1())" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource LA(1))" +  " \n"+
 					")" + "\n" ;
 
@@ -587,7 +588,7 @@ public class CausalDomainGenerator {
 					" (RequiredState req1 RobotAction::pick_"+ objVar[i]+ "_LA_"+"west" +"_table1())" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource LA(1))" +  " \n"+
 					")" + "\n" ;
 
@@ -606,7 +607,7 @@ public class CausalDomainGenerator {
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource RA(1))" +  " \n"+
@@ -625,7 +626,7 @@ public class CausalDomainGenerator {
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource RA(1))" +  " \n"+
@@ -644,7 +645,7 @@ public class CausalDomainGenerator {
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource RA(1))" +  " \n"+
@@ -664,7 +665,7 @@ public class CausalDomainGenerator {
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource RA(1))" +  " \n"+
@@ -684,7 +685,7 @@ public class CausalDomainGenerator {
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource LA(1))" +  " \n"+
@@ -703,7 +704,7 @@ public class CausalDomainGenerator {
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource LA(1))" +  " \n"+
@@ -722,7 +723,7 @@ public class CausalDomainGenerator {
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource LA(1))" +  " \n"+
@@ -741,7 +742,7 @@ public class CausalDomainGenerator {
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource arm(1))" +  " \n"+
+					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
 					" (RequiredResource robot1(1))" +  " \n"+
 					" (RequiredResource LA(1))" +  " \n"+
@@ -750,7 +751,7 @@ public class CausalDomainGenerator {
 			
 			//=======================================================================================================
 			
-			ret += "#######################################################" + "\n" ;
+//			ret += "#######################################################" + "\n" ;
 //			ret +=  "(SimpleOperator " + " \n"+
 //					" (Head atLocation::at_"+ objVar[i] +"_tray1())" +  " \n"+
 //					" (RequiredState req1 RobotAction::place_"+ objVar[i]+ "_RA_" +"_tray1())" +  " \n"+

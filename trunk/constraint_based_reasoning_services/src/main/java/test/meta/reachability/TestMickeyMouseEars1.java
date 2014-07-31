@@ -59,6 +59,8 @@ public class TestMickeyMouseEars1 {
 		
 		SimpleHybridPlanner simpleHybridPlanner = new SimpleHybridPlanner(0, 100000, 0);
 
+		MetaCSPLogging.setLevel(SimpleHybridPlanner.class, Level.FINEST);
+		MetaCSPLogging.setLevel(MetaSpatialAdherenceConstraint.class, Level.FINEST);
 
 		//Most critical conflict is the one with most activities
 		VariableOrderingH varOH = new VariableOrderingH() {
@@ -87,56 +89,32 @@ public class TestMickeyMouseEars1 {
 
 		getSpatialKnowledge(srules);
 		observation = getAssertionalRule(saRelations);
-		//simpleHybridPlanner.addObservation(observation);
+		simpleHybridPlanner.addObservation(observation);
 		insertCurrentStateCurrentGoal(groundSolver);
-		simpleHybridPlanner.addMetaConstraint(metaSpatialAdherence);
+		//add spatial general and assertional rule to MetaSpatialFluentConstraint
+		metaSpatialAdherence.setSpatialRules(srules.toArray(new SpatialRule[srules.size()]));
+		metaSpatialAdherence.setSpatialAssertionalRelations(saRelations);
+		metaSpatialAdherence.setInitialGoal(new String[]{"at_cup1_table1"});
 		
-		MetaCSPLogging.setLevel(SimpleHybridPlanner.class, Level.FINEST);
-		MetaCSPLogging.setLevel(MetaSpatialAdherenceConstraint.class, Level.FINEST);
+		
+		simpleHybridPlanner.addMetaConstraint(metaSpatialAdherence);
 
 		//#################################################################################################################
 		FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/reachability_test_cutlary_mickey.ddl", FluentBasedSimpleDomain.class); //did not terminate
-		
-		//#################################################################################################################
-//		//add manAreaResource
-//		FluentBasedSimpleDomain fbsd = null;
-//		for (MetaConstraint mc : simpleHybridPlanner.getMetaConstraints()) {
-//			if (mc instanceof FluentBasedSimpleDomain) fbsd = (FluentBasedSimpleDomain)mc;
-//		}
-//		SimpleReusableResource	manAreaResource = new SimpleReusableResource(varOH, valOH, 1, fbsd, "manAreaResource");
-//		fbsd.addResrouceUtilizers(manAreaResource, new HashMap<Variable, Integer>());		
-//		//fbsd.addResrouceUtilizer(manAreaResource, sf1.getActivity(), 1);
-//		fbsd.addReourceMap("manAreaResource", manAreaResource);
-//		for (Schedulable sch : fbsd.getSchedulingMetaConstraints()) simpleHybridPlanner.addMetaConstraint(sch);
-		
 
 		//#################################################################################################################
 		//add metaOccupiedConstraint
 		MetaOccupiedConstraint metaOccupiedConstraint = new MetaOccupiedConstraint(null, null);
 		metaOccupiedConstraint.setPad(pad);
-		//#################################################################################################################
-		//add metaMovebaseManagerConstraint
-		MetaMoveBaseManagerConstraint metaMoveBaseMangerConstraint = new MetaMoveBaseManagerConstraint(null, null);
-
-		//#################################################################################################################
-		//add metaMovebaseManagerConstraint
-		MetaInverseReachabilityConstraint metaInverseReachabilityConstraint = new MetaInverseReachabilityConstraint(null, null);
-		metaInverseReachabilityConstraint.setSpatialAssertionalRelations(saRelations);
-		//#################################################################################################################		
-		//add spatial general and assertional rule to MetaSpatialFluentConstraint
-		metaSpatialAdherence.setSpatialRules(srules.toArray(new SpatialRule[srules.size()]));
-		metaSpatialAdherence.setSpatialAssertionalRelations(saRelations);
-		metaSpatialAdherence.setInitialGoal(new String[]{"at_cup1_table1"});
-
-
-		//add meta constraint
-
-		simpleHybridPlanner.addMetaConstraint(metaOccupiedConstraint);		
-//		simpleHybridPlanner.addMetaConstraint(metaInverseReachabilityConstraint);
-//		simpleHybridPlanner.addMetaConstraint(metaMoveBaseMangerConstraint);
+		simpleHybridPlanner.addMetaConstraint(metaOccupiedConstraint);
 		
-		
-		
+		//#############################################################################################
+//		FluentBasedSimpleDomain fbsd = null;
+//		for (MetaConstraint mc : simpleHybridPlanner.getMetaConstraints()) {
+//			if (mc instanceof FluentBasedSimpleDomain) fbsd = (FluentBasedSimpleDomain)mc;
+//		}
+//		for (Schedulable sch : fbsd.getSchedulingMetaConstraints()) simpleHybridPlanner.addMetaConstraint(sch);
+		//############################################################################################
 
 		long timeNow = Calendar.getInstance().getTimeInMillis();
 		simpleHybridPlanner.backtrack();
@@ -257,9 +235,9 @@ public class TestMickeyMouseEars1 {
 //        SpatialFluent sf1 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_robot1_manipulationArea_cup1_RA_north_table1", "at_robot1_manipulationArea_cup1_table1()", markings.JUSTIFIED,  -1);
 		
 		
-		SpatialFluent sf2 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_table1_table1", "at_table1_table1()", markings.JUSTIFIED,  1);
-        SpatialFluent sf3 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_fork1_table1", "at_fork1_table1()", markings.JUSTIFIED, 1);
-        SpatialFluent sf4 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_knife1_table1", "at_knife1_table1()", markings.JUSTIFIED,1);
+		SpatialFluent sf2 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_table1_table1", "at_table1_table1()", markings.JUSTIFIED,  2000);
+        SpatialFluent sf3 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_fork1_table1", "at_fork1_table1()", markings.JUSTIFIED, 2000);
+        SpatialFluent sf4 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_knife1_table1", "at_knife1_table1()", markings.JUSTIFIED,2000);
         SpatialFluent sf5 = setFluentintoNetwork(cons, grounSpatialFluentSolver, "atLocation", "at_cup1_table1", "at_cup1_table1()", markings.UNJUSTIFIED, -1);
 
 		//===================================================================================================================
@@ -269,12 +247,12 @@ public class TestMickeyMouseEars1 {
 		Activity two = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("RobotProprioception");
 		two.setSymbolicDomain("holding_RA_cup1()");
 		two.setMarking(markings.JUSTIFIED);
-		AllenIntervalConstraint releaseHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
+		AllenIntervalConstraint releaseHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(500,500));
 		releaseHolding.setFrom(two);
 		releaseHolding.setTo(two);
 		cons.add(releaseHolding);
 
-		AllenIntervalConstraint durationHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(10,APSPSolver.INF));
+		AllenIntervalConstraint durationHolding = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Duration, new Bounds(2000,APSPSolver.INF));
 		durationHolding.setFrom(two);
 		durationHolding.setTo(two);
 		cons.add(durationHolding);
@@ -282,7 +260,7 @@ public class TestMickeyMouseEars1 {
 		Activity two1 = (Activity)grounSpatialFluentSolver.getConstraintSolvers()[1].createVariable("atLocation");
 		two1.setSymbolicDomain("at_robot1_table1()");
 		two1.setMarking(markings.JUSTIFIED);
-		AllenIntervalConstraint releaseatRobot = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1,1));
+		AllenIntervalConstraint releaseatRobot = new AllenIntervalConstraint(AllenIntervalConstraint.Type.Release, new Bounds(1000,1000));
 		releaseatRobot.setFrom(two1);
 		releaseatRobot.setTo(two1);
 		cons.add(releaseatRobot);
