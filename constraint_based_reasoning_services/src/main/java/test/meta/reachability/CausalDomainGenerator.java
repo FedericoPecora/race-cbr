@@ -29,7 +29,7 @@ public class CausalDomainGenerator {
 		//String resource1 = "(Resource arm  2)"; 
 		String resource2 = "(Resource fieldOfView 200)"; 
 		String resource3 = "(Resource robot1 1)"; 
-		String resource4 = "(Resource manArea 1)"; 
+		//String resource4 = "(Resource manArea 1)"; 
 
 		String resource5 = "(Resource RA 1)"; 
 		String resource6 = "(Resource LA 1)"; 
@@ -42,7 +42,7 @@ public class CausalDomainGenerator {
 		operator += simpleDomain + "\n" +controllable1 + "\n" +controllable2 + "\n" + 
 				//resource1 + "\n" + 
 				resource2 + "\n" + resource3  + "\n" + 
-				resource4  + "\n" +
+				//resource4  + "\n" +
 				resource5 + "\n" + resource6 +"\n" + "\n"; 
 
 //		operator += getSwapArms(objVar);
@@ -148,8 +148,52 @@ public class CausalDomainGenerator {
 		String ret = "";
 
 		for (int i = 0; i < objVar.length; i++) {			
+			
 			ret +=  "(SimpleOperator " + " \n"+
-					" (Head RobotAction::moveTo_manipulationArea_"+ objVar[i] +"_table1())" + " \n"+
+					" (Head RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_LA_" +"north" + "_table1())" +  " \n"+ 
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					" (RequiredResource robot1(1)) " +  " \n"+
+					")" + "\n" ;
+
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_LA_" +"east" + "_table1())" +  " \n"+ 
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					" (RequiredResource robot1(1)) " +  " \n"+
+					")" + "\n" ;
+			
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_LA_" +"west" + "_table1())" +  " \n"+ 
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					" (RequiredResource robot1(1)) " +  " \n"+
+					")" + "\n" ;
+
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_LA_" +"south" + "_table1())" +  " \n"+ 
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					" (RequiredResource robot1(1)) " +  " \n"+
+					")" + "\n" ;
+
+
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_RA_" +"north" + "_table1())" +  " \n"+ 
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					" (RequiredResource robot1(1)) " +  " \n"+
+					")" + "\n" ;
+
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_RA_" +"east" + "_table1())" +  " \n"+ 
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					" (RequiredResource robot1(1)) " +  " \n"+
+					")" + "\n" ;
+			
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_RA_" +"west" + "_table1())" +  " \n"+ 
+					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
+					" (RequiredResource robot1(1)) " +  " \n"+
+					")" + "\n" ;
+
+			ret +=  "(SimpleOperator " + " \n"+
+					" (Head RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_RA_" +"south" + "_table1())" +  " \n"+ 
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					" (RequiredResource robot1(1)) " +  " \n"+
 					")" + "\n" ;
@@ -168,67 +212,67 @@ public class CausalDomainGenerator {
 			
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head atLocation::at_robot1_manipulationArea_"+ objVar[i]  + "_LA_" +"north" + "_table1())" +  " \n"+
-//					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+ //HAS TO BE COMNTED 
-//					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
+					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_LA_" +"north" + "_table1())" +  " \n"+ 
+					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource manArea(1)) " +  " \n"+
+					//" (RequiredResource manArea(1)) " +  " \n"+
 					")" + "\n" ;
 			
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head atLocation::at_robot1_manipulationArea_"+ objVar[i]  + "_LA_" +"east" + "_table1())" +  " \n"+
-//					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+ //HAS TO BE COMNTED 
-//					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
+					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_LA_" +"east" + "_table1())" +  " \n"+ 
+					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource manArea(1)) " +  " \n"+
+					//" (RequiredResource manArea(1)) " +  " \n"+
 					")" + "\n" ;
 			
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head atLocation::at_robot1_manipulationArea_"+ objVar[i]  + "_LA_" +"south" + "_table1())" +  " \n"+
-//					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+ //HAS TO BE COMNTED 
-//					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
+					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_LA_" +"south" + "_table1())" +  " \n"+ 
+					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource manArea(1)) " +  " \n"+
+					//" (RequiredResource manArea(1)) " +  " \n"+
 					")" + "\n" ;
 
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head atLocation::at_robot1_manipulationArea_"+ objVar[i]  + "_LA_" +"west" + "_table1())" +  " \n"+
-//					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+ //HAS TO BE COMNTED 
-//					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
+					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_LA_" +"west" + "_table1())" +  " \n"+ 
+					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource manArea(1)) " +  " \n"+
+					//" (RequiredResource manArea(1)) " +  " \n"+
 					")" + "\n" ;
 			
 			////
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head atLocation::at_robot1_manipulationArea_"+ objVar[i]  + "_RA_" +"north" + "_table1())" +  " \n"+
-//					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+ //HAS TO BE COMNTED 
-//					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
+					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_RA_" +"north" + "_table1())" +  " \n"+ 
+					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource manArea(1)) " +  " \n"+
+					//" (RequiredResource manArea(1)) " +  " \n"+
 					")" + "\n" ;
 			
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head atLocation::at_robot1_manipulationArea_"+ objVar[i]  + "_RA_" +"east" + "_table1())" +  " \n"+
-//					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+ //HAS TO BE COMNTED 
-//					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
+					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_RA_" +"east" + "_table1())" +  " \n"+ 
+					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource manArea(1)) " +  " \n"+
+					//" (RequiredResource manArea(1)) " +  " \n"+
 					")" + "\n" ;
 			
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head atLocation::at_robot1_manipulationArea_"+ objVar[i]  + "_RA_" +"south" + "_table1())" +  " \n"+
-//					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+ //HAS TO BE COMNTED 
-//					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
+					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_RA_" +"south" + "_table1())" +  " \n"+ 
+					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource manArea(1)) " +  " \n"+
+					//" (RequiredResource manArea(1)) " +  " \n"+
 					")" + "\n" ;
 
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head atLocation::at_robot1_manipulationArea_"+ objVar[i]  + "_RA_" +"west" + "_table1())" +  " \n"+
-//					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i] +"_table1())" +  " \n"+ //HAS TO BE COMNTED 
-//					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
+					" (RequiredState req1 RobotAction::moveTo_manipulationArea_"+ objVar[i]  + "_RA_" +"west" + "_table1())" +  " \n"+ 
+					" (Constraint MetBy(Head,req1))" +  " \n"+ //HAS TO BE COMNTED 
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
-					" (RequiredResource manArea(1)) " +  " \n"+
+					//" (RequiredResource manArea(1)) " +  " \n"+
 					")" + "\n" ;
 			
 			
@@ -380,6 +424,7 @@ public class CausalDomainGenerator {
 					" (Constraint During(Head,req3))" +  " \n"+
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -398,6 +443,7 @@ public class CausalDomainGenerator {
 					" (Constraint During(Head,req3))" +  " \n"+
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -416,6 +462,7 @@ public class CausalDomainGenerator {
 					" (Constraint During(Head,req3))" +  " \n"+
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -434,6 +481,7 @@ public class CausalDomainGenerator {
 					" (Constraint During(Head,req3))" +  " \n"+
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -454,6 +502,7 @@ public class CausalDomainGenerator {
 					" (Constraint During(Head,req3))" +  " \n"+
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -472,6 +521,7 @@ public class CausalDomainGenerator {
 					" (Constraint During(Head,req3))" +  " \n"+
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -490,6 +540,7 @@ public class CausalDomainGenerator {
 					" (Constraint During(Head,req3))" +  " \n"+
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -508,6 +559,7 @@ public class CausalDomainGenerator {
 					" (Constraint During(Head,req3))" +  " \n"+
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint MetBy(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -606,6 +658,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -625,6 +678,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -644,6 +698,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -664,6 +719,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -684,6 +740,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -703,6 +760,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -722,6 +780,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
@@ -741,6 +800,7 @@ public class CausalDomainGenerator {
 					" (Constraint MetBy(Head,req2))" +  " \n"+
 					" (Constraint OverlappedBy(Head,req1))" +  " \n"+
 					" (Constraint Finishes(Head,req1))" +  " \n"+
+					" (Constraint Starts(req2,req4))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					//" (RequiredResource arm(1))" +  " \n"+
 					" (RequiredResource fieldOfView(1))" +  " \n"+
