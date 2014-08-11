@@ -12,6 +12,9 @@ import java.util.Vector;
 import java.util.logging.Level;
 
 
+import meta.MetaInverseReachabilityConstraint;
+import meta.MetaMoveBaseManagerConstraint;
+
 import org.metacsp.framework.Constraint;
 import org.metacsp.framework.ConstraintNetwork;
 import org.metacsp.framework.ValueOrderingH;
@@ -19,8 +22,7 @@ import org.metacsp.framework.Variable;
 import org.metacsp.framework.VariableOrderingH;
 import org.metacsp.framework.meta.MetaConstraint;
 import org.metacsp.meta.hybridPlanner.FluentBasedSimpleDomain;
-import org.metacsp.meta.hybridPlanner.MetaInverseReachabilityConstraint;
-import org.metacsp.meta.hybridPlanner.MetaMoveBaseManagerConstraint;
+
 import org.metacsp.meta.hybridPlanner.MetaOccupiedConstraint;
 import org.metacsp.meta.hybridPlanner.MetaSpatialAdherenceConstraint;
 import org.metacsp.meta.hybridPlanner.SimpleHybridPlanner;
