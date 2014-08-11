@@ -19,9 +19,8 @@ import org.metacsp.framework.Variable;
 import org.metacsp.framework.VariableOrderingH;
 import org.metacsp.framework.meta.MetaConstraint;
 import org.metacsp.meta.hybridPlanner.FluentBasedSimpleDomain;
-import org.metacsp.meta.hybridPlanner.MetaInverseReachabilityConstraint;
-import org.metacsp.meta.hybridPlanner.MetaMoveBaseManagerConstraint;
 import org.metacsp.meta.hybridPlanner.MetaOccupiedConstraint;
+import org.metacsp.meta.hybridPlanner.MetaOccupiedTimesBasedConstraint;
 import org.metacsp.meta.hybridPlanner.MetaSpatialAdherenceConstraint;
 import org.metacsp.meta.hybridPlanner.SimpleHybridPlanner;
 import org.metacsp.meta.simplePlanner.SimpleReusableResource;
@@ -100,13 +99,13 @@ public class TestMickeyMouseEars1 {
 		simpleHybridPlanner.addMetaConstraint(metaSpatialAdherence);
 
 		//#################################################################################################################
-		FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/reachability_test_cutlary_mickey.ddl", FluentBasedSimpleDomain.class); //did not terminate
-
-		//#################################################################################################################
 		//add metaOccupiedConstraint
-		MetaOccupiedConstraint metaOccupiedConstraint = new MetaOccupiedConstraint(null, null);
+		MetaOccupiedTimesBasedConstraint metaOccupiedConstraint = new MetaOccupiedTimesBasedConstraint(null, null);
 		metaOccupiedConstraint.setPad(pad);
 		simpleHybridPlanner.addMetaConstraint(metaOccupiedConstraint);
+		
+		//#################################################################################################################
+		FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/reachability_test_cutlary_mickey.ddl", FluentBasedSimpleDomain.class); //did not terminate
 		
 		//#############################################################################################
 //		FluentBasedSimpleDomain fbsd = null;

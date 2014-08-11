@@ -51,8 +51,8 @@ public class TestManipulationConstraint {
 		//cup [[212, 212], [222, 222]], [[224, 229], [234, 239]]]}
 		//fork 211, 211], [223, 223]], [[244, 254], [248, 259
 		UnaryRectangleConstraint atobjectFleunt = new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
-				new Bounds(212,212), new Bounds(222, 222), new Bounds(224,229), new Bounds(234,239));
-//				new Bounds(211,211), new Bounds(223, 223), new Bounds(244,254), new Bounds(248,259));
+//				new Bounds(212,212), new Bounds(222, 222), new Bounds(224,229), new Bounds(234,239));
+				new Bounds(211,211), new Bounds(223, 223), new Bounds(244,254), new Bounds(248,259));
 //				new Bounds(211,211), new Bounds(223, 223), new Bounds(230,230), new Bounds(234,234));
 
 		atobjectFleunt.setFrom(objectFleunt);
@@ -177,7 +177,10 @@ public class TestManipulationConstraint {
 		
 		RectangularRegion[] rect = {objectFleunt, supportFluent, manipulationAreaPrototype, placingRecVar};
 		System.out.println(recSolver.drawAlmostCentreRectangle(300, rect));
-		ConstraintNetwork.draw(recSolver.getConstraintNetwork());
+		//ConstraintNetwork.draw(recSolver.getConstraintNetwork());
+//        recSolver.removeConstraint(atobjectFleunt);
+		System.out.println(recSolver.getConstraintNetwork());
+		
 
 		
 	}
