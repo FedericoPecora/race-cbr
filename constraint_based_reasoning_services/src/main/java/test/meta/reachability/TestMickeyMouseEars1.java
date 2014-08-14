@@ -98,15 +98,16 @@ public class TestMickeyMouseEars1 {
 		
 		simpleHybridPlanner.addMetaConstraint(metaSpatialAdherence);
 
-		//#################################################################################################################
-		//add metaOccupiedConstraint
-		MetaOccupiedTimesBasedConstraint metaOccupiedConstraint = new MetaOccupiedTimesBasedConstraint(null, null);
-		metaOccupiedConstraint.setPad(pad);
-		simpleHybridPlanner.addMetaConstraint(metaOccupiedConstraint);
 		
 		//#################################################################################################################
 		FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/reachability_test_cutlary_mickey.ddl", FluentBasedSimpleDomain.class); //did not terminate
-		
+
+		//#################################################################################################################
+//		//add metaOccupiedConstraint
+		MetaOccupiedTimesBasedConstraint metaOccupiedConstraint = new MetaOccupiedTimesBasedConstraint(null, null);
+		metaOccupiedConstraint.setPad(pad);
+		simpleHybridPlanner.addMetaConstraint(metaOccupiedConstraint);
+
 		//#############################################################################################
 //		FluentBasedSimpleDomain fbsd = null;
 //		for (MetaConstraint mc : simpleHybridPlanner.getMetaConstraints()) {

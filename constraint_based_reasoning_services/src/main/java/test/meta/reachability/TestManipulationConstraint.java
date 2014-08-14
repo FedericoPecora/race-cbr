@@ -13,6 +13,7 @@ import org.metacsp.multi.spatial.rectangleAlgebra.RectangularRegion;
 import org.metacsp.multi.spatial.rectangleAlgebra.UnaryRectangleConstraint;
 import org.metacsp.multi.spatioTemporal.SpatialFluentSolver;
 import org.metacsp.spatial.utility.SpatialRule;
+import org.metacsp.time.APSPSolver;
 import org.metacsp.time.Bounds;
 import org.metacsp.utility.logging.MetaCSPLogging;
 
@@ -28,7 +29,7 @@ public class TestManipulationConstraint {
 
 		
 	 
-		RectangleConstraintSolver recSolver = new RectangleConstraintSolver(0,1000);
+		RectangleConstraintSolver recSolver = new RectangleConstraintSolver(0,100000);
 	
 		RectangularRegion placingRecVar = (RectangularRegion) recSolver.createVariable();
 		placingRecVar.setName("placingArea");
@@ -43,17 +44,28 @@ public class TestManipulationConstraint {
 		RectangularRegion supportFluent = (RectangularRegion) recSolver.createVariable();
 		supportFluent.setName("supportFluent");		
 		
+		int counter = 0;
+		//while(counter < 10){
 		Vector<Constraint> allConstraints = new Vector<Constraint>();
 		ManipulationAreaDomain manipulationAreaDomain = new ManipulationAreaDomain();
-		Vector<SpatialRule> srules = manipulationAreaDomain.getSpatialRulesByRelation("RA_west");
+		Vector<SpatialRule> srules = manipulationAreaDomain.getSpatialRulesByRelation("RA_south");
 		
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		UnaryRectangleConstraint atobjectFleunt1 = new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
+				new Bounds(0,APSPSolver.INF), new Bounds(0,APSPSolver.INF), new Bounds(0,APSPSolver.INF), new Bounds(0,APSPSolver.INF));
+
+		atobjectFleunt1.setFrom(objectFleunt);
+		atobjectFleunt1.setTo(objectFleunt);
+		recSolver.addConstraint(atobjectFleunt1);
+		//allConstraints.add(atobjectFleunt1);
+		
+		
 		//cup [[212, 212], [222, 222]], [[224, 229], [234, 239]]]}
 		//fork 211, 211], [223, 223]], [[244, 254], [248, 259
 		UnaryRectangleConstraint atobjectFleunt = new UnaryRectangleConstraint(UnaryRectangleConstraint.Type.At, 
 //				new Bounds(212,212), new Bounds(222, 222), new Bounds(224,229), new Bounds(234,239));
-				new Bounds(211,211), new Bounds(223, 223), new Bounds(244,254), new Bounds(248,259));
-//				new Bounds(211,211), new Bounds(223, 223), new Bounds(230,230), new Bounds(234,234));
+//				new Bounds(211,211), new Bounds(223, 223), new Bounds(244,254), new Bounds(248,259));
+				new Bounds(211,211), new Bounds(223, 223), new Bounds(230,230), new Bounds(234,234));
 
 		atobjectFleunt.setFrom(objectFleunt);
 		atobjectFleunt.setTo(objectFleunt);
@@ -95,23 +107,67 @@ public class TestManipulationConstraint {
 		sizePlacingArea.setTo(placingRecVar);
 		allConstraints.add(sizePlacingArea);
 		
+		RectangleConstraint manipulationAreaTOtable = null;
 		
-		for (int i = 2; i < srules.size(); i++) {
+		if(srules.get(4).getBinaryRAConstraint().getInternalAllenIntervalConstraints()[0].getTypes().length == 1){
 			
-			
-			//"manipulationArea", "table", 
-			if(i == 4){				
-				System.out.println(srules.get(4).getBinaryRAConstraint().clone());
-				RectangleConstraint manipulationAreaTOtable = (RectangleConstraint)srules.get(4).getBinaryRAConstraint().clone(); 
-//				RectangleConstraint manipulationAreaTOtable = new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Meets , AllenIntervalConstraint.Type.Meets.getDefaultBounds()),
-//						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Meets, AllenIntervalConstraint.Type.Overlaps, AllenIntervalConstraint.Type.During, 
-//								AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.After));
-
-				manipulationAreaTOtable.setFrom(manipulationAreaPrototype);
-				manipulationAreaTOtable.setTo(supportFluent);
-				allConstraints.add(manipulationAreaTOtable);
-				continue;
+			Bounds[] allenBoundsX = new Bounds[(srules.get(4).getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getBounds().length];
+			for (int j = 0; j < allenBoundsX.length; j++) {
+				Bounds bx = new Bounds(
+						(srules.get(4).getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getBounds()[j].min, (srules.get(4)
+								.getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getBounds()[j].max);
+				allenBoundsX[j] = bx;
 			}
+			AllenIntervalConstraint xAllenCon = new AllenIntervalConstraint((srules.get(4).getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getType(), allenBoundsX);
+			if((srules.get(4).getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getBounds().length == 0)
+				xAllenCon = (AllenIntervalConstraint)(srules.get(4).getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].clone();
+			AllenIntervalConstraint yAllenCon = manipulationAreaDomain.getConvexifyBeforeAndAfter(); 
+			manipulationAreaTOtable = new RectangleConstraint(xAllenCon, yAllenCon);
+			
+		}
+		else{
+			
+			Bounds[] allenBoundsY = new Bounds[(srules.get(4).getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1].getBounds().length];
+			for (int j = 0; j < allenBoundsY.length; j++) {
+				Bounds bx = new Bounds(
+						(srules.get(4).getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1].getBounds()[j].min, (srules.get(4)
+								.getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1].getBounds()[j].max);
+				allenBoundsY[j] = bx;
+			}
+			AllenIntervalConstraint yAllenCon = new AllenIntervalConstraint((srules.get(4).getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1].getType(), allenBoundsY);
+			if((srules.get(4).getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1].getBounds().length == 0)
+				yAllenCon = (AllenIntervalConstraint)(srules.get(4).getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[1].clone();
+			AllenIntervalConstraint xAllenCon = manipulationAreaDomain.getConvexifyBeforeAndAfter(); 
+//					new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Meets, AllenIntervalConstraint.Type.Overlaps, AllenIntervalConstraint.Type.During, 
+//					AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.After);
+
+			manipulationAreaTOtable = new RectangleConstraint(xAllenCon, yAllenCon);
+
+			
+		}		
+		manipulationAreaTOtable.setFrom(manipulationAreaPrototype);
+		manipulationAreaTOtable.setTo(supportFluent);
+		allConstraints.add(manipulationAreaTOtable);
+		
+		for (int i = 2; i < 4; i++) {
+			
+			
+//			//"manipulationArea", "table", 
+//			if(i == 4){				
+//				System.out.println(srules.get(4).getBinaryRAConstraint().clone());
+////				RectangleConstraint manipulationAreaTOtable = (RectangleConstraint)srules.get(4).getBinaryRAConstraint().clone(); 
+////				manipulationAreaTOtable = new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Meets , AllenIntervalConstraint.Type.Meets.getDefaultBounds()),
+////						new AllenIntervalConstraint(AllenIntervalConstraint.Type.Before, AllenIntervalConstraint.Type.Meets, AllenIntervalConstraint.Type.Overlaps, AllenIntervalConstraint.Type.During, 
+////								AllenIntervalConstraint.Type.OverlappedBy, AllenIntervalConstraint.Type.MetBy, AllenIntervalConstraint.Type.After));
+//
+//				
+//				manipulationAreaTOtable = new RectangleConstraint(new AllenIntervalConstraint(AllenIntervalConstraint.Type.Meets , manipulationAreaDomain.getConvexifyBeforeAndAfter()));
+//
+//				manipulationAreaTOtable.setFrom(manipulationAreaPrototype);
+//				manipulationAreaTOtable.setTo(supportFluent);
+//				allConstraints.add(manipulationAreaTOtable);
+//				continue;
+//			}
 			
 			//general rule
 			Bounds[] allenBoundsX = new Bounds[(srules.get(i).getBinaryRAConstraint()).getInternalAllenIntervalConstraints()[0].getBounds().length];
@@ -168,6 +224,15 @@ public class TestManipulationConstraint {
 		}
 
 		Constraint[] allConstraintsArray = allConstraints.toArray(new Constraint[allConstraints.size()]);
+//		for (int j = allConstraintsArray.length - 1; j >= 0; j--) {
+//			
+//			if(recSolver.addConstraint(allConstraintsArray[j]))
+//				System.out.println("Added: " + (allConstraintsArray[j]));
+//			else
+//				System.out.println("NOT Added: " + (allConstraintsArray[j]));
+//		}
+		
+		ConstraintNetwork.draw(recSolver.getConstraintNetwork());
 		if (!recSolver.addConstraints(allConstraintsArray)) { 
 			System.out.println("Failed to add constraints!");
 		}
@@ -176,12 +241,14 @@ public class TestManipulationConstraint {
 		}
 		
 		RectangularRegion[] rect = {objectFleunt, supportFluent, manipulationAreaPrototype, placingRecVar};
-		System.out.println(recSolver.drawAlmostCentreRectangle(300, rect));
+//		System.out.println(recSolver.drawAlmostCentreRectangle(300, rect));
 		//ConstraintNetwork.draw(recSolver.getConstraintNetwork());
 //        recSolver.removeConstraint(atobjectFleunt);
+//        recSolver.removeConstraint(manipulationAreaTOtable);
+//        recSolver.removeConstraints(allConstraintsArray);
 		System.out.println(recSolver.getConstraintNetwork());
-		
-
+		counter++;
+		//}
 		
 	}
 
