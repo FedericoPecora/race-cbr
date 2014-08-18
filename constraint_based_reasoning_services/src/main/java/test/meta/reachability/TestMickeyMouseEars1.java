@@ -77,6 +77,8 @@ public class TestMickeyMouseEars1 {
 		};
 		
 		//#################################################################################################################
+		simpleHybridPlanner.setManipulationAreasEncoding("at_robot1_manipulationArea");
+		//#################################################################################################################
 		//add metaAdehrenceConstraint
 		MetaSpatialAdherenceConstraint metaSpatialAdherence = new MetaSpatialAdherenceConstraint(varOH, valOH);
 		SpatialFluentSolver groundSolver = (SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0];
@@ -93,14 +95,11 @@ public class TestMickeyMouseEars1 {
 		//add spatial general and assertional rule to MetaSpatialFluentConstraint
 		metaSpatialAdherence.setSpatialRules(srules.toArray(new SpatialRule[srules.size()]));
 		metaSpatialAdherence.setSpatialAssertionalRelations(saRelations);
-		metaSpatialAdherence.setInitialGoal(new String[]{"at_cup1_table1"});
-		
-		
+		metaSpatialAdherence.setInitialGoal(new String[]{"at_cup1_table1"});		
 		simpleHybridPlanner.addMetaConstraint(metaSpatialAdherence);
-
 		
 		//#################################################################################################################
-		FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/reachability_test_cutlary_mickey.ddl", FluentBasedSimpleDomain.class); //did not terminate
+		FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/reachability_test_cutlary_mickey.ddl", FluentBasedSimpleDomain.class); 
 
 		//#################################################################################################################
 //		//add metaOccupiedConstraint
@@ -117,6 +116,7 @@ public class TestMickeyMouseEars1 {
 		//############################################################################################
 
 		long timeNow = Calendar.getInstance().getTimeInMillis();
+		simpleHybridPlanner.setObstacles(saRelations);
 		simpleHybridPlanner.backtrack();
 		
 		System.out.println("TOTAL TIME: " + (Calendar.getInstance().getTimeInMillis()-timeNow));
@@ -157,12 +157,21 @@ public class TestMickeyMouseEars1 {
 			System.out.println(act + " --> " + starttimes.get(act));
 		}
 		//#####################################################################################################################
-		
-		System.out.println("fluenttttttttttttttttttttttttttttttts");
+		HashMap<String, Rectangle> recstoDraw = new HashMap<String, Rectangle>();
+//		System.out.println("fluenttttttttttttttttttttttttttttttts");
 		for (int i = 0; i < ((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getVariables().length; i++) {
-			System.out.println(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getVariables()[i]);
+//			System.out.println(((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getVariables()[i]);
+//			System.out.println(
+//					((SpatialFluent)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getVariables()[i]).getRectangularRegion().getBoundingBox().getAlmostCentreRectangle()					
+//					);
+			recstoDraw.put(((SpatialFluent)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getVariables()[i]).getRectangularRegion().getName(), 
+					((SpatialFluent)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getVariables()[i]).getRectangularRegion().getBoundingBox().getAlmostCentreRectangle()
+					);
 		}
 	
+		String print = ((RectangleConstraintSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[0]).
+		drawAlmostCentreRectangle(300, recstoDraw);
+//		System.out.println(print);
 	}
 
 	private static LinkedHashMap sortHashMapByValuesD(HashMap passedMap) {
@@ -383,14 +392,15 @@ public class TestMickeyMouseEars1 {
 		HashMap<String, Rectangle> recs = new HashMap<String, Rectangle>();
 
 
-		//change in referance frame min and max 30-35
+//		//change in referance frame min and max 30-35
 		insertAtConstraint(recs, saRelations, "at_table1_table1", "table_table", 200, 270, 200, 270, false, false);
 		insertAtConstraint(recs, saRelations, "at_fork1_table1", "fork_table", 211, 223, 230, 234, true, false);
 		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 210, 214, true, false);
 		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true, false);
-		
+//		
 		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false, true);
 		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false, true);
+		
 		
 		
 //		//both fork and knife has to re-placed - min and max 30-35
@@ -401,13 +411,7 @@ public class TestMickeyMouseEars1 {
 //		
 //		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false, true);
 //		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false, true);
-		
-
-
-
-		
-
-		
+	
 		
 		return recs;
 	}

@@ -290,8 +290,8 @@ public class CausalDomainGenerator {
 		for (int i = 0; i < objVar.length; i++) {
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head RobotSense::sensing_before_placing_"+ objVar[i] +"_table1())" +  " \n"+
-					" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
-					" (Constraint During(Head,req1))" +  " \n"+
+					//" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
+					//" (Constraint During(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					" (RequiredResource fieldOfView(200)) " +  " \n"+
 					" (RequiredResource robot1(1)) " +  " \n"+					
@@ -299,8 +299,8 @@ public class CausalDomainGenerator {
 
 			ret +=  "(SimpleOperator " + " \n"+
 					" (Head RobotSense::sensing_before_picking_"+ objVar[i] +"_table1())" +  " \n"+
-					" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
-					" (Constraint During(Head,req1))" +  " \n"+
+					//" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
+					//" (Constraint During(Head,req1))" +  " \n"+
 					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 					" (RequiredResource fieldOfView(200)) " +  " \n"+
 					" (RequiredResource robot1(1)) " +  " \n"+
@@ -309,8 +309,8 @@ public class CausalDomainGenerator {
 
 //			ret +=  "(SimpleOperator " + " \n"+
 //					" (Head RobotSense::sensing_before_picking_"+ objVar[i] +"_tray1())" +  " \n"+
-//					" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
-//					" (Constraint During(Head,req1))" +  " \n"+
+//					//" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
+//					//" (Constraint During(Head,req1))" +  " \n"+
 //					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 //					" (RequiredResource fieldOfView(200)) " +  " \n"+
 //					" (RequiredResource robot1(1)) " +  " \n"+
@@ -319,8 +319,8 @@ public class CausalDomainGenerator {
 //
 //			ret +=  "(SimpleOperator " + " \n"+
 //					" (Head RobotSense::sensing_before_placing_"+ objVar[i] +"_tray1())" +  " \n"+
-//					" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
-//					" (Constraint During(Head,req1))" +  " \n"+
+//					//" (RequiredState req1 atLocation::at_robot1_table1())" +  " \n"+
+//					//" (Constraint During(Head,req1))" +  " \n"+
 //					" (Constraint Duration[" + duration +",INF](Head))" +  " \n"+
 //					" (RequiredResource fieldOfView(200)) " +  " \n"+
 //					" (RequiredResource robot1(1)) " +  " \n"+
