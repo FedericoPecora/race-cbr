@@ -398,9 +398,12 @@ public class TestMickeyMouseEars1 {
 		insertAtConstraint(recs, saRelations, "at_knife1_table1", "knife_table",211, 223, 210, 214, true, false);
 		insertAtConstraint(recs, saRelations, "at_cup1_table1", "cup_table", 0, 0, 0, 0, true, false);
 //		
-		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false, true);
-		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false, true);
-		
+//		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 200, 270, false, true);//west
+//		insertAtConstraint(recs, saRelations, "at_chair2_room1", "chair_room", 272, 322, 200, 270, false, true);//east
+//		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 235, 270, 272, 300, false, true);//north
+//		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 150, 198, 180, 220, false, true);//east
+		insertAtConstraint(recs, saRelations, "at_chair1_room1", "chair_room", 205, 220, 272, 300, false, true);//north//ii
+
 		
 		
 //		//both fork and knife has to re-placed - min and max 30-35

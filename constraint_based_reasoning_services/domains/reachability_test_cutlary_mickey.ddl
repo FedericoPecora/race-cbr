@@ -209,18 +209,16 @@
  (Constraint OverlappedBy(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
 )
-
 (SimpleOperator  
  (Head atLocation::at_cup1_table1()) 
- (RequiredState req1 RobotAction::place_cup1_RA_east_table1()) 
+ (RequiredState req1 RobotAction::place_cup1_RA_north_table1()) 
  (Constraint StartedBy(Head,req1)) 
  (Constraint OverlappedBy(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
 )
-
 (SimpleOperator  
  (Head atLocation::at_cup1_table1()) 
- (RequiredState req1 RobotAction::place_cup1_RA_west_table1()) 
+ (RequiredState req1 RobotAction::place_cup1_RA_east_table1()) 
  (Constraint StartedBy(Head,req1)) 
  (Constraint OverlappedBy(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
@@ -232,10 +230,9 @@
  (Constraint OverlappedBy(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
 )
-
 (SimpleOperator  
  (Head atLocation::at_cup1_table1()) 
- (RequiredState req1 RobotAction::place_cup1_RA_north_table1()) 
+ (RequiredState req1 RobotAction::place_cup1_RA_west_table1()) 
  (Constraint StartedBy(Head,req1)) 
  (Constraint OverlappedBy(Head,req1)) 
  (Constraint Duration[2000,INF](Head)) 
