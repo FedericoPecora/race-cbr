@@ -85,8 +85,8 @@ public class TestMetaFuzzyActivity {
 		
 		
 		fd.addRule(r1);
-		fd.addRule(r2);
-		//fd.addRule(r3);
+//		fd.addRule(r2);
+		fd.addRule(r3);
 		
 		
 		fd.setRuleDependency();
@@ -94,16 +94,16 @@ public class TestMetaFuzzyActivity {
 		System.out.println("start");
 		metaSolver.addMetaConstraint(fd);//it defines the heuristic for variable ordering
 		metaSolver.branchAndBound();
-		//System.out.println("Optimal Constraint Network: " + metaSolver.getOptimalConstraint());
-		System.out.println("Most likely activities: " + metaSolver.getMostLiklyOccuredActivities());
-		
-		ConstraintNetwork.draw(metaSolver.getOptimalConstraint(), "Constraint Network");
-		
-		
-		//ConstraintNetwork.draw(groundSolver.getConstraintNetwork(), "Constraint Network");
-		
-		System.out.println(metaSolver.getMostLiklyOccuredActivities());
-		//metaSolver.draw();
+//		//System.out.println("Optimal Constraint Network: " + metaSolver.getOptimalConstraint());
+//		System.out.println("Most likely activities: " + metaSolver.getMostLiklyOccuredActivities());
+//		
+//		ConstraintNetwork.draw(metaSolver.getOptimalConstraint(), "Constraint Network");
+//		
+//		
+//		//ConstraintNetwork.draw(groundSolver.getConstraintNetwork(), "Constraint Network");
+//		
+//		System.out.println(metaSolver.getMostLiklyOccuredActivities());
+//		//metaSolver.draw();
 		
 	}
 

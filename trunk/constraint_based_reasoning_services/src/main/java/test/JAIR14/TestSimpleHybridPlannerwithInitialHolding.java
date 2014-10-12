@@ -23,6 +23,7 @@ import org.metacsp.meta.hybridPlanner.MetaOccupiedConstraint;
 import org.metacsp.meta.hybridPlanner.MetaSpatialAdherenceConstraint;
 import org.metacsp.meta.hybridPlanner.SensingSchedulable;
 import org.metacsp.meta.hybridPlanner.SimpleHybridPlanner;
+import org.metacsp.meta.hybridPlanner.SimpleHybridPlannerInferenceCallback;
 import org.metacsp.meta.simplePlanner.SimpleDomain.markings;
 import org.metacsp.multi.activity.Activity;
 import org.metacsp.multi.activity.ActivityNetworkSolver;
@@ -88,8 +89,10 @@ public class TestSimpleHybridPlannerwithInitialHolding {
 		FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/testSensingBeforePickAndPlaceDomain.ddl", FluentBasedSimpleDomain.class);
 //		FluentBasedSimpleDomain.parseDomain(simpleHybridPlanner, "domains/withManipulationSpace.ddl", FluentBasedSimpleDomain.class);
 		
-		
-		ConstraintNetworkAnimator animator = new ConstraintNetworkAnimator(simpleHybridPlanner, tick);
+		ActivityNetworkSolver ans = (ActivityNetworkSolver)((SpatialFluentSolver)simpleHybridPlanner.getConstraintSolvers()[0]).getConstraintSolvers()[1];
+		SimpleHybridPlannerInferenceCallback cb = new SimpleHybridPlannerInferenceCallback(simpleHybridPlanner);
+
+		ConstraintNetworkAnimator animator = new ConstraintNetworkAnimator(ans, tick, cb);
 
 		//Most critical conflict is the one with most activities 
 		VariableOrderingH varOH = new VariableOrderingH() {
@@ -207,7 +210,7 @@ public class TestSimpleHybridPlannerwithInitialHolding {
 		}; 
 		dispatches.add(dfSense);
 
-		animator.addDispatchingFunctions(simpleHybridPlanner, dispatches.toArray(new DispatchingFunction[dispatches.size()]));
+		animator.addDispatchingFunctions(ans, dispatches.toArray(new DispatchingFunction[dispatches.size()]));
 
 		//######################################################################
 		//Timeline
