@@ -74,7 +74,7 @@ public class IRANTestSymbolicVariableConstraintSolver {
 		/***/
 		System.out.println("---------------------");
 
-		SymbolicValueConstraint con3 = new SymbolicValueConstraint(SymbolicValueConstraint.Type.UNARYEQUALS);
+		SymbolicValueConstraint con3 = new SymbolicValueConstraint(SymbolicValueConstraint.Type.VALUEEQUALS);
 		con3.setFrom(var2);
 		con3.setTo(var2);
 		con2.setUnaryValue(new boolean[] {false,true,false,false,false,false});

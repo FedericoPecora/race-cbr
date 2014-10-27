@@ -18,6 +18,8 @@ public class TestRigidityOfSTN {
 	 */
 	public static void main(String[] args) {
 		
+		int a = 11;
+		System.out.println(a/2);
 		
 
 		APSPSolver solver = new APSPSolver(0, 100);
