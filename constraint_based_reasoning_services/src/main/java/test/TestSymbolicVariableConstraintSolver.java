@@ -54,7 +54,7 @@ public class TestSymbolicVariableConstraintSolver {
 
 		System.out.println("---------------------");
 		
-		SymbolicValueConstraint con2 = new SymbolicValueConstraint(SymbolicValueConstraint.Type.VALUEEQUALS);
+		SymbolicValueConstraint con2 = new SymbolicValueConstraint(SymbolicValueConstraint.Type.UNARYEQUALS);
 		con2.setFrom(var1);
 		con2.setTo(var1);
 		con2.setUnaryValue(new boolean[] {false,false,true,false,false,false});
