@@ -94,7 +94,7 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	private HashMap<String, org.metacsp.multi.spatial.rectangleAlgebra.Point> passiveObjSize = new HashMap<String, org.metacsp.multi.spatial.rectangleAlgebra.Point>(); 
 	private enum subroutin {GETFLUNET, GETPOSE, ADDFLUNETS};
 	private ArrayList<Fluent> fluents = new ArrayList<Fluent>();
-
+	private boolean initialiKnLoaded = false;
 
 	@Override
 	public void onStart(ConnectedNode connectedNode) {
@@ -106,15 +106,79 @@ public class spatialReasonerNode extends AbstractNodeMain {
 
 		StaticSpatialKnowledge.getSpatialKnowledge(spatialKnowledge);
 
-		Subscriber<Fluent> fluentArrsubscriber = connectedNode.newSubscriber(MYTOPIC, Fluent._TYPE);
-		fluentArrsubscriber.addMessageListener(new MessageListener<Fluent>() {
-			@Override
-			public void onNewMessage(Fluent message) {	
-				System.out.println("get new furniture");
-
-				onStaticKnowlegeLoaded(message);
+		//waiting for blackboard to be up
+		ServiceClient<GetFluentsByQueryRequest, GetFluentsByQueryResponse> getPassiveObjsClients = null;
+		boolean print = false;
+		while (true)
+		{
+			try {
+				getPassiveObjsClients = node.newServiceClient("blackboard/get_fluents_by_query", GetFluentsByQuery._TYPE);
 			}
-		});
+			catch (org.ros.exception.ServiceNotFoundException e) {
+				System.out.println("waiting for service 'blackboard/get_fluents_by_query'...");
+				print = true;
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e1) {
+				}
+				continue;
+			}
+
+			break;
+		}
+		if (print)
+			System.out.println("... done waiting for service.");
+		
+		//waiting for initial Kn to be loaded
+		while(!initialiKnLoaded){			
+			try {
+				getPassiveObjsClients = node.newServiceClient("blackboard/get_fluents_by_query", GetFluentsByQuery._TYPE);
+			} catch (org.ros.exception.ServiceNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			final GetFluentsByQueryRequest poRequest = getPassiveObjsClients.newMessage();
+			poRequest.setQuery("select distinct ?instance where {?instance a ?subclass. ?subclass rdfs:subClassOf+ race:Furniture}");
+
+			getPassiveObjsClients.call(poRequest, new ServiceResponseListener<GetFluentsByQueryResponse>() {
+
+				@Override
+				public void onSuccess(GetFluentsByQueryResponse response) {
+
+					if(response.getFluents().size() == 0){
+						System.out.println("waiting for initial knowledge to be loaded");
+					}
+					else{
+						System.out.println("set To be true");
+						initialiKnLoaded = true;						
+					}
+
+				}
+
+				@Override
+				public void onFailure(RemoteException arg0) {
+					System.out.println("Get passive Objects is failed");
+
+				}
+			});			
+		}
+		
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+//		Subscriber<Fluent> fluentArrsubscriber = connectedNode.newSubscriber(MYTOPIC, Fluent._TYPE);
+//		fluentArrsubscriber.addMessageListener(new MessageListener<Fluent>() {
+//			@Override
+//			public void onNewMessage(Fluent message) {	
+//				System.out.println("get new furniture");
+//
+//				onStaticKnowlegeLoaded(message);
+//			}
+//		});
 
 		getPassiveObject();
 		waitForTerminate(subroutin.GETFLUNET);
@@ -460,28 +524,12 @@ public class spatialReasonerNode extends AbstractNodeMain {
 	private void getPassiveObject() {
 
 		ServiceClient<GetFluentsByQueryRequest, GetFluentsByQueryResponse> getPassiveObjsClients = null;
-		boolean print = false;
-		while (true)
-		{
-			try {
-				getPassiveObjsClients = node.newServiceClient("blackboard/get_fluents_by_query", GetFluentsByQuery._TYPE);
-			}
-			catch (org.ros.exception.ServiceNotFoundException e) {
-				System.out.println("waiting for service 'blackboard/get_fluents_by_query'...");
-				print = true;
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e1) {
-				}
-				continue;
-			}
-
-			break;
+		try {
+			getPassiveObjsClients = node.newServiceClient("blackboard/get_fluents_by_query", GetFluentsByQuery._TYPE);
+		} catch (org.ros.exception.ServiceNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		if (print)
-			System.out.println("... done waiting for service.");
-
-
 		final GetFluentsByQueryRequest poRequest = getPassiveObjsClients.newMessage();
 		poRequest.setQuery("select distinct ?instance where {?instance a ?subclass. ?subclass rdfs:subClassOf+ race:Furniture}");
 
