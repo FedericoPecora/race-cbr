@@ -215,7 +215,7 @@ public class StaticSpatialKnowledge {
 //		the y axis is manipulated in order to close to hard code version! This number is not consistent with D1.3
 		SpatialRule r17 = new SpatialRule("ManipulationAreaEast", "Counter", 
 				new AugmentedRectangleConstraint(
-						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(maSlack - 9,maSlack - 9)),
+						new AllenIntervalConstraint(AllenIntervalConstraint.Type.After, new Bounds(maSlack, maSlack)),
 						new AllenIntervalConstraint(AllenIntervalConstraint.Type.During, AllenIntervalConstraint.Type.During.getDefaultBounds())
 						)
 		);
