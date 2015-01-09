@@ -489,6 +489,8 @@ public class spatialReasonerNode extends AbstractNodeMain {
 			return new Point3d(35, 35, 73);
 		else if(str.compareTo("table2") == 0 || str.compareTo("VerticalTable") == 0)
 			return new Point3d(35, 35, 73);
+		else if(str.compareTo("table3") == 0 || str.compareTo("HorizontalTable") == 0)
+			return new Point3d(35, 35, 73);
 		else if(str.compareTo("counter1") == 0 || str.compareTo("Counter") == 0)
 			return new Point3d(35, 70, 75);
 		return null;
