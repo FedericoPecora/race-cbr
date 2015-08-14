@@ -1,0 +1,1 @@
+This repository contains constraint based reasoning services for the EU project RACE (http://project-race.eu).  This depends on the Meta-CSP Framework stack available at http://meta-csp-framework.googlecode.com
